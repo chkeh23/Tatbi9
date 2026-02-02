@@ -1,1 +1,434 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👽 Alien Mask | غزو المجرة</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <!-- خلفية الفضاء المتحركة -->
+    <div class="space-background">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+        <div class="nebula"></div>
+        <div class="planet planet-1"></div>
+        <div class="planet planet-2"></div>
+        <div class="ufo ufo-1"><i class="fas fa-ship"></i></div>
+        <div class="ufo ufo-2"><i class="fas fa-rocket"></i></div>
+        <div class="alien alien-1"><i class="fas fa-user-astronaut"></i></div>
+        <div class="alien alien-2"><i class="fas fa-robot"></i></div>
+    </div>
 
+    <div class="container">
+        <!-- الهيدر العلوي (سفينة القيادة) -->
+        <header class="command-center animate__animated animate__fadeInDown">
+            <div class="spaceship-panel" id="admin-trigger-area">
+                <div class="hologram-logo">
+                    <div class="hologram-effect">
+                        <h1><i class="fas fa-mask"></i> ALIEN MASK</h1>
+                        <p class="token-price">
+                            <i class="fas fa-coins"></i> 1 AMSK = <span class="glow">0.0002$</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="commander-profile">
+                    <div class="profile-hologram">
+                        <img id="user-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="القائد" class="hologram-avatar">
+                        <div class="rank-badge">
+                            <i class="fas fa-star"></i>
+                            <span id="vip-level">مبتدئ</span>
+                        </div>
+                    </div>
+                    <div class="commander-info">
+                        <h3 id="user-name" class="glow-text">قائد فضائي</h3>
+                        <p id="user-id" class="telegram-id">
+                            <i class="fab fa-telegram"></i> @username
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- محطة التعدين المركزية -->
+        <section class="mining-station animate__animated animate__fadeInUp">
+            <div class="station-header">
+                <h2><i class="fas fa-satellite-dish"></i> مركز الطاقة الكونية</h2>
+                <div class="power-indicator">
+                    <div class="pulse-ring"></div>
+                    <span id="mining-power">⚡ 100 طاقة/ثانية</span>
+                </div>
+            </div>
+
+            <!-- المحرك الفضائي (زر التعدين) -->
+            <div class="quantum-engine">
+                <div class="engine-core">
+                    <div class="plasma-ball">
+                        <div class="plasma-inner"></div>
+                        <div class="plasma-rings">
+                            <div class="ring r1"></div>
+                            <div class="ring r2"></div>
+                            <div class="ring r3"></div>
+                        </div>
+                    </div>
+                    <button id="mine-btn" class="quantum-btn">
+                        <i class="fas fa-bolt"></i>
+                        <span class="btn-text">تفعيل المحرك الكمي</span>
+                        <div class="energy-wave"></div>
+                    </button>
+                </div>
+                
+                <!-- عداد الإنتاج -->
+                <div class="production-display">
+                    <div class="display-panel">
+                        <div class="display-title">
+                            <i class="fas fa-gem"></i> إنتاج الطاقة
+                        </div>
+                        <div class="display-content">
+                            <div class="crystal-counter">
+                                <i class="fas fa-cubes"></i>
+                                <span id="mined-tokens">0</span> 
+                                <span class="token-unit">AMSK</span>
+                            </div>
+                            <div class="rate-display">
+                                <div class="rate-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>كل 4 ساعات:</span>
+                                    <span class="rate-value">5,000</span>
+                                </div>
+                                <div class="rate-item">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span>يومياً:</span>
+                                    <span class="rate-value">30,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- معززات الطاقة -->
+            <div class="boosters-section">
+                <h3><i class="fas fa-tachometer-alt"></i> معززات الطاقة المتقدمة</h3>
+                <div class="boosters-grid">
+                    <!-- معزز 1 -->
+                    <div class="booster-card booster-basic" data-boost="1.2">
+                        <div class="booster-icon">
+                            <i class="fas fa-bolt"></i>
+                            <div class="sparkle s1"></div>
+                            <div class="sparkle s2"></div>
+                        </div>
+                        <h4>محرك توربيني</h4>
+                        <p class="booster-desc">+20% قوة تعدين</p>
+                        <div class="booster-price">
+                            <i class="fas fa-coins"></i> 10,000 AMSK
+                        </div>
+                        <button class="activate-booster">
+                            <i class="fas fa-rocket"></i> تفعيل
+                        </button>
+                    </div>
+
+                    <!-- معزز 2 -->
+                    <div class="booster-card booster-pro" data-boost="1.5">
+                        <div class="booster-icon">
+                            <i class="fas fa-atom"></i>
+                            <div class="pulse p1"></div>
+                            <div class="pulse p2"></div>
+                        </div>
+                        <h4>مفاعل كمي</h4>
+                        <p class="booster-desc">+50% قوة تعدين</p>
+                        <div class="booster-price">
+                            <i class="fas fa-coins"></i> 25,000 AMSK
+                        </div>
+                        <button class="activate-booster">
+                            <i class="fas fa-rocket"></i> تفعيل
+                        </button>
+                    </div>
+
+                    <!-- معزز 3 -->
+                    <div class="booster-card booster-ultimate" data-boost="2">
+                        <div class="booster-icon">
+                            <i class="fas fa-infinity"></i>
+                            <div class="orbit o1"></div>
+                            <div class="orbit o2"></div>
+                        </div>
+                        <h4>ثقب دودي</h4>
+                        <p class="booster-desc">+100% قوة تعدين</p>
+                        <div class="booster-price">
+                            <i class="fas fa-coins"></i> 50,000 AMSK
+                        </div>
+                        <button class="activate-booster">
+                            <i class="fas fa-rocket"></i> تفعيل
+                        </button>
+                    </div>
+
+                    <!-- معزز 4 -->
+                    <div class="booster-card booster-galactic" data-boost="3">
+                        <div class="booster-icon">
+                            <i class="fas fa-galaxy"></i>
+                            <div class="nebula-effect"></div>
+                        </div>
+                        <h4>محرك مجري</h4>
+                        <p class="booster-desc">+200% قوة تعدين</p>
+                        <div class="booster-price">
+                            <i class="fas fa-gem"></i> 100,000 AMSK
+                        </div>
+                        <button class="activate-booster">
+                            <i class="fas fa-rocket"></i> تفعيل
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قائمة المهام الفضائية -->
+        <section class="space-missions animate__animated animate__fadeInUp">
+            <div class="missions-header">
+                <h2><i class="fas fa-tasks"></i> المهام الفضائية اليومية</h2>
+                <div class="mission-reward">
+                    <i class="fas fa-award"></i>
+                    <span>جوائز يومية</span>
+                </div>
+            </div>
+            
+            <div class="missions-grid">
+                <div class="mission-card mission-login">
+                    <div class="mission-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <div class="status-dot completed"></div>
+                    </div>
+                    <div class="mission-details">
+                        <h4>تسجيل الدخول اليومي</h4>
+                        <p>ادخل إلى المحطة الفضائية</p>
+                    </div>
+                    <div class="mission-reward">
+                        <span>+500 AMSK</span>
+                    </div>
+                    <button class="mission-claim" disabled>
+                        <i class="fas fa-check"></i> مكتمل
+                    </button>
+                </div>
+
+                <div class="mission-card mission-mining">
+                    <div class="mission-icon">
+                        <i class="fas fa-hammer"></i>
+                        <div class="status-dot in-progress"></div>
+                    </div>
+                    <div class="mission-details">
+                        <h4>التعدين الكمي</h4>
+                        <p>تفعيل المحرك 50 مرة</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 32%"></div>
+                        </div>
+                        <span class="progress-text">16/50</span>
+                    </div>
+                    <div class="mission-reward">
+                        <span>+1,000 AMSK</span>
+                    </div>
+                    <button class="mission-claim">
+                        <i class="fas fa-bolt"></i> ادعي المكافأة
+                    </button>
+                </div>
+
+                <div class="mission-card mission-invite">
+                    <div class="mission-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                        <div class="status-dot pending"></div>
+                    </div>
+                    <div class="mission-details">
+                        <h4>توسيع الأسطول</h4>
+                        <p>ادعُ قائداً فضائياً جديداً</p>
+                    </div>
+                    <div class="mission-reward">
+                        <span>+20,000 AMSK</span>
+                    </div>
+                    <button class="mission-claim">
+                        <i class="fas fa-share-alt"></i> ابدأ المهمة
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- إحصائيات الأسطول -->
+        <section class="fleet-stats animate__animated animate__fadeInUp">
+            <div class="stats-header">
+                <h2><i class="fas fa-chart-network"></i> إحصائيات الأسطول</h2>
+                <div class="total-fleet">
+                    <i class="fas fa-users"></i>
+                    <span>1,847 قائد</span>
+                </div>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card rank-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>مرتبتك</h4>
+                        <p class="stat-value">#847</p>
+                    </div>
+                    <div class="stat-graph">
+                        <div class="graph-bar" style="height: 45%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card invites-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>أعضاء الأسطول</h4>
+                        <p class="stat-value">7 قادة</p>
+                    </div>
+                    <div class="stat-graph">
+                        <div class="graph-bar" style="height: 70%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-card rewards-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>مكافآت الإحالة</h4>
+                        <p class="stat-value">140,000 AMSK</p>
+                    </div>
+                    <div class="stat-graph">
+                        <div class="graph-bar" style="height: 85%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- رابط الدعوة -->
+            <div class="invitation-portal">
+                <div class="portal-header">
+                    <i class="fas fa-door-open"></i>
+                    <h4>بوابة الدعوة الفضائية</h4>
+                </div>
+                <div class="portal-body">
+                    <p class="portal-desc">
+                        شارك هذا الرابط ودعُ قادة جدد للانضمام للأسطول
+                    </p>
+                    <div class="referral-link">
+                        <code id="referral-link">t.me/AlienMuskbot/Musk?start=ref-XXXXXX</code>
+                        <button id="copy-link" class="portal-btn">
+                            <i class="fas fa-copy"></i> نسخ
+                        </button>
+                    </div>
+                    <div class="invite-reward">
+                        <i class="fas fa-gift"></i>
+                        <span>مكافأة الدعوة: <strong>20,000 AMSK</strong> لكل قائد جديد</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- قائمة التنقل الفضائية -->
+        <nav class="space-navigation">
+            <div class="nav-container">
+                <a href="#" class="nav-item active" data-page="home">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                        <div class="nav-glow"></div>
+                    </div>
+                    <span class="nav-label">القيادة</span>
+                </a>
+
+                <a href="#" class="nav-item" data-page="staking">
+                    <div class="nav-icon">
+                        <i class="fas fa-database"></i>
+                        <div class="nav-pulse"></div>
+                    </div>
+                    <span class="nav-label">الستارك</span>
+                </a>
+
+                <a href="#" class="nav-item" data-page="wallet">
+                    <div class="nav-icon">
+                        <i class="fas fa-wallet"></i>
+                        <div class="nav-ripple"></div>
+                    </div>
+                    <span class="nav-label">الخزنة</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- لوحة المشرف المخفية -->
+    <div id="admin-modal" class="admin-modal">
+        <div class="admin-portal">
+            <div class="portal-gate">
+                <div class="gate-header">
+                    <h3><i class="fas fa-user-secret"></i> بوابة القيادة العليا</h3>
+                    <button class="close-portal">&times;</button>
+                </div>
+                
+                <div class="gate-body">
+                    <div class="access-form">
+                        <div class="form-icon">
+                            <i class="fas fa-fingerprint"></i>
+                        </div>
+                        <h4>تأكيد الهوية القيادية</h4>
+                        <input type="password" id="admin-password" placeholder="أدخل كلمة المرور السرية" class="access-input">
+                        <button id="admin-login" class="access-btn">
+                            <i class="fas fa-lock-open"></i> فتح البوابة
+                        </button>
+                    </div>
+                    
+                    <div class="admin-dashboard" style="display: none;">
+                        <!-- محتوى لوحة التحكم سيتم إضافته في app.js -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الـBooster -->
+    <div id="booster-modal" class="booster-modal">
+        <div class="booster-portal">
+            <!-- محتوى تفعيل المعززات -->
+        </div>
+    </div>
+
+    <!-- الإشعارات -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- الأصوات -->
+    <audio id="mine-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // جعل المتغيرات عالمية
+        window.firebaseApp = app;
+        window.db = db;
+        window.auth = auth;
+    </script>
+
+    <!-- ملفات التطبيق -->
+    <script src="app.js"></script>
+</body>
+</html>
