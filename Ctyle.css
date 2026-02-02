@@ -1,1 +1,1049 @@
+/* ملف style.css - التصميم الفضائي الاحترافي */
 
+:root {
+    --space-black: #0a0a1a;
+    --deep-space: #0f1b2d;
+    --nebula-blue: #1a237e;
+    --star-white: #e3f2fd;
+    --plasma-purple: #7b1fa2;
+    --quantum-cyan: #00bcd4;
+    --energy-green: #00e676;
+    --warp-yellow: #ffd600;
+    --alien-green: #76ff03;
+    --danger-red: #ff1744;
+    --hologram-teal: #18ffff;
+    
+    --glow-light: 0 0 20px rgba(24, 255, 255, 0.7);
+    --glow-medium: 0 0 30px rgba(123, 31, 162, 0.8);
+    --glow-strong: 0 0 40px rgba(0, 188, 212, 0.9);
+    --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', 'Orbitron', sans-serif;
+    background: var(--space-black);
+    color: var(--star-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+/* خلفية الفضاء المتحركة */
+.space-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.stars, .stars2, .stars3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.stars { animation: twinkle 5s infinite; }
+.stars2 { animation: twinkle 7s infinite 1s; }
+.stars3 { animation: twinkle 9s infinite 2s; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* الكواكب والأجسام الفضائية */
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--plasma-purple), transparent);
+    box-shadow: var(--glow-medium);
+}
+
+.planet-1 {
+    width: 150px;
+    height: 150px;
+    top: 10%;
+    left: 10%;
+    animation: orbit 40s linear infinite;
+}
+
+.planet-2 {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    right: 15%;
+    animation: orbit 30s linear infinite reverse;
+}
+
+.ufo, .alien {
+    position: absolute;
+    font-size: 24px;
+    color: var(--quantum-cyan);
+    animation: float 15s ease-in-out infinite;
+}
+
+.ufo-1 { top: 30%; right: 20%; animation-delay: 0s; }
+.ufo-2 { bottom: 30%; left: 25%; animation-delay: 3s; }
+.alien-1 { top: 40%; left: 15%; animation-delay: 5s; }
+.alien-2 { bottom: 40%; right: 20%; animation-delay: 7s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes orbit {
+    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+    to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+}
+
+/* الحاوية الرئيسية */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+/* سفينة القيادة */
+.command-center {
+    background: linear-gradient(135deg, rgba(15, 27, 45, 0.9), rgba(26, 35, 126, 0.8));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-deep), var(--glow-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.command-center::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--quantum-cyan), transparent);
+    animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.spaceship-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.hologram-logo {
+    flex: 1;
+}
+
+.hologram-effect {
+    position: relative;
+    padding: 10px;
+    border: 1px solid rgba(24, 255, 255, 0.3);
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.hologram-effect h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    color: var(--hologram-teal);
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px var(--quantum-cyan);
+}
+
+.token-price {
+    font-size: 14px;
+    color: var(--energy-green);
+}
+
+.glow {
+    color: var(--warp-yellow);
+    text-shadow: 0 0 10px currentColor;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.commander-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-hologram {
+    position: relative;
+}
+
+.hologram-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--quantum-cyan);
+    box-shadow: var(--glow-light);
+}
+
+.rank-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.commander-info h3 {
+    font-size: 16px;
+    color: var(--star-white);
+    margin-bottom: 3px;
+}
+
+.telegram-id {
+    font-size: 12px;
+    color: var(--quantum-cyan);
+    opacity: 0.8;
+}
+
+/* محطة التعدين */
+.mining-station {
+    background: rgba(15, 27, 45, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(123, 31, 162, 0.4);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.station-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+.station-header h2 {
+    font-size: 18px;
+    color: var(--hologram-teal);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.power-indicator {
+    position: relative;
+    padding: 8px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 1px solid var(--energy-green);
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 2px solid var(--energy-green);
+    animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse-ring {
+    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* المحرك الكمي */
+.quantum-engine {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.engine-core {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.plasma-ball {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(123, 31, 162, 0.3), transparent 70%);
+    z-index: 1;
+}
+
+.plasma-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--plasma-purple), var(--quantum-cyan));
+    animation: plasma-spin 3s linear infinite;
+}
+
+@keyframes plasma-spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.plasma-rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+}
+
+.ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 2px solid var(--quantum-cyan);
+    border-radius: 50%;
+    animation: ring-expand 3s ease-out infinite;
+}
+
+.r1 { width: 120px; height: 120px; animation-delay: 0s; }
+.r2 { width: 160px; height: 160px; animation-delay: 1s; }
+.r3 { width: 200px; height: 200px; animation-delay: 2s; }
+
+@keyframes ring-expand {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.quantum-btn {
+    position: relative;
+    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 2;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(123, 31, 162, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0 auto;
+}
+
+.quantum-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(0, 188, 212, 0.9);
+}
+
+.quantum-btn:active {
+    transform: scale(0.98);
+}
+
+.energy-wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    background: radial-gradient(circle, transparent 30%, rgba(0, 188, 212, 0.3) 70%);
+    animation: wave-pulse 2s infinite;
+}
+
+@keyframes wave-pulse {
+    0% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* معززات الطاقة */
+.boosters-section {
+    margin-top: 30px;
+}
+
+.boosters-section h3 {
+    font-size: 16px;
+    color: var(--warp-yellow);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.boosters-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.booster-card {
+    background: linear-gradient(135deg, rgba(26, 35, 126, 0.6), rgba(15, 27, 45, 0.8));
+    border: 1px solid rgba(0, 188, 212, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.booster-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--quantum-cyan);
+    box-shadow: var(--glow-light);
+}
+
+.booster-icon {
+    font-size: 24px;
+    color: var(--quantum-cyan);
+    margin-bottom: 10px;
+    position: relative;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sparkle, .pulse, .orbit {
+    position: absolute;
+    background: var(--quantum-cyan);
+    border-radius: 50%;
+}
+
+.sparkle { width: 6px; height: 6px; }
+.pulse { width: 8px; height: 8px; }
+.orbit { width: 10px; height: 10px; }
+
+.booster-card h4 {
+    font-size: 14px;
+    color: var(--star-white);
+    margin-bottom: 5px;
+}
+
+.booster-desc {
+    font-size: 12px;
+    color: var(--energy-green);
+    margin-bottom: 10px;
+}
+
+.booster-price {
+    font-size: 12px;
+    color: var(--warp-yellow);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.activate-booster {
+    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.activate-booster:hover {
+    background: linear-gradient(45deg, var(--quantum-cyan), var(--plasma-purple));
+}
+
+/* المهام الفضائية */
+.space-missions {
+    background: rgba(15, 27, 45, 0.8);
+    border: 1px solid rgba(118, 255, 3, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.missions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(118, 255, 3, 0.3);
+}
+
+.missions-header h2 {
+    font-size: 18px;
+    color: var(--alien-green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mission-reward {
+    font-size: 14px;
+    color: var(--warp-yellow);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.missions-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.mission-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(118, 255, 3, 0.2);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mission-icon {
+    position: relative;
+    font-size: 20px;
+    color: var(--alien-green);
+}
+
+.status-dot {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.completed { background: var(--energy-green); }
+.in-progress { background: var(--warp-yellow); }
+.pending { background: var(--danger-red); }
+
+.mission-details {
+    flex: 1;
+}
+
+.mission-details h4 {
+    font-size: 14px;
+    color: var(--star-white);
+    margin-bottom: 5px;
+}
+
+.mission-details p {
+    font-size: 12px;
+    color: var(--quantum-cyan);
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--alien-green), var(--energy-green));
+    border-radius: 3px;
+}
+
+.progress-text {
+    font-size: 10px;
+    color: var(--star-white);
+}
+
+.mission-claim {
+    background: linear-gradient(45deg, var(--alien-green), var(--energy-green));
+    color: var(--space-black);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.mission-claim:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+/* إحصائيات الأسطول */
+.fleet-stats {
+    background: rgba(15, 27, 45, 0.8);
+    border: 1px solid rgba(255, 214, 0, 0.3);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 80px;
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 214, 0, 0.3);
+}
+
+.stats-header h2 {
+    font-size: 18px;
+    color: var(--warp-yellow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.total-fleet {
+    font-size: 14px;
+    color: var(--quantum-cyan);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid rgba(0, 188, 212, 0.2);
+}
+
+.stat-icon {
+    font-size: 20px;
+    color: var(--quantum-cyan);
+    margin-bottom: 10px;
+}
+
+.stat-info h4 {
+    font-size: 12px;
+    color: var(--star-white);
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--hologram-teal);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.stat-graph {
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.graph-bar {
+    width: 10px;
+    background: linear-gradient(to top, var(--quantum-cyan), var(--hologram-teal));
+    border-radius: 5px 5px 0 0;
+}
+
+/* بوابة الدعوة */
+.invitation-portal {
+    background: linear-gradient(135deg, rgba(123, 31, 162, 0.6), rgba(0, 188, 212, 0.6));
+    border-radius: 15px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.portal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.portal-header h4 {
+    font-size: 16px;
+}
+
+.portal-body {
+    color: white;
+}
+
+.portal-desc {
+    font-size: 14px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.referral-link {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.referral-link code {
+    flex: 1;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--star-white);
+    word-break: break-all;
+}
+
+.portal-btn {
+    background: white;
+    color: var(--plasma-purple);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+.invite-reward {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--warp-yellow);
+}
+
+/* التنقل الفضائي */
+.space-navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 188, 212, 0.3);
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: var(--quantum-cyan);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 5px;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: var(--hologram-teal);
+}
+
+.nav-item.active .nav-icon {
+    transform: translateY(-5px);
+}
+
+.nav-icon {
+    font-size: 22px;
+    margin-bottom: 5px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-glow, .nav-pulse, .nav-ripple {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+.nav-item.active .nav-glow {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(24, 255, 255, 0.3), transparent);
+    animation: nav-glow 2s infinite;
+}
+
+.nav-item.active .nav-pulse {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgba(123, 31, 162, 0.5);
+    animation: nav-pulse 3s infinite;
+}
+
+.nav-item.active .nav-ripple {
+    width: 35px;
+    height: 35px;
+    border: 2px solid rgba(0, 188, 212, 0.5);
+    animation: nav-ripple 4s infinite;
+}
+
+@keyframes nav-glow {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes nav-pulse {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+@keyframes nav-ripple {
+    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.5); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.nav-item.active .nav-label {
+    color: var(--hologram-teal);
+    text-shadow: 0 0 10px var(--quantum-cyan);
+}
+
+/* لوحة المشرف */
+.admin-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.admin-portal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    background: linear-gradient(135deg, #1a0033, #0a0a1a);
+    border: 2px solid var(--danger-red);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 50px rgba(255, 23, 68, 0.5);
+}
+
+.portal-gate {
+    padding: 30px;
+}
+
+.gate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    color: var(--danger-red);
+}
+
+.close-portal {
+    background: none;
+    border: none;
+    color: var(--danger-red);
+    font-size: 30px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.access-form {
+    text-align: center;
+}
+
+.form-icon {
+    font-size: 50px;
+    color: var(--danger-red);
+    margin-bottom: 20px;
+}
+
+.access-input {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--danger-red);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.access-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, var(--danger-red), #ff5252);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.access-btn:hover {
+    background: linear-gradient(45deg, #ff5252, var(--danger-red));
+    transform: scale(1.02);
+}
+
+/* الإشعارات */
+.notifications-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    max-width: 300px;
+}
+
+.notification {
+    background: linear-gradient(135deg, var(--plasma-purple), var(--quantum-cyan));
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    animation: slideIn 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* التجاوب مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .spaceship-panel {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .commander-profile {
+        flex-direction: column;
+    }
+    
+    .boosters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-cards {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .mission-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .mission-details {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .station-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .quantum-btn {
+        padding: 15px 30px;
+        font-size: 16px;
+    }
+}
