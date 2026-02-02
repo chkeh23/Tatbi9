@@ -6,12 +6,12 @@
 
 // Firebase Configuration
 const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyC4R4p7v6QmX9Q9Q9Q9Q9Q9Q9Q9Q9Q9Q9Q9Q",
-    authDomain: "alien-musk-app.firebaseapp.com",
-    projectId: "alien-musk-app",
-    storageBucket: "alien-musk.appspot.com",
-    messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:abcdef1234567890abcdef"
+    apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+    authDomain: "tatbi9-681bf.firebaseapp.com",
+    projectId: "tatbi9-681bf",
+    storageBucket: "tatbi9-681bf.firebasestorage.app",
+    messagingSenderId: "863237064748",
+    appId: "1:863237064748:web:134de1e01d2639ef5fa989"
 };
 
 // App Constants
