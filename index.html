@@ -1,434 +1,446 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👽 Alien Mask | غزو المجرة</title>
+    <title>👽 Alien Mask | Crypto Mining App</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- خلفية الفضاء المتحركة -->
-    <div class="space-background">
-        <div class="stars"></div>
-        <div class="stars2"></div>
-        <div class="stars3"></div>
-        <div class="nebula"></div>
-        <div class="planet planet-1"></div>
-        <div class="planet planet-2"></div>
-        <div class="ufo ufo-1"><i class="fas fa-ship"></i></div>
-        <div class="ufo ufo-2"><i class="fas fa-rocket"></i></div>
-        <div class="alien alien-1"><i class="fas fa-user-astronaut"></i></div>
-        <div class="alien alien-2"><i class="fas fa-robot"></i></div>
-    </div>
-
-    <div class="container">
-        <!-- الهيدر العلوي (سفينة القيادة) -->
-        <header class="command-center animate__animated animate__fadeInDown">
-            <div class="spaceship-panel" id="admin-trigger-area">
-                <div class="hologram-logo">
-                    <div class="hologram-effect">
-                        <h1><i class="fas fa-mask"></i> ALIEN MASK</h1>
-                        <p class="token-price">
-                            <i class="fas fa-coins"></i> 1 AMSK = <span class="glow">0.0002$</span>
-                        </p>
+    <!-- Main Container -->
+    <div class="app-container">
+        
+        <!-- Header Section -->
+        <header class="app-header">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-mask"></i>
+                    <div>
+                        <h1>Alien Mask</h1>
+                        <p class="token-price">1 AMSK = $0.0002</p>
                     </div>
                 </div>
-                <div class="commander-profile">
-                    <div class="profile-hologram">
-                        <img id="user-avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="القائد" class="hologram-avatar">
-                        <div class="rank-badge">
-                            <i class="fas fa-star"></i>
-                            <span id="vip-level">مبتدئ</span>
-                        </div>
-                    </div>
-                    <div class="commander-info">
-                        <h3 id="user-name" class="glow-text">قائد فضائي</h3>
-                        <p id="user-id" class="telegram-id">
-                            <i class="fab fa-telegram"></i> @username
-                        </p>
+                <div class="user-info">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="Avatar" class="user-avatar">
+                    <div>
+                        <h3 id="username">@username</h3>
+                        <p class="user-id">ID: <span id="user-id">123456</span></p>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- محطة التعدين المركزية -->
-        <section class="mining-station animate__animated animate__fadeInUp">
-            <div class="station-header">
-                <h2><i class="fas fa-satellite-dish"></i> مركز الطاقة الكونية</h2>
-                <div class="power-indicator">
-                    <div class="pulse-ring"></div>
-                    <span id="mining-power">⚡ 100 طاقة/ثانية</span>
-                </div>
+        <!-- Balance Card -->
+        <section class="balance-card">
+            <div class="balance-header">
+                <h3><i class="fas fa-wallet"></i> Total Balance</h3>
+                <button class="refresh-btn"><i class="fas fa-sync-alt"></i></button>
             </div>
-
-            <!-- المحرك الفضائي (زر التعدين) -->
-            <div class="quantum-engine">
-                <div class="engine-core">
-                    <div class="plasma-ball">
-                        <div class="plasma-inner"></div>
-                        <div class="plasma-rings">
-                            <div class="ring r1"></div>
-                            <div class="ring r2"></div>
-                            <div class="ring r3"></div>
-                        </div>
-                    </div>
-                    <button id="mine-btn" class="quantum-btn">
-                        <i class="fas fa-bolt"></i>
-                        <span class="btn-text">تفعيل المحرك الكمي</span>
-                        <div class="energy-wave"></div>
-                    </button>
-                </div>
-                
-                <!-- عداد الإنتاج -->
-                <div class="production-display">
-                    <div class="display-panel">
-                        <div class="display-title">
-                            <i class="fas fa-gem"></i> إنتاج الطاقة
-                        </div>
-                        <div class="display-content">
-                            <div class="crystal-counter">
-                                <i class="fas fa-cubes"></i>
-                                <span id="mined-tokens">0</span> 
-                                <span class="token-unit">AMSK</span>
-                            </div>
-                            <div class="rate-display">
-                                <div class="rate-item">
-                                    <i class="fas fa-clock"></i>
-                                    <span>كل 4 ساعات:</span>
-                                    <span class="rate-value">5,000</span>
-                                </div>
-                                <div class="rate-item">
-                                    <i class="fas fa-calendar-day"></i>
-                                    <span>يومياً:</span>
-                                    <span class="rate-value">30,000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="balance-amount">
+                <h2 id="total-balance">0</h2>
+                <p class="balance-unit">AMSK</p>
             </div>
-
-            <!-- معززات الطاقة -->
-            <div class="boosters-section">
-                <h3><i class="fas fa-tachometer-alt"></i> معززات الطاقة المتقدمة</h3>
-                <div class="boosters-grid">
-                    <!-- معزز 1 -->
-                    <div class="booster-card booster-basic" data-boost="1.2">
-                        <div class="booster-icon">
-                            <i class="fas fa-bolt"></i>
-                            <div class="sparkle s1"></div>
-                            <div class="sparkle s2"></div>
-                        </div>
-                        <h4>محرك توربيني</h4>
-                        <p class="booster-desc">+20% قوة تعدين</p>
-                        <div class="booster-price">
-                            <i class="fas fa-coins"></i> 10,000 AMSK
-                        </div>
-                        <button class="activate-booster">
-                            <i class="fas fa-rocket"></i> تفعيل
-                        </button>
-                    </div>
-
-                    <!-- معزز 2 -->
-                    <div class="booster-card booster-pro" data-boost="1.5">
-                        <div class="booster-icon">
-                            <i class="fas fa-atom"></i>
-                            <div class="pulse p1"></div>
-                            <div class="pulse p2"></div>
-                        </div>
-                        <h4>مفاعل كمي</h4>
-                        <p class="booster-desc">+50% قوة تعدين</p>
-                        <div class="booster-price">
-                            <i class="fas fa-coins"></i> 25,000 AMSK
-                        </div>
-                        <button class="activate-booster">
-                            <i class="fas fa-rocket"></i> تفعيل
-                        </button>
-                    </div>
-
-                    <!-- معزز 3 -->
-                    <div class="booster-card booster-ultimate" data-boost="2">
-                        <div class="booster-icon">
-                            <i class="fas fa-infinity"></i>
-                            <div class="orbit o1"></div>
-                            <div class="orbit o2"></div>
-                        </div>
-                        <h4>ثقب دودي</h4>
-                        <p class="booster-desc">+100% قوة تعدين</p>
-                        <div class="booster-price">
-                            <i class="fas fa-coins"></i> 50,000 AMSK
-                        </div>
-                        <button class="activate-booster">
-                            <i class="fas fa-rocket"></i> تفعيل
-                        </button>
-                    </div>
-
-                    <!-- معزز 4 -->
-                    <div class="booster-card booster-galactic" data-boost="3">
-                        <div class="booster-icon">
-                            <i class="fas fa-galaxy"></i>
-                            <div class="nebula-effect"></div>
-                        </div>
-                        <h4>محرك مجري</h4>
-                        <p class="booster-desc">+200% قوة تعدين</p>
-                        <div class="booster-price">
-                            <i class="fas fa-gem"></i> 100,000 AMSK
-                        </div>
-                        <button class="activate-booster">
-                            <i class="fas fa-rocket"></i> تفعيل
-                        </button>
-                    </div>
-                </div>
+            <div class="balance-equivalent">
+                ≈ $<span id="usd-equivalent">0.00</span>
             </div>
         </section>
 
-        <!-- قائمة المهام الفضائية -->
-        <section class="space-missions animate__animated animate__fadeInUp">
-            <div class="missions-header">
-                <h2><i class="fas fa-tasks"></i> المهام الفضائية اليومية</h2>
-                <div class="mission-reward">
-                    <i class="fas fa-award"></i>
-                    <span>جوائز يومية</span>
-                </div>
-            </div>
-            
-            <div class="missions-grid">
-                <div class="mission-card mission-login">
-                    <div class="mission-icon">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <div class="status-dot completed"></div>
-                    </div>
-                    <div class="mission-details">
-                        <h4>تسجيل الدخول اليومي</h4>
-                        <p>ادخل إلى المحطة الفضائية</p>
-                    </div>
-                    <div class="mission-reward">
-                        <span>+500 AMSK</span>
-                    </div>
-                    <button class="mission-claim" disabled>
-                        <i class="fas fa-check"></i> مكتمل
-                    </button>
-                </div>
-
-                <div class="mission-card mission-mining">
-                    <div class="mission-icon">
-                        <i class="fas fa-hammer"></i>
-                        <div class="status-dot in-progress"></div>
-                    </div>
-                    <div class="mission-details">
-                        <h4>التعدين الكمي</h4>
-                        <p>تفعيل المحرك 50 مرة</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 32%"></div>
-                        </div>
-                        <span class="progress-text">16/50</span>
-                    </div>
-                    <div class="mission-reward">
-                        <span>+1,000 AMSK</span>
-                    </div>
-                    <button class="mission-claim">
-                        <i class="fas fa-bolt"></i> ادعي المكافأة
-                    </button>
-                </div>
-
-                <div class="mission-card mission-invite">
-                    <div class="mission-icon">
-                        <i class="fas fa-user-astronaut"></i>
-                        <div class="status-dot pending"></div>
-                    </div>
-                    <div class="mission-details">
-                        <h4>توسيع الأسطول</h4>
-                        <p>ادعُ قائداً فضائياً جديداً</p>
-                    </div>
-                    <div class="mission-reward">
-                        <span>+20,000 AMSK</span>
-                    </div>
-                    <button class="mission-claim">
-                        <i class="fas fa-share-alt"></i> ابدأ المهمة
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- إحصائيات الأسطول -->
-        <section class="fleet-stats animate__animated animate__fadeInUp">
-            <div class="stats-header">
-                <h2><i class="fas fa-chart-network"></i> إحصائيات الأسطول</h2>
-                <div class="total-fleet">
-                    <i class="fas fa-users"></i>
-                    <span>1,847 قائد</span>
-                </div>
-            </div>
-            
-            <div class="stats-cards">
-                <div class="stat-card rank-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-crown"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>مرتبتك</h4>
-                        <p class="stat-value">#847</p>
-                    </div>
-                    <div class="stat-graph">
-                        <div class="graph-bar" style="height: 45%"></div>
-                    </div>
-                </div>
-
-                <div class="stat-card invites-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-satellite"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>أعضاء الأسطول</h4>
-                        <p class="stat-value">7 قادة</p>
-                    </div>
-                    <div class="stat-graph">
-                        <div class="graph-bar" style="height: 70%"></div>
-                    </div>
-                </div>
-
-                <div class="stat-card rewards-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h4>مكافآت الإحالة</h4>
-                        <p class="stat-value">140,000 AMSK</p>
-                    </div>
-                    <div class="stat-graph">
-                        <div class="graph-bar" style="height: 85%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- رابط الدعوة -->
-            <div class="invitation-portal">
-                <div class="portal-header">
-                    <i class="fas fa-door-open"></i>
-                    <h4>بوابة الدعوة الفضائية</h4>
-                </div>
-                <div class="portal-body">
-                    <p class="portal-desc">
-                        شارك هذا الرابط ودعُ قادة جدد للانضمام للأسطول
-                    </p>
-                    <div class="referral-link">
-                        <code id="referral-link">t.me/AlienMuskbot/Musk?start=ref-XXXXXX</code>
-                        <button id="copy-link" class="portal-btn">
-                            <i class="fas fa-copy"></i> نسخ
-                        </button>
-                    </div>
-                    <div class="invite-reward">
-                        <i class="fas fa-gift"></i>
-                        <span>مكافأة الدعوة: <strong>20,000 AMSK</strong> لكل قائد جديد</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- قائمة التنقل الفضائية -->
-        <nav class="space-navigation">
-            <div class="nav-container">
-                <a href="#" class="nav-item active" data-page="home">
-                    <div class="nav-icon">
-                        <i class="fas fa-home"></i>
-                        <div class="nav-glow"></div>
-                    </div>
-                    <span class="nav-label">القيادة</span>
-                </a>
-
-                <a href="#" class="nav-item" data-page="staking">
-                    <div class="nav-icon">
-                        <i class="fas fa-database"></i>
-                        <div class="nav-pulse"></div>
-                    </div>
-                    <span class="nav-label">الستارك</span>
-                </a>
-
-                <a href="#" class="nav-item" data-page="wallet">
-                    <div class="nav-icon">
-                        <i class="fas fa-wallet"></i>
-                        <div class="nav-ripple"></div>
-                    </div>
-                    <span class="nav-label">الخزنة</span>
-                </a>
-            </div>
+        <!-- Navigation Tabs -->
+        <nav class="app-tabs">
+            <button class="tab-btn active" data-tab="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="tab-btn" data-tab="staking">
+                <i class="fas fa-chart-line"></i>
+                <span>Staking</span>
+            </button>
+            <button class="tab-btn" data-tab="wallet">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </button>
         </nav>
-    </div>
 
-    <!-- لوحة المشرف المخفية -->
-    <div id="admin-modal" class="admin-modal">
-        <div class="admin-portal">
-            <div class="portal-gate">
-                <div class="gate-header">
-                    <h3><i class="fas fa-user-secret"></i> بوابة القيادة العليا</h3>
-                    <button class="close-portal">&times;</button>
-                </div>
+        <!-- Content Sections -->
+        <main class="app-content">
+            
+            <!-- Home Tab Content -->
+            <section id="home-tab" class="tab-content active">
                 
-                <div class="gate-body">
-                    <div class="access-form">
-                        <div class="form-icon">
-                            <i class="fas fa-fingerprint"></i>
+                <!-- Mining Section -->
+                <div class="mining-card">
+                    <div class="mining-header">
+                        <h3><i class="fas fa-cogs"></i> Quantum Mining</h3>
+                        <div class="mining-power">
+                            <i class="fas fa-bolt"></i>
+                            <span id="mining-power">100</span> H/s
                         </div>
-                        <h4>تأكيد الهوية القيادية</h4>
-                        <input type="password" id="admin-password" placeholder="أدخل كلمة المرور السرية" class="access-input">
-                        <button id="admin-login" class="access-btn">
-                            <i class="fas fa-lock-open"></i> فتح البوابة
-                        </button>
                     </div>
                     
-                    <div class="admin-dashboard" style="display: none;">
-                        <!-- محتوى لوحة التحكم سيتم إضافته في app.js -->
+                    <div class="mining-display">
+                        <div class="quantum-core">
+                            <div class="plasma-sphere">
+                                <div class="plasma-inner"></div>
+                                <div class="plasma-rings">
+                                    <div class="ring"></div>
+                                    <div class="ring"></div>
+                                    <div class="ring"></div>
+                                </div>
+                            </div>
+                            <button id="mine-btn" class="quantum-btn">
+                                <i class="fas fa-play"></i>
+                                Activate Quantum Core
+                            </button>
+                        </div>
+                        
+                        <div class="mining-stats">
+                            <div class="stat-box">
+                                <div class="stat-label">Mined Today</div>
+                                <div class="stat-value" id="mined-today">0</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">Total Mined</div>
+                                <div class="stat-value" id="total-mined">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Auto Mining Timer -->
+                    <div class="auto-mining-timer">
+                        <div class="timer-header">
+                            <i class="fas fa-clock"></i>
+                            <span>Next Auto-Reward in:</span>
+                        </div>
+                        <div class="timer-display" id="mining-timer">04:00:00</div>
+                        <div class="timer-reward">
+                            <i class="fas fa-gem"></i>
+                            <span>Reward: <strong>5,000 AMSK</strong></span>
+                        </div>
+                        <button id="claim-reward" class="claim-btn" disabled>
+                            <i class="fas fa-gift"></i> Claim Reward
+                        </button>
                     </div>
                 </div>
+
+                <!-- Boosters Section -->
+                <div class="boosters-section">
+                    <h3><i class="fas fa-rocket"></i> Mining Boosters</h3>
+                    <div class="boosters-grid">
+                        <!-- Booster 1 -->
+                        <div class="booster-card" data-boost="1.2">
+                            <div class="booster-icon blue">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h4>Turbo Engine</h4>
+                            <p class="booster-desc">+20% Mining Speed</p>
+                            <div class="booster-price">
+                                <i class="fas fa-coins"></i>
+                                <span>10,000 AMSK</span>
+                            </div>
+                            <button class="buy-booster">Activate</button>
+                        </div>
+                        
+                        <!-- Booster 2 -->
+                        <div class="booster-card" data-boost="1.5">
+                            <div class="booster-icon purple">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <h4>Quantum Reactor</h4>
+                            <p class="booster-desc">+50% Mining Speed</p>
+                            <div class="booster-price">
+                                <i class="fas fa-coins"></i>
+                                <span>25,000 AMSK</span>
+                            </div>
+                            <button class="buy-booster">Activate</button>
+                        </div>
+                        
+                        <!-- Booster 3 -->
+                        <div class="booster-card" data-boost="2">
+                            <div class="booster-icon gold">
+                                <i class="fas fa-infinity"></i>
+                            </div>
+                            <h4>Warp Drive</h4>
+                            <p class="booster-desc">+100% Mining Speed</p>
+                            <div class="booster-price">
+                                <i class="fas fa-coins"></i>
+                                <span>50,000 AMSK</span>
+                            </div>
+                            <button class="buy-booster">Activate</button>
+                        </div>
+                        
+                        <!-- Booster 4 -->
+                        <div class="booster-card" data-boost="3">
+                            <div class="booster-icon cosmic">
+                                <i class="fas fa-galaxy"></i>
+                            </div>
+                            <h4>Galactic Core</h4>
+                            <p class="booster-desc">+200% Mining Speed</p>
+                            <div class="booster-price">
+                                <i class="fas fa-gem"></i>
+                                <span>100,000 AMSK</span>
+                            </div>
+                            <button class="buy-booster">Activate</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Section -->
+                <div class="referral-section">
+                    <div class="referral-card">
+                        <div class="referral-header">
+                            <i class="fas fa-users"></i>
+                            <h3>Invite & Earn</h3>
+                        </div>
+                        <p class="referral-desc">Invite friends and earn 20,000 AMSK for each successful referral</p>
+                        <div class="referral-code">
+                            <span class="code-label">Your Referral Code:</span>
+                            <div class="code-display">
+                                <code id="referral-code">ALIEN-XXXX</code>
+                                <button id="copy-code" class="copy-btn">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="referral-stats">
+                            <div class="stat">
+                                <div class="stat-value" id="total-refs">0</div>
+                                <div class="stat-label">Total Referrals</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value" id="ref-earnings">0</div>
+                                <div class="stat-label">Total Earnings</div>
+                            </div>
+                        </div>
+                        <button class="share-btn">
+                            <i class="fas fa-share-alt"></i> Share Referral Link
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Staking Tab Content -->
+            <section id="staking-tab" class="tab-content">
+                <div class="staking-header">
+                    <h2><i class="fas fa-chart-line"></i> Staking Plans</h2>
+                    <p class="staking-subtitle">Stake USDT, earn AMSK rewards</p>
+                </div>
+                
+                <!-- Weekly Plans -->
+                <div class="plan-section">
+                    <h3 class="section-title">Weekly Plans (7 Days)</h3>
+                    <div class="plans-grid">
+                        <!-- Plan 1 -->
+                        <div class="plan-card silver">
+                            <div class="plan-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h4>Silver Saucer</h4>
+                            <div class="plan-amount">10 USDT</div>
+                            <div class="plan-reward">
+                                <i class="fas fa-gem"></i>
+                                <span>5,000 AMSK Daily</span>
+                            </div>
+                            <div class="plan-total">
+                                Total: <strong>35,000 AMSK</strong>
+                            </div>
+                            <button class="stake-btn" data-plan="weekly-10">Stake Now</button>
+                        </div>
+                        
+                        <!-- Plan 2 -->
+                        <div class="plan-card gold">
+                            <div class="plan-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <h4>Gold Galaxy</h4>
+                            <div class="plan-amount">50 USDT</div>
+                            <div class="plan-reward">
+                                <i class="fas fa-gem"></i>
+                                <span>25,000 AMSK Daily</span>
+                            </div>
+                            <div class="plan-total">
+                                Total: <strong>175,000 AMSK</strong>
+                            </div>
+                            <button class="stake-btn" data-plan="weekly-50">Stake Now</button>
+                        </div>
+                        
+                        <!-- Plan 3 -->
+                        <div class="plan-card diamond">
+                            <div class="plan-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h4>Diamond Nebula</h4>
+                            <div class="plan-amount">100 USDT</div>
+                            <div class="plan-reward">
+                                <i class="fas fa-gem"></i>
+                                <span>50,000 AMSK Daily</span>
+                            </div>
+                            <div class="plan-total">
+                                Total: <strong>350,000 AMSK</strong>
+                            </div>
+                            <button class="stake-btn" data-plan="weekly-100">Stake Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Monthly Plans -->
+                <div class="plan-section">
+                    <h3 class="section-title">Monthly Plans (30 Days)</h3>
+                    <div class="plans-grid">
+                        <!-- Repeat similar structure for monthly plans -->
+                    </div>
+                </div>
+                
+                <!-- 90-Day Plans -->
+                <div class="plan-section">
+                    <h3 class="section-title">90-Day Plans</h3>
+                    <div class="plans-grid">
+                        <!-- Repeat similar structure for 90-day plans -->
+                    </div>
+                </div>
+                
+                <!-- VIP Plan -->
+                <div class="vip-plan">
+                    <div class="vip-badge">
+                        <i class="fas fa-gem"></i>
+                        VIP EXCLUSIVE
+                    </div>
+                    <div class="vip-content">
+                        <h3>Cosmic Whale Plan</h3>
+                        <div class="vip-amount">10,000 USDT</div>
+                        <div class="vip-features">
+                            <p><i class="fas fa-check"></i> 500,000 AMSK Daily</p>
+                            <p><i class="fas fa-check"></i> +50% Mining Power</p>
+                            <p><i class="fas fa-check"></i> Priority Support</p>
+                            <p><i class="fas fa-check"></i> Exclusive NFT</p>
+                        </div>
+                        <button class="vip-btn">Become VIP</button>
+                    </div>
+                </div>
+
+                <!-- Active Stakes -->
+                <div class="active-stakes">
+                    <h3><i class="fas fa-history"></i> Active Stakes</h3>
+                    <div class="stakes-list" id="stakes-list">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Wallet Tab Content -->
+            <section id="wallet-tab" class="tab-content">
+                <div class="wallet-header">
+                    <h2><i class="fas fa-wallet"></i> Multi-Currency Wallet</h2>
+                    <p class="wallet-subtitle">Manage all your assets in one place</p>
+                </div>
+                
+                <!-- Assets List -->
+                <div class="assets-section">
+                    <!-- AMSK Asset -->
+                    <div class="asset-card amsk">
+                        <div class="asset-header">
+                            <div class="asset-info">
+                                <div class="asset-icon">
+                                    <i class="fas fa-mask"></i>
+                                </div>
+                                <div>
+                                    <h4>Alien Mask (AMSK)</h4>
+                                    <p class="asset-price">$0.0002 per AMSK</p>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="amsk-balance">0</div>
+                                <div class="balance-value">≈ $<span id="amsk-value">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="asset-actions">
+                            <button class="asset-btn send"><i class="fas fa-paper-plane"></i> Send</button>
+                            <button class="asset-btn receive"><i class="fas fa-qrcode"></i> Receive</button>
+                            <button class="asset-btn swap"><i class="fas fa-exchange-alt"></i> Swap</button>
+                        </div>
+                    </div>
+                    
+                    <!-- USDT Asset -->
+                    <div class="asset-card usdt">
+                        <div class="asset-header">
+                            <div class="asset-info">
+                                <div class="asset-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div>
+                                    <h4>Tether (USDT)</h4>
+                                    <p class="asset-price">BEP20 Network</p>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="usdt-balance">0</div>
+                                <div class="balance-value">≈ $<span id="usdt-value">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="asset-actions">
+                            <button class="asset-btn deposit" data-currency="USDT">
+                                <i class="fas fa-arrow-down"></i> Deposit
+                            </button>
+                            <button class="asset-btn withdraw" data-currency="USDT">
+                                <i class="fas fa-arrow-up"></i> Withdraw
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Repeat for BNB and TON -->
+                    
+                </div>
+
+                <!-- Deposit/Withdraw Modal -->
+                <div class="transaction-modal" id="deposit-modal">
+                    <div class="modal-content">
+                        <h3><i class="fas fa-arrow-down"></i> Deposit USDT</h3>
+                        <div class="deposit-info">
+                            <p>Send USDT to the address below:</p>
+                            <div class="wallet-address">
+                                <code id="deposit-address">0x742d35Cc6634C0532925a3b... </code>
+                                <button class="copy-address">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="deposit-note">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Deposits are processed manually within 1-5 minutes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction History -->
+                <div class="history-section">
+                    <h3><i class="fas fa-history"></i> Transaction History</h3>
+                    <div class="history-list" id="transaction-history">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Admin Panel (Hidden) -->
+        <div class="admin-panel" id="admin-panel">
+            <div class="admin-content">
+                <!-- Admin interface will be loaded here -->
             </div>
         </div>
+
     </div>
 
-    <!-- نافذة الـBooster -->
-    <div id="booster-modal" class="booster-modal">
-        <div class="booster-portal">
-            <!-- محتوى تفعيل المعززات -->
-        </div>
-    </div>
+    <!-- Modals -->
+    <div class="modal-overlay" id="modal-overlay"></div>
 
-    <!-- الإشعارات -->
-    <div id="notifications" class="notifications-container"></div>
-
-    <!-- الأصوات -->
-    <audio id="mine-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
-    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
-    <audio id="success-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
-            authDomain: "tatbi9-681bf.firebaseapp.com",
-            projectId: "tatbi9-681bf",
-            storageBucket: "tatbi9-681bf.firebasestorage.app",
-            messagingSenderId: "863237064748",
-            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        
-        // جعل المتغيرات عالمية
-        window.firebaseApp = app;
-        window.db = db;
-        window.auth = auth;
-    </script>
-
-    <!-- ملفات التطبيق -->
+    <!-- Scripts -->
+    <script type="module" src="firebase.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
