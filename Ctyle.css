@@ -1,24 +1,36 @@
-/* ملف style.css - التصميم الفضائي الاحترافي */
+/* Alien Mask - Professional Crypto App */
 
 :root {
-    --space-black: #0a0a1a;
-    --deep-space: #0f1b2d;
-    --nebula-blue: #1a237e;
-    --star-white: #e3f2fd;
-    --plasma-purple: #7b1fa2;
-    --quantum-cyan: #00bcd4;
-    --energy-green: #00e676;
-    --warp-yellow: #ffd600;
-    --alien-green: #76ff03;
-    --danger-red: #ff1744;
-    --hologram-teal: #18ffff;
+    /* Color Palette */
+    --primary: #6C63FF;
+    --primary-dark: #554FD8;
+    --secondary: #00D4AA;
+    --accent: #FF6584;
+    --dark: #121826;
+    --darker: #0A0F1C;
+    --light: #F8FAFC;
+    --gray: #64748B;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
     
-    --glow-light: 0 0 20px rgba(24, 255, 255, 0.7);
-    --glow-medium: 0 0 30px rgba(123, 31, 162, 0.8);
-    --glow-strong: 0 0 40px rgba(0, 188, 212, 0.9);
-    --shadow-deep: 0 10px 30px rgba(0, 0, 0, 0.5);
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #6C63FF 0%, #554FD8 100%);
+    --gradient-secondary: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+    --gradient-accent: linear-gradient(135deg, #FF6584 0%, #FF3366 100%);
+    --gradient-dark: linear-gradient(135deg, #121826 0%, #0A0F1C 100%);
+    --gradient-cosmic: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.25);
+    --glow-blue: 0 0 20px rgba(108, 99, 255, 0.5);
+    --glow-green: 0 0 20px rgba(0, 212, 170, 0.5);
 }
 
+/* Reset & Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -26,290 +38,308 @@
 }
 
 body {
-    font-family: 'Cairo', 'Orbitron', sans-serif;
-    background: var(--space-black);
-    color: var(--star-white);
+    font-family: 'Poppins', sans-serif;
+    background: var(--darker);
+    color: var(--light);
+    line-height: 1.6;
     min-height: 100vh;
-    overflow-x: hidden;
-    direction: rtl;
+    padding: 0;
+    margin: 0;
 }
 
-/* خلفية الفضاء المتحركة */
-.space-background {
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--dark);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Effects */
+.app-container::before {
+    content: '';
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.stars, .stars2, .stars3 {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-}
-
-.stars { animation: twinkle 5s infinite; }
-.stars2 { animation: twinkle 7s infinite 1s; }
-.stars3 { animation: twinkle 9s infinite 2s; }
-
-@keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-}
-
-/* الكواكب والأجسام الفضائية */
-.planet {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--plasma-purple), transparent);
-    box-shadow: var(--glow-medium);
-}
-
-.planet-1 {
-    width: 150px;
-    height: 150px;
-    top: 10%;
-    left: 10%;
-    animation: orbit 40s linear infinite;
-}
-
-.planet-2 {
-    width: 100px;
-    height: 100px;
-    bottom: 20%;
-    right: 15%;
-    animation: orbit 30s linear infinite reverse;
-}
-
-.ufo, .alien {
-    position: absolute;
-    font-size: 24px;
-    color: var(--quantum-cyan);
-    animation: float 15s ease-in-out infinite;
-}
-
-.ufo-1 { top: 30%; right: 20%; animation-delay: 0s; }
-.ufo-2 { bottom: 30%; left: 25%; animation-delay: 3s; }
-.alien-1 { top: 40%; left: 15%; animation-delay: 5s; }
-.alien-2 { bottom: 40%; right: 20%; animation-delay: 7s; }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
-}
-
-@keyframes orbit {
-    from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
-    to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
-}
-
-/* الحاوية الرئيسية */
-.container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 15px;
-    position: relative;
-    z-index: 1;
-}
-
-/* سفينة القيادة */
-.command-center {
-    background: linear-gradient(135deg, rgba(15, 27, 45, 0.9), rgba(26, 35, 126, 0.8));
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 188, 212, 0.3);
-    border-radius: 20px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-deep), var(--glow-light);
-    position: relative;
-    overflow: hidden;
-}
-
-.command-center::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--quantum-cyan), transparent);
-    animation: scan 3s linear infinite;
+    height: 300px;
+    background: var(--gradient-cosmic);
+    opacity: 0.1;
+    z-index: -1;
 }
 
-@keyframes scan {
-    0% { left: -100%; }
-    100% { left: 100%; }
+/* Header Styles */
+.app-header {
+    background: var(--gradient-dark);
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.spaceship-panel {
+.logo-section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 15px;
 }
 
-.hologram-logo {
-    flex: 1;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.hologram-effect {
-    position: relative;
-    padding: 10px;
-    border: 1px solid rgba(24, 255, 255, 0.3);
-    border-radius: 15px;
-    background: rgba(0, 0, 0, 0.4);
+.logo i {
+    font-size: 32px;
+    color: var(--primary);
+    background: rgba(108, 99, 255, 0.1);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 
-.hologram-effect h1 {
+.logo h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 20px;
-    color: var(--hologram-teal);
-    margin-bottom: 5px;
-    text-shadow: 0 0 10px var(--quantum-cyan);
+    font-size: 22px;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .token-price {
-    font-size: 14px;
-    color: var(--energy-green);
-}
-
-.glow {
-    color: var(--warp-yellow);
-    text-shadow: 0 0 10px currentColor;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-.commander-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.profile-hologram {
-    position: relative;
-}
-
-.hologram-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid var(--quantum-cyan);
-    box-shadow: var(--glow-light);
-}
-
-.rank-badge {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-}
-
-.commander-info h3 {
-    font-size: 16px;
-    color: var(--star-white);
-    margin-bottom: 3px;
-}
-
-.telegram-id {
     font-size: 12px;
-    color: var(--quantum-cyan);
-    opacity: 0.8;
+    color: var(--gray);
+    margin-top: 2px;
 }
 
-/* محطة التعدين */
-.mining-station {
-    background: rgba(15, 27, 45, 0.8);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(123, 31, 162, 0.4);
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    border: 2px solid var(--primary);
+    background: var(--darker);
+}
+
+.user-info h3 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.user-id {
+    font-size: 11px;
+    color: var(--gray);
+}
+
+/* Balance Card */
+.balance-card {
+    background: var(--gradient-dark);
+    margin: 20px;
+    padding: 25px;
     border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border: 1px solid rgba(108, 99, 255, 0.2);
+    box-shadow: var(--shadow-lg), var(--glow-blue);
     position: relative;
     overflow: hidden;
 }
 
-.station-header {
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(108, 99, 255, 0.1) 0%, transparent 70%);
+    z-index: -1;
+}
+
+.balance-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 188, 212, 0.3);
 }
 
-.station-header h2 {
+.balance-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    color: var(--gray);
+}
+
+.refresh-btn {
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    color: var(--primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    background: rgba(108, 99, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.balance-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.balance-amount h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 40px;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.balance-unit {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+.balance-equivalent {
+    color: var(--secondary);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Navigation Tabs */
+.app-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0 20px 20px;
+    background: rgba(10, 15, 28, 0.8);
+    border-radius: 15px;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: var(--gray);
+    padding: 12px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.tab-btn i {
     font-size: 18px;
-    color: var(--hologram-teal);
+}
+
+.tab-btn.active {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.tab-btn:hover:not(.active) {
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--primary);
+}
+
+/* Content Area */
+.app-content {
+    padding: 0 20px 100px;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mining Card */
+.mining-card {
+    background: var(--gradient-dark);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    box-shadow: var(--shadow-lg);
+}
+
+.mining-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.mining-header h3 {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 18px;
+    color: var(--light);
 }
 
-.power-indicator {
-    position: relative;
+.mining-power {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 212, 170, 0.1);
     padding: 8px 15px;
-    background: rgba(0, 0, 0, 0.5);
     border-radius: 10px;
-    border: 1px solid var(--energy-green);
+    color: var(--secondary);
+    font-weight: 600;
+    border: 1px solid rgba(0, 212, 170, 0.3);
 }
 
-.pulse-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    border: 2px solid var(--energy-green);
-    animation: pulse-ring 2s infinite;
-}
-
-@keyframes pulse-ring {
-    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
-}
-
-/* المحرك الكمي */
-.quantum-engine {
-    text-align: center;
+.quantum-core {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 30px;
 }
 
-.engine-core {
+.plasma-sphere {
     position: relative;
-    display: inline-block;
+    width: 150px;
+    height: 150px;
     margin-bottom: 20px;
-}
-
-.plasma-ball {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(123, 31, 162, 0.3), transparent 70%);
-    z-index: 1;
 }
 
 .plasma-inner {
@@ -319,102 +349,191 @@ body {
     transform: translate(-50%, -50%);
     width: 80px;
     height: 80px;
+    background: var(--gradient-secondary);
     border-radius: 50%;
-    background: radial-gradient(circle, var(--plasma-purple), var(--quantum-cyan));
-    animation: plasma-spin 3s linear infinite;
-}
-
-@keyframes plasma-spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    animation: pulse 2s ease-in-out infinite;
 }
 
 .plasma-rings {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-}
-
-.ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 2px solid var(--quantum-cyan);
-    border-radius: 50%;
-    animation: ring-expand 3s ease-out infinite;
-}
-
-.r1 { width: 120px; height: 120px; animation-delay: 0s; }
-.r2 { width: 160px; height: 160px; animation-delay: 1s; }
-.r3 { width: 200px; height: 200px; animation-delay: 2s; }
-
-@keyframes ring-expand {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(0.8); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
-}
-
-.quantum-btn {
-    position: relative;
-    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
-    color: white;
-    border: none;
-    padding: 20px 40px;
-    font-size: 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    z-index: 2;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 30px rgba(123, 31, 162, 0.8);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin: 0 auto;
-}
-
-.quantum-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 40px rgba(0, 188, 212, 0.9);
-}
-
-.quantum-btn:active {
-    transform: scale(0.98);
-}
-
-.energy-wave {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 50px;
-    background: radial-gradient(circle, transparent 30%, rgba(0, 188, 212, 0.3) 70%);
-    animation: wave-pulse 2s infinite;
 }
 
-@keyframes wave-pulse {
-    0% { opacity: 0.5; transform: scale(1); }
-    100% { opacity: 0; transform: scale(1.5); }
+.plasma-rings .ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    opacity: 0;
 }
 
-/* معززات الطاقة */
-.boosters-section {
-    margin-top: 30px;
+.plasma-rings .ring:nth-child(1) {
+    width: 120px;
+    height: 120px;
+    animation: ringExpand 3s ease-out infinite;
 }
 
-.boosters-section h3 {
+.plasma-rings .ring:nth-child(2) {
+    width: 140px;
+    height: 140px;
+    animation: ringExpand 3s ease-out infinite 1s;
+}
+
+.plasma-rings .ring:nth-child(3) {
+    width: 160px;
+    height: 160px;
+    animation: ringExpand 3s ease-out infinite 2s;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes ringExpand {
+    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.quantum-btn {
+    background: var(--gradient-secondary);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 15px;
     font-size: 16px;
-    color: var(--warp-yellow);
-    margin-bottom: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
+}
+
+.quantum-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(0, 212, 170, 0.5);
+}
+
+.quantum-btn:active {
+    transform: translateY(0);
+}
+
+.mining-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--light);
+}
+
+/* Auto Mining Timer */
+.auto-mining-timer {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 25px;
+    border: 1px solid rgba(108, 99, 255, 0.3);
+}
+
+.timer-header {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-bottom: 15px;
+    color: var(--primary);
+    font-size: 14px;
+}
+
+.timer-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--secondary);
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 212, 170, 0.5);
+}
+
+.timer-reward {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: var(--light);
+    font-size: 14px;
+}
+
+.timer-reward strong {
+    color: var(--secondary);
+}
+
+.claim-btn {
+    width: 100%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.claim-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.claim-btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+}
+
+/* Boosters Section */
+.boosters-section {
+    margin-bottom: 25px;
+}
+
+.boosters-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--light);
 }
 
 .boosters-grid {
@@ -424,626 +543,790 @@ body {
 }
 
 .booster-card {
-    background: linear-gradient(135deg, rgba(26, 35, 126, 0.6), rgba(15, 27, 45, 0.8));
-    border: 1px solid rgba(0, 188, 212, 0.3);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: 15px;
+    padding: 20px;
     text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 .booster-card:hover {
     transform: translateY(-5px);
-    border-color: var(--quantum-cyan);
-    box-shadow: var(--glow-light);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
 }
 
 .booster-icon {
-    font-size: 24px;
-    color: var(--quantum-cyan);
-    margin-bottom: 10px;
-    position: relative;
-    height: 50px;
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
 }
 
-.sparkle, .pulse, .orbit {
-    position: absolute;
-    background: var(--quantum-cyan);
-    border-radius: 50%;
+.booster-icon.blue {
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--primary);
+    border: 2px solid rgba(108, 99, 255, 0.3);
 }
 
-.sparkle { width: 6px; height: 6px; }
-.pulse { width: 8px; height: 8px; }
-.orbit { width: 10px; height: 10px; }
+.booster-icon.purple {
+    background: rgba(117, 75, 162, 0.1);
+    color: #754BA2;
+    border: 2px solid rgba(117, 75, 162, 0.3);
+}
+
+.booster-icon.gold {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+    border: 2px solid rgba(245, 158, 11, 0.3);
+}
+
+.booster-icon.cosmic {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667EEA;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+}
 
 .booster-card h4 {
-    font-size: 14px;
-    color: var(--star-white);
-    margin-bottom: 5px;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--light);
 }
 
 .booster-desc {
     font-size: 12px;
-    color: var(--energy-green);
-    margin-bottom: 10px;
+    color: var(--secondary);
+    margin-bottom: 15px;
 }
 
 .booster-price {
-    font-size: 12px;
-    color: var(--warp-yellow);
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--warning);
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.activate-booster {
-    background: linear-gradient(45deg, var(--plasma-purple), var(--quantum-cyan));
-    color: white;
-    border: none;
-    padding: 8px 15px;
+.buy-booster {
+    width: 100%;
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    padding: 12px;
     border-radius: 10px;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
+}
+
+.buy-booster:hover {
+    background: rgba(108, 99, 255, 0.2);
+}
+
+/* Referral Section */
+.referral-section {
+    margin-bottom: 25px;
+}
+
+.referral-card {
+    background: var(--gradient-dark);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 101, 132, 0.2);
+    box-shadow: var(--shadow-lg);
+}
+
+.referral-header {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 5px;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
-.activate-booster:hover {
-    background: linear-gradient(45deg, var(--quantum-cyan), var(--plasma-purple));
+.referral-header i {
+    color: var(--accent);
+    font-size: 24px;
 }
 
-/* المهام الفضائية */
-.space-missions {
-    background: rgba(15, 27, 45, 0.8);
-    border: 1px solid rgba(118, 255, 3, 0.3);
-    border-radius: 20px;
-    padding: 20px;
+.referral-header h3 {
+    font-size: 20px;
+    color: var(--light);
+}
+
+.referral-desc {
+    color: var(--gray);
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.referral-code {
     margin-bottom: 20px;
 }
 
-.missions-header {
+.code-label {
+    display: block;
+    font-size: 12px;
+    color: var(--gray);
+    margin-bottom: 8px;
+}
+
+.code-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-display code {
+    flex: 1;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--light);
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: rgba(108, 99, 255, 0.2);
+}
+
+.referral-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.referral-stats .stat {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+}
+
+.referral-stats .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--light);
+    margin-bottom: 5px;
+}
+
+.referral-stats .stat-label {
+    font-size: 11px;
+    color: var(--gray);
+}
+
+.share-btn {
+    width: 100%;
+    background: var(--gradient-accent);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 101, 132, 0.5);
+}
+
+/* Staking Styles */
+.staking-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.staking-header h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--light);
+}
+
+.staking-subtitle {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+.plan-section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 18px;
+    color: var(--light);
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+
+.plans-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.plan-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    border: 2px solid;
+    transition: all 0.3s ease;
+}
+
+.plan-card.silver {
+    border-color: rgba(192, 192, 192, 0.3);
+}
+
+.plan-card.gold {
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+.plan-card.diamond {
+    border-color: rgba(185, 242, 255, 0.3);
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.plan-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
+}
+
+.plan-card.silver .plan-icon {
+    background: rgba(192, 192, 192, 0.1);
+    color: silver;
+}
+
+.plan-card.gold .plan-icon {
+    background: rgba(255, 215, 0, 0.1);
+    color: gold;
+}
+
+.plan-card.diamond .plan-icon {
+    background: rgba(185, 242, 255, 0.1);
+    color: #B9F2FF;
+}
+
+.plan-card h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--light);
+}
+
+.plan-amount {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--light);
+    margin-bottom: 15px;
+}
+
+.plan-reward {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    color: var(--secondary);
+    font-size: 14px;
+}
+
+.plan-total {
+    color: var(--gray);
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.plan-total strong {
+    color: var(--light);
+}
+
+.stake-btn {
+    width: 100%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stake-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* VIP Plan */
+.vip-plan {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 20px;
+    padding: 2px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.vip-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #000;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vip-content {
+    background: var(--darker);
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+}
+
+.vip-content h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #FFD700;
+}
+
+.vip-amount {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #FFD700;
+    margin-bottom: 20px;
+}
+
+.vip-features {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.vip-features p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: var(--light);
+    font-size: 14px;
+}
+
+.vip-features i {
+    color: #FFD700;
+}
+
+.vip-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #000;
+    border: none;
+    padding: 16px;
+    border-radius: 15px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.vip-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+/* Active Stakes */
+.active-stakes {
+    margin-top: 30px;
+}
+
+.active-stakes h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--light);
+}
+
+.stakes-list {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Wallet Styles */
+.wallet-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.wallet-header h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--light);
+}
+
+.wallet-subtitle {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+.assets-section {
+    display: grid;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.asset-card {
+    background: var(--gradient-dark);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.asset-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.asset-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(118, 255, 3, 0.3);
+    margin-bottom: 20px;
 }
 
-.missions-header h2 {
-    font-size: 18px;
-    color: var(--alien-green);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.mission-reward {
-    font-size: 14px;
-    color: var(--warp-yellow);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.missions-grid {
-    display: grid;
-    gap: 10px;
-}
-
-.mission-card {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(118, 255, 3, 0.2);
-    border-radius: 15px;
-    padding: 15px;
+.asset-info {
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
-.mission-icon {
-    position: relative;
+.asset-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 20px;
-    color: var(--alien-green);
 }
 
-.status-dot {
-    position: absolute;
-    bottom: -3px;
-    right: -3px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+.asset-card.amsk .asset-icon {
+    background: rgba(108, 99, 255, 0.1);
+    color: var(--primary);
+    border: 2px solid rgba(108, 99, 255, 0.3);
 }
 
-.completed { background: var(--energy-green); }
-.in-progress { background: var(--warp-yellow); }
-.pending { background: var(--danger-red); }
-
-.mission-details {
-    flex: 1;
+.asset-card.usdt .asset-icon {
+    background: rgba(0, 212, 170, 0.1);
+    color: var(--secondary);
+    border: 2px solid rgba(0, 212, 170, 0.3);
 }
 
-.mission-details h4 {
-    font-size: 14px;
-    color: var(--star-white);
-    margin-bottom: 5px;
-}
-
-.mission-details p {
-    font-size: 12px;
-    color: var(--quantum-cyan);
-    margin-bottom: 8px;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 5px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--alien-green), var(--energy-green));
-    border-radius: 3px;
-}
-
-.progress-text {
-    font-size: 10px;
-    color: var(--star-white);
-}
-
-.mission-claim {
-    background: linear-gradient(45deg, var(--alien-green), var(--energy-green));
-    color: var(--space-black);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 10px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.mission-claim:disabled {
-    background: #666;
-    cursor: not-allowed;
-}
-
-/* إحصائيات الأسطول */
-.fleet-stats {
-    background: rgba(15, 27, 45, 0.8);
-    border: 1px solid rgba(255, 214, 0, 0.3);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 80px;
-}
-
-.stats-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 214, 0, 0.3);
-}
-
-.stats-header h2 {
+.asset-info h4 {
     font-size: 18px;
-    color: var(--warp-yellow);
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    color: var(--light);
+    margin-bottom: 5px;
 }
 
-.total-fleet {
-    font-size: 14px;
-    color: var(--quantum-cyan);
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.asset-price {
+    font-size: 12px;
+    color: var(--gray);
 }
 
-.stats-cards {
+.asset-balance {
+    text-align: right;
+}
+
+.balance-amount {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--light);
+    margin-bottom: 5px;
+}
+
+.balance-value {
+    font-size: 12px;
+    color: var(--gray);
+}
+
+.asset-actions {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-bottom: 20px;
 }
 
-.stat-card {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 15px;
-    padding: 15px;
-    text-align: center;
-    border: 1px solid rgba(0, 188, 212, 0.2);
-}
-
-.stat-icon {
-    font-size: 20px;
-    color: var(--quantum-cyan);
-    margin-bottom: 10px;
-}
-
-.stat-info h4 {
-    font-size: 12px;
-    color: var(--star-white);
-    margin-bottom: 5px;
-}
-
-.stat-value {
-    font-size: 16px;
-    font-weight: bold;
-    color: var(--hologram-teal);
-    font-family: 'Orbitron', sans-serif;
-}
-
-.stat-graph {
-    height: 40px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-}
-
-.graph-bar {
-    width: 10px;
-    background: linear-gradient(to top, var(--quantum-cyan), var(--hologram-teal));
-    border-radius: 5px 5px 0 0;
-}
-
-/* بوابة الدعوة */
-.invitation-portal {
-    background: linear-gradient(135deg, rgba(123, 31, 162, 0.6), rgba(0, 188, 212, 0.6));
-    border-radius: 15px;
-    padding: 15px;
-    margin-top: 20px;
-}
-
-.portal-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    color: white;
-}
-
-.portal-header h4 {
-    font-size: 16px;
-}
-
-.portal-body {
-    color: white;
-}
-
-.portal-desc {
-    font-size: 14px;
-    margin-bottom: 15px;
-    opacity: 0.9;
-}
-
-.referral-link {
-    background: rgba(0, 0, 0, 0.3);
+.asset-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--light);
+    padding: 12px;
     border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.referral-link code {
-    flex: 1;
-    font-family: monospace;
     font-size: 12px;
-    color: var(--star-white);
-    word-break: break-all;
-}
-
-.portal-btn {
-    background: white;
-    color: var(--plasma-purple);
-    border: none;
-    padding: 8px 15px;
-    border-radius: 8px;
-    font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-weight: bold;
-}
-
-.invite-reward {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: var(--warp-yellow);
-}
-
-/* التنقل الفضائي */
-.space-navigation {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(10, 10, 26, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0, 188, 212, 0.3);
-    z-index: 1000;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-around;
-    padding: 10px 0;
-}
-
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-decoration: none;
-    color: var(--quantum-cyan);
-    opacity: 0.7;
-    transition: all 0.3s ease;
-    position: relative;
-    padding: 5px;
-}
-
-.nav-item.active {
-    opacity: 1;
-    color: var(--hologram-teal);
-}
-
-.nav-item.active .nav-icon {
-    transform: translateY(-5px);
-}
-
-.nav-icon {
-    font-size: 22px;
-    margin-bottom: 5px;
-    position: relative;
+    justify-content: center;
+    gap: 8px;
     transition: all 0.3s ease;
 }
 
-.nav-glow, .nav-pulse, .nav-ripple {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    opacity: 0;
+.asset-btn:hover {
+    background: rgba(108, 99, 255, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
-.nav-item.active .nav-glow {
-    width: 40px;
-    height: 40px;
-    background: radial-gradient(circle, rgba(24, 255, 255, 0.3), transparent);
-    animation: nav-glow 2s infinite;
-}
+.asset-btn.send { border-color: rgba(239, 68, 68, 0.3); }
+.asset-btn.receive { border-color: rgba(16, 185, 129, 0.3); }
+.asset-btn.swap { border-color: rgba(108, 99, 255, 0.3); }
+.asset-btn.deposit { border-color: rgba(0, 212, 170, 0.3); }
+.asset-btn.withdraw { border-color: rgba(245, 158, 11, 0.3); }
 
-.nav-item.active .nav-pulse {
-    width: 30px;
-    height: 30px;
-    border: 2px solid rgba(123, 31, 162, 0.5);
-    animation: nav-pulse 3s infinite;
-}
-
-.nav-item.active .nav-ripple {
-    width: 35px;
-    height: 35px;
-    border: 2px solid rgba(0, 188, 212, 0.5);
-    animation: nav-ripple 4s infinite;
-}
-
-@keyframes nav-glow {
-    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
-}
-
-@keyframes nav-pulse {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.2); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
-}
-
-@keyframes nav-ripple {
-    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.5); }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
-}
-
-.nav-label {
-    font-size: 11px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.nav-item.active .nav-label {
-    color: var(--hologram-teal);
-    text-shadow: 0 0 10px var(--quantum-cyan);
-}
-
-/* لوحة المشرف */
-.admin-modal {
+/* Transaction Modal */
+.transaction-modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background: rgba(0, 0, 0, 0.9);
-    z-index: 2000;
-    backdrop-filter: blur(5px);
-}
-
-.admin-portal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 400px;
-    background: linear-gradient(135deg, #1a0033, #0a0a1a);
-    border: 2px solid var(--danger-red);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 0 50px rgba(255, 23, 68, 0.5);
-}
-
-.portal-gate {
-    padding: 30px;
-}
-
-.gate-header {
-    display: flex;
-    justify-content: space-between;
+    z-index: 1000;
     align-items: center;
-    margin-bottom: 30px;
-    color: var(--danger-red);
+    justify-content: center;
+    padding: 20px;
 }
 
-.close-portal {
-    background: none;
-    border: none;
-    color: var(--danger-red);
-    font-size: 30px;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.access-form {
-    text-align: center;
-}
-
-.form-icon {
-    font-size: 50px;
-    color: var(--danger-red);
-    margin-bottom: 20px;
-}
-
-.access-input {
+.modal-content {
+    background: var(--gradient-dark);
+    border-radius: 25px;
+    padding: 30px;
     width: 100%;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid var(--danger-red);
-    border-radius: 10px;
-    color: white;
-    font-size: 16px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-family: 'Orbitron', sans-serif;
+    max-width: 400px;
+    border: 1px solid var(--primary);
+    box-shadow: var(--shadow-xl), var(--glow-blue);
 }
 
-.access-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(45deg, var(--danger-red), #ff5252);
-    color: white;
-    border: none;
+.modal-content h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--light);
+}
+
+.deposit-info p {
+    color: var(--gray);
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.wallet-address {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.wallet-address code {
+    flex: 1;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--light);
+    word-break: break-all;
+}
+
+.copy-address {
+    background: rgba(108, 99, 255, 0.1);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
     border-radius: 10px;
-    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: bold;
-    letter-spacing: 2px;
     transition: all 0.3s ease;
 }
 
-.access-btn:hover {
-    background: linear-gradient(45deg, #ff5252, var(--danger-red));
-    transform: scale(1.02);
+.copy-address:hover {
+    background: rgba(108, 99, 255, 0.2);
 }
 
-/* الإشعارات */
-.notifications-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 3000;
-    max-width: 300px;
-}
-
-.notification {
-    background: linear-gradient(135deg, var(--plasma-purple), var(--quantum-cyan));
-    color: white;
+.deposit-note {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 12px;
     padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    animation: slideIn 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--warning);
+    font-size: 13px;
 }
 
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+.deposit-note i {
+    font-size: 16px;
+    margin-top: 2px;
 }
 
-/* التجاوب مع الشاشات الصغيرة */
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
+/* History Section */
+.history-section {
+    margin-top: 30px;
+}
+
+.history-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--light);
+}
+
+.history-list {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Admin Panel */
+.admin-panel {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    backdrop-filter: blur(10px);
+}
+
+.admin-content {
+    background: var(--gradient-dark);
+    border-radius: 25px;
+    padding: 30px;
+    margin: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 2px solid var(--danger);
+    box-shadow: 0 0 40px rgba(239, 68, 68, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .app-container {
+        max-width: 100%;
     }
     
-    .spaceship-panel {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-    
-    .commander-profile {
-        flex-direction: column;
+    .balance-amount h2 {
+        font-size: 32px;
     }
     
     .boosters-grid {
         grid-template-columns: 1fr;
     }
     
-    .stats-cards {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+    .asset-actions {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .mission-card {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-    
-    .mission-details {
-        text-align: center;
+    .plans-grid {
+        grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 480px) {
-    .stats-cards {
-        grid-template-columns: 1fr;
-    }
-    
-    .station-header {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .quantum-btn {
-        padding: 15px 30px;
-        font-size: 16px;
-    }
+/* Utility Classes */
+.text-center { text-align: center; }
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.3s ease; }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
