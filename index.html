@@ -1,1 +1,759 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👽 ALIEN MUSK | Ultimate Crypto Platform</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+    
+    <!-- Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- ========== HEADER LAYER 1 ========== -->
+        <header class="top-header">
+            <div class="header-content">
+                <div class="brand-section">
+                    <div class="brand-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1 class="brand-name">ALIEN MUSK</h1>
+                        <p class="token-price">1 AMSK = $0.0002</p>
+                    </div>
+                </div>
+                
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-wallet"></i>
+                        <span id="header-balance">$0.00</span>
+                    </div>
+                    <div class="stat-item notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge" id="notification-count">0</span>
+                    </div>
+                    <div class="stat-item user-profile">
+                        <img id="user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="User" class="user-avatar">
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- ========== HEADER LAYER 2 ========== -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-btn" data-tab="staking">
+                <i class="fas fa-chart-line"></i>
+                <span>Staking</span>
+            </button>
+            <button class="nav-btn" data-tab="wallet">
+                <i class="fas fa-wallet"></i>
+                <span>Wallet</span>
+            </button>
+        </nav>
+        
+        <!-- ========== MAIN CONTENT ========== -->
+        <main class="content-area">
+            
+            <!-- HOME TAB -->
+            <div id="home-tab" class="tab-content active">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <div class="welcome-content">
+                        <h2 id="welcome-text">Welcome, Alien!</h2>
+                        <p class="user-id">ID: <span id="user-id">000000</span></p>
+                    </div>
+                    
+                    <div class="total-balance-card">
+                        <div class="balance-label">Total Balance</div>
+                        <div class="balance-amount">
+                            <span id="total-amsk">0</span>
+                            <span class="currency">AMSK</span>
+                        </div>
+                        <div class="balance-usd">≈ $<span id="usd-equivalent">0.00</span></div>
+                    </div>
+                </div>
+                
+                <!-- Mining Dashboard -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cogs"></i> Quantum Mining</h3>
+                        <div class="hashrate">
+                            <i class="fas fa-bolt"></i>
+                            <span id="current-hashrate">100</span> H/s
+                        </div>
+                    </div>
+                    
+                    <div class="mining-visual">
+                        <div class="quantum-core">
+                            <div class="core-glow"></div>
+                        </div>
+                        <div class="mining-info">
+                            <div class="next-reward">
+                                <span class="label">Next Reward in:</span>
+                                <div class="timer" id="mining-timer">04:00:00</div>
+                            </div>
+                            <div class="reward-amount">
+                                <span class="label">Reward:</span>
+                                <span class="amount" id="next-reward">5,000 AMSK</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="start-mining" class="action-btn primary-btn">
+                        <i class="fas fa-play"></i>
+                        <span>Activate Quantum Core</span>
+                    </button>
+                </div>
+                
+                <!-- Mining Levels -->
+                <div class="mining-levels">
+                    <h4><i class="fas fa-chart-bar"></i> Upgrade Mining Power</h4>
+                    <div class="levels-grid">
+                        <div class="level-card" data-level="1">
+                            <div class="level-icon free">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h5>Beginner</h5>
+                            <div class="level-cost">FREE</div>
+                            <div class="level-reward">25K/6h</div>
+                            <button class="upgrade-btn" disabled>Active</button>
+                        </div>
+                        
+                        <div class="level-card" data-level="2">
+                            <div class="level-icon blue">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h5>Advanced</h5>
+                            <div class="level-cost">5 USDT</div>
+                            <div class="level-reward">50K/6h</div>
+                            <button class="upgrade-btn">Upgrade</button>
+                        </div>
+                        
+                        <div class="level-card" data-level="3">
+                            <div class="level-icon purple">
+                                <i class="fas fa-atom"></i>
+                            </div>
+                            <h5>Pro</h5>
+                            <div class="level-cost">20 USDT</div>
+                            <div class="level-reward">100K/6h</div>
+                            <button class="upgrade-btn">Upgrade</button>
+                        </div>
+                        
+                        <div class="level-card" data-level="4">
+                            <div class="level-icon gold">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h5>Expert</h5>
+                            <div class="level-cost">100 USDT</div>
+                            <div class="level-reward">250K/6h</div>
+                            <button class="upgrade-btn">Upgrade</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-digging"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="mined-today">0</div>
+                            <div class="stat-label">Mined Today</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-mountain"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="total-mined">0</div>
+                            <div class="stat-label">Total Mined</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="staking-earned">0</div>
+                            <div class="stat-label">Staking Earned</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon gold">
+                            <i class="fas fa-signal"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="mining-level">1</div>
+                            <div class="stat-label">Mining Level</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Referral System -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users"></i> Referral Program</h3>
+                        <div class="hashrate">
+                            <span id="ref-count">0</span> Referrals
+                        </div>
+                    </div>
+                    
+                    <div class="referral-content">
+                        <div class="ref-stats">
+                            <div class="stat-box">
+                                <div class="stat-value" id="total-refs">0</div>
+                                <div class="stat-label">Total Referrals</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="ref-earned">0 AMSK</div>
+                                <div class="stat-label">Total Earnings</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <div class="progress-header">
+                                <span>Next Goal: <strong id="next-goal">10 Referrals</strong></span>
+                                <span id="progress-text">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div class="goal-reward">
+                                Reward: <span id="goal-reward">250K AMSK</span>
+                            </div>
+                        </div>
+                        
+                        <div class="referral-code-section">
+                            <div class="code-label">Your Referral Code:</div>
+                            <div class="code-display">
+                                <code id="ref-code">ALIEN-XXXX</code>
+                                <button id="copy-ref-code" class="icon-btn">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <button id="share-ref" class="action-btn secondary-btn">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Share Referral Link</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- STAKING TAB -->
+            <div id="staking-tab" class="tab-content">
+                <div class="staking-header">
+                    <h2><i class="fas fa-chart-line"></i> Staking Platform</h2>
+                    <p class="subtitle">Stake USDT, earn AMSK rewards with high APR</p>
+                </div>
+                
+                <!-- Active Stakes -->
+                <div class="dashboard-card">
+                    <h3><i class="fas fa-history"></i> Active Stakes</h3>
+                    <div id="active-stakes-list">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No active stakes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Staking Plans -->
+                <div class="staking-plans">
+                    <h3><i class="fas fa-gem"></i> Available Staking Plans</h3>
+                    <p class="plan-subtitle">Minimum: 10 USDT | Flexible Duration</p>
+                    
+                    <div class="plans-grid">
+                        <div class="plan-card" data-plan="1">
+                            <div class="plan-header">
+                                <div class="plan-icon silver">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="plan-title">Silver Plan</div>
+                            </div>
+                            <div class="plan-details">
+                                <div class="plan-amount">10 USDT</div>
+                                <div class="plan-duration">7 Days</div>
+                                <div class="plan-apr">40% APR</div>
+                                <div class="plan-reward">
+                                    <i class="fas fa-gift"></i>
+                                    <span>40 AMSK Daily</span>
+                                </div>
+                            </div>
+                            <button class="stake-btn" data-plan="1">Stake Now</button>
+                        </div>
+                        
+                        <div class="plan-card" data-plan="2">
+                            <div class="plan-header">
+                                <div class="plan-icon gold">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <div class="plan-title">Gold Plan</div>
+                            </div>
+                            <div class="plan-details">
+                                <div class="plan-amount">50 USDT</div>
+                                <div class="plan-duration">15 Days</div>
+                                <div class="plan-apr">50% APR</div>
+                                <div class="plan-reward">
+                                    <i class="fas fa-gift"></i>
+                                    <span>250 AMSK Daily</span>
+                                </div>
+                            </div>
+                            <button class="stake-btn" data-plan="2">Stake Now</button>
+                        </div>
+                        
+                        <div class="plan-card" data-plan="3">
+                            <div class="plan-header">
+                                <div class="plan-icon diamond">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <div class="plan-title">Diamond Plan</div>
+                            </div>
+                            <div class="plan-details">
+                                <div class="plan-amount">100 USDT</div>
+                                <div class="plan-duration">30 Days</div>
+                                <div class="plan-apr">60% APR</div>
+                                <div class="plan-reward">
+                                    <i class="fas fa-gift"></i>
+                                    <span>600 AMSK Daily</span>
+                                </div>
+                            </div>
+                            <button class="stake-btn" data-plan="3">Stake Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calculator -->
+                <div class="calculator-card">
+                    <h3><i class="fas fa-calculator"></i> Staking Calculator</h3>
+                    <div class="calculator-form">
+                        <div class="input-group">
+                            <label for="calc-amount">Staking Amount (USDT)</label>
+                            <input type="number" id="calc-amount" value="100" min="10">
+                        </div>
+                        <div class="input-group">
+                            <label for="calc-duration">Duration (Days)</label>
+                            <select id="calc-duration">
+                                <option value="7">7 Days</option>
+                                <option value="15">15 Days</option>
+                                <option value="30" selected>30 Days</option>
+                                <option value="60">60 Days</option>
+                            </select>
+                        </div>
+                        
+                        <div class="calc-results">
+                            <div class="result-item">
+                                <span>Daily Reward:</span>
+                                <strong id="calc-daily">0 AMSK</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>Total Reward:</span>
+                                <strong id="calc-total">0 AMSK</strong>
+                            </div>
+                            <div class="result-item">
+                                <span>Estimated APR:</span>
+                                <strong id="calc-apr">40%</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- WALLET TAB -->
+            <div id="wallet-tab" class="tab-content">
+                <div class="wallet-header">
+                    <h2><i class="fas fa-wallet"></i> Multi-Currency Wallet</h2>
+                    <p class="subtitle">Manage all your assets in one secure place</p>
+                </div>
+                
+                <!-- Total Balance -->
+                <div class="total-balance-section">
+                    <div class="balance-display">
+                        <div class="balance-label">Total Portfolio Value</div>
+                        <div class="balance-main">
+                            <span id="wallet-total-amsk">0</span>
+                            <span class="currency">AMSK</span>
+                        </div>
+                        <div class="balance-secondary">
+                            ≈ $<span id="wallet-total-usd">0.00</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="quick-btn" data-action="swap">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Swap</span>
+                        </button>
+                        <button class="quick-btn" data-action="deposit">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>Deposit</span>
+                        </button>
+                        <button class="quick-btn" data-action="withdraw">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Withdraw</span>
+                        </button>
+                        <button class="quick-btn" data-action="history">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Assets List -->
+                <div class="assets-list">
+                    <!-- AMSK Asset -->
+                    <div class="asset-card amsk-asset">
+                        <div class="asset-header">
+                            <div class="asset-icon">
+                                <i class="fas fa-user-astronaut"></i>
+                            </div>
+                            <div class="asset-info">
+                                <h4>Alien Musk (AMSK)</h4>
+                                <p class="asset-price">$0.0002 per AMSK</p>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="wallet-amsk">0</div>
+                                <div class="balance-value">≈ $<span id="wallet-amsk-value">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="asset-actions">
+                            <button class="asset-action-btn" data-action="send" data-currency="AMSK">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Send</span>
+                            </button>
+                            <button class="asset-action-btn" data-action="receive" data-currency="AMSK">
+                                <i class="fas fa-qrcode"></i>
+                                <span>Receive</span>
+                            </button>
+                            <button class="asset-action-btn" data-action="swap" data-currency="AMSK">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Swap</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- USDT Asset -->
+                    <div class="asset-card usdt-asset">
+                        <div class="asset-header">
+                            <div class="asset-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="asset-info">
+                                <h4>Tether (USDT)</h4>
+                                <p class="asset-network">BEP20 Network</p>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="wallet-usdt">0.00</div>
+                                <div class="balance-value">≈ $<span id="wallet-usdt-value">0.00</span></div>
+                            </div>
+                        </div>
+                        <div class="asset-actions">
+                            <button class="asset-action-btn" data-action="deposit" data-currency="USDT">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Deposit</span>
+                            </button>
+                            <button class="asset-action-btn" data-action="withdraw" data-currency="USDT">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Withdraw</span>
+                            </button>
+                        </div>
+                        <div class="deposit-info">
+                            <div class="info-label">Deposit Address:</div>
+                            <div class="address-box">
+                                <code id="usdt-address" class="address">0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58</code>
+                                <button class="copy-btn" data-address="usdt">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="min-deposit">
+                                <i class="fas fa-info-circle"></i>
+                                Minimum deposit: 10 USDT
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transaction History -->
+                <div class="history-section">
+                    <h3><i class="fas fa-history"></i> Transaction History</h3>
+                    <div class="history-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="deposit">Deposits</button>
+                        <button class="filter-btn" data-filter="withdraw">Withdrawals</button>
+                        <button class="filter-btn" data-filter="swap">Swaps</button>
+                    </div>
+                    <div class="history-list" id="transaction-history">
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <p>No transactions found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- ========== MODALS ========== -->
+        <div id="modal-overlay" class="modal-overlay"></div>
+        
+        <!-- Deposit Modal -->
+        <div id="deposit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-arrow-down"></i> Deposit Funds</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="currency-selector">
+                        <div class="currency-option active" data-currency="USDT">
+                            <i class="fab fa-usd"></i>
+                            <span>USDT</span>
+                        </div>
+                        <div class="currency-option" data-currency="BNB">
+                            <i class="fab fa-ethereum"></i>
+                            <span>BNB</span>
+                        </div>
+                        <div class="currency-option" data-currency="TON">
+                            <i class="fas fa-bolt"></i>
+                            <span>TON</span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p>Send only <strong id="deposit-currency">USDT</strong> to this address</p>
+                        <p class="input-hint">Minimum deposit: <span id="min-deposit-amount">10</span> <span id="deposit-currency-text">USDT</span></p>
+                        
+                        <div class="address-display">
+                            <code id="deposit-address">0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58</code>
+                            <button class="copy-address-btn">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deposit-amount-input">Amount Deposited</label>
+                        <input type="number" id="deposit-amount-input" placeholder="Enter amount" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tx-id-input">Transaction ID (TX ID)</label>
+                        <input type="text" id="tx-id-input" placeholder="Enter transaction hash">
+                        <p class="input-hint">Find this in your wallet transaction history</p>
+                    </div>
+                    
+                    <button id="submit-deposit" class="action-btn primary-btn full-width">
+                        Submit Deposit Request
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Withdraw Modal -->
+        <div id="withdraw-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-arrow-up"></i> Withdraw Funds</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="info-box">
+                        <p>Available Balance: <strong id="withdraw-balance">0.00</strong> USDT</p>
+                        <p class="input-hint">Minimum withdrawal: 100 USDT</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-address">Wallet Address</label>
+                        <input type="text" id="withdraw-address" placeholder="Enter your wallet address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="withdraw-amount">Amount (USDT)</label>
+                        <input type="number" id="withdraw-amount" placeholder="Enter amount" value="100" min="100">
+                    </div>
+                    
+                    <div class="fee-info">
+                        <div class="fee-item">
+                            <span>Network Fee:</span>
+                            <span>0.0005 BNB</span>
+                        </div>
+                        <div class="fee-item">
+                            <span>Your BNB Balance:</span>
+                            <span id="bnb-fee-balance">0.00</span>
+                        </div>
+                        <div class="fee-warning" id="fee-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Insufficient BNB for network fee</span>
+                        </div>
+                    </div>
+                    
+                    <button id="submit-withdraw" class="action-btn primary-btn full-width" disabled>
+                        Submit Withdrawal Request
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Swap Modal -->
+        <div id="swap-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exchange-alt"></i> Swap Tokens</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="swap-form">
+                        <div class="swap-from">
+                            <div class="swap-header">
+                                <span>From</span>
+                                <span>Balance: <span id="swap-from-balance">0</span></span>
+                            </div>
+                            <div class="swap-input">
+                                <select id="swap-from-currency">
+                                    <option value="AMSK">AMSK</option>
+                                    <option value="USDT">USDT</option>
+                                    <option value="BNB">BNB</option>
+                                    <option value="TON">TON</option>
+                                </select>
+                                <input type="number" id="swap-from-amount" placeholder="0.00">
+                            </div>
+                        </div>
+                        
+                        <div class="swap-arrow">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        
+                        <div class="swap-to">
+                            <div class="swap-header">
+                                <span>To</span>
+                                <span>Balance: <span id="swap-to-balance">0</span></span>
+                            </div>
+                            <div class="swap-input">
+                                <select id="swap-to-currency">
+                                    <option value="USDT">USDT</option>
+                                    <option value="AMSK">AMSK</option>
+                                    <option value="BNB">BNB</option>
+                                    <option value="TON">TON</option>
+                                </select>
+                                <div class="swap-output" id="swap-to-amount">0.00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="swap-info">
+                            <div class="rate-info">
+                                <span>Rate:</span>
+                                <span id="swap-rate">1 AMSK = 0.0002 USDT</span>
+                            </div>
+                            <div class="min-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Minimum swap: 250,000 AMSK</span>
+                            </div>
+                        </div>
+                        
+                        <button id="submit-swap" class="action-btn primary-btn full-width" disabled>
+                            Confirm Swap
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stake Modal -->
+        <div id="stake-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-chart-line"></i> Confirm Staking</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="stake-plan-display"></div>
+                    
+                    <div class="info-box">
+                        <p>Available USDT: <strong id="available-usdt">0.00</strong></p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stake-amount">Amount to Stake (USDT)</label>
+                        <input type="number" id="stake-amount" placeholder="Enter amount">
+                    </div>
+                    
+                    <div class="stake-preview">
+                        <div class="preview-item">
+                            <span>Duration:</span>
+                            <strong id="stake-duration">30 Days</strong>
+                        </div>
+                        <div class="preview-item">
+                            <span>APR:</span>
+                            <strong id="stake-apr">60%</strong>
+                        </div>
+                        <div class="preview-item">
+                            <span>Daily Reward:</span>
+                            <strong id="stake-daily">600 AMSK</strong>
+                        </div>
+                        <div class="preview-item">
+                            <span>Total Reward:</span>
+                            <strong id="stake-total">18,000 AMSK</strong>
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-stake" class="action-btn primary-btn full-width">
+                        Confirm & Stake
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Panel -->
+        <div id="admin-panel" class="admin-panel">
+            <!-- Admin content will be loaded here -->
+        </div>
+        
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="loading-spinner">
+            <div class="spinner">
+                <i class="fas fa-user-astronaut fa-spin"></i>
+            </div>
+        </div>
+        
+        <!-- Notification Center -->
+        <div id="notification-center"></div>
+    </div>
+    
+    <!-- Main Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
