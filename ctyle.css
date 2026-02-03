@@ -2367,3 +2367,33 @@ strong {
         color: black;
     }
 }
+/* إصلاحات سريعة للهيدر */
+.user-avatar-mini {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+}
+
+.compressed-header {
+    display: block !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background: #0a0a0f !important;
+    padding: 10px 15px !important;
+}
+
+/* إخفاء الصفحات غير النشطة */
+.page {
+    display: none !important;
+}
+
+.page.active {
+    display: block !important;
+}
+
+/* تصغير صورة الهيدر في الصفحة الرئيسية */
+#home-avatar {
+    width: 50px !important;
+    height: 50px !important;
+}
