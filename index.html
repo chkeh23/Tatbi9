@@ -39,7 +39,7 @@
                 <div class="header-stats">
                     <div class="stat-item">
                         <i class="fas fa-wallet"></i>
-                        <span id="header-balance">$0.00</span>
+                        <span id="header-balance">$0.50</span>
                     </div>
                     <div class="stat-item notifications">
                         <i class="fas fa-bell"></i>
@@ -77,16 +77,16 @@
                 <div class="welcome-banner">
                     <div class="welcome-content">
                         <h2 id="welcome-text">Welcome, Alien!</h2>
-                        <p class="user-id">ID: <span id="user-id">000000</span></p>
+                        <p class="user-id">ID: <span id="user-id">ALIEN001</span></p>
                     </div>
                     
                     <div class="total-balance-card">
                         <div class="balance-label">Total Balance</div>
                         <div class="balance-amount">
-                            <span id="total-amsk">0</span>
+                            <span id="total-amsk">2,500</span>
                             <span class="currency">AMSK</span>
                         </div>
-                        <div class="balance-usd">≈ $<span id="usd-equivalent">0.00</span></div>
+                        <div class="balance-usd">≈ $<span id="usd-equivalent">0.50</span></div>
                     </div>
                 </div>
                 
@@ -126,7 +126,7 @@
                 <div class="mining-levels">
                     <h4><i class="fas fa-chart-bar"></i> Upgrade Mining Power</h4>
                     <div class="levels-grid">
-                        <div class="level-card" data-level="1">
+                        <div class="level-card active-level" data-level="1">
                             <div class="level-icon free">
                                 <i class="fas fa-rocket"></i>
                             </div>
@@ -175,7 +175,7 @@
                             <i class="fas fa-digging"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="mined-today">0</div>
+                            <div class="stat-value" id="mined-today">2,500</div>
                             <div class="stat-label">Mined Today</div>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                             <i class="fas fa-mountain"></i>
                         </div>
                         <div class="stat-info">
-                            <div class="stat-value" id="total-mined">0</div>
+                            <div class="stat-value" id="total-mined">2,500</div>
                             <div class="stat-label">Total Mined</div>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
                                 <span id="progress-text">0%</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-fill" id="progress-fill"></div>
+                                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
                             </div>
                             <div class="goal-reward">
                                 Reward: <span id="goal-reward">250K AMSK</span>
@@ -248,7 +248,7 @@
                         <div class="referral-code-section">
                             <div class="code-label">Your Referral Code:</div>
                             <div class="code-display">
-                                <code id="ref-code">ALIEN-XXXX</code>
+                                <code id="ref-code">ALIEN-M7B9X2</code>
                                 <button id="copy-ref-code" class="icon-btn">
                                     <i class="fas fa-copy"></i>
                                 </button>
@@ -370,7 +370,7 @@
                             </div>
                             <div class="result-item">
                                 <span>Total Reward:</span>
-                                <strong id="calc-total">280 AMSK</strong>
+                                <strong id="calc-total">1,200 AMSK</strong>
                             </div>
                             <div class="result-item">
                                 <span>Estimated APR:</span>
@@ -393,11 +393,11 @@
                     <div class="balance-display">
                         <div class="balance-label">Total Portfolio Value</div>
                         <div class="balance-main">
-                            <span id="wallet-total-amsk">0</span>
+                            <span id="wallet-total-amsk">2,500</span>
                             <span class="currency">AMSK</span>
                         </div>
                         <div class="balance-secondary">
-                            ≈ $<span id="wallet-total-usd">0.00</span>
+                            ≈ $<span id="wallet-total-usd">0.50</span>
                         </div>
                     </div>
                     
@@ -435,8 +435,8 @@
                                 <p class="asset-price">$0.0002 per AMSK</p>
                             </div>
                             <div class="asset-balance">
-                                <div class="balance-amount" id="wallet-amsk">0</div>
-                                <div class="balance-value">≈ $<span id="wallet-amsk-value">0.00</span></div>
+                                <div class="balance-amount" id="wallet-amsk">2,500</div>
+                                <div class="balance-value">≈ $<span id="wallet-amsk-value">0.50</span></div>
                             </div>
                         </div>
                         <div class="asset-actions">
@@ -466,8 +466,8 @@
                                 <p class="asset-network">BEP20 Network</p>
                             </div>
                             <div class="asset-balance">
-                                <div class="balance-amount" id="wallet-usdt">0.00</div>
-                                <div class="balance-value">≈ $<span id="wallet-usdt-value">0.00</span></div>
+                                <div class="balance-amount" id="wallet-usdt">100.00</div>
+                                <div class="balance-value">≈ $<span id="wallet-usdt-value">100.00</span></div>
                             </div>
                         </div>
                         <div class="asset-actions">
@@ -555,7 +555,7 @@
                     
                     <div class="form-group">
                         <label for="deposit-amount-input">Amount Deposited</label>
-                        <input type="number" id="deposit-amount-input" placeholder="Enter amount" step="0.01">
+                        <input type="number" id="deposit-amount-input" placeholder="Enter amount" step="0.01" min="10">
                     </div>
                     
                     <div class="form-group">
@@ -580,7 +580,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="info-box">
-                        <p>Available Balance: <strong id="withdraw-balance">0.00</strong> USDT</p>
+                        <p>Available Balance: <strong id="withdraw-balance">100.00</strong> USDT</p>
                         <p class="input-hint">Minimum withdrawal: 100 USDT</p>
                     </div>
                     
@@ -591,7 +591,7 @@
                     
                     <div class="form-group">
                         <label for="withdraw-amount">Amount (USDT)</label>
-                        <input type="number" id="withdraw-amount" placeholder="100" value="100" min="100">
+                        <input type="number" id="withdraw-amount" value="100" min="100">
                     </div>
                     
                     <div class="fee-info">
@@ -628,14 +628,14 @@
                         <div class="swap-from">
                             <div class="swap-header">
                                 <span>From</span>
-                                <span>Balance: <span id="swap-from-balance">0</span></span>
+                                <span>Balance: <span id="swap-from-balance">2,500</span></span>
                             </div>
                             <div class="swap-input">
                                 <select id="swap-from-currency">
                                     <option value="AMSK">AMSK</option>
                                     <option value="USDT">USDT</option>
                                 </select>
-                                <input type="number" id="swap-from-amount" placeholder="0.00">
+                                <input type="number" id="swap-from-amount" placeholder="0" min="0">
                             </div>
                         </div>
                         
@@ -646,7 +646,7 @@
                         <div class="swap-to">
                             <div class="swap-header">
                                 <span>To</span>
-                                <span>Balance: <span id="swap-to-balance">0</span></span>
+                                <span>Balance: <span id="swap-to-balance">100.00</span></span>
                             </div>
                             <div class="swap-input">
                                 <select id="swap-to-currency">
@@ -687,12 +687,12 @@
                     <div id="stake-plan-display"></div>
                     
                     <div class="info-box">
-                        <p>Available USDT: <strong id="available-usdt">0.00</strong></p>
+                        <p>Available USDT: <strong id="available-usdt">100.00</strong></p>
                     </div>
                     
                     <div class="form-group">
                         <label for="stake-amount">Amount to Stake (USDT)</label>
-                        <input type="number" id="stake-amount" placeholder="10" min="10">
+                        <input type="number" id="stake-amount" value="10" min="10">
                     </div>
                     
                     <div class="stake-preview">
@@ -721,11 +721,6 @@
             </div>
         </div>
         
-        <!-- Admin Panel -->
-        <div id="admin-panel" class="admin-panel">
-            <!-- Admin content will be loaded here -->
-        </div>
-        
         <!-- Loading Spinner -->
         <div id="loading-spinner" class="loading-spinner">
             <div class="spinner">
@@ -739,5 +734,16 @@
     
     <!-- Main Application Script -->
     <script src="app.js"></script>
+    
+    <!-- Force initialization -->
+    <script>
+        // تأخير بسيط لضمان تحمّل كل شيء
+        setTimeout(function() {
+            if (window.alienMuskApp) {
+                console.log('🔄 Forcing UI update...');
+                window.alienMuskApp.updateAllUI();
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
