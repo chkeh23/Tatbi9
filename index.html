@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,117 +12,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen active">
+    <div class="loading-screen active" id="loading-screen">
         <div class="loading-content">
             <div class="quantum-loader">
-                <div class="quantum-particle"></div>
-                <div class="quantum-particle"></div>
-                <div class="quantum-particle"></div>
-                <div class="quantum-particle"></div>
+                <div class="particle" style="--i:1"></div>
+                <div class="particle" style="--i:2"></div>
+                <div class="particle" style="--i:3"></div>
+                <div class="particle" style="--i:4"></div>
             </div>
-            <h2 class="loading-title">👽 جاري تنشيط المنصة الكمومية</h2>
-            <p class="loading-subtitle">ALIEN MUSK</p>
+            <div class="loading-text">
+                <h1 class="loading-title">👽 Activating Quantum Platform</h1>
+                <p class="loading-subtitle">ALIEN MUSK</p>
+                <div class="loading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="loading-progress"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Main App Container -->
+    <!-- App Container -->
     <div class="app-container">
-        <!-- ========== HEADER ========== -->
-        <header class="main-header">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div class="brand-section">
+        <!-- Top Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="brand">
                     <div class="brand-logo">
                         <i class="fas fa-user-astronaut"></i>
                     </div>
                     <div class="brand-info">
                         <h1 class="brand-name">ALIEN MUSK</h1>
                         <div class="token-price">
-                            <span class="price-badge">🔥</span>
+                            <span class="fire-icon">🔥</span>
                             <span>1 AMSK = $0.0002</span>
                         </div>
                     </div>
                 </div>
                 
-                <div class="header-actions">
-                    <div class="total-balance">
+                <div class="header-right">
+                    <div class="balance-widget">
                         <i class="fas fa-wallet"></i>
-                        <span id="total-balance">$100.50</span>
+                        <span class="balance-amount" id="header-balance">$100.50</span>
                     </div>
                     
-                    <div class="notification-bell">
+                    <div class="notification-icon">
                         <i class="fas fa-bell"></i>
                         <span class="notification-badge" id="notification-count">0</span>
                     </div>
                     
-                    <div class="user-profile">
-                        <img id="user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="User">
+                    <div class="user-avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="User" id="user-avatar">
                     </div>
                 </div>
             </div>
-            
-            <!-- Navigation -->
-            <nav class="main-navigation">
-                <div class="nav-container">
-                    <a href="#" class="nav-item active" data-page="home">
-                        <i class="fas fa-home"></i>
-                        <span>الرئيسية</span>
-                    </a>
-                    <a href="#" class="nav-item" data-page="mining">
-                        <i class="fas fa-cogs"></i>
-                        <span>التعدين</span>
-                    </a>
-                    <a href="#" class="nav-item" data-page="staking">
-                        <i class="fas fa-chart-line"></i>
-                        <span>الستيكينغ</span>
-                    </a>
-                    <a href="#" class="nav-item" data-page="wallet">
-                        <i class="fas fa-wallet"></i>
-                        <span>المحفظة</span>
-                    </a>
-                </div>
-            </nav>
         </header>
 
-        <!-- ========== MAIN CONTENT ========== -->
-        <main class="main-content">
-            <!-- HOME PAGE (التعدين) -->
-            <div id="home-page" class="page active">
+        <!-- Main Content -->
+        <main class="app-content" id="app-content">
+            <!-- Home Page (Mining) -->
+            <div class="page active" id="home-page" data-page="home">
                 <!-- Welcome Section -->
-                <section class="welcome-section">
+                <section class="welcome-section" data-aos="fade-up">
                     <div class="welcome-card">
-                        <div class="user-info">
+                        <div class="user-greeting">
                             <div class="avatar-container">
-                                <img id="home-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="User">
-                                <div class="status-indicator"></div>
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="User" id="home-avatar">
+                                <div class="online-status active"></div>
                             </div>
-                            <div class="user-details">
-                                <h2 id="welcome-text">مرحبًا، Alien!</h2>
-                                <p class="user-id">🆔 المعرف: <span id="user-id">ALIEN001</span></p>
+                            <div class="greeting-text">
+                                <h2>Welcome, <span id="username">Alien</span>!</h2>
+                                <p class="user-id">🆔 ID: <span id="user-id">ALIEN001</span></p>
                             </div>
                         </div>
                         
-                        <div class="balance-card">
-                            <div class="balance-label">
+                        <div class="total-balance-card">
+                            <div class="balance-header">
                                 <i class="fas fa-coins"></i>
-                                <span>إجمالي الرصيد</span>
+                                <span>Total Balance</span>
                             </div>
-                            <div class="balance-amount">
-                                <span id="total-amsk" class="amount">2,500</span>
+                            <div class="balance-main">
+                                <span class="amount" id="total-amsk">2,500</span>
                                 <span class="currency">AMSK</span>
                             </div>
-                            <div class="balance-usd">
+                            <div class="balance-sub">
                                 ≈ $<span id="usd-equivalent">0.50</span>
                             </div>
                         </div>
@@ -130,263 +113,243 @@
                 </section>
 
                 <!-- Mining Dashboard -->
-                <section class="mining-dashboard">
-                    <div class="dashboard-header">
-                        <h3><i class="fas fa-cogs"></i> محطة التعدين الكمومية</h3>
-                        <div class="hashrate-display">
+                <section class="mining-section" data-aos="fade-up" data-aos-delay="100">
+                    <div class="section-header">
+                        <h3><i class="fas fa-cogs"></i> Quantum Mining Station</h3>
+                        <div class="hashrate-badge">
                             <i class="fas fa-bolt"></i>
                             <span id="current-hashrate">2,500</span> H/s
                         </div>
                     </div>
                     
-                    <div class="mining-interface">
-                        <!-- Quantum Core Visual -->
-                        <div class="quantum-core-section">
-                            <div class="core-container">
-                                <div class="quantum-core">
-                                    <div class="core-inner"></div>
-                                    <div class="core-particle" style="--delay: 0s"></div>
-                                    <div class="core-particle" style="--delay: 1s"></div>
-                                    <div class="core-particle" style="--delay: 2s"></div>
-                                </div>
-                                <div class="core-stats">
-                                    <div class="stat-item">
-                                        <span class="stat-label">المكافأة القادمة</span>
-                                        <div class="timer" id="mining-timer">01:00:00</div>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">قيمة المكافأة</span>
-                                        <div class="reward-amount">
-                                            <span id="next-reward">2,500</span> AMSK
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="mining-core">
+                        <div class="quantum-circle">
+                            <div class="circle-inner">
+                                <div class="core-center"></div>
+                                <div class="ring ring-1"></div>
+                                <div class="ring ring-2"></div>
+                                <div class="ring ring-3"></div>
                             </div>
                         </div>
                         
-                        <!-- Mining Control -->
-                        <div class="mining-control">
-                            <button id="start-mining" class="mining-btn primary-btn">
-                                <i class="fas fa-play"></i>
-                                <span>تشغيل المحرك الكمومي</span>
-                            </button>
+                        <div class="mining-info">
+                            <div class="info-card">
+                                <div class="info-label">Next Reward In</div>
+                                <div class="timer" id="mining-timer">01:00:00</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">Reward Amount</div>
+                                <div class="reward-amount">
+                                    <span id="next-reward">2,500</span> AMSK
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Mining Stats -->
-                    <div class="mining-stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon mining">
-                                <i class="fas fa-digging"></i>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-value" id="mined-today">2,500</div>
-                                <div class="stat-label">تم تعدينها اليوم</div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon total">
-                                <i class="fas fa-mountain"></i>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-value" id="total-mined">2,500</div>
-                                <div class="stat-label">إجمالي التعدين</div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon staking">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-value" id="staking-earned">0</div>
-                                <div class="stat-label">أرباح الستيكينغ</div>
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-icon level">
-                                <i class="fas fa-signal"></i>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-value" id="mining-level">1</div>
-                                <div class="stat-label">مستوى التعدين</div>
-                            </div>
-                        </div>
-                    </div>
+                    <button class="mining-action-btn primary-btn" id="start-mining">
+                        <i class="fas fa-play"></i>
+                        <span>Activate Quantum Core</span>
+                    </button>
                 </section>
 
+                <!-- Quick Stats -->
+                <div class="quick-stats" data-aos="fade-up" data-aos-delay="150">
+                    <div class="stat-item">
+                        <div class="stat-icon mining">
+                            <i class="fas fa-digging"></i>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="mined-today">2,500</div>
+                            <div class="stat-label">Mined Today</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon total">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="total-mined">2,500</div>
+                            <div class="stat-label">Total Mined</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon staking">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="staking-earned">0</div>
+                            <div class="stat-label">Staking Earned</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon level">
+                            <i class="fas fa-signal"></i>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value" id="mining-level">1</div>
+                            <div class="stat-label">Mining Level</div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Mining Upgrades -->
-                <section class="mining-upgrades">
+                <section class="upgrades-section" data-aos="fade-up" data-aos-delay="200">
                     <div class="section-header">
-                        <h4><i class="fas fa-arrow-up"></i> ترقيات الطاقة الكمومية</h4>
-                        <span class="section-subtitle">زد قوتك، زد أرباحك</span>
+                        <h4><i class="fas fa-rocket"></i> Power Upgrades</h4>
+                        <span class="section-sub">Boost power, increase profits</span>
                     </div>
                     
                     <div class="upgrades-grid">
-                        <!-- Level 1 -->
                         <div class="upgrade-card active" data-level="1">
-                            <div class="upgrade-header">
-                                <div class="upgrade-icon beginner">
-                                    <i class="fas fa-rocket"></i>
-                                </div>
-                                <div class="upgrade-title">مستوى المبتدئ</div>
+                            <div class="upgrade-icon beginner">
+                                <i class="fas fa-star"></i>
                             </div>
-                            <div class="upgrade-details">
-                                <div class="upgrade-cost free">مجاني</div>
-                                <div class="upgrade-reward">2.5K AMSK/ساعة</div>
+                            <div class="upgrade-content">
+                                <h5>Beginner Level</h5>
+                                <div class="upgrade-cost free">FREE</div>
+                                <div class="upgrade-reward">2.5K AMSK/hour</div>
                             </div>
-                            <button class="upgrade-btn active-btn">نشط</button>
+                            <button class="upgrade-btn active-btn">Active</button>
                         </div>
                         
-                        <!-- Level 2 -->
                         <div class="upgrade-card" data-level="2">
-                            <div class="upgrade-header">
-                                <div class="upgrade-icon advanced">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="upgrade-title">المستوى المتقدم</div>
+                            <div class="upgrade-icon advanced">
+                                <i class="fas fa-bolt"></i>
                             </div>
-                            <div class="upgrade-details">
+                            <div class="upgrade-content">
+                                <h5>Advanced Level</h5>
                                 <div class="upgrade-cost">5 USDT</div>
-                                <div class="upgrade-reward">5K AMSK/ساعة</div>
+                                <div class="upgrade-reward">5K AMSK/hour</div>
                             </div>
-                            <button class="upgrade-btn">ترقية</button>
+                            <button class="upgrade-btn">Upgrade</button>
                         </div>
                         
-                        <!-- Level 3 -->
                         <div class="upgrade-card" data-level="3">
-                            <div class="upgrade-header">
-                                <div class="upgrade-icon pro">
-                                    <i class="fas fa-atom"></i>
-                                </div>
-                                <div class="upgrade-title">المستوى المحترف</div>
+                            <div class="upgrade-icon pro">
+                                <i class="fas fa-atom"></i>
                             </div>
-                            <div class="upgrade-details">
+                            <div class="upgrade-content">
+                                <h5>Pro Level</h5>
                                 <div class="upgrade-cost">20 USDT</div>
-                                <div class="upgrade-reward">10K AMSK/ساعة</div>
+                                <div class="upgrade-reward">10K AMSK/hour</div>
                             </div>
-                            <button class="upgrade-btn">ترقية</button>
+                            <button class="upgrade-btn">Upgrade</button>
                         </div>
                         
-                        <!-- Level 4 -->
                         <div class="upgrade-card" data-level="4">
-                            <div class="upgrade-header">
-                                <div class="upgrade-icon expert">
-                                    <i class="fas fa-crown"></i>
-                                </div>
-                                <div class="upgrade-title">مستوى الخبير</div>
+                            <div class="upgrade-icon expert">
+                                <i class="fas fa-crown"></i>
                             </div>
-                            <div class="upgrade-details">
+                            <div class="upgrade-content">
+                                <h5>Expert Level</h5>
                                 <div class="upgrade-cost">100 USDT</div>
-                                <div class="upgrade-reward">25K AMSK/ساعة</div>
+                                <div class="upgrade-reward">25K AMSK/hour</div>
                             </div>
-                            <button class="upgrade-btn">ترقية</button>
+                            <button class="upgrade-btn">Upgrade</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- Boosters Section -->
-                <section class="boosters-section">
+                <!-- Energy Boosters -->
+                <section class="boosters-section" data-aos="fade-up" data-aos-delay="250">
                     <div class="section-header">
-                        <h4><i class="fas fa-bolt"></i> معززات الطاقة الفورية</h4>
-                        <span class="section-subtitle">دفعة إضافية من الطاقة</span>
+                        <h4><i class="fas fa-bolt"></i> Energy Boosters</h4>
+                        <span class="section-sub">Instant power boost</span>
                     </div>
                     
                     <div class="boosters-grid">
-                        <!-- Booster 1 -->
                         <div class="booster-card" data-booster="2x">
                             <div class="booster-header">
                                 <div class="booster-icon x2">
                                     <span>2x</span>
                                 </div>
-                                <div class="booster-title">معزز الطاقة</div>
+                                <div class="booster-title">Energy Booster</div>
                             </div>
                             <div class="booster-details">
                                 <div class="booster-effect">
                                     <i class="fas fa-arrow-up"></i>
-                                    <span>مضاعفة الإنتاج ×2</span>
+                                    <span>2x Mining Speed</span>
                                 </div>
                                 <div class="booster-duration">
                                     <i class="fas fa-clock"></i>
-                                    <span>مدته 24 ساعة</span>
+                                    <span>24 Hours</span>
                                 </div>
                             </div>
                             <div class="booster-price">10,000 AMSK</div>
-                            <button class="booster-btn">تفعيل</button>
+                            <button class="booster-btn">Activate</button>
                         </div>
                         
-                        <!-- Booster 2 -->
                         <div class="booster-card" data-booster="3x">
                             <div class="booster-header">
                                 <div class="booster-icon x3">
                                     <span>3x</span>
                                 </div>
-                                <div class="booster-title">معزز الإنتاجية</div>
+                                <div class="booster-title">Productivity Booster</div>
                             </div>
                             <div class="booster-details">
                                 <div class="booster-effect">
                                     <i class="fas fa-arrow-up"></i>
-                                    <span>مضاعفة الإنتاج ×3</span>
+                                    <span>3x Mining Speed</span>
                                 </div>
                                 <div class="booster-duration">
                                     <i class="fas fa-clock"></i>
-                                    <span>مدته 12 ساعة</span>
+                                    <span>12 Hours</span>
                                 </div>
                             </div>
                             <div class="booster-price">15,000 AMSK</div>
-                            <button class="booster-btn">تفعيل</button>
+                            <button class="booster-btn">Activate</button>
                         </div>
                         
-                        <!-- Booster 3 -->
                         <div class="booster-card" data-booster="5x">
                             <div class="booster-header">
                                 <div class="booster-icon x5">
                                     <span>5x</span>
                                 </div>
-                                <div class="booster-title">معزز VIP</div>
+                                <div class="booster-title">VIP Booster</div>
                             </div>
                             <div class="booster-details">
                                 <div class="booster-effect">
                                     <i class="fas fa-arrow-up"></i>
-                                    <span>مضاعفة الإنتاج ×5</span>
+                                    <span>5x Mining Speed</span>
                                 </div>
                                 <div class="booster-duration">
                                     <i class="fas fa-clock"></i>
-                                    <span>مدته 6 ساعات</span>
+                                    <span>6 Hours</span>
                                 </div>
                             </div>
                             <div class="booster-price">25,000 AMSK</div>
-                            <button class="booster-btn">تفعيل</button>
+                            <button class="booster-btn">Activate</button>
                         </div>
                     </div>
                 </section>
 
-                <!-- Referral Section -->
-                <section class="referral-section">
+                <!-- Referral Program -->
+                <section class="referral-section" data-aos="fade-up" data-aos-delay="300">
                     <div class="referral-card">
                         <div class="referral-header">
-                            <h4><i class="fas fa-users"></i> برنامج الإحالة</h4>
+                            <h4><i class="fas fa-users"></i> Referral Program</h4>
                             <div class="referral-count">
-                                <span id="ref-count">0</span> محالين
+                                <span id="ref-count">0</span> Referrals
                             </div>
                         </div>
                         
                         <div class="referral-stats">
                             <div class="ref-stat">
-                                <div class="stat-label">إجمالي المحالين</div>
+                                <div class="stat-label">Total Referrals</div>
                                 <div class="stat-value" id="total-refs">0</div>
                             </div>
                             <div class="ref-stat">
-                                <div class="stat-label">الأرباح من الإحالة</div>
+                                <div class="stat-label">Referral Earnings</div>
                                 <div class="stat-value" id="ref-earned">0 AMSK</div>
                             </div>
                         </div>
                         
                         <div class="referral-progress">
                             <div class="progress-header">
-                                <span>الهدف التالي: <strong id="next-goal">10 محالين</strong></span>
+                                <span>Next Goal: <strong id="next-goal">10 Referrals</strong></span>
                                 <span id="progress-text">0%</span>
                             </div>
                             <div class="progress-bar">
@@ -394,13 +357,13 @@
                             </div>
                             <div class="goal-reward">
                                 <i class="fas fa-gift"></i>
-                                المكافأة: <span id="goal-reward">250,000 AMSK</span>
+                                Reward: <span id="goal-reward">250,000 AMSK</span>
                             </div>
                         </div>
                         
                         <div class="referral-share">
                             <div class="referral-code">
-                                <div class="code-label">كود الإحالة الخاص بك:</div>
+                                <div class="code-label">Your Referral Code:</div>
                                 <div class="code-display">
                                     <code id="ref-code">ALIEN-M7B9X2</code>
                                     <button id="copy-ref-code" class="copy-btn">
@@ -411,146 +374,298 @@
                             
                             <button id="share-ref" class="share-btn">
                                 <i class="fas fa-share-alt"></i>
-                                <span>شارك رابط الإحالة</span>
+                                <span>Share Referral Link</span>
                             </button>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- MINING PAGE -->
-            <div id="mining-page" class="page">
-                <!-- Mining Stats -->
-                <section class="page-header">
-                    <h2><i class="fas fa-cogs"></i> إحصائيات التعدين المتقدمة</h2>
-                    <p class="page-subtitle">تحليل مفصل لأداء التعدين</p>
-                </section>
-                
-                <div class="advanced-stats">
-                    <!-- سأضيف محتوى صفحة التعدين هنا -->
-                    <div class="empty-state">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>إحصائيات التعدين</h3>
-                        <p>سيتم عرض إحصائيات التعدين المتقدمة هنا</p>
-                    </div>
+            <!-- Staking Page -->
+            <div class="page" id="staking-page" data-page="staking">
+                <div class="page-header">
+                    <h2><i class="fas fa-chart-line"></i> Staking Platform</h2>
+                    <p class="page-subtitle">Stake USDT, earn high rewards</p>
                 </div>
-            </div>
-
-            <!-- STAKING PAGE -->
-            <div id="staking-page" class="page">
-                <!-- Staking Content -->
-                <section class="page-header">
-                    <h2><i class="fas fa-chart-line"></i> منصة الستيكينغ</h2>
-                    <p class="page-subtitle">استثمر واستمتع بأرباح عالية</p>
-                </section>
                 
                 <div class="staking-content">
-                    <!-- سأضيف محتوى الستيكينغ هنا -->
-                    <div class="empty-state">
-                        <i class="fas fa-coins"></i>
-                        <h3>خطط الستيكينغ</h3>
-                        <p>سيتم عرض خطط الستيكينغ هنا</p>
+                    <div class="active-stakes">
+                        <h3><i class="fas fa-history"></i> Active Stakes</h3>
+                        <div class="stakes-list" id="active-stakes-list">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>No active stakes</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="staking-plans">
+                        <h3><i class="fas fa-gem"></i> Available Plans</h3>
+                        <div class="plans-grid">
+                            <div class="plan-card" data-plan="1">
+                                <div class="plan-header">
+                                    <div class="plan-icon silver">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="plan-title">Silver Plan</div>
+                                </div>
+                                <div class="plan-details">
+                                    <div class="plan-amount">10 USDT</div>
+                                    <div class="plan-duration">7 Days</div>
+                                    <div class="plan-apr">40% APR</div>
+                                    <div class="plan-reward">
+                                        <i class="fas fa-gift"></i>
+                                        <span>40 AMSK Daily</span>
+                                    </div>
+                                </div>
+                                <button class="stake-btn" data-plan="1">Stake Now</button>
+                            </div>
+                            
+                            <div class="plan-card" data-plan="2">
+                                <div class="plan-header">
+                                    <div class="plan-icon gold">
+                                        <i class="fas fa-award"></i>
+                                    </div>
+                                    <div class="plan-title">Gold Plan</div>
+                                </div>
+                                <div class="plan-details">
+                                    <div class="plan-amount">50 USDT</div>
+                                    <div class="plan-duration">15 Days</div>
+                                    <div class="plan-apr">50% APR</div>
+                                    <div class="plan-reward">
+                                        <i class="fas fa-gift"></i>
+                                        <span>250 AMSK Daily</span>
+                                    </div>
+                                </div>
+                                <button class="stake-btn" data-plan="2">Stake Now</button>
+                            </div>
+                            
+                            <div class="plan-card" data-plan="3">
+                                <div class="plan-header">
+                                    <div class="plan-icon diamond">
+                                        <i class="fas fa-crown"></i>
+                                    </div>
+                                    <div class="plan-title">Diamond Plan</div>
+                                </div>
+                                <div class="plan-details">
+                                    <div class="plan-amount">100 USDT</div>
+                                    <div class="plan-duration">30 Days</div>
+                                    <div class="plan-apr">60% APR</div>
+                                    <div class="plan-reward">
+                                        <i class="fas fa-gift"></i>
+                                        <span>600 AMSK Daily</span>
+                                    </div>
+                                </div>
+                                <button class="stake-btn" data-plan="3">Stake Now</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- WALLET PAGE -->
-            <div id="wallet-page" class="page">
-                <!-- Wallet Content -->
-                <section class="page-header">
-                    <h2><i class="fas fa-wallet"></i> المحفظة المتعددة</h2>
-                    <p class="page-subtitle">ادارة جميع أصولك في مكان واحد</p>
-                </section>
+            <!-- Wallet Page -->
+            <div class="page" id="wallet-page" data-page="wallet">
+                <div class="page-header">
+                    <h2><i class="fas fa-wallet"></i> Multi-Currency Wallet</h2>
+                    <p class="page-subtitle">Manage all your assets</p>
+                </div>
                 
                 <div class="wallet-content">
-                    <!-- سأضيف محتوى المحفظة هنا -->
-                    <div class="empty-state">
-                        <i class="fas fa-wallet"></i>
-                        <h3>أصول المحفظة</h3>
-                        <p>سيتم عرض جميع أصول المحفظة هنا</p>
+                    <div class="total-balance-section">
+                        <div class="balance-display">
+                            <div class="balance-label">Total Portfolio Value</div>
+                            <div class="balance-main">
+                                <span id="wallet-total-amsk">2,500</span>
+                                <span class="currency">AMSK</span>
+                            </div>
+                            <div class="balance-secondary">
+                                ≈ $<span id="wallet-total-usd">0.50</span>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <button class="quick-btn" data-action="swap">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Swap</span>
+                            </button>
+                            <button class="quick-btn" data-action="deposit">
+                                <i class="fas fa-arrow-down"></i>
+                                <span>Deposit</span>
+                            </button>
+                            <button class="quick-btn" data-action="withdraw">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Withdraw</span>
+                            </button>
+                            <button class="quick-btn" data-action="history">
+                                <i class="fas fa-history"></i>
+                                <span>History</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="assets-list">
+                        <div class="asset-card amsk-asset">
+                            <div class="asset-header">
+                                <div class="asset-icon">
+                                    <i class="fas fa-user-astronaut"></i>
+                                </div>
+                                <div class="asset-info">
+                                    <h4>Alien Musk (AMSK)</h4>
+                                    <p class="asset-price">$0.0002 per AMSK</p>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="wallet-amsk">2,500</div>
+                                <div class="balance-value">≈ $<span id="wallet-amsk-value">0.50</span></div>
+                            </div>
+                            <div class="asset-actions">
+                                <button class="asset-action-btn" data-action="send" data-currency="AMSK">
+                                    <i class="fas fa-paper-plane"></i>
+                                    <span>Send</span>
+                                </button>
+                                <button class="asset-action-btn" data-action="receive" data-currency="AMSK">
+                                    <i class="fas fa-qrcode"></i>
+                                    <span>Receive</span>
+                                </button>
+                                <button class="asset-action-btn" data-action="swap" data-currency="AMSK">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    <span>Swap</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="asset-card usdt-asset">
+                            <div class="asset-header">
+                                <div class="asset-icon">
+                                    <i class="fab fa-usd"></i>
+                                </div>
+                                <div class="asset-info">
+                                    <h4>Tether (USDT)</h4>
+                                    <p class="asset-price">BEP20 Network</p>
+                                </div>
+                            </div>
+                            <div class="asset-balance">
+                                <div class="balance-amount" id="wallet-usdt">100.00</div>
+                                <div class="balance-value">≈ $<span id="wallet-usdt-value">100.00</span></div>
+                            </div>
+                            <div class="asset-actions">
+                                <button class="asset-action-btn" data-action="deposit" data-currency="USDT">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>Deposit</span>
+                                </button>
+                                <button class="asset-action-btn" data-action="withdraw" data-currency="USDT">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>Withdraw</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- ========== MODALS ========== -->
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-btn active" data-page="home">
+                <div class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span class="nav-label">Home</span>
+            </a>
+            
+            <a href="#" class="nav-btn" data-page="staking">
+                <div class="nav-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="nav-label">Staking</span>
+            </a>
+            
+            <a href="#" class="nav-btn" data-page="wallet">
+                <div class="nav-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <span class="nav-label">Wallet</span>
+            </a>
+        </nav>
+
+        <!-- Modals -->
+        <div class="modal-overlay" id="modal-overlay"></div>
+        
         <!-- Deposit Modal -->
-        <div id="deposit-modal" class="modal">
+        <div class="modal" id="deposit-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-arrow-down"></i> إيداع الأموال</h3>
+                    <h3><i class="fas fa-arrow-down"></i> Deposit Funds</h3>
                     <button class="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Deposit form will be inserted here by JS -->
+                    <!-- Deposit content will be added by JS -->
                 </div>
             </div>
         </div>
 
         <!-- Withdraw Modal -->
-        <div id="withdraw-modal" class="modal">
+        <div class="modal" id="withdraw-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-arrow-up"></i> سحب الأموال</h3>
+                    <h3><i class="fas fa-arrow-up"></i> Withdraw Funds</h3>
                     <button class="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Withdraw form will be inserted here by JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Stake Modal -->
-        <div id="stake-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3><i class="fas fa-gem"></i> تأكيد الستيكينغ</h3>
-                    <button class="close-modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <!-- Stake form will be inserted here by JS -->
+                    <!-- Withdraw content will be added by JS -->
                 </div>
             </div>
         </div>
 
         <!-- Swap Modal -->
-        <div id="swap-modal" class="modal">
+        <div class="modal" id="swap-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-exchange-alt"></i> مبادلة العملات</h3>
+                    <h3><i class="fas fa-exchange-alt"></i> Swap Tokens</h3>
                     <button class="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Swap form will be inserted here by JS -->
+                    <!-- Swap content will be added by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Stake Modal -->
+        <div class="modal" id="stake-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-gem"></i> Confirm Staking</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Stake content will be added by JS -->
                 </div>
             </div>
         </div>
 
         <!-- Booster Modal -->
-        <div id="booster-modal" class="modal">
+        <div class="modal" id="booster-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-bolt"></i> تفعيل المعزز</h3>
+                    <h3><i class="fas fa-bolt"></i> Activate Booster</h3>
                     <button class="close-modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <!-- Booster confirmation will be inserted here by JS -->
+                    <!-- Booster content will be added by JS -->
                 </div>
             </div>
         </div>
 
-        <!-- Admin Panel (Hidden) -->
-        <div id="admin-panel" class="admin-panel">
-            <!-- Will be populated by JavaScript -->
-        </div>
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="admin-panel"></div>
+
+        <!-- Notification Center -->
+        <div id="notification-center" class="notification-center"></div>
     </div>
 
-    <!-- Notification Center -->
-    <div id="notification-center" class="notification-center"></div>
-
-    <!-- Modal Overlay -->
-    <div id="modal-overlay" class="modal-overlay"></div>
-
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <!-- Main JavaScript -->
     <script src="app.js"></script>
 </body>
