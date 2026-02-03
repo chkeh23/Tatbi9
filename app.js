@@ -1,26 +1,81 @@
 /* ===========================================
    ALIEN MUSK - Ultimate Crypto Platform
    Main Application JavaScript
-   Version: 3.0.0 (Professional & Organized)
+   Version: 4.0.0 (Professional & Complete)
    =========================================== */
+
+// Firebase Configuration
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+    authDomain: "tatbi9-681bf.firebaseapp.com",
+    projectId: "tatbi9-681bf",
+    storageBucket: "tatbi9-681bf.firebasestorage.app",
+    messagingSenderId: "863237064748",
+    appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+};
 
 // App Configuration
 const APP_CONFIG = {
     AMSK_PRICE: 0.0002,
     
-    // Mining Configuration
+    // Mining Configuration - Updated to 2,500/hour
     MINING_LEVELS: {
-        1: { name: "Beginner", cost: 0, reward: 25000, hashrate: 100 },
-        2: { name: "Advanced", cost: 5, reward: 50000, hashrate: 200 },
-        3: { name: "Pro", cost: 20, reward: 100000, hashrate: 400 },
-        4: { name: "Expert", cost: 100, reward: 250000, hashrate: 800 }
+        1: { 
+            name: "Beginner", 
+            cost: 0, 
+            reward: 2500,  // 2,500 AMSK per hour
+            hashrate: "2,500",
+            duration: 1 // 1 hour
+        },
+        2: { 
+            name: "Advanced", 
+            cost: 5, 
+            reward: 5000,  // 5,000 AMSK per hour
+            hashrate: "5,000",
+            duration: 1
+        },
+        3: { 
+            name: "Pro", 
+            cost: 20, 
+            reward: 10000, // 10,000 AMSK per hour
+            hashrate: "10,000",
+            duration: 1
+        },
+        4: { 
+            name: "Expert", 
+            cost: 100, 
+            reward: 25000, // 25,000 AMSK per hour
+            hashrate: "25,000",
+            duration: 1
+        }
     },
     
     // Staking Plans
     STAKING_PLANS: {
-        1: { name: "Silver", amount: 10, duration: 7, apr: 40, dailyReward: 40 },
-        2: { name: "Gold", amount: 50, duration: 15, apr: 50, dailyReward: 250 },
-        3: { name: "Diamond", amount: 100, duration: 30, apr: 60, dailyReward: 600 }
+        1: { 
+            name: "Silver", 
+            amount: 10, 
+            duration: 7, 
+            apr: 40, 
+            dailyReward: 40,
+            color: "silver"
+        },
+        2: { 
+            name: "Gold", 
+            amount: 50, 
+            duration: 15, 
+            apr: 50, 
+            dailyReward: 250,
+            color: "gold"
+        },
+        3: { 
+            name: "Diamond", 
+            amount: 100, 
+            duration: 30, 
+            apr: 60, 
+            dailyReward: 600,
+            color: "#B9F2FF"
+        }
     },
     
     // Referral Rewards
@@ -32,17 +87,12 @@ const APP_CONFIG = {
     SWAP_RATES: {
         AMSK_TO_USDT: 0.0002,
         USDT_TO_AMSK: 5000
-    }
-};
-
-// Firebase Configuration
-const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
-    authDomain: "tatbi9-681bf.firebaseapp.com",
-    projectId: "tatbi9-681bf",
-    storageBucket: "tatbi9-681bf.firebasestorage.app",
-    messagingSenderId: "863237064748",
-    appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+    },
+    
+    // Minimum Limits
+    MIN_DEPOSIT: 10,
+    MIN_WITHDRAWAL: 100,
+    MIN_SWAP_AMSK: 250000
 };
 
 class AlienMuskApp {
@@ -67,6 +117,9 @@ class AlienMuskApp {
             // Cache DOM elements
             this.cacheElements();
             
+            // Initialize UI
+            this.initUI();
+            
             // Setup event listeners
             this.setupEventListeners();
             
@@ -79,10 +132,14 @@ class AlienMuskApp {
             // Hide loading
             this.hideLoading();
             
+            // Show welcome notification
+            this.showNotification('Welcome to Alien Musk! 🚀', 'success');
+            
             console.log('✅ App initialized successfully');
             
         } catch (error) {
             console.error('❌ App initialization failed:', error);
+            this.showNotification('Failed to initialize app. Please refresh.', 'error');
             this.hideLoading();
         }
     }
@@ -93,7 +150,9 @@ class AlienMuskApp {
 
     async initFirebase() {
         try {
-            firebase.initializeApp(FIREBASE_CONFIG);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(FIREBASE_CONFIG);
+            }
             this.db = firebase.firestore();
             console.log('🔥 Firebase initialized');
         } catch (error) {
@@ -116,7 +175,8 @@ class AlienMuskApp {
                     user: {
                         id: Date.now(),
                         username: 'alien_user',
-                        first_name: 'Alien'
+                        first_name: 'Alien',
+                        photo_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
                     }
                 }
             };
@@ -124,30 +184,40 @@ class AlienMuskApp {
     }
 
     setupInitialState() {
+        const user = this.tg.initDataUnsafe?.user || {};
+        
         this.state = {
             user: {
-                id: this.tg?.initDataUnsafe?.user?.id || Date.now(),
-                name: this.tg?.initDataUnsafe?.user?.first_name || 'Alien',
-                username: this.tg?.initDataUnsafe?.user?.username || 'alien_user'
+                id: user.id || Date.now().toString(),
+                name: user.first_name || 'Alien',
+                username: user.username || 'alien_user',
+                photoUrl: user.photo_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
             },
             mining: {
                 level: 1,
                 isActive: true,
-                nextReward: Date.now() + (4 * 60 * 60 * 1000), // 4 hours
+                nextReward: Date.now() + (60 * 60 * 1000), // 1 hour
                 minedToday: 0,
-                totalMined: 0
+                totalMined: 2500, // Starting balance
+                lastClaim: Date.now()
             },
             staking: {
-                activeStakes: []
+                activeStakes: [],
+                totalEarned: 0
             },
             balances: {
-                AMSK: 0,
-                USDT: 0
+                AMSK: 2500, // Starting with 2,500 AMSK
+                USDT: 100   // Starting with 100 USDT
             },
             referral: {
                 code: 'ALIEN-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
                 referrals: 0,
                 earned: 0
+            },
+            transactions: {
+                deposits: [],
+                withdrawals: [],
+                swaps: []
             }
         };
     }
@@ -162,6 +232,7 @@ class AlienMuskApp {
         this.userId = document.getElementById('user-id');
         this.totalAmsk = document.getElementById('total-amsk');
         this.usdEquivalent = document.getElementById('usd-equivalent');
+        this.userAvatar = document.getElementById('user-avatar');
         
         // Mining Elements
         this.currentHashrate = document.getElementById('current-hashrate');
@@ -179,6 +250,10 @@ class AlienMuskApp {
         this.refCount = document.getElementById('ref-count');
         this.totalRefs = document.getElementById('total-refs');
         this.refEarned = document.getElementById('ref-earned');
+        this.nextGoal = document.getElementById('next-goal');
+        this.progressText = document.getElementById('progress-text');
+        this.progressFill = document.getElementById('progress-fill');
+        this.goalReward = document.getElementById('goal-reward');
         this.refCode = document.getElementById('ref-code');
         this.copyRefCode = document.getElementById('copy-ref-code');
         this.shareRef = document.getElementById('share-ref');
@@ -201,34 +276,75 @@ class AlienMuskApp {
         this.walletAmskValue = document.getElementById('wallet-amsk-value');
         this.walletUsdt = document.getElementById('wallet-usdt');
         this.walletUsdtValue = document.getElementById('wallet-usdt-value');
+        this.usdtAddress = document.getElementById('usdt-address');
         
         // Quick Actions
         this.quickBtns = document.querySelectorAll('.quick-btn');
+        
+        // Asset Actions
+        this.assetActionBtns = document.querySelectorAll('.asset-action-btn');
         
         // Modal Elements
         this.modalOverlay = document.getElementById('modal-overlay');
         this.closeModalBtns = document.querySelectorAll('.close-modal');
         
+        // Deposit Modal
+        this.currencyOptions = document.querySelectorAll('.currency-option');
+        this.depositAddress = document.getElementById('deposit-address');
+        this.submitDeposit = document.getElementById('submit-deposit');
+        
+        // Withdraw Modal
+        this.withdrawBalance = document.getElementById('withdraw-balance');
+        this.submitWithdraw = document.getElementById('submit-withdraw');
+        
+        // Swap Modal
+        this.swapFromAmount = document.getElementById('swap-from-amount');
+        this.swapToAmount = document.getElementById('swap-to-amount');
+        this.submitSwap = document.getElementById('submit-swap');
+        
+        // Stake Modal
+        this.stakeAmount = document.getElementById('stake-amount');
+        this.confirmStake = document.getElementById('confirm-stake');
+        
         // Loading
         this.loadingSpinner = document.getElementById('loading-spinner');
+        
+        // Header
+        this.headerBalance = document.getElementById('header-balance');
     }
 
-    /* ===========================================
-       EVENT LISTENERS SETUP
-       =========================================== */
+    initUI() {
+        // Set user info
+        this.welcomeText.textContent = `Welcome, ${this.state.user.name}!`;
+        this.userId.textContent = this.state.user.id.substring(0, 8);
+        this.userAvatar.src = this.state.user.photoUrl;
+        
+        // Update all UI
+        this.updateHeader();
+        this.updateHomeTab();
+        this.updateStakingTab();
+        this.updateWalletTab();
+        
+        // Show home tab by default
+        this.switchTab('home');
+    }
 
     setupEventListeners() {
-        // Navigation
+        // Navigation - This is the most important part!
         this.navBtns.forEach(btn => {
-            btn.addEventListener('click', () => this.switchTab(btn.dataset.tab));
+            btn.addEventListener('click', (e) => {
+                const tab = e.currentTarget.dataset.tab;
+                this.switchTab(tab);
+            });
         });
 
         // Mining
         this.startMiningBtn.addEventListener('click', () => this.handleMining());
         
         // Mining Levels
-        document.querySelectorAll('.upgrade-btn').forEach(btn => {
+        document.querySelectorAll('.upgrade-btn:not(.active-btn)').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                if (e.target.disabled) return;
                 const card = e.target.closest('.level-card');
                 if (card) {
                     this.upgradeMining(card.dataset.level);
@@ -243,7 +359,7 @@ class AlienMuskApp {
         // Staking
         this.stakeBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const planId = e.target.dataset.plan;
+                const planId = e.currentTarget.dataset.plan;
                 this.openStakeModal(planId);
             });
         });
@@ -260,6 +376,22 @@ class AlienMuskApp {
             });
         });
 
+        // Asset Actions
+        this.assetActionBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.currentTarget.dataset.action;
+                const currency = e.currentTarget.dataset.currency;
+                this.handleAssetAction(action, currency);
+            });
+        });
+
+        // Copy Address
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.copyToClipboard(this.usdtAddress.textContent);
+            });
+        });
+
         // Modal Controls
         this.closeModalBtns.forEach(btn => {
             btn.addEventListener('click', () => this.closeAllModals());
@@ -267,13 +399,26 @@ class AlienMuskApp {
         
         this.modalOverlay.addEventListener('click', () => this.closeAllModals());
 
-        // Copy buttons
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const address = document.getElementById('usdt-address').textContent;
-                this.copyToClipboard(address);
+        // Deposit Modal
+        this.currencyOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                this.currencyOptions.forEach(opt => opt.classList.remove('active'));
+                e.currentTarget.classList.add('active');
             });
         });
+
+        this.submitDeposit.addEventListener('click', () => this.submitDeposit());
+
+        // Withdraw Modal
+        this.submitWithdraw.addEventListener('click', () => this.submitWithdrawal());
+
+        // Swap Modal
+        this.swapFromAmount.addEventListener('input', () => this.updateSwap());
+        this.submitSwap.addEventListener('click', () => this.executeSwap());
+
+        // Stake Modal
+        this.stakeAmount.addEventListener('input', () => this.updateStakePreview());
+        this.confirmStake.addEventListener('click', () => this.confirmStaking());
 
         // Admin access (5 clicks on logo)
         let clickCount = 0;
@@ -294,13 +439,19 @@ class AlienMuskApp {
     }
 
     /* ===========================================
-       TAB NAVIGATION - IMPROVED
+       TAB NAVIGATION - NOW WORKING!
        =========================================== */
 
     switchTab(tabName) {
+        console.log('Switching to tab:', tabName);
+        
         // Update active nav button
         this.navBtns.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.tab === tabName);
+            if (btn.dataset.tab === tabName) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
 
         // Hide all tabs
@@ -329,72 +480,76 @@ class AlienMuskApp {
     }
 
     /* ===========================================
-       USER DATA MANAGEMENT
+       DATA MANAGEMENT
        =========================================== */
 
     async loadUserData() {
         try {
-            const userId = this.state.user.id.toString();
-            const userRef = this.db.collection('users').doc(userId);
-            const userDoc = await userRef.get();
-            
-            if (userDoc.exists) {
-                const userData = userDoc.data();
-                this.state = { ...this.state, ...userData };
+            if (this.useLocalStorage) {
+                this.loadFromLocalStorage();
             } else {
-                // Create new user
-                await userRef.set(this.state);
+                const userId = this.state.user.id.toString();
+                const userRef = this.db.collection('users').doc(userId);
+                const userDoc = await userRef.get();
+                
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    this.state = { ...this.state, ...userData };
+                } else {
+                    await userRef.set(this.state);
+                }
             }
             
             this.updateUI();
             
         } catch (error) {
             console.error('Error loading user data:', error);
-            // Load from localStorage as fallback
             this.loadFromLocalStorage();
         }
     }
 
     async saveUserData() {
         try {
-            const userId = this.state.user.id.toString();
-            const userRef = this.db.collection('users').doc(userId);
-            await userRef.set(this.state, { merge: true });
+            if (this.useLocalStorage) {
+                this.saveToLocalStorage();
+            } else {
+                const userId = this.state.user.id.toString();
+                const userRef = this.db.collection('users').doc(userId);
+                await userRef.set(this.state, { merge: true });
+            }
         } catch (error) {
             console.error('Error saving user data:', error);
-            // Save to localStorage as fallback
             this.saveToLocalStorage();
         }
     }
 
     loadFromLocalStorage() {
-        const savedData = localStorage.getItem('alien_musk_user_data');
+        const savedData = localStorage.getItem('alien_musk_data');
         if (savedData) {
             this.state = JSON.parse(savedData);
         }
     }
 
     saveToLocalStorage() {
-        localStorage.setItem('alien_musk_user_data', JSON.stringify(this.state));
+        localStorage.setItem('alien_musk_data', JSON.stringify(this.state));
     }
 
     /* ===========================================
        UI UPDATE METHODS
        =========================================== */
 
-    updateUI() {
-        this.updateHomeTab();
-        this.updateStakingTab();
-        this.updateWalletTab();
+    updateHeader() {
+        const totalValue = (this.state.balances.AMSK * APP_CONFIG.AMSK_PRICE) + this.state.balances.USDT;
+        this.headerBalance.textContent = `$${this.formatNumber(totalValue, 2)}`;
     }
 
     updateHomeTab() {
         // Welcome message
         this.welcomeText.textContent = `Welcome, ${this.state.user.name}!`;
-        this.userId.textContent = this.state.user.id.toString().substr(0, 8);
+        this.userId.textContent = this.state.user.id.substring(0, 8);
         
         // Balance
-        const totalAMSK = this.state.balances.AMSK || 0;
+        const totalAMSK = this.state.balances.AMSK;
         this.totalAmsk.textContent = this.formatNumber(totalAMSK);
         this.usdEquivalent.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
         
@@ -403,10 +558,21 @@ class AlienMuskApp {
         this.currentHashrate.textContent = miningLevel.hashrate;
         this.nextReward.textContent = `${this.formatNumber(miningLevel.reward)} AMSK`;
         
+        // Update mining button
+        if (this.state.mining.isActive && Date.now() >= this.state.mining.nextReward) {
+            this.startMiningBtn.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
+        } else if (this.state.mining.isActive) {
+            this.startMiningBtn.innerHTML = '<i class="fas fa-clock"></i><span>Mining...</span>';
+            this.startMiningBtn.disabled = true;
+        } else {
+            this.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
+            this.startMiningBtn.disabled = false;
+        }
+        
         // Stats
         this.minedToday.textContent = this.formatNumber(this.state.mining.minedToday);
         this.totalMined.textContent = this.formatNumber(this.state.mining.totalMined);
-        this.stakingEarned.textContent = this.formatNumber(this.state.staking.totalEarned || 0);
+        this.stakingEarned.textContent = this.formatNumber(this.state.staking.totalEarned);
         this.miningLevel.textContent = this.state.mining.level;
         
         // Referral info
@@ -415,8 +581,10 @@ class AlienMuskApp {
         this.refEarned.textContent = `${this.formatNumber(this.state.referral.earned)} AMSK`;
         this.refCode.textContent = this.state.referral.code;
         
-        // Update mining timer
-        this.updateMiningTimer();
+        // Update progress
+        const progress = (this.state.referral.referrals / 10) * 100;
+        this.progressText.textContent = `${Math.min(progress, 100)}%`;
+        this.progressFill.style.width = `${Math.min(progress, 100)}%`;
         
         // Update mining levels
         this.updateMiningLevels();
@@ -431,8 +599,8 @@ class AlienMuskApp {
     }
 
     updateWalletTab() {
-        const totalAMSK = this.state.balances.AMSK || 0;
-        const usdtBalance = this.state.balances.USDT || 0;
+        const totalAMSK = this.state.balances.AMSK;
+        const usdtBalance = this.state.balances.USDT;
         
         // Total balance
         this.walletTotalAmsk.textContent = this.formatNumber(totalAMSK);
@@ -445,24 +613,9 @@ class AlienMuskApp {
         // USDT balance
         this.walletUsdt.textContent = this.formatNumber(usdtBalance, 2);
         this.walletUsdtValue.textContent = this.formatNumber(usdtBalance, 2);
-    }
-
-    updateMiningTimer() {
-        const now = Date.now();
-        const timeLeft = this.state.mining.nextReward - now;
         
-        if (timeLeft <= 0) {
-            this.miningTimer.textContent = 'READY!';
-            this.miningTimer.style.color = '#00D4AA';
-        } else {
-            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            
-            this.miningTimer.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            this.miningTimer.style.color = '#FFFFFF';
-        }
+        // Update withdraw balance
+        this.withdrawBalance.textContent = this.formatNumber(usdtBalance, 2);
     }
 
     updateMiningLevels() {
@@ -476,13 +629,16 @@ class AlienMuskApp {
             if (isCurrentLevel) {
                 btn.textContent = 'Active';
                 btn.disabled = true;
+                btn.classList.add('active-btn');
                 card.classList.add('active');
             } else if (level < this.state.mining.level) {
                 btn.textContent = 'Upgraded';
                 btn.disabled = true;
+                btn.classList.add('active-btn');
             } else {
                 btn.textContent = canAfford ? 'Upgrade' : `Need ${levelData.cost} USDT`;
                 btn.disabled = !canAfford;
+                btn.classList.remove('active-btn');
                 card.classList.remove('active');
             }
         });
@@ -492,7 +648,7 @@ class AlienMuskApp {
         const stakesList = this.activeStakesList;
         stakesList.innerHTML = '';
         
-        if (!this.state.staking.activeStakes || this.state.staking.activeStakes.length === 0) {
+        if (this.state.staking.activeStakes.length === 0) {
             stakesList.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-inbox"></i>
@@ -525,29 +681,41 @@ class AlienMuskApp {
                         <span class="value">${plan.dailyReward} AMSK</span>
                     </div>
                 </div>
+                <button class="claim-btn" data-index="${index}">Claim</button>
             `;
             
             stakesList.appendChild(stakeElement);
         });
+        
+        // Add claim button listeners
+        stakesList.querySelectorAll('.claim-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.target.dataset.index);
+                this.claimStakingReward(index);
+            });
+        });
     }
 
     updateCalculator() {
-        const amount = parseFloat(this.calcAmount.value) || 100;
-        const duration = parseInt(this.calcDuration.value) || 30;
+        const amount = parseFloat(this.calcAmount.value) || 10;
+        const duration = parseInt(this.calcDuration.value) || 7;
         
         // Find appropriate APR
         let apr = 40;
-        for (const [id, plan] of Object.entries(APP_CONFIG.STAKING_PLANS)) {
-            if (amount >= plan.amount) {
-                apr = plan.apr;
-            }
+        let dailyReward = 40;
+        
+        if (amount >= 100) {
+            apr = 60;
+            dailyReward = 600;
+        } else if (amount >= 50) {
+            apr = 50;
+            dailyReward = 250;
         }
         
-        const dailyReward = (amount * (apr / 100)) / 365;
         const totalReward = dailyReward * duration;
         
-        this.calcDaily.textContent = `${this.formatNumber(dailyReward, 2)} AMSK`;
-        this.calcTotal.textContent = `${this.formatNumber(totalReward, 2)} AMSK`;
+        this.calcDaily.textContent = `${this.formatNumber(dailyReward)} AMSK`;
+        this.calcTotal.textContent = `${this.formatNumber(totalReward)} AMSK`;
         this.calcApr.textContent = `${apr}%`;
     }
 
@@ -556,16 +724,22 @@ class AlienMuskApp {
        =========================================== */
 
     handleMining() {
-        if (this.state.mining.isActive) {
+        if (!this.state.mining.isActive) {
+            this.startMining();
+            return;
+        }
+        
+        if (Date.now() >= this.state.mining.nextReward) {
             this.claimMiningReward();
         } else {
-            this.startMining();
+            this.showNotification('Mining in progress... ⏳', 'info');
         }
     }
 
     startMining() {
         this.state.mining.isActive = true;
-        this.state.mining.nextReward = Date.now() + (4 * 60 * 60 * 1000);
+        this.state.mining.nextReward = Date.now() + (60 * 60 * 1000); // 1 hour
+        this.state.mining.lastClaim = Date.now();
         
         this.updateHomeTab();
         this.saveUserData();
@@ -575,7 +749,6 @@ class AlienMuskApp {
 
     claimMiningReward() {
         if (!this.state.mining.isActive || Date.now() < this.state.mining.nextReward) {
-            this.showNotification('Mining in progress...', 'info');
             return;
         }
         
@@ -583,17 +756,18 @@ class AlienMuskApp {
         const reward = miningLevel.reward;
         
         // Add reward
-        this.state.balances.AMSK = (this.state.balances.AMSK || 0) + reward;
+        this.state.balances.AMSK += reward;
         this.state.mining.minedToday += reward;
         this.state.mining.totalMined += reward;
         
         // Reset timer
-        this.state.mining.nextReward = Date.now() + (4 * 60 * 60 * 1000);
+        this.state.mining.nextReward = Date.now() + (60 * 60 * 1000);
+        this.state.mining.lastClaim = Date.now();
         
         this.updateUI();
         this.saveUserData();
         
-        this.showNotification(`Claimed ${this.formatNumber(reward)} AMSK! 💎`, 'success');
+        this.showNotification(`💰 Claimed ${this.formatNumber(reward)} AMSK!`, 'success');
     }
 
     upgradeMining(level) {
@@ -617,7 +791,7 @@ class AlienMuskApp {
         this.updateUI();
         this.saveUserData();
         
-        this.showNotification(`Upgraded to ${levelData.name} level! 🚀`, 'success');
+        this.showNotification(`⚡ Upgraded to ${levelData.name} level!`, 'success');
     }
 
     /* ===========================================
@@ -634,7 +808,7 @@ class AlienMuskApp {
         document.getElementById('stake-plan-display').innerHTML = `
             <div class="selected-plan">
                 <div class="plan-header">
-                    <div class="plan-icon ${plan.name.toLowerCase()}">
+                    <div class="plan-icon ${plan.color}">
                         <i class="fas fa-gem"></i>
                     </div>
                     <div class="plan-info">
@@ -645,13 +819,13 @@ class AlienMuskApp {
             </div>
         `;
         
-        document.getElementById('available-usdt').textContent = this.formatNumber(this.state.balances.USDT || 0, 2);
+        document.getElementById('available-usdt').textContent = this.formatNumber(this.state.balances.USDT, 2);
         document.getElementById('stake-duration').textContent = `${plan.duration} Days`;
         document.getElementById('stake-apr').textContent = `${plan.apr}%`;
         document.getElementById('stake-daily').textContent = `${plan.dailyReward} AMSK`;
         document.getElementById('stake-total').textContent = `${plan.dailyReward * plan.duration} AMSK`;
         
-        // Set minimum amount
+        // Set amount
         const stakeAmountInput = document.getElementById('stake-amount');
         stakeAmountInput.value = plan.amount;
         stakeAmountInput.min = plan.amount;
@@ -661,6 +835,84 @@ class AlienMuskApp {
         
         // Show modal
         this.openModal('stake-modal');
+    }
+
+    updateStakePreview() {
+        const plan = APP_CONFIG.STAKING_PLANS[this.currentStakePlan];
+        const amount = parseFloat(document.getElementById('stake-amount').value) || plan.amount;
+        
+        const dailyReward = (amount / plan.amount) * plan.dailyReward;
+        const totalReward = dailyReward * plan.duration;
+        
+        document.getElementById('stake-daily').textContent = `${this.formatNumber(dailyReward)} AMSK`;
+        document.getElementById('stake-total').textContent = `${this.formatNumber(totalReward)} AMSK`;
+    }
+
+    confirmStaking() {
+        const plan = APP_CONFIG.STAKING_PLANS[this.currentStakePlan];
+        const amount = parseFloat(document.getElementById('stake-amount').value);
+        
+        if (amount < plan.amount) {
+            this.showNotification(`Minimum stake is ${plan.amount} USDT`, 'error');
+            return;
+        }
+        
+        if (this.state.balances.USDT < amount) {
+            this.showNotification('Insufficient USDT balance', 'error');
+            return;
+        }
+        
+        // Create stake
+        const stake = {
+            planId: this.currentStakePlan,
+            amount: amount,
+            startTime: Date.now(),
+            endTime: Date.now() + (plan.duration * 24 * 60 * 60 * 1000),
+            claimed: 0
+        };
+        
+        // Deduct USDT
+        this.state.balances.USDT -= amount;
+        
+        // Add to active stakes
+        this.state.staking.activeStakes.push(stake);
+        
+        this.closeAllModals();
+        this.updateUI();
+        this.saveUserData();
+        
+        this.showNotification(`✅ Staked ${amount} USDT successfully!`, 'success');
+    }
+
+    claimStakingReward(index) {
+        const stake = this.state.staking.activeStakes[index];
+        if (!stake) return;
+        
+        const plan = APP_CONFIG.STAKING_PLANS[stake.planId];
+        const daysPassed = Math.floor((Date.now() - stake.startTime) / (1000 * 60 * 60 * 24));
+        const reward = (daysPassed * plan.dailyReward) - stake.claimed;
+        
+        if (reward <= 0) {
+            this.showNotification('No rewards available yet', 'info');
+            return;
+        }
+        
+        // Add reward
+        this.state.balances.AMSK += reward;
+        this.state.staking.totalEarned += reward;
+        stake.claimed += reward;
+        
+        // If stake ended, remove it
+        if (Date.now() >= stake.endTime) {
+            // Return staked amount
+            this.state.balances.USDT += stake.amount;
+            this.state.staking.activeStakes.splice(index, 1);
+        }
+        
+        this.updateUI();
+        this.saveUserData();
+        
+        this.showNotification(`💰 Claimed ${this.formatNumber(reward)} AMSK from staking!`, 'success');
     }
 
     /* ===========================================
@@ -673,24 +925,26 @@ class AlienMuskApp {
     }
 
     shareReferralLink() {
-        const message = `🚀 Join Alien Musk and earn free AMSK tokens!\n\nUse my referral code: ${this.state.referral.code}`;
+        const link = `https://t.me/alien_musk_bot?start=ref_${this.state.referral.code}`;
+        const message = `🚀 Join Alien Musk and earn 2,500 AMSK per hour!\n\nUse my referral code: ${this.state.referral.code}\n\n${link}`;
         
         if (navigator.share) {
             navigator.share({
-                title: 'Alien Musk - Ultimate Crypto Platform',
-                text: message
+                title: 'Alien Musk - Quantum Mining Platform',
+                text: message,
+                url: link
             }).catch(() => {
                 this.copyToClipboard(message);
-                this.showNotification('Referral link copied!', 'info');
+                this.showNotification('Link copied! Share with friends.', 'info');
             });
         } else {
             this.copyToClipboard(message);
-            this.showNotification('Referral link copied! Share it with friends.', 'info');
+            this.showNotification('Link copied! Share with friends.', 'info');
         }
     }
 
     /* ===========================================
-       QUICK ACTIONS
+       WALLET ACTIONS
        =========================================== */
 
     handleQuickAction(action) {
@@ -705,9 +959,144 @@ class AlienMuskApp {
                 this.openWithdrawModal();
                 break;
             case 'history':
-                this.switchTab('wallet');
+                // Show transaction history
+                this.showNotification('Transaction history coming soon!', 'info');
                 break;
         }
+    }
+
+    handleAssetAction(action, currency) {
+        switch (action) {
+            case 'deposit':
+                this.openDepositModal();
+                break;
+            case 'withdraw':
+                this.openWithdrawModal();
+                break;
+            case 'swap':
+                this.openSwapModal();
+                break;
+            case 'send':
+                this.showNotification('Send feature coming soon!', 'info');
+                break;
+            case 'receive':
+                this.showNotification('Your address: ' + this.usdtAddress.textContent, 'info');
+                break;
+        }
+    }
+
+    openDepositModal() {
+        this.openModal('deposit-modal');
+    }
+
+    openWithdrawModal() {
+        this.openModal('withdraw-modal');
+    }
+
+    openSwapModal() {
+        this.openModal('swap-modal');
+    }
+
+    submitDeposit() {
+        const amount = parseFloat(document.getElementById('deposit-amount-input').value);
+        const txId = document.getElementById('tx-id-input').value;
+        
+        if (!amount || amount < APP_CONFIG.MIN_DEPOSIT) {
+            this.showNotification(`Minimum deposit is ${APP_CONFIG.MIN_DEPOSIT} USDT`, 'error');
+            return;
+        }
+        
+        if (!txId) {
+            this.showNotification('Please enter Transaction ID', 'error');
+            return;
+        }
+        
+        this.showNotification('Deposit request submitted! ⏳', 'success');
+        this.closeAllModals();
+    }
+
+    submitWithdrawal() {
+        const amount = parseFloat(document.getElementById('withdraw-amount').value);
+        const address = document.getElementById('withdraw-address').value;
+        
+        if (!amount || amount < APP_CONFIG.MIN_WITHDRAWAL) {
+            this.showNotification(`Minimum withdrawal is ${APP_CONFIG.MIN_WITHDRAWAL} USDT`, 'error');
+            return;
+        }
+        
+        if (!address) {
+            this.showNotification('Please enter wallet address', 'error');
+            return;
+        }
+        
+        if (this.state.balances.USDT < amount) {
+            this.showNotification('Insufficient USDT balance', 'error');
+            return;
+        }
+        
+        this.showNotification('Withdrawal request submitted! ⏳', 'success');
+        this.closeAllModals();
+    }
+
+    updateSwap() {
+        const amount = parseFloat(this.swapFromAmount.value) || 0;
+        const fromCurrency = document.getElementById('swap-from-currency').value;
+        const toCurrency = document.getElementById('swap-to-currency').value;
+        
+        let result = 0;
+        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
+            result = amount * APP_CONFIG.SWAP_RATES.AMSK_TO_USDT;
+        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
+            result = amount * APP_CONFIG.SWAP_RATES.USDT_TO_AMSK;
+        }
+        
+        this.swapToAmount.textContent = this.formatNumber(result, 2);
+        
+        // Validate
+        const isValid = amount > 0 && 
+                       ((fromCurrency === 'AMSK' && amount >= APP_CONFIG.MIN_SWAP_AMSK) || 
+                        (fromCurrency === 'USDT' && amount >= 50));
+        
+        this.submitSwap.disabled = !isValid;
+    }
+
+    executeSwap() {
+        const amount = parseFloat(this.swapFromAmount.value);
+        const fromCurrency = document.getElementById('swap-from-currency').value;
+        const toCurrency = document.getElementById('swap-to-currency').value;
+        
+        let result = 0;
+        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
+            if (amount < APP_CONFIG.MIN_SWAP_AMSK) {
+                this.showNotification(`Minimum swap is ${APP_CONFIG.MIN_SWAP_AMSK} AMSK`, 'error');
+                return;
+            }
+            if (this.state.balances.AMSK < amount) {
+                this.showNotification('Insufficient AMSK balance', 'error');
+                return;
+            }
+            result = amount * APP_CONFIG.SWAP_RATES.AMSK_TO_USDT;
+            this.state.balances.AMSK -= amount;
+            this.state.balances.USDT += result;
+        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
+            if (amount < 50) {
+                this.showNotification('Minimum swap is 50 USDT', 'error');
+                return;
+            }
+            if (this.state.balances.USDT < amount) {
+                this.showNotification('Insufficient USDT balance', 'error');
+                return;
+            }
+            result = amount * APP_CONFIG.SWAP_RATES.USDT_TO_AMSK;
+            this.state.balances.USDT -= amount;
+            this.state.balances.AMSK += result;
+        }
+        
+        this.closeAllModals();
+        this.updateUI();
+        this.saveUserData();
+        
+        this.showNotification(`🔄 Swapped ${amount} ${fromCurrency} to ${this.formatNumber(result)} ${toCurrency}!`, 'success');
     }
 
     /* ===========================================
@@ -777,7 +1166,8 @@ class AlienMuskApp {
         
         // Remove after 4 seconds
         setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease';
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
@@ -795,9 +1185,27 @@ class AlienMuskApp {
     }
 
     showAdminPanel() {
-        // This would show admin panel
-        console.log('Admin panel requested');
-        this.showNotification('Admin panel access granted', 'success');
+        const adminPanel = document.getElementById('admin-panel');
+        adminPanel.innerHTML = `
+            <div class="admin-content">
+                <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
+                <p>Total Users: 1</p>
+                <p>Total AMSK in Circulation: ${this.formatNumber(this.state.balances.AMSK)}</p>
+                <button onclick="alienMuskApp.closeAdminPanel()" class="action-btn primary-btn">Close</button>
+            </div>
+        `;
+        adminPanel.classList.add('active');
+    }
+
+    closeAdminPanel() {
+        document.getElementById('admin-panel').classList.remove('active');
+    }
+
+    updateUI() {
+        this.updateHeader();
+        this.updateHomeTab();
+        this.updateStakingTab();
+        this.updateWalletTab();
     }
 
     /* ===========================================
@@ -805,7 +1213,7 @@ class AlienMuskApp {
        =========================================== */
 
     startTimers() {
-        // Mining timer
+        // Update mining timer every second
         setInterval(() => {
             this.updateMiningTimer();
         }, 1000);
@@ -814,6 +1222,37 @@ class AlienMuskApp {
         setInterval(() => {
             this.saveUserData();
         }, 30000);
+        
+        // Check for mining rewards
+        setInterval(() => {
+            if (this.state.mining.isActive && Date.now() >= this.state.mining.nextReward) {
+                this.updateHomeTab();
+            }
+        }, 1000);
+    }
+
+    updateMiningTimer() {
+        if (!this.state.mining.isActive) {
+            this.miningTimer.textContent = '00:00:00';
+            return;
+        }
+        
+        const now = Date.now();
+        const timeLeft = this.state.mining.nextReward - now;
+        
+        if (timeLeft <= 0) {
+            this.miningTimer.textContent = 'READY!';
+            this.miningTimer.style.color = '#00D4AA';
+            return;
+        }
+        
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        
+        this.miningTimer.textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        this.miningTimer.style.color = '#FFFFFF';
     }
 }
 
@@ -826,4 +1265,4 @@ document.addEventListener('DOMContentLoaded', () => {
     window.AlienMusk = window.alienMuskApp;
 });
 
-console.log('👽 Alien Musk Platform loaded!');
+console.log('👽 Alien Musk Platform loaded successfully!');
