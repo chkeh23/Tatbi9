@@ -1,15 +1,15 @@
 // ============================================
 // ALIEN MUSK - Quantum Mining Platform
-// Professional JavaScript v2.0
+// Professional Firebase Integrated Version
 // ============================================
 
-// Telegram WebApp
+// Telegram WebApp Initialization
 let tg = null;
 try {
-    if (window.Telegram && window.Telegram.WebApp) {
-        tg = window.Telegram.WebApp;
-        tg.expand();
+    tg = window.Telegram.WebApp;
+    if (tg) {
         tg.ready();
+        tg.expand();
         console.log("✅ Telegram WebApp initialized");
     }
 } catch (e) {
@@ -18,374 +18,668 @@ try {
 
 // Firebase Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCuzWYapa7LBRg40OzcHLWFBpfSrjEVQoU",
+    apiKey: "AIzaSyDummyKeyForDemoPurposesOnly",
     authDomain: "alien-musk-platform.firebaseapp.com",
     projectId: "alien-musk-platform",
-    storageBucket: "alien-musk-platform.firebasestorage.app",
-    messagingSenderId: "205041694428",
-    appId: "1:205041694428:web:5b9a0ab2cc31b118d8be619"
+    storageBucket: "alien-musk-platform.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abcdef1234567890"
 };
 
-// Initialize Firebase
+// Firebase Initialization
 let db = null;
-if (typeof firebase !== 'undefined') {
-    try {
-        firebase.initializeApp(firebaseConfig);
+let firebaseApp = null;
+
+// Initialize Firebase
+try {
+    if (typeof firebase !== 'undefined') {
+        firebaseApp = firebase.initializeApp(firebaseConfig);
         db = firebase.firestore();
-        console.log("✅ Firebase initialized");
-    } catch (error) {
-        console.error("❌ Firebase error:", error);
+        
+        // Enable offline persistence
+        db.enablePersistence().catch((err) => {
+            console.warn('Firebase persistence error:', err);
+        });
+        
+        console.log("✅ Firebase initialized successfully");
+    } else {
+        console.warn("⚠️ Firebase not available, using localStorage");
     }
+} catch (error) {
+    console.error("❌ Firebase initialization error:", error);
 }
 
 // ============================================
-// APP CONFIGURATION
+// CONFIGURATION
 // ============================================
 const CONFIG = {
     // Mining Configuration
     MINING: {
-        DURATION: 3600000, // 1 hour
+        DURATION: 3600000, // 1 hour in milliseconds
         LEVELS: {
-            1: { name: 'Beginner', reward: 2500, hashrate: 2500, cost: 0 },
-            2: { name: 'Advanced', reward: 5000, hashrate: 5000, cost: 5 },
-            3: { name: 'Pro', reward: 10000, hashrate: 10000, cost: 20 },
-            4: { name: 'Expert', reward: 25000, hashrate: 25000, cost: 100 }
+            1: { name: 'Beginner', reward: 2500, hashrate: 2500, cost: 0, multiplier: 1 },
+            2: { name: 'Advanced', reward: 5000, hashrate: 5000, cost: 5, multiplier: 2 },
+            3: { name: 'Pro', reward: 10000, hashrate: 10000, cost: 20, multiplier: 4 },
+            4: { name: 'Expert', reward: 25000, hashrate: 25000, cost: 100, multiplier: 10 }
         }
+    },
+    
+    // Booster Configuration
+    BOOSTERS: {
+        '2x': { name: 'Quantum Boost', multiplier: 2, duration: 86400000, price: 10000 },
+        '3x': { name: 'Hyper Boost', multiplier: 3, duration: 43200000, price: 15000 },
+        '5x': { name: 'Alien Boost', multiplier: 5, duration: 21600000, price: 25000 }
     },
     
     // Staking Configuration
     STAKING: {
         PLANS: {
-            1: { name: 'Silver Plan', amount: 10, duration: 7, apr: 40, dailyReward: 40 },
-            2: { name: 'Gold Plan', amount: 50, duration: 15, apr: 50, dailyReward: 250 },
-            3: { name: 'Diamond Plan', amount: 100, duration: 30, apr: 60, dailyReward: 600 }
+            1: { id: 1, name: 'Silver Plan', amount: 10, duration: 7, apr: 40, dailyReward: 40 },
+            2: { id: 2, name: 'Gold Plan', amount: 50, duration: 15, apr: 50, dailyReward: 250 },
+            3: { id: 3, name: 'Diamond Plan', amount: 100, duration: 30, apr: 60, dailyReward: 600 }
         }
     },
     
-    // Token Prices
+    // Token Prices (USD)
     PRICES: {
         AMSK: 0.0002,
-        USDT: 1,
-        BNB: 300,
-        TON: 2
+        USDT: 1.00,
+        BNB: 300.00,
+        TON: 2.00
     },
     
     // Referral System
     REFERRAL: {
-        REWARD: 10000,
-        MILESTONES: {
-            10: 250000,
-            25: 1000000,
-            50: 5000000,
-            100: 25000000
-        }
+        BASE_REWARD: 10000,
+        MILESTONES: [
+            { referrals: 10, reward: 250000 },
+            { referrals: 25, reward: 1000000 },
+            { referrals: 50, reward: 5000000 },
+            { referrals: 100, reward: 25000000 }
+        ]
     },
     
-    // Wallet Limits
+    // Wallet Configuration
     WALLET: {
         MIN_DEPOSIT_USDT: 10,
         MIN_WITHDRAWAL: 50,
+        WITHDRAWAL_FEE: 0.0005,
         DEPOSIT_ADDRESS: "0x790CAB511055F63db2F30AD227f7086bA3B6376a"
     },
     
     // Admin Configuration
     ADMIN: {
         TELEGRAM_ID: "1653918641",
-        PASSWORD: "Ali97$"
+        PASSWORD: "Ali97$",
+        SECRET_CODE: "ALIEN2024"
+    },
+    
+    // UI Configuration
+    UI: {
+        NOTIFICATION_DURATION: 4000,
+        ANIMATION_DURATION: 300
     }
 };
 
 // ============================================
-// APP STATE MANAGEMENT
-// ============================================
-class AppState {
-    constructor() {
-        this.user = {
-            id: null,
-            username: '',
-            firstName: 'Alien',
-            balance: 2500,
-            totalEarned: 2500,
-            miningLevel: 1,
-            referralCode: '',
-            referrals: [],
-            referralCount: 0,
-            referralEarnings: 0,
-            lastMine: 0,
-            isInitialized: false
-        };
-        
-        this.wallet = {
-            AMSK: 2500,
-            USDT: 100,
-            BNB: 0.5,
-            TON: 50,
-            totalWithdrawn: 0,
-            pendingDeposits: [],
-            pendingWithdrawals: [],
-            transactions: []
-        };
-        
-        this.mining = {
-            active: true,
-            lastReward: Date.now(),
-            nextReward: Date.now() + CONFIG.MINING.DURATION,
-            activeBoosters: [],
-            totalMined: 2500
-        };
-        
-        this.staking = {
-            activeStakes: [],
-            completedStakes: [],
-            totalEarned: 0
-        };
-    }
-    
-    // Generate unique referral code
-    generateReferralCode(userId) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = 'ALIEN-';
-        for (let i = 0; i < 6; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-    }
-    
-    // Calculate total balance in USD
-    calculateTotalBalance() {
-        return (
-            this.wallet.AMSK * CONFIG.PRICES.AMSK +
-            this.wallet.USDT * CONFIG.PRICES.USDT +
-            this.wallet.BNB * CONFIG.PRICES.BNB +
-            this.wallet.TON * CONFIG.PRICES.TON
-        ).toFixed(2);
-    }
-    
-    // Calculate next mining reward
-    calculateNextReward() {
-        const level = CONFIG.MINING.LEVELS[this.user.miningLevel];
-        let reward = level.reward;
-        
-        // Apply boosters
-        this.mining.activeBoosters.forEach(booster => {
-            reward *= booster.multiplier;
-        });
-        
-        return reward;
-    }
-}
-
-// ============================================
-// MAIN APP CLASS
+// MAIN APPLICATION CLASS
 // ============================================
 class AlienMuskApp {
     constructor() {
-        this.state = new AppState();
+        this.userData = null;
+        this.walletData = null;
+        this.miningData = null;
+        this.stakingData = null;
+        this.referralData = null;
+        
         this.elements = {};
-        this.adminClicks = 0;
-        this.lastAdminClick = 0;
-        this.isProcessing = false;
         this.timers = {};
+        this.modals = {};
+        this.isProcessing = false;
+        this.isAdmin = false;
+        this.adminClickCount = 0;
+        this.lastAdminClick = 0;
+        
+        this.currentPage = 'home';
+        this.currentModal = null;
+        
         this.init();
     }
     
-    // Initialize the application
+    // ============================================
+    // INITIALIZATION
+    // ============================================
     async init() {
-        console.log('👽 Initializing Alien Musk Platform...');
+        console.log('🚀 Initializing Alien Musk Platform...');
         
         try {
-            // 1. Setup Telegram user
-            await this.setupUser();
+            // 1. Show loading screen
+            this.showLoading();
             
-            // 2. Cache DOM elements
+            // 2. Initialize Telegram WebApp
+            await this.initTelegramUser();
+            
+            // 3. Cache DOM elements
             this.cacheElements();
             
-            // 3. Load saved data
-            await this.loadData();
-            
-            // 4. Initialize UI
-            this.initUI();
-            
-            // 5. Setup event listeners
+            // 4. Setup event listeners
             this.setupEventListeners();
             
-            // 6. Setup admin access
+            // 5. Setup admin access
             this.setupAdminAccess();
             
-            // 7. Start background services
+            // 6. Load user data from Firebase
+            await this.loadUserData();
+            
+            // 7. Initialize UI
+            this.initUI();
+            
+            // 8. Start background services
             this.startServices();
             
-            // Mark as initialized
-            this.state.user.isInitialized = true;
-            
-            // Show welcome message
+            // 9. Hide loading screen
             setTimeout(() => {
                 this.hideLoading();
                 this.showNotification('👽 Welcome to Alien Musk Quantum Platform!', 'success');
                 console.log('✅ Platform initialized successfully');
-            }, 1000);
+            }, 1500);
             
         } catch (error) {
             console.error('❌ Initialization failed:', error);
-            this.showNotification('Failed to initialize. Please refresh.', 'error');
+            this.showNotification('Failed to initialize platform. Please refresh.', 'error');
             this.hideLoading();
         }
     }
     
-    // Setup Telegram user
-    async setupUser() {
-        let telegramUser = null;
-        
-        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            telegramUser = tg.initDataUnsafe.user;
-            console.log("📱 Telegram user found:", telegramUser.id);
-        }
-        
-        if (telegramUser) {
-            this.state.user.id = telegramUser.id.toString();
-            this.state.user.username = telegramUser.username ? `@${telegramUser.username}` : 
-                                     telegramUser.first_name || `User${telegramUser.id.toString().slice(-4)}`;
-            this.state.user.firstName = telegramUser.first_name || 'Alien';
-        } else {
-            const savedId = localStorage.getItem('alien_musk_user_id');
-            this.state.user.id = savedId || `user_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
-            this.state.user.username = 'Alien Explorer';
-            
-            if (!savedId) {
-                localStorage.setItem('alien_musk_user_id', this.state.user.id);
+    // Initialize Telegram user
+    async initTelegramUser() {
+        return new Promise((resolve) => {
+            try {
+                let telegramUser = null;
+                
+                if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                    telegramUser = tg.initDataUnsafe.user;
+                    console.log("📱 Telegram user found:", telegramUser.id);
+                }
+                
+                // Create initial user data structure
+                this.userData = {
+                    id: telegramUser ? telegramUser.id.toString() : `user_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+                    telegramId: telegramUser ? telegramUser.id.toString() : null,
+                    username: telegramUser ? (telegramUser.username || `user_${telegramUser.id}`) : 'Alien Explorer',
+                    firstName: telegramUser ? telegramUser.first_name : 'Alien',
+                    lastName: telegramUser ? telegramUser.last_name : '',
+                    photoUrl: telegramUser ? telegramUser.photo_url : 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien',
+                    language: telegramUser ? telegramUser.language_code : 'en',
+                    isPremium: telegramUser ? telegramUser.is_premium : false,
+                    joinedAt: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    isInitialized: false
+                };
+                
+                // Generate referral code
+                this.userData.referralCode = this.generateReferralCode(this.userData.id);
+                
+                resolve();
+                
+            } catch (error) {
+                console.error('Telegram user init error:', error);
+                resolve();
             }
-        }
-        
-        // Generate referral code if not exists
-        if (!this.state.user.referralCode) {
-            this.state.user.referralCode = this.state.generateReferralCode(this.state.user.id);
-        }
-        
-        // Check for referral parameter
-        this.checkReferral();
+        });
     }
     
     // Cache DOM elements
     cacheElements() {
-        const cache = (id) => document.getElementById(id);
+        console.log('🔍 Caching DOM elements...');
         
-        // Loading
-        this.elements.loadingScreen = cache('loading-screen');
-        this.elements.loadingProgress = cache('loading-progress');
+        // Loading screen
+        this.elements.loadingScreen = document.getElementById('loading-screen');
+        this.elements.loadingProgress = document.getElementById('loading-progress');
         
-        // Header
-        this.elements.headerBalance = cache('header-balance');
-        this.elements.username = cache('username');
-        this.elements.userId = cache('user-id');
-        this.elements.userAvatar = cache('user-avatar');
-        this.elements.homeAvatar = cache('home-avatar');
+        // Header elements
+        this.elements.headerBalance = document.getElementById('header-balance');
+        this.elements.notificationCount = document.getElementById('notification-count');
+        this.elements.userAvatar = document.getElementById('user-avatar');
+        this.elements.homeAvatar = document.getElementById('home-avatar');
         
         // Navigation
         this.elements.navButtons = document.querySelectorAll('.nav-btn');
+        this.elements.bottomNav = document.querySelector('.bottom-nav');
         
-        // Home Page
-        this.elements.totalAmsk = cache('total-amsk');
-        this.elements.usdEquivalent = cache('usd-equivalent');
-        this.elements.currentHashrate = cache('current-hashrate');
-        this.elements.miningTimer = cache('mining-timer');
-        this.elements.nextReward = cache('next-reward');
-        this.elements.startMiningBtn = cache('start-mining');
-        this.elements.minedToday = cache('mined-today');
-        this.elements.totalMined = cache('total-mined');
-        this.elements.miningLevel = cache('mining-level');
+        // Pages
+        this.elements.pages = document.querySelectorAll('.page');
         
-        // Upgrades & Boosters
+        // Home page elements
+        this.elements.username = document.getElementById('username');
+        this.elements.userId = document.getElementById('user-id');
+        this.elements.totalAmsk = document.getElementById('total-amsk');
+        this.elements.usdEquivalent = document.getElementById('usd-equivalent');
+        this.elements.currentHashrate = document.getElementById('current-hashrate');
+        this.elements.miningTimer = document.getElementById('mining-timer');
+        this.elements.nextReward = document.getElementById('next-reward');
+        this.elements.startMiningBtn = document.getElementById('start-mining');
+        this.elements.minedToday = document.getElementById('mined-today');
+        this.elements.totalMined = document.getElementById('total-mined');
+        this.elements.stakingEarned = document.getElementById('staking-earned');
+        this.elements.miningLevel = document.getElementById('mining-level');
+        
+        // Upgrade cards
+        this.elements.upgradeCards = document.querySelectorAll('.upgrade-card');
         this.elements.upgradeButtons = document.querySelectorAll('.upgrade-btn');
+        
+        // Booster cards
+        this.elements.boosterCards = document.querySelectorAll('.booster-card');
         this.elements.boosterButtons = document.querySelectorAll('.booster-btn');
         
-        // Referral
-        this.elements.refCode = cache('ref-code');
-        this.elements.copyRefCode = cache('copy-ref-code');
-        this.elements.shareRef = cache('share-ref');
-        this.elements.refCount = cache('ref-count');
-        this.elements.refEarned = cache('ref-earned');
+        // Referral elements
+        this.elements.refCount = document.getElementById('ref-count');
+        this.elements.totalRefs = document.getElementById('total-refs');
+        this.elements.refEarned = document.getElementById('ref-earned');
+        this.elements.nextGoal = document.getElementById('next-goal');
+        this.elements.progressText = document.getElementById('progress-text');
+        this.elements.progressFill = document.getElementById('progress-fill');
+        this.elements.goalReward = document.getElementById('goal-reward');
+        this.elements.refCode = document.getElementById('ref-code');
+        this.elements.copyRefCode = document.getElementById('copy-ref-code');
+        this.elements.shareRef = document.getElementById('share-ref');
         
-        // Staking
+        // Staking page elements
+        this.elements.activeStakesList = document.getElementById('active-stakes-list');
         this.elements.stakeButtons = document.querySelectorAll('.stake-btn');
-        this.elements.activeStakesList = cache('active-stakes-list');
+        this.elements.planCards = document.querySelectorAll('.plan-card');
         
-        // Wallet
-        this.elements.walletAmsk = cache('wallet-amsk');
-        this.elements.walletUsdt = cache('wallet-usdt');
+        // Wallet page elements
+        this.elements.walletTotalAmsk = document.getElementById('wallet-total-amsk');
+        this.elements.walletTotalUsd = document.getElementById('wallet-total-usd');
+        this.elements.walletAmsk = document.getElementById('wallet-amsk');
+        this.elements.walletAmskValue = document.getElementById('wallet-amsk-value');
+        this.elements.walletUsdt = document.getElementById('wallet-usdt');
+        this.elements.walletUsdtValue = document.getElementById('wallet-usdt-value');
         this.elements.quickButtons = document.querySelectorAll('.quick-btn');
+        this.elements.assetActionButtons = document.querySelectorAll('.asset-action-btn');
         
         // Modals
-        this.elements.modalOverlay = cache('modal-overlay');
+        this.elements.modalOverlay = document.getElementById('modal-overlay');
+        this.elements.depositModal = document.getElementById('deposit-modal');
+        this.elements.withdrawModal = document.getElementById('withdraw-modal');
+        this.elements.swapModal = document.getElementById('swap-modal');
+        this.elements.stakeModal = document.getElementById('stake-modal');
+        this.elements.boosterModal = document.getElementById('booster-modal');
         this.elements.closeModalButtons = document.querySelectorAll('.close-modal');
         
-        console.log('✅ DOM elements cached');
+        console.log(`✅ Cached ${Object.keys(this.elements).length} elements`);
     }
     
-    // Load data from storage
-    async loadData() {
+    // ============================================
+    // FIREBASE DATA MANAGEMENT
+    // ============================================
+    async loadUserData() {
+        if (!db) {
+            console.warn('⚠️ Firebase not available, using localStorage');
+            await this.loadFromLocalStorage();
+            return;
+        }
+        
         try {
-            const savedData = localStorage.getItem(`alien_musk_data_${this.state.user.id}`);
+            console.log('📥 Loading user data from Firebase...');
+            
+            const userRef = db.collection('users').doc(this.userData.id);
+            const userDoc = await userRef.get();
+            
+            if (userDoc.exists) {
+                // User exists in Firebase, load data
+                const firebaseData = userDoc.data();
+                
+                // Initialize user data structure
+                this.userData = {
+                    ...this.userData,
+                    ...firebaseData,
+                    isInitialized: true
+                };
+                
+                // Load wallet data
+                await this.loadWalletData();
+                
+                // Load mining data
+                await this.loadMiningData();
+                
+                // Load staking data
+                await this.loadStakingData();
+                
+                // Load referral data
+                await this.loadReferralData();
+                
+                console.log('✅ User data loaded from Firebase');
+                
+            } else {
+                // New user, create document in Firebase
+                await this.createNewUser();
+            }
+            
+        } catch (error) {
+            console.error('❌ Error loading user data:', error);
+            await this.loadFromLocalStorage();
+        }
+    }
+    
+    async createNewUser() {
+        try {
+            const initialData = {
+                // User information
+                id: this.userData.id,
+                telegramId: this.userData.telegramId,
+                username: this.userData.username,
+                firstName: this.userData.firstName,
+                photoUrl: this.userData.photoUrl,
+                joinedAt: this.userData.joinedAt,
+                lastActive: new Date().toISOString(),
+                
+                // Wallet balances
+                balance: 2500, // Initial AMSK balance
+                totalEarned: 2500,
+                usdtBalance: 100,
+                bnbBalance: 0.5,
+                tonBalance: 50,
+                
+                // Mining data
+                miningLevel: 1,
+                miningActive: true,
+                lastMineTime: Date.now(),
+                nextMineTime: Date.now() + CONFIG.MINING.DURATION,
+                totalMined: 2500,
+                minedToday: 2500,
+                
+                // Referral data
+                referralCode: this.userData.referralCode,
+                referralCount: 0,
+                referralEarnings: 0,
+                referrals: [],
+                claimedMilestones: [],
+                
+                // Staking data
+                activeStakes: [],
+                stakingEarnings: 0,
+                totalStaked: 0,
+                
+                // System data
+                version: '2.0.0',
+                settings: {
+                    notifications: true,
+                    sound: true,
+                    theme: 'dark'
+                }
+            };
+            
+            // Save to Firebase
+            await db.collection('users').doc(this.userData.id).set(initialData);
+            
+            // Update local data
+            this.userData = { ...this.userData, ...initialData, isInitialized: true };
+            this.walletData = {
+                AMSK: initialData.balance,
+                USDT: initialData.usdtBalance,
+                BNB: initialData.bnbBalance,
+                TON: initialData.tonBalance
+            };
+            
+            console.log('✅ New user created in Firebase');
+            
+        } catch (error) {
+            console.error('❌ Error creating new user:', error);
+            throw error;
+        }
+    }
+    
+    async loadWalletData() {
+        if (!db) return;
+        
+        try {
+            const walletRef = db.collection('wallets').doc(this.userData.id);
+            const walletDoc = await walletRef.get();
+            
+            if (walletDoc.exists) {
+                this.walletData = walletDoc.data();
+            } else {
+                // Create wallet if doesn't exist
+                this.walletData = {
+                    userId: this.userData.id,
+                    AMSK: this.userData.balance || 2500,
+                    USDT: this.userData.usdtBalance || 100,
+                    BNB: this.userData.bnbBalance || 0.5,
+                    TON: this.userData.tonBalance || 50,
+                    totalWithdrawn: 0,
+                    pendingDeposits: [],
+                    pendingWithdrawals: [],
+                    transactionHistory: [],
+                    lastUpdate: new Date().toISOString()
+                };
+                
+                await walletRef.set(this.walletData);
+            }
+        } catch (error) {
+            console.error('❌ Error loading wallet data:', error);
+        }
+    }
+    
+    async loadMiningData() {
+        if (!db) return;
+        
+        try {
+            const miningRef = db.collection('mining').doc(this.userData.id);
+            const miningDoc = await miningRef.get();
+            
+            if (miningDoc.exists) {
+                this.miningData = miningDoc.data();
+            } else {
+                this.miningData = {
+                    userId: this.userData.id,
+                    level: this.userData.miningLevel || 1,
+                    isActive: true,
+                    lastReward: Date.now(),
+                    nextReward: Date.now() + CONFIG.MINING.DURATION,
+                    totalMined: this.userData.totalMined || 2500,
+                    minedToday: this.userData.minedToday || 2500,
+                    activeBoosters: [],
+                    efficiency: 1.0,
+                    lastUpgrade: Date.now()
+                };
+                
+                await miningRef.set(this.miningData);
+            }
+        } catch (error) {
+            console.error('❌ Error loading mining data:', error);
+        }
+    }
+    
+    async loadStakingData() {
+        if (!db) return;
+        
+        try {
+            const stakingRef = db.collection('staking').doc(this.userData.id);
+            const stakingDoc = await stakingRef.get();
+            
+            if (stakingDoc.exists) {
+                this.stakingData = stakingDoc.data();
+            } else {
+                this.stakingData = {
+                    userId: this.userData.id,
+                    activeStakes: [],
+                    completedStakes: [],
+                    totalEarned: 0,
+                    totalStaked: 0,
+                    totalProfit: 0
+                };
+                
+                await stakingRef.set(this.stakingData);
+            }
+        } catch (error) {
+            console.error('❌ Error loading staking data:', error);
+        }
+    }
+    
+    async loadReferralData() {
+        if (!db) return;
+        
+        try {
+            const referralRef = db.collection('referrals').doc(this.userData.id);
+            const referralDoc = await referralRef.get();
+            
+            if (referralDoc.exists) {
+                this.referralData = referralDoc.data();
+            } else {
+                this.referralData = {
+                    userId: this.userData.id,
+                    code: this.userData.referralCode,
+                    referrals: [],
+                    totalCount: 0,
+                    earned: 0,
+                    claimedMilestones: [],
+                    lastReferral: null
+                };
+                
+                await referralRef.set(this.referralData);
+            }
+        } catch (error) {
+            console.error('❌ Error loading referral data:', error);
+        }
+    }
+    
+    async saveUserData() {
+        if (this.isProcessing || !this.userData.isInitialized) return;
+        
+        this.isProcessing = true;
+        
+        try {
+            // Update last active timestamp
+            this.userData.lastActive = new Date().toISOString();
+            
+            if (db) {
+                // Save to Firebase
+                await db.collection('users').doc(this.userData.id).update({
+                    balance: this.userData.balance,
+                    totalEarned: this.userData.totalEarned,
+                    miningLevel: this.userData.miningLevel,
+                    referralCount: this.userData.referralCount,
+                    referralEarnings: this.userData.referralEarnings,
+                    lastActive: this.userData.lastActive
+                });
+                
+                // Save wallet data
+                if (this.walletData) {
+                    await db.collection('wallets').doc(this.userData.id).update({
+                        AMSK: this.walletData.AMSK,
+                        USDT: this.walletData.USDT,
+                        BNB: this.walletData.BNB,
+                        TON: this.walletData.TON,
+                        lastUpdate: new Date().toISOString()
+                    });
+                }
+                
+                // Save mining data
+                if (this.miningData) {
+                    await db.collection('mining').doc(this.userData.id).update({
+                        ...this.miningData,
+                        lastUpdate: new Date().toISOString()
+                    });
+                }
+                
+                console.log('💾 Data saved to Firebase');
+            }
+            
+            // Also save to localStorage as backup
+            this.saveToLocalStorage();
+            
+        } catch (error) {
+            console.error('❌ Error saving user data:', error);
+        } finally {
+            this.isProcessing = false;
+        }
+    }
+    
+    async loadFromLocalStorage() {
+        try {
+            const savedData = localStorage.getItem(`alien_musk_${this.userData.id}`);
             
             if (savedData) {
                 const parsed = JSON.parse(savedData);
-                
-                // Merge with current state
-                Object.keys(parsed.user || {}).forEach(key => {
-                    if (this.state.user[key] !== undefined) {
-                        this.state.user[key] = parsed.user[key];
-                    }
-                });
-                
-                Object.keys(parsed.wallet || {}).forEach(key => {
-                    if (this.state.wallet[key] !== undefined) {
-                        this.state.wallet[key] = parsed.wallet[key];
-                    }
-                });
+                this.userData = { ...this.userData, ...parsed.userData, isInitialized: true };
+                this.walletData = parsed.walletData;
+                this.miningData = parsed.miningData;
+                this.stakingData = parsed.stakingData;
+                this.referralData = parsed.referralData;
                 
                 console.log('📂 Data loaded from localStorage');
+            } else {
+                // Initialize with default data
+                this.initializeDefaultData();
             }
-            
-            // Try to load from Firebase
-            if (db) {
-                await this.loadFromFirebase();
-            }
-            
         } catch (error) {
-            console.warn('Failed to load data:', error);
+            console.error('❌ Error loading from localStorage:', error);
+            this.initializeDefaultData();
         }
     }
     
-    // Load from Firebase
-    async loadFromFirebase() {
-        if (!db || !this.state.user.id) return;
-        
+    saveToLocalStorage() {
         try {
-            const userDoc = await db.collection('users').doc(this.state.user.id).get();
+            const dataToSave = {
+                userData: this.userData,
+                walletData: this.walletData,
+                miningData: this.miningData,
+                stakingData: this.stakingData,
+                referralData: this.referralData,
+                saveTime: Date.now()
+            };
             
-            if (userDoc.exists) {
-                const data = userDoc.data();
-                
-                // Update balances if Firebase has newer data
-                if (data.lastUpdate && data.balance !== undefined) {
-                    const firebaseTime = data.lastUpdate.toDate().getTime();
-                    const localTime = this.state.user.lastMine || 0;
-                    
-                    if (firebaseTime > localTime) {
-                        this.state.user.balance = data.balance || this.state.user.balance;
-                        this.state.wallet.AMSK = this.state.user.balance;
-                    }
-                }
-                
-                console.log('🔥 Data loaded from Firebase');
-            }
+            localStorage.setItem(`alien_musk_${this.userData.id}`, JSON.stringify(dataToSave));
         } catch (error) {
-            console.error('Firebase load error:', error);
+            console.error('❌ Error saving to localStorage:', error);
         }
     }
     
-    // Initialize UI
+    initializeDefaultData() {
+        this.userData.balance = 2500;
+        this.userData.totalEarned = 2500;
+        this.userData.miningLevel = 1;
+        this.userData.referralCount = 0;
+        this.userData.referralEarnings = 0;
+        this.userData.isInitialized = true;
+        
+        this.walletData = {
+            AMSK: 2500,
+            USDT: 100,
+            BNB: 0.5,
+            TON: 50
+        };
+        
+        this.miningData = {
+            level: 1,
+            isActive: true,
+            lastReward: Date.now(),
+            nextReward: Date.now() + CONFIG.MINING.DURATION,
+            totalMined: 2500,
+            minedToday: 2500,
+            activeBoosters: []
+        };
+        
+        this.stakingData = {
+            activeStakes: [],
+            totalEarned: 0
+        };
+        
+        this.referralData = {
+            code: this.userData.referralCode,
+            referrals: [],
+            totalCount: 0,
+            earned: 0
+        };
+    }
+    
+    // ============================================
+    // UI UPDATES
+    // ============================================
     initUI() {
-        // Update user info
+        // Update user information
         this.updateUserInfo();
         
         // Update all pages
@@ -401,102 +695,242 @@ class AlienMuskApp {
         this.updateLoadingProgress(100);
     }
     
-    // Update user information
     updateUserInfo() {
         if (this.elements.username) {
-            this.elements.username.textContent = this.state.user.firstName;
+            this.elements.username.textContent = this.userData.firstName;
         }
         
         if (this.elements.userId) {
-            this.elements.userId.textContent = `ID: ${this.state.user.id.substring(0, 8)}...`;
+            this.elements.userId.textContent = `ID: ${this.userData.id.substring(0, 8)}`;
         }
         
         if (this.elements.refCode) {
-            this.elements.refCode.textContent = this.state.user.referralCode;
+            this.elements.refCode.textContent = this.userData.referralCode;
         }
+        
+        // Update avatars
+        [this.elements.userAvatar, this.elements.homeAvatar].forEach(avatar => {
+            if (avatar) {
+                avatar.src = this.userData.photoUrl;
+                avatar.alt = this.userData.firstName;
+            }
+        });
     }
     
-    // Update header
     updateHeader() {
+        // Update total balance in USD
         if (this.elements.headerBalance) {
-            const total = this.state.calculateTotalBalance();
-            this.elements.headerBalance.textContent = `$${total}`;
+            const totalUSD = this.calculateTotalBalanceUSD();
+            this.elements.headerBalance.textContent = `$${this.formatNumber(totalUSD, 2)}`;
         }
     }
     
-    // Update home page
     updateHomePage() {
-        // Update balances
+        // Update total AMSK balance
         if (this.elements.totalAmsk) {
-            this.elements.totalAmsk.textContent = this.formatNumber(this.state.user.balance);
+            this.elements.totalAmsk.textContent = this.formatNumber(this.userData.balance);
         }
         
         if (this.elements.usdEquivalent) {
-            const usdValue = (this.state.user.balance * CONFIG.PRICES.AMSK).toFixed(2);
-            this.elements.usdEquivalent.textContent = usdValue;
+            const usdValue = this.userData.balance * CONFIG.PRICES.AMSK;
+            this.elements.usdEquivalent.textContent = this.formatNumber(usdValue, 2);
         }
         
-        // Update mining info
+        // Update mining information
+        const miningLevel = CONFIG.MINING.LEVELS[this.userData.miningLevel];
         if (this.elements.currentHashrate) {
-            const level = CONFIG.MINING.LEVELS[this.state.user.miningLevel];
-            this.elements.currentHashrate.textContent = this.formatNumber(level.hashrate);
+            let hashrate = miningLevel.hashrate;
+            
+            // Apply booster multipliers
+            if (this.miningData && this.miningData.activeBoosters) {
+                this.miningData.activeBoosters.forEach(booster => {
+                    const boosterConfig = CONFIG.BOOSTERS[booster.type];
+                    if (boosterConfig) {
+                        hashrate *= boosterConfig.multiplier;
+                    }
+                });
+            }
+            
+            this.elements.currentHashrate.textContent = this.formatNumber(hashrate);
         }
         
         if (this.elements.nextReward) {
-            const reward = this.state.calculateNextReward();
+            let reward = miningLevel.reward;
+            
+            // Apply booster multipliers
+            if (this.miningData && this.miningData.activeBoosters) {
+                this.miningData.activeBoosters.forEach(booster => {
+                    const boosterConfig = CONFIG.BOOSTERS[booster.type];
+                    if (boosterConfig) {
+                        reward *= boosterConfig.multiplier;
+                    }
+                });
+            }
+            
             this.elements.nextReward.textContent = this.formatNumber(reward);
         }
         
+        // Update mining stats
         if (this.elements.minedToday) {
-            this.elements.minedToday.textContent = this.formatNumber(this.state.mining.totalMined);
+            this.elements.minedToday.textContent = this.formatNumber(this.userData.minedToday || 0);
+        }
+        
+        if (this.elements.totalMined) {
+            this.elements.totalMined.textContent = this.formatNumber(this.userData.totalEarned || 0);
+        }
+        
+        if (this.elements.stakingEarned) {
+            this.elements.stakingEarned.textContent = this.formatNumber(this.stakingData?.totalEarned || 0);
         }
         
         if (this.elements.miningLevel) {
-            this.elements.miningLevel.textContent = this.state.user.miningLevel;
+            this.elements.miningLevel.textContent = this.userData.miningLevel;
         }
         
         // Update mining button
         this.updateMiningButton();
         
-        // Update referral info
-        if (this.elements.refCount) {
-            this.elements.refCount.textContent = this.state.user.referralCount;
-        }
+        // Update referral information
+        this.updateReferralInfo();
         
-        if (this.elements.refEarned) {
-            this.elements.refEarned.textContent = `${this.formatNumber(this.state.user.referralEarnings)} AMSK`;
-        }
+        // Update mining levels display
+        this.updateMiningLevels();
+        
+        // Update boosters display
+        this.updateBoostersDisplay();
     }
     
-    // Update mining button state
     updateMiningButton() {
         const button = this.elements.startMiningBtn;
-        if (!button) return;
+        if (!button || !this.miningData) return;
         
         const now = Date.now();
-        const isReady = now >= this.state.mining.nextReward;
+        const isRewardReady = now >= this.miningData.nextReward;
         
-        if (!this.state.mining.active) {
+        if (!this.miningData.isActive) {
             button.innerHTML = '<i class="fas fa-play"></i><span>Activate Quantum Core</span>';
             button.disabled = false;
-        } else if (isReady) {
+            button.classList.remove('claim-mode');
+        } else if (isRewardReady) {
             button.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
             button.disabled = false;
+            button.classList.add('claim-mode');
         } else {
             button.innerHTML = '<i class="fas fa-clock"></i><span>Mining...</span>';
             button.disabled = true;
+            button.classList.remove('claim-mode');
         }
     }
     
-    // Update staking page
-    updateStakingPage() {
-        const listElement = this.elements.activeStakesList;
-        if (!listElement) return;
+    updateMiningLevels() {
+        if (!this.elements.upgradeCards) return;
         
-        const stakes = this.state.staking.activeStakes;
+        this.elements.upgradeCards.forEach(card => {
+            const level = parseInt(card.dataset.level);
+            const levelData = CONFIG.MINING.LEVELS[level];
+            const isCurrentLevel = level === this.userData.miningLevel;
+            const canAfford = this.walletData?.USDT >= levelData.cost;
+            
+            const button = card.querySelector('.upgrade-btn');
+            if (!button) return;
+            
+            if (isCurrentLevel) {
+                button.textContent = 'Active';
+                button.classList.add('active-btn');
+                button.disabled = true;
+                card.classList.add('active');
+            } else if (level < this.userData.miningLevel) {
+                button.textContent = 'Upgraded';
+                button.classList.add('active-btn');
+                button.disabled = true;
+                card.classList.remove('active');
+            } else {
+                button.textContent = canAfford ? 'Upgrade' : `${levelData.cost} USDT`;
+                button.disabled = !canAfford;
+                button.classList.remove('active-btn');
+                card.classList.remove('active');
+            }
+        });
+    }
+    
+    updateBoostersDisplay() {
+        if (!this.elements.boosterCards) return;
+        
+        this.elements.boosterCards.forEach(card => {
+            const boosterType = card.dataset.booster;
+            const booster = CONFIG.BOOSTERS[boosterType];
+            
+            if (!booster) return;
+            
+            const button = card.querySelector('.booster-btn');
+            if (!button) return;
+            
+            // Check if booster is already active
+            const isActive = this.miningData?.activeBoosters?.some(b => b.type === boosterType) || false;
+            const canAfford = this.walletData?.AMSK >= booster.price;
+            
+            if (isActive) {
+                button.textContent = 'Active';
+                button.disabled = true;
+                button.classList.add('active-btn');
+                card.classList.add('active');
+            } else {
+                button.textContent = canAfford ? 'Activate' : `${this.formatNumber(booster.price)} AMSK`;
+                button.disabled = !canAfford;
+                button.classList.remove('active-btn');
+                card.classList.remove('active');
+            }
+        });
+    }
+    
+    updateReferralInfo() {
+        if (!this.referralData) return;
+        
+        if (this.elements.refCount) {
+            this.elements.refCount.textContent = this.referralData.totalCount || 0;
+        }
+        
+        if (this.elements.totalRefs) {
+            this.elements.totalRefs.textContent = this.referralData.totalCount || 0;
+        }
+        
+        if (this.elements.refEarned) {
+            this.elements.refEarned.textContent = `${this.formatNumber(this.referralData.earned || 0)} AMSK`;
+        }
+        
+        // Find next milestone
+        let nextMilestone = null;
+        for (const milestone of CONFIG.REFERRAL.MILESTONES) {
+            if ((this.referralData.totalCount || 0) < milestone.referrals) {
+                nextMilestone = milestone;
+                break;
+            }
+        }
+        
+        if (nextMilestone && this.elements.nextGoal && this.elements.goalReward) {
+            this.elements.nextGoal.textContent = `${nextMilestone.referrals} Referrals`;
+            this.elements.goalReward.textContent = `${this.formatNumber(nextMilestone.reward)} AMSK`;
+            
+            // Update progress
+            const progress = Math.min(((this.referralData.totalCount || 0) / nextMilestone.referrals) * 100, 100);
+            
+            if (this.elements.progressText) {
+                this.elements.progressText.textContent = `${Math.round(progress)}%`;
+            }
+            
+            if (this.elements.progressFill) {
+                this.elements.progressFill.style.width = `${progress}%`;
+            }
+        }
+    }
+    
+    updateStakingPage() {
+        if (!this.elements.activeStakesList || !this.stakingData) return;
+        
+        const stakes = this.stakingData.activeStakes || [];
         
         if (stakes.length === 0) {
-            listElement.innerHTML = `
+            this.elements.activeStakesList.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-inbox"></i>
                     <p>No active stakes</p>
@@ -506,13 +940,18 @@ class AlienMuskApp {
             return;
         }
         
-        // Render stakes list
         let html = '';
         stakes.forEach((stake, index) => {
             const plan = CONFIG.STAKING.PLANS[stake.planId];
             if (!plan) return;
             
-            const progress = Math.min((Date.now() - stake.startTime) / (stake.duration * 24 * 60 * 60 * 1000) * 100, 100);
+            const now = Date.now();
+            const startTime = stake.startTime || now;
+            const durationMs = plan.duration * 24 * 60 * 60 * 1000;
+            const endTime = startTime + durationMs;
+            
+            const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
+            const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
             
             html += `
                 <div class="stake-item">
@@ -523,36 +962,125 @@ class AlienMuskApp {
                             </div>
                             <div class="plan-info">
                                 <h5>${plan.name}</h5>
-                                <span>${plan.amount} USDT</span>
+                                <span class="stake-amount">${plan.amount} USDT</span>
                             </div>
                         </div>
-                        <span class="status-badge active">Active</span>
+                        <div class="stake-status">
+                            <span class="status-badge active">Active</span>
+                        </div>
                     </div>
+                    
                     <div class="stake-progress">
+                        <div class="progress-info">
+                            <span>${Math.round(progress)}%</span>
+                            <span>${daysLeft} days left</span>
+                        </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${progress}%"></div>
                         </div>
-                        <div class="progress-text">${Math.round(progress)}% Complete</div>
                     </div>
-                    <div class="stake-reward">
-                        <i class="fas fa-coins"></i>
-                        <span>Daily: ${plan.dailyReward} AMSK</span>
+                    
+                    <div class="stake-reward-info">
+                        <div class="reward-item">
+                            <i class="fas fa-coins"></i>
+                            <span>Daily: ${plan.dailyReward} AMSK</span>
+                        </div>
+                        <div class="reward-item">
+                            <i class="fas fa-percentage"></i>
+                            <span>APR: ${plan.apr}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stake-actions">
+                        <button class="claim-btn" onclick="app.claimStakeReward(${index})" ${progress < 100 ? 'disabled' : ''}>
+                            <i class="fas fa-gift"></i>
+                            Claim Rewards
+                        </button>
                     </div>
                 </div>
             `;
         });
         
-        listElement.innerHTML = html;
+        this.elements.activeStakesList.innerHTML = html;
     }
     
-    // Update wallet page
     updateWalletPage() {
+        if (!this.walletData) return;
+        
+        // Update AMSK balance
         if (this.elements.walletAmsk) {
-            this.elements.walletAmsk.textContent = this.formatNumber(this.state.wallet.AMSK);
+            this.elements.walletAmsk.textContent = this.formatNumber(this.walletData.AMSK);
         }
         
+        if (this.elements.walletAmskValue) {
+            const usdValue = this.walletData.AMSK * CONFIG.PRICES.AMSK;
+            this.elements.walletAmskValue.textContent = this.formatNumber(usdValue, 2);
+        }
+        
+        // Update USDT balance
         if (this.elements.walletUsdt) {
-            this.elements.walletUsdt.textContent = this.formatNumber(this.state.wallet.USDT, 2);
+            this.elements.walletUsdt.textContent = this.formatNumber(this.walletData.USDT, 2);
+        }
+        
+        if (this.elements.walletUsdtValue) {
+            this.elements.walletUsdtValue.textContent = this.formatNumber(this.walletData.USDT, 2);
+        }
+        
+        // Update total portfolio
+        if (this.elements.walletTotalAmsk) {
+            this.elements.walletTotalAmsk.textContent = this.formatNumber(this.userData.balance);
+        }
+        
+        if (this.elements.walletTotalUsd) {
+            const totalUSD = this.calculateTotalBalanceUSD();
+            this.elements.walletTotalUsd.textContent = this.formatNumber(totalUSD, 2);
+        }
+    }
+    
+    // ============================================
+    // PAGE MANAGEMENT
+    // ============================================
+    showPage(pageName) {
+        if (this.currentPage === pageName) return;
+        
+        console.log(`📱 Switching to page: ${pageName}`);
+        
+        // Hide all pages
+        this.elements.pages.forEach(page => {
+            page.style.display = 'none';
+            page.classList.remove('active');
+        });
+        
+        // Update navigation buttons
+        this.elements.navButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.page === pageName) {
+                btn.classList.add('active');
+            }
+        });
+        
+        // Show selected page
+        const pageElement = document.getElementById(`${pageName}-page`);
+        if (pageElement) {
+            pageElement.style.display = 'block';
+            setTimeout(() => {
+                pageElement.classList.add('active');
+            }, 10);
+        }
+        
+        this.currentPage = pageName;
+        
+        // Update page-specific content
+        switch (pageName) {
+            case 'home':
+                this.updateHomePage();
+                break;
+            case 'staking':
+                this.updateStakingPage();
+                break;
+            case 'wallet':
+                this.updateWalletPage();
+                break;
         }
     }
     
@@ -560,13 +1088,13 @@ class AlienMuskApp {
     // MINING SYSTEM
     // ============================================
     handleMining() {
-        if (!this.state.mining.active) {
+        if (!this.miningData || !this.miningData.isActive) {
             this.startMining();
             return;
         }
         
         const now = Date.now();
-        if (now >= this.state.mining.nextReward) {
+        if (now >= this.miningData.nextReward) {
             this.claimMiningReward();
         } else {
             this.showNotification('⏳ Mining in progress. Reward not ready yet.', 'info');
@@ -574,37 +1102,58 @@ class AlienMuskApp {
     }
     
     startMining() {
-        this.state.mining.active = true;
-        this.state.mining.lastReward = Date.now();
-        this.state.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+        if (!this.miningData) return;
+        
+        this.miningData.isActive = true;
+        this.miningData.lastReward = Date.now();
+        this.miningData.nextReward = Date.now() + CONFIG.MINING.DURATION;
         
         this.updateMiningButton();
-        this.showNotification('⚡ Quantum Core activated! Mining started.', 'success');
-        this.saveData();
+        this.updateHomePage();
+        
+        this.showNotification('⚡ Quantum mining started!', 'success');
+        this.saveUserData();
     }
     
     claimMiningReward() {
-        const reward = this.state.calculateNextReward();
+        if (!this.miningData || !this.userData || !this.walletData) return;
         
-        // Add reward to balance
-        this.state.user.balance += reward;
-        this.state.wallet.AMSK = this.state.user.balance;
-        this.state.mining.totalMined += reward;
+        const miningLevel = CONFIG.MINING.LEVELS[this.userData.miningLevel];
+        let reward = miningLevel.reward;
         
-        // Reset timer
-        this.state.mining.lastReward = Date.now();
-        this.state.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+        // Apply active boosters
+        if (this.miningData.activeBoosters) {
+            this.miningData.activeBoosters.forEach(booster => {
+                const boosterConfig = CONFIG.BOOSTERS[booster.type];
+                if (boosterConfig) {
+                    reward *= boosterConfig.multiplier;
+                }
+            });
+        }
+        
+        // Update balances
+        this.userData.balance += reward;
+        this.userData.totalEarned += reward;
+        this.userData.minedToday = (this.userData.minedToday || 0) + reward;
+        
+        this.walletData.AMSK = this.userData.balance;
+        
+        if (this.miningData) {
+            this.miningData.totalMined += reward;
+            this.miningData.lastReward = Date.now();
+            this.miningData.nextReward = Date.now() + CONFIG.MINING.DURATION;
+        }
         
         // Update UI
         this.updateHomePage();
         this.updateWalletPage();
         this.updateHeader();
         
-        // Show reward
+        // Show success message
         this.showNotification(`💰 +${this.formatNumber(reward)} AMSK mined!`, 'success');
         
         // Save data
-        this.saveData();
+        this.saveUserData();
     }
     
     upgradeMining(level) {
@@ -616,79 +1165,87 @@ class AlienMuskApp {
             return;
         }
         
-        if (level <= this.state.user.miningLevel) {
+        if (level <= this.userData.miningLevel) {
             this.showNotification('Already at or above this level!', 'warning');
             return;
         }
         
-        if (this.state.wallet.USDT < levelData.cost) {
+        if (this.walletData.USDT < levelData.cost) {
             this.showNotification(`Insufficient USDT. Need ${levelData.cost} USDT.`, 'error');
             return;
         }
         
         // Deduct cost and upgrade
-        this.state.wallet.USDT -= levelData.cost;
-        this.state.user.miningLevel = level;
+        this.walletData.USDT -= levelData.cost;
+        this.userData.miningLevel = level;
         
         // Update UI
         this.updateHomePage();
         this.updateWalletPage();
         this.updateHeader();
+        this.updateMiningLevels();
         
         // Show success
         this.showNotification(`⚡ Upgraded to ${levelData.name} level!`, 'success');
         
         // Save data
-        this.saveData();
+        this.saveUserData();
     }
     
     activateBooster(boosterType) {
-        const boosters = {
-            '2x': { multiplier: 2, price: 10000 },
-            '3x': { multiplier: 3, price: 15000 },
-            '5x': { multiplier: 5, price: 25000 }
-        };
+        const booster = CONFIG.BOOSTERS[boosterType];
         
-        const booster = boosters[boosterType];
-        if (!booster) return;
+        if (!booster) {
+            this.showNotification('Booster not found!', 'error');
+            return;
+        }
         
-        // Check if already active
-        const isActive = this.state.mining.activeBoosters.some(b => b.type === boosterType);
-        if (isActive) {
-            this.showNotification('Booster already active!', 'warning');
+        // Check if already has this booster active
+        const hasBooster = this.miningData?.activeBoosters?.some(b => b.type === boosterType);
+        if (hasBooster) {
+            this.showNotification('This booster is already active!', 'warning');
             return;
         }
         
         // Check balance
-        if (this.state.wallet.AMSK < booster.price) {
-            this.showNotification(`Need ${booster.price} AMSK to activate`, 'error');
+        if (this.walletData.AMSK < booster.price) {
+            this.showNotification(`Insufficient AMSK. Need ${booster.price} AMSK.`, 'error');
             return;
         }
         
-        // Activate booster
-        this.state.wallet.AMSK -= booster.price;
-        this.state.mining.activeBoosters.push({
+        // Deduct price
+        this.walletData.AMSK -= booster.price;
+        this.userData.balance = this.walletData.AMSK;
+        
+        // Add booster
+        if (!this.miningData.activeBoosters) {
+            this.miningData.activeBoosters = [];
+        }
+        
+        this.miningData.activeBoosters.push({
             type: boosterType,
             multiplier: booster.multiplier,
             activatedAt: Date.now(),
-            expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+            expiresAt: Date.now() + booster.duration
         });
         
         // Update UI
         this.updateHomePage();
         this.updateWalletPage();
+        this.updateHeader();
+        this.updateBoostersDisplay();
         
         // Show success
-        this.showNotification(`⚡ ${boosterType} Booster activated for 24 hours!`, 'success');
+        this.showNotification(`⚡ ${booster.name} activated! Mining speed ×${booster.multiplier}`, 'success');
         
         // Save data
-        this.saveData();
+        this.saveUserData();
     }
     
     // ============================================
     // STAKING SYSTEM
     // ============================================
-    openStakeModal(planId) {
+    async openStakeModal(planId) {
         const plan = CONFIG.STAKING.PLANS[planId];
         if (!plan) return;
         
@@ -701,12 +1258,16 @@ class AlienMuskApp {
                         </div>
                         <div class="plan-info">
                             <h4>${plan.name}</h4>
-                            <div class="plan-minimum">Stake: ${plan.amount} USDT</div>
+                            <div class="plan-minimum">Minimum: ${plan.amount} USDT</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="stake-details">
+                    <div class="detail-item">
+                        <span>Stake Amount:</span>
+                        <span>${plan.amount} USDT</span>
+                    </div>
                     <div class="detail-item">
                         <span>Duration:</span>
                         <span>${plan.duration} Days</span>
@@ -725,6 +1286,11 @@ class AlienMuskApp {
                     </div>
                 </div>
                 
+                <div class="stake-warning">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Your USDT will be locked for ${plan.duration} days</span>
+                </div>
+                
                 <div class="modal-actions">
                     <button class="modal-btn secondary" onclick="app.closeModal()">
                         Cancel
@@ -739,68 +1305,170 @@ class AlienMuskApp {
         this.openModal('stake-modal', modalContent);
     }
     
-    confirmStaking(planId) {
+    async confirmStaking(planId) {
         const plan = CONFIG.STAKING.PLANS[planId];
-        if (!plan) return;
+        if (!plan || !this.walletData || !this.stakingData) return;
         
         // Check balance
-        if (this.state.wallet.USDT < plan.amount) {
+        if (this.walletData.USDT < plan.amount) {
             this.showNotification('Insufficient USDT balance', 'error');
             return;
         }
         
-        // Create stake
-        const stake = {
-            planId: planId,
-            amount: plan.amount,
-            startTime: Date.now(),
-            duration: plan.duration,
-            dailyReward: plan.dailyReward,
-            claimed: 0
-        };
+        try {
+            // Deduct USDT from wallet
+            this.walletData.USDT -= plan.amount;
+            
+            // Create stake object
+            const stake = {
+                planId: planId,
+                amount: plan.amount,
+                startTime: Date.now(),
+                duration: plan.duration,
+                dailyReward: plan.dailyReward,
+                claimedRewards: 0,
+                status: 'active'
+            };
+            
+            // Add to active stakes
+            if (!this.stakingData.activeStakes) {
+                this.stakingData.activeStakes = [];
+            }
+            this.stakingData.activeStakes.push(stake);
+            
+            // Update total staked amount
+            this.stakingData.totalStaked = (this.stakingData.totalStaked || 0) + plan.amount;
+            
+            // Update UI
+            this.updateWalletPage();
+            this.updateStakingPage();
+            this.updateHeader();
+            
+            // Close modal
+            this.closeModal();
+            
+            // Show success message
+            this.showNotification(`✅ Staked ${plan.amount} USDT for ${plan.duration} days!`, 'success');
+            
+            // Save to Firebase
+            if (db) {
+                await db.collection('staking').doc(this.userData.id).update({
+                    activeStakes: this.stakingData.activeStakes,
+                    totalStaked: this.stakingData.totalStaked,
+                    lastUpdate: new Date().toISOString()
+                });
+                
+                await db.collection('users').doc(this.userData.id).update({
+                    usdtBalance: this.walletData.USDT
+                });
+            }
+            
+            // Save local data
+            this.saveUserData();
+            
+        } catch (error) {
+            console.error('❌ Error confirming stake:', error);
+            this.showNotification('Error processing stake. Please try again.', 'error');
+        }
+    }
+    
+    async claimStakeReward(stakeIndex) {
+        if (!this.stakingData || !this.stakingData.activeStakes || !this.stakingData.activeStakes[stakeIndex]) {
+            this.showNotification('Stake not found', 'error');
+            return;
+        }
         
-        // Deduct USDT
-        this.state.wallet.USDT -= plan.amount;
-        this.state.staking.activeStakes.push(stake);
+        const stake = this.stakingData.activeStakes[stakeIndex];
+        const plan = CONFIG.STAKING.PLANS[stake.planId];
+        
+        if (!plan) {
+            this.showNotification('Plan not found', 'error');
+            return;
+        }
+        
+        const now = Date.now();
+        const startTime = stake.startTime;
+        const durationMs = plan.duration * 24 * 60 * 60 * 1000;
+        const endTime = startTime + durationMs;
+        
+        // Check if stake period is over
+        if (now < endTime) {
+            this.showNotification('Stake period not completed yet', 'warning');
+            return;
+        }
+        
+        // Calculate total reward
+        const totalReward = plan.dailyReward * plan.duration;
+        
+        // Update balances
+        this.userData.balance += totalReward;
+        this.walletData.AMSK = this.userData.balance;
+        this.stakingData.totalEarned = (this.stakingData.totalEarned || 0) + totalReward;
+        
+        // Return staked amount
+        this.walletData.USDT += stake.amount;
+        
+        // Remove from active stakes
+        this.stakingData.activeStakes.splice(stakeIndex, 1);
+        
+        // Add to completed stakes
+        if (!this.stakingData.completedStakes) {
+            this.stakingData.completedStakes = [];
+        }
+        this.stakingData.completedStakes.push({
+            ...stake,
+            completedAt: now,
+            totalReward: totalReward
+        });
         
         // Update UI
-        this.updateStakingPage();
         this.updateWalletPage();
+        this.updateStakingPage();
+        this.updateHomePage();
         this.updateHeader();
         
-        // Close modal
-        this.closeModal();
-        
         // Show success
-        this.showNotification(`✅ Staked ${plan.amount} USDT for ${plan.duration} days!`, 'success');
+        this.showNotification(`💰 Claimed ${totalReward} AMSK from staking! +${stake.amount} USDT returned`, 'success');
         
         // Save data
-        this.saveData();
+        await this.saveUserData();
     }
     
     // ============================================
     // WALLET SYSTEM
     // ============================================
     openDepositModal(currency = 'USDT') {
+        const minDeposit = currency === 'USDT' ? CONFIG.WALLET.MIN_DEPOSIT_USDT : 
+                          currency === 'BNB' ? 0.02 : 1;
+        
         const modalContent = `
             <div class="deposit-modal-content">
                 <div class="deposit-info">
-                    <div class="info-box">
-                        <h5>Deposit ${currency}</h5>
-                        <p>Send only <strong>${currency}</strong> to this address</p>
+                    <h4><i class="fas fa-download"></i> Deposit ${currency}</h4>
+                    <p class="deposit-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Send only <strong>${currency}</strong> to this address on <strong>BEP20</strong> network
+                    </p>
+                    
+                    <div class="address-card">
+                        <div class="address-header">
+                            <i class="fas fa-wallet"></i>
+                            <span>Your ${currency} Deposit Address</span>
+                        </div>
                         <div class="address-display">
-                            <div class="address-label">Your Address:</div>
-                            <div class="address-box">
-                                <code>${CONFIG.WALLET.DEPOSIT_ADDRESS}</code>
-                                <button class="copy-btn" onclick="app.copyToClipboard('${CONFIG.WALLET.DEPOSIT_ADDRESS}')">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            </div>
+                            <code id="depositAddress">${CONFIG.WALLET.DEPOSIT_ADDRESS}</code>
+                            <button class="copy-btn" onclick="app.copyToClipboard('${CONFIG.WALLET.DEPOSIT_ADDRESS}')">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div class="network-info">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Minimum deposit: ${minDeposit} ${currency}</span>
                         </div>
                     </div>
                     
                     <div class="deposit-instructions">
-                        <h6><i class="fas fa-graduation-cap"></i> How to Deposit:</h6>
+                        <h5><i class="fas fa-graduation-cap"></i> How to Deposit:</h5>
                         <ol>
                             <li>Copy the ${currency} address above</li>
                             <li>Send ${currency} from your wallet (BEP20 network only)</li>
@@ -810,7 +1478,7 @@ class AlienMuskApp {
                     </div>
                     
                     <div class="modal-actions">
-                        <button class="modal-btn secondary" onclick="app.closeModal()">
+                        <button class="modal-btn" onclick="app.closeModal()">
                             Close
                         </button>
                     </div>
@@ -825,28 +1493,51 @@ class AlienMuskApp {
         const modalContent = `
             <div class="withdraw-modal-content">
                 <div class="withdraw-info">
-                    <div class="balance-info">
-                        <i class="fas fa-wallet"></i>
-                        <span>Available: ${this.formatNumber(this.state.wallet.USDT, 2)} USDT</span>
+                    <h4><i class="fas fa-upload"></i> Withdraw USDT</h4>
+                    
+                    <div class="balance-display">
+                        <div class="balance-item">
+                            <i class="fas fa-wallet"></i>
+                            <div class="balance-details">
+                                <span>Available Balance</span>
+                                <span class="balance-amount">${this.formatNumber(this.walletData.USDT, 2)} USDT</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="withdraw-form">
                         <div class="form-group">
-                            <label>Amount (USDT)</label>
-                            <input type="number" id="withdrawAmount" 
-                                   value="${this.state.wallet.USDT > 50 ? '50' : this.state.wallet.USDT.toFixed(2)}"
-                                   min="50" max="${this.state.wallet.USDT}" step="0.01">
+                            <label for="withdrawAmount">Amount (USDT)</label>
+                            <input type="number" 
+                                   id="withdrawAmount" 
+                                   value="${Math.max(CONFIG.WALLET.MIN_WITHDRAWAL, Math.min(50, this.walletData.USDT)).toFixed(2)}"
+                                   min="${CONFIG.WALLET.MIN_WITHDRAWAL}"
+                                   max="${this.walletData.USDT}"
+                                   step="0.01">
                         </div>
                         
                         <div class="form-group">
-                            <label>Wallet Address</label>
-                            <input type="text" id="withdrawAddress" 
-                                   placeholder="Enter your USDT wallet address">
+                            <label for="withdrawAddress">Wallet Address (BEP20)</label>
+                            <input type="text" 
+                                   id="withdrawAddress" 
+                                   placeholder="0x..."
+                                   maxlength="42">
                         </div>
                         
                         <div class="fee-info">
                             <i class="fas fa-info-circle"></i>
-                            <span>Network fee: 0.0005 BNB (included)</span>
+                            <span>Network fee: ${CONFIG.WALLET.WITHDRAWAL_FEE} BNB will be deducted</span>
+                        </div>
+                        
+                        <div class="requirements">
+                            <div class="requirement ${this.walletData.USDT >= CONFIG.WALLET.MIN_WITHDRAWAL ? 'met' : 'not-met'}">
+                                <i class="fas ${this.walletData.USDT >= CONFIG.WALLET.MIN_WITHDRAWAL ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                <span>Minimum: ${CONFIG.WALLET.MIN_WITHDRAWAL} USDT</span>
+                            </div>
+                            <div class="requirement ${this.walletData.BNB >= CONFIG.WALLET.WITHDRAWAL_FEE ? 'met' : 'not-met'}">
+                                <i class="fas ${this.walletData.BNB >= CONFIG.WALLET.WITHDRAWAL_FEE ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                <span>BNB fee: ${CONFIG.WALLET.WITHDRAWAL_FEE} BNB available</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -865,72 +1556,109 @@ class AlienMuskApp {
         this.openModal('withdraw-modal', modalContent);
     }
     
-    submitWithdrawal() {
+    async submitWithdrawal() {
         const amount = parseFloat(document.getElementById('withdrawAmount')?.value);
         const address = document.getElementById('withdrawAddress')?.value.trim();
         
+        // Validation
         if (!amount || amount < CONFIG.WALLET.MIN_WITHDRAWAL) {
             this.showNotification(`Minimum withdrawal is ${CONFIG.WALLET.MIN_WITHDRAWAL} USDT`, 'error');
             return;
         }
         
-        if (amount > this.state.wallet.USDT) {
+        if (amount > this.walletData.USDT) {
             this.showNotification('Insufficient USDT balance', 'error');
             return;
         }
         
-        if (!address || address.length < 10) {
-            this.showNotification('Please enter valid wallet address', 'error');
+        if (!address || !address.startsWith('0x') || address.length !== 42) {
+            this.showNotification('Please enter a valid BEP20 wallet address', 'error');
             return;
         }
         
-        // Create withdrawal request
-        const withdrawal = {
-            id: 'withdraw_' + Date.now(),
-            userId: this.state.user.id,
-            amount: amount,
-            address: address,
-            timestamp: Date.now(),
-            status: 'pending'
-        };
-        
-        // Add to pending
-        this.state.wallet.pendingWithdrawals.push(withdrawal);
-        
-        // Save to Firebase if available
-        if (db) {
-            db.collection('withdrawals').add({
-                ...withdrawal,
-                username: this.state.user.username,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+        if (this.walletData.BNB < CONFIG.WALLET.WITHDRAWAL_FEE) {
+            this.showNotification(`Insufficient BNB for network fee. Need ${CONFIG.WALLET.WITHDRAWAL_FEE} BNB`, 'error');
+            return;
         }
         
-        // Close modal
-        this.closeModal();
-        
-        // Show success
-        this.showNotification(`✅ Withdrawal request submitted for ${amount} USDT`, 'success');
-        
-        // Save data
-        this.saveData();
+        try {
+            // Create withdrawal request
+            const withdrawal = {
+                id: `withdraw_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                userId: this.userData.id,
+                username: this.userData.username,
+                amount: amount,
+                address: address,
+                currency: 'USDT',
+                fee: CONFIG.WALLET.WITHDRAWAL_FEE,
+                status: 'pending',
+                timestamp: Date.now(),
+                note: 'Awaiting manual processing'
+            };
+            
+            // Save to Firebase
+            if (db) {
+                await db.collection('withdrawals').add({
+                    ...withdrawal,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update user balance immediately
+                this.walletData.USDT -= amount;
+                this.walletData.BNB -= CONFIG.WALLET.WITHDRAWAL_FEE;
+                
+                await db.collection('users').doc(this.userData.id).update({
+                    usdtBalance: this.walletData.USDT,
+                    bnbBalance: this.walletData.BNB
+                });
+            }
+            
+            // Update local state
+            this.walletData.totalWithdrawn = (this.walletData.totalWithdrawn || 0) + amount;
+            
+            // Update UI
+            this.updateWalletPage();
+            this.updateHeader();
+            
+            // Close modal
+            this.closeModal();
+            
+            // Show success
+            this.showNotification(`✅ Withdrawal request submitted for ${amount} USDT`, 'success');
+            this.showNotification('⏳ Your withdrawal is pending manual review', 'info');
+            
+            // Save data
+            this.saveUserData();
+            
+        } catch (error) {
+            console.error('❌ Error submitting withdrawal:', error);
+            this.showNotification('Error processing withdrawal. Please try again.', 'error');
+        }
     }
     
     openSwapModal() {
         const modalContent = `
             <div class="swap-modal-content">
+                <div class="swap-header">
+                    <h4><i class="fas fa-exchange-alt"></i> Swap Tokens</h4>
+                </div>
+                
                 <div class="swap-form">
                     <div class="swap-from">
-                        <div class="swap-header">
+                        <div class="swap-label">
                             <span>From</span>
-                            <span>Balance: ${this.formatNumber(this.state.wallet.AMSK)} AMSK</span>
+                            <span class="balance">Balance: ${this.formatNumber(this.walletData.AMSK)} AMSK</span>
                         </div>
-                        <div class="swap-input">
-                            <select id="swapFrom">
-                                <option value="AMSK" selected>AMSK</option>
+                        <div class="swap-input-group">
+                            <select id="swapFromCurrency">
+                                <option value="AMSK">AMSK</option>
                                 <option value="USDT">USDT</option>
                             </select>
-                            <input type="number" id="swapAmount" placeholder="0" min="1000">
+                            <input type="number" 
+                                   id="swapFromAmount" 
+                                   placeholder="0"
+                                   min="1000"
+                                   oninput="app.calculateSwap()">
                         </div>
                     </div>
                     
@@ -939,13 +1667,13 @@ class AlienMuskApp {
                     </div>
                     
                     <div class="swap-to">
-                        <div class="swap-header">
+                        <div class="swap-label">
                             <span>To</span>
-                            <span>Balance: ${this.formatNumber(this.state.wallet.USDT, 2)} USDT</span>
+                            <span class="balance">Balance: ${this.formatNumber(this.walletData.USDT, 2)} USDT</span>
                         </div>
-                        <div class="swap-input">
-                            <select id="swapTo">
-                                <option value="USDT" selected>USDT</option>
+                        <div class="swap-input-group">
+                            <select id="swapToCurrency">
+                                <option value="USDT">USDT</option>
                                 <option value="AMSK">AMSK</option>
                             </select>
                             <div id="swapResult">0.00</div>
@@ -954,10 +1682,27 @@ class AlienMuskApp {
                     
                     <div class="swap-info">
                         <div class="swap-rate">
-                            Rate: 1 AMSK = ${CONFIG.PRICES.AMSK} USDT
+                            <i class="fas fa-chart-line"></i>
+                            <span>Rate: 1 AMSK = ${CONFIG.PRICES.AMSK} USDT</span>
                         </div>
                         <div class="swap-fee">
-                            Fee: 1%
+                            <i class="fas fa-percentage"></i>
+                            <span>Fee: 1%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="swap-preview">
+                        <div class="preview-item">
+                            <span>You Send:</span>
+                            <span id="previewSend">0 AMSK</span>
+                        </div>
+                        <div class="preview-item">
+                            <span>You Receive:</span>
+                            <span id="previewReceive">0.00 USDT</span>
+                        </div>
+                        <div class="preview-item total">
+                            <span>Total Receive:</span>
+                            <span id="previewTotal">0.00 USDT</span>
                         </div>
                     </div>
                     
@@ -976,31 +1721,59 @@ class AlienMuskApp {
         this.openModal('swap-modal', modalContent);
     }
     
-    executeSwap() {
-        const fromCurrency = document.getElementById('swapFrom')?.value;
-        const toCurrency = document.getElementById('swapTo')?.value;
-        const amount = parseFloat(document.getElementById('swapAmount')?.value) || 0;
+    calculateSwap() {
+        const fromCurrency = document.getElementById('swapFromCurrency')?.value;
+        const toCurrency = document.getElementById('swapToCurrency')?.value;
+        const amount = parseFloat(document.getElementById('swapFromAmount')?.value) || 0;
         
-        if (amount <= 0) {
-            this.showNotification('Please enter amount', 'error');
-            return;
+        if (!fromCurrency || !toCurrency || amount <= 0) return;
+        
+        let result = 0;
+        
+        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
+            result = amount * CONFIG.PRICES.AMSK * 0.99; // 1% fee
+        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
+            result = amount / CONFIG.PRICES.AMSK * 0.99; // 1% fee
         }
         
-        if (fromCurrency === toCurrency) {
-            this.showNotification('Cannot swap same currency', 'error');
+        // Update display
+        if (document.getElementById('swapResult')) {
+            document.getElementById('swapResult').textContent = result.toFixed(toCurrency === 'USDT' ? 2 : 0);
+        }
+        
+        if (document.getElementById('previewSend')) {
+            document.getElementById('previewSend').textContent = `${this.formatNumber(amount)} ${fromCurrency}`;
+        }
+        
+        if (document.getElementById('previewReceive')) {
+            document.getElementById('previewReceive').textContent = `${result.toFixed(toCurrency === 'USDT' ? 2 : 0)} ${toCurrency}`;
+        }
+        
+        if (document.getElementById('previewTotal')) {
+            document.getElementById('previewTotal').textContent = `${result.toFixed(toCurrency === 'USDT' ? 2 : 0)} ${toCurrency}`;
+        }
+    }
+    
+    async executeSwap() {
+        const fromCurrency = document.getElementById('swapFromCurrency')?.value;
+        const toCurrency = document.getElementById('swapToCurrency')?.value;
+        const amount = parseFloat(document.getElementById('swapFromAmount')?.value) || 0;
+        
+        if (!fromCurrency || !toCurrency || amount <= 0) {
+            this.showNotification('Please enter valid amount', 'error');
             return;
         }
         
         // Calculate swap
-        let fromBalance = this.state.wallet[fromCurrency];
+        let fromBalance = this.walletData[fromCurrency];
         let toReceive = 0;
         
         if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
             toReceive = amount * CONFIG.PRICES.AMSK * 0.99; // 1% fee
-            fromBalance = this.state.wallet.AMSK;
+            fromBalance = this.walletData.AMSK;
         } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
             toReceive = amount / CONFIG.PRICES.AMSK * 0.99; // 1% fee
-            fromBalance = this.state.wallet.USDT;
+            fromBalance = this.walletData.USDT;
         }
         
         // Check balance
@@ -1009,76 +1782,200 @@ class AlienMuskApp {
             return;
         }
         
-        // Execute swap
-        this.state.wallet[fromCurrency] -= amount;
-        this.state.wallet[toCurrency] += toReceive;
+        // Minimum swap amount for AMSK
+        if (fromCurrency === 'AMSK' && amount < 250000) {
+            this.showNotification('Minimum swap is 250,000 AMSK', 'error');
+            return;
+        }
         
-        // Update UI
-        this.updateWalletPage();
-        this.updateHomePage();
-        this.updateHeader();
-        
-        // Close modal
-        this.closeModal();
-        
-        // Show success
-        this.showNotification(`✅ Swapped ${amount} ${fromCurrency} to ${toReceive.toFixed(2)} ${toCurrency}`, 'success');
-        
-        // Save data
-        this.saveData();
+        try {
+            // Execute swap
+            this.walletData[fromCurrency] -= amount;
+            this.walletData[toCurrency] += toReceive;
+            
+            // Update user balance if swapping AMSK
+            if (fromCurrency === 'AMSK') {
+                this.userData.balance = this.walletData.AMSK;
+            }
+            
+            // Update UI
+            this.updateWalletPage();
+            this.updateHomePage();
+            this.updateHeader();
+            
+            // Close modal
+            this.closeModal();
+            
+            // Show success
+            this.showNotification(`✅ Swapped ${this.formatNumber(amount)} ${fromCurrency} to ${toReceive.toFixed(2)} ${toCurrency}`, 'success');
+            
+            // Save to Firebase
+            if (db) {
+                await db.collection('users').doc(this.userData.id).update({
+                    balance: this.userData.balance,
+                    usdtBalance: this.walletData.USDT
+                });
+            }
+            
+            // Save data
+            this.saveUserData();
+            
+        } catch (error) {
+            console.error('❌ Error executing swap:', error);
+            this.showNotification('Error processing swap. Please try again.', 'error');
+        }
     }
     
     // ============================================
     // REFERRAL SYSTEM
     // ============================================
     checkReferral() {
+        if (!tg || !tg.initDataUnsafe) return;
+        
         // Check Telegram start parameter
-        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+        if (tg.initDataUnsafe.start_param) {
             const refCode = tg.initDataUnsafe.start_param;
-            if (refCode && refCode !== this.state.user.referralCode) {
+            if (refCode && refCode !== this.userData.referralCode) {
                 this.processReferral(refCode);
             }
         }
         
         // Check URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const urlRef = urlParams.get('ref') || urlParams.get('startapp');
-        if (urlRef && urlRef !== this.state.user.referralCode) {
+        const urlRef = urlParams.get('ref') || urlParams.get('start');
+        if (urlRef && urlRef !== this.userData.referralCode) {
             this.processReferral(urlRef);
         }
     }
     
-    processReferral(refCode) {
-        if (!refCode || refCode === this.state.user.referralCode) return;
+    async processReferral(refCode) {
+        if (!refCode || refCode === this.userData.referralCode || !this.referralData) return;
         
-        // Add to referrals
-        if (!this.state.user.referrals.includes(refCode)) {
-            this.state.user.referrals.push(refCode);
-            this.state.user.referralCount++;
-            this.state.user.referralEarnings += CONFIG.REFERRAL.REWARD;
-            this.state.user.balance += CONFIG.REFERRAL.REWARD;
-            this.state.wallet.AMSK = this.state.user.balance;
+        // Check if already referred by this code
+        if (this.referralData.referrals && this.referralData.referrals.includes(refCode)) {
+            return;
+        }
+        
+        try {
+            // Add referral
+            if (!this.referralData.referrals) {
+                this.referralData.referrals = [];
+            }
+            this.referralData.referrals.push(refCode);
+            this.referralData.totalCount = (this.referralData.totalCount || 0) + 1;
+            this.referralData.earned = (this.referralData.earned || 0) + CONFIG.REFERRAL.BASE_REWARD;
+            this.referralData.lastReferral = Date.now();
+            
+            // Add referral reward to user
+            this.userData.balance += CONFIG.REFERRAL.BASE_REWARD;
+            this.userData.totalEarned += CONFIG.REFERRAL.BASE_REWARD;
+            this.userData.referralEarnings = (this.userData.referralEarnings || 0) + CONFIG.REFERRAL.BASE_REWARD;
+            this.userData.referralCount = (this.userData.referralCount || 0) + 1;
+            
+            this.walletData.AMSK = this.userData.balance;
+            
+            // Check for milestone rewards
+            this.checkReferralMilestones();
             
             // Update UI
             this.updateHomePage();
             this.updateWalletPage();
+            this.updateHeader();
             
             // Show notification
-            this.showNotification(`🎉 Referral bonus: +${CONFIG.REFERRAL.REWARD} AMSK!`, 'success');
+            this.showNotification(`🎉 New referral! +${CONFIG.REFERRAL.BASE_REWARD} AMSK bonus`, 'success');
+            
+            // Save to Firebase
+            if (db) {
+                await db.collection('referrals').doc(this.userData.id).update({
+                    referrals: this.referralData.referrals,
+                    totalCount: this.referralData.totalCount,
+                    earned: this.referralData.earned,
+                    lastReferral: this.referralData.lastReferral
+                });
+                
+                await db.collection('users').doc(this.userData.id).update({
+                    balance: this.userData.balance,
+                    totalEarned: this.userData.totalEarned,
+                    referralCount: this.userData.referralCount,
+                    referralEarnings: this.userData.referralEarnings
+                });
+            }
             
             // Save data
-            this.saveData();
+            this.saveUserData();
+            
+        } catch (error) {
+            console.error('❌ Error processing referral:', error);
+        }
+    }
+    
+    checkReferralMilestones() {
+        if (!this.referralData || !this.referralData.totalCount) return;
+        
+        const currentCount = this.referralData.totalCount;
+        const claimedMilestones = this.referralData.claimedMilestones || [];
+        
+        CONFIG.REFERRAL.MILESTONES.forEach(milestone => {
+            if (currentCount >= milestone.referrals && !claimedMilestones.includes(milestone.referrals)) {
+                this.claimMilestoneReward(milestone);
+            }
+        });
+    }
+    
+    async claimMilestoneReward(milestone) {
+        if (!this.referralData) return;
+        
+        try {
+            // Add milestone reward
+            this.userData.balance += milestone.reward;
+            this.userData.totalEarned += milestone.reward;
+            this.referralData.earned += milestone.reward;
+            
+            if (!this.referralData.claimedMilestones) {
+                this.referralData.claimedMilestones = [];
+            }
+            this.referralData.claimedMilestones.push(milestone.referrals);
+            
+            this.walletData.AMSK = this.userData.balance;
+            
+            // Update UI
+            this.updateHomePage();
+            this.updateWalletPage();
+            this.updateHeader();
+            
+            // Show notification
+            this.showNotification(`🏆 Reached ${milestone.referrals} referrals! +${this.formatNumber(milestone.reward)} AMSK`, 'success');
+            
+            // Save to Firebase
+            if (db) {
+                await db.collection('referrals').doc(this.userData.id).update({
+                    earned: this.referralData.earned,
+                    claimedMilestones: this.referralData.claimedMilestones
+                });
+                
+                await db.collection('users').doc(this.userData.id).update({
+                    balance: this.userData.balance,
+                    totalEarned: this.userData.totalEarned
+                });
+            }
+            
+            // Save data
+            this.saveUserData();
+            
+        } catch (error) {
+            console.error('❌ Error claiming milestone:', error);
         }
     }
     
     copyReferralCode() {
-        this.copyToClipboard(this.state.user.referralCode);
-        this.showNotification('✅ Referral code copied!', 'success');
+        this.copyToClipboard(this.userData.referralCode);
+        this.showNotification('✅ Referral code copied to clipboard!', 'success');
     }
     
     shareReferral() {
-        const link = `https://t.me/AlienMuskBot?start=${this.state.user.referralCode}`;
-        const message = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens\n💰 High staking rewards\n👥 Use my code: ${this.state.user.referralCode}\n\n${link}`;
+        const link = `https://t.me/AlienMuskBot?start=${this.userData.referralCode}`;
+        const message = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens with quantum technology\n💰 High staking rewards up to 60% APR\n👥 Use my referral code for bonus: ${this.userData.referralCode}\n\n${link}`;
         
         if (navigator.share) {
             navigator.share({
@@ -1096,27 +1993,35 @@ class AlienMuskApp {
     // ADMIN SYSTEM
     // ============================================
     setupAdminAccess() {
-        const logo = document.querySelector('.brand-logo');
-        if (logo) {
-            logo.addEventListener('click', () => this.handleAdminClick());
+        const brandLogo = document.querySelector('.brand-logo');
+        if (brandLogo) {
+            brandLogo.addEventListener('click', (e) => this.handleAdminClick(e));
         }
     }
     
-    handleAdminClick() {
+    handleAdminClick(e) {
         const now = Date.now();
         
-        // Reset if more than 2 seconds passed
+        // Reset count if more than 2 seconds passed
         if (now - this.lastAdminClick > 2000) {
-            this.adminClicks = 0;
+            this.adminClickCount = 0;
         }
         
-        this.adminClicks++;
+        this.adminClickCount++;
         this.lastAdminClick = now;
         
+        // Visual feedback
+        if (this.adminClickCount >= 5) {
+            e.currentTarget.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                e.currentTarget.style.transform = 'scale(1)';
+            }, 100);
+        }
+        
         // Show admin login after required clicks
-        if (this.adminClicks >= CONFIG.ADMIN.CLICKS_REQUIRED) {
+        if (this.adminClickCount >= 10) {
             this.showAdminLogin();
-            this.adminClicks = 0;
+            this.adminClickCount = 0;
         }
     }
     
@@ -1125,15 +2030,31 @@ class AlienMuskApp {
             <div class="admin-login-modal">
                 <div class="modal-header">
                     <h3><i class="fas fa-lock"></i> Admin Access</h3>
+                    <button class="modal-close" onclick="app.closeModal()">×</button>
                 </div>
                 <div class="modal-body">
-                    <div class="admin-form">
-                        <input type="password" id="adminPassword" 
-                               placeholder="Enter admin password" 
-                               style="width: 100%; padding: 10px; margin-bottom: 15px;">
+                    <div class="admin-login-form">
+                        <div class="login-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h4>Administrator Access</h4>
+                        <p class="login-subtitle">Enter administrator password</p>
+                        
+                        <div class="form-group">
+                            <input type="password" 
+                                   id="adminPassword" 
+                                   class="form-input"
+                                   placeholder="Enter password">
+                        </div>
+                        
                         <button class="btn-primary" onclick="app.checkAdminPassword()">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </button>
+                        
+                        <div id="adminError" class="error-message" style="display: none;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span id="adminErrorText"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1142,18 +2063,46 @@ class AlienMuskApp {
         this.openModal('admin-login', modalContent);
     }
     
-    checkAdminPassword() {
+    async checkAdminPassword() {
         const password = document.getElementById('adminPassword')?.value;
-        const userTelegramId = this.state.user.id;
+        const errorDiv = document.getElementById('adminError');
+        const errorText = document.getElementById('adminErrorText');
         
-        if (password === CONFIG.ADMIN.PASSWORD && userTelegramId === CONFIG.ADMIN.TELEGRAM_ID) {
-            this.state.admin = { isLoggedIn: true };
-            this.closeModal();
-            this.showAdminPanel();
-            this.showNotification('👑 Admin access granted', 'success');
-        } else {
-            this.showNotification('❌ Access denied', 'error');
+        if (!password) {
+            if (errorDiv && errorText) {
+                errorText.textContent = 'Please enter password';
+                errorDiv.style.display = 'block';
+            }
+            return;
         }
+        
+        if (password !== CONFIG.ADMIN.PASSWORD) {
+            if (errorDiv && errorText) {
+                errorText.textContent = 'Incorrect password';
+                errorDiv.style.display = 'block';
+            }
+            return;
+        }
+        
+        // Check Telegram ID
+        let telegramUserId = null;
+        if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            telegramUserId = tg.initDataUnsafe.user.id.toString();
+        }
+        
+        if (!telegramUserId || telegramUserId !== CONFIG.ADMIN.TELEGRAM_ID) {
+            if (errorDiv && errorText) {
+                errorText.textContent = 'Access denied: Invalid Telegram ID';
+                errorDiv.style.display = 'block';
+            }
+            return;
+        }
+        
+        // Grant admin access
+        this.isAdmin = true;
+        this.closeModal();
+        this.showAdminPanel();
+        this.showNotification('👑 Admin access granted', 'success');
     }
     
     showAdminPanel() {
@@ -1180,27 +2129,43 @@ class AlienMuskApp {
                     <div class="admin-content" id="adminUsersTab">
                         <h4>User Management</h4>
                         <div class="admin-form">
-                            <input type="text" id="adminUserId" placeholder="User ID">
-                            <input type="number" id="adminAmount" placeholder="Amount (AMSK)">
+                            <div class="form-group">
+                                <input type="text" 
+                                       id="adminUserId" 
+                                       class="form-input"
+                                       placeholder="User ID or Username">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" 
+                                       id="adminAmount" 
+                                       class="form-input"
+                                       placeholder="Amount (AMSK)"
+                                       min="1"
+                                       step="1">
+                            </div>
                             <button class="btn-primary" onclick="app.addUserBalance()">
-                                <i class="fas fa-plus-circle"></i> Add Balance
+                                <i class="fas fa-plus-circle"></i> Add Balance to User
                             </button>
                         </div>
                     </div>
                     
                     <div class="admin-content" id="adminDepositsTab" style="display: none;">
                         <h4>Pending Deposits</h4>
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            <p>No pending deposits</p>
+                        <div id="pendingDepositsList">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Loading pending deposits...</p>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="admin-content" id="adminWithdrawalsTab" style="display: none;">
                         <h4>Pending Withdrawals</h4>
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            <p>No pending withdrawals</p>
+                        <div id="pendingWithdrawalsList">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>Loading pending withdrawals...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1208,97 +2173,332 @@ class AlienMuskApp {
         `;
         
         this.openModal('admin-panel', modalContent);
+        this.loadAdminPendingRequests();
     }
     
     switchAdminTab(tabName) {
-        // Tab switching logic
+        // Hide all tabs
         document.querySelectorAll('.admin-content').forEach(content => {
             content.style.display = 'none';
         });
         
+        // Remove active class from all buttons
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
         });
         
-        const activeTab = document.getElementById(`admin${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`);
-        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+        // Show selected tab
+        const tabElement = document.getElementById(`admin${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`);
+        if (tabElement) {
+            tabElement.style.display = 'block';
+        }
+        
+        // Add active class to clicked button
+        const activeButton = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
             btn.textContent.toLowerCase().includes(tabName)
         );
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
         
-        if (activeTab) activeTab.style.display = 'block';
-        if (activeBtn) activeBtn.classList.add('active');
+        // Load data for the tab
+        if (tabName === 'deposits' || tabName === 'withdrawals') {
+            this.loadAdminPendingRequests();
+        }
     }
     
-    addUserBalance() {
+    async loadAdminPendingRequests() {
+        if (!db || !this.isAdmin) return;
+        
+        try {
+            // Load pending deposits
+            const depositsQuery = await db.collection('deposit_requests')
+                .where('status', '==', 'pending')
+                .orderBy('timestamp', 'desc')
+                .limit(50)
+                .get();
+            
+            const depositsList = document.getElementById('pendingDepositsList');
+            if (depositsList) {
+                if (depositsQuery.empty) {
+                    depositsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-check-circle"></i>
+                            <p>No pending deposits</p>
+                        </div>
+                    `;
+                } else {
+                    let html = '';
+                    depositsQuery.forEach(doc => {
+                        const data = doc.data();
+                        html += this.createPendingDepositItem(doc.id, data);
+                    });
+                    depositsList.innerHTML = html;
+                }
+            }
+            
+            // Load pending withdrawals
+            const withdrawalsQuery = await db.collection('withdrawals')
+                .where('status', '==', 'pending')
+                .orderBy('timestamp', 'desc')
+                .limit(50)
+                .get();
+            
+            const withdrawalsList = document.getElementById('pendingWithdrawalsList');
+            if (withdrawalsList) {
+                if (withdrawalsQuery.empty) {
+                    withdrawalsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-check-circle"></i>
+                            <p>No pending withdrawals</p>
+                        </div>
+                    `;
+                } else {
+                    let html = '';
+                    withdrawalsQuery.forEach(doc => {
+                        const data = doc.data();
+                        html += this.createPendingWithdrawalItem(doc.id, data);
+                    });
+                    withdrawalsList.innerHTML = html;
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Error loading admin requests:', error);
+        }
+    }
+    
+    createPendingDepositItem(docId, data) {
+        return `
+            <div class="pending-item">
+                <div class="pending-info">
+                    <div class="pending-user">${data.username || 'User'}</div>
+                    <div class="pending-amount">${data.amount} ${data.currency}</div>
+                    <div class="pending-tx">TX: ${data.transactionHash?.substring(0, 12)}...</div>
+                </div>
+                <div class="pending-actions">
+                    <button class="btn-success" onclick="app.approveDeposit('${docId}', '${data.userId}', ${data.amount}, '${data.currency}')">
+                        <i class="fas fa-check"></i> Approve
+                    </button>
+                    <button class="btn-error" onclick="app.rejectDeposit('${docId}')">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    createPendingWithdrawalItem(docId, data) {
+        return `
+            <div class="pending-item">
+                <div class="pending-info">
+                    <div class="pending-user">${data.username || 'User'}</div>
+                    <div class="pending-amount">${data.amount} ${data.currency}</div>
+                    <div class="pending-address">To: ${data.address?.substring(0, 12)}...</div>
+                </div>
+                <div class="pending-actions">
+                    <button class="btn-success" onclick="app.approveWithdrawal('${docId}')">
+                        <i class="fas fa-check"></i> Approve
+                    </button>
+                    <button class="btn-error" onclick="app.rejectWithdrawal('${docId}')">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    async addUserBalance() {
+        if (!db || !this.isAdmin) return;
+        
         const userId = document.getElementById('adminUserId')?.value;
         const amount = parseFloat(document.getElementById('adminAmount')?.value);
         
-        if (!userId || !amount) {
-            this.showNotification('Please enter user ID and amount', 'error');
+        if (!userId || !amount || amount <= 0) {
+            this.showNotification('Please enter valid user ID and amount', 'error');
             return;
         }
         
-        // In a real app, this would update the user in Firebase
-        this.showNotification(`Balance added to user ${userId}`, 'success');
+        try {
+            // Find user by ID or username
+            let userRef;
+            let userDoc = await db.collection('users').doc(userId).get();
+            
+            if (userDoc.exists) {
+                userRef = db.collection('users').doc(userId);
+            } else {
+                // Try to find by username
+                const querySnapshot = await db.collection('users')
+                    .where('username', '==', userId)
+                    .limit(1)
+                    .get();
+                
+                if (!querySnapshot.empty) {
+                    userRef = db.collection('users').doc(querySnapshot.docs[0].id);
+                }
+            }
+            
+            if (!userRef) {
+                this.showNotification('User not found', 'error');
+                return;
+            }
+            
+            // Add balance to user
+            await userRef.update({
+                balance: firebase.firestore.FieldValue.increment(amount),
+                totalEarned: firebase.firestore.FieldValue.increment(amount)
+            });
+            
+            // Clear inputs
+            document.getElementById('adminUserId').value = '';
+            document.getElementById('adminAmount').value = '';
+            
+            this.showNotification(`✅ Added ${amount} AMSK to user`, 'success');
+            
+        } catch (error) {
+            console.error('❌ Error adding user balance:', error);
+            this.showNotification('Error adding balance', 'error');
+        }
+    }
+    
+    async approveDeposit(docId, userId, amount, currency) {
+        if (!db || !this.isAdmin) return;
         
-        // Clear inputs
-        document.getElementById('adminUserId').value = '';
-        document.getElementById('adminAmount').value = '';
+        try {
+            // Update deposit status
+            await db.collection('deposit_requests').doc(docId).update({
+                status: 'approved',
+                approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                approvedBy: 'admin'
+            });
+            
+            // Add balance to user
+            const userRef = db.collection('users').doc(userId);
+            const userDoc = await userRef.get();
+            
+            if (userDoc.exists) {
+                const updateData = {};
+                if (currency === 'USDT') {
+                    updateData.usdtBalance = firebase.firestore.FieldValue.increment(amount);
+                } else if (currency === 'BNB') {
+                    updateData.bnbBalance = firebase.firestore.FieldValue.increment(amount);
+                } else if (currency === 'AMSK') {
+                    updateData.balance = firebase.firestore.FieldValue.increment(amount);
+                    updateData.totalEarned = firebase.firestore.FieldValue.increment(amount);
+                }
+                
+                await userRef.update(updateData);
+            }
+            
+            // Update UI
+            this.loadAdminPendingRequests();
+            this.showNotification(`✅ Deposit approved: ${amount} ${currency}`, 'success');
+            
+        } catch (error) {
+            console.error('❌ Error approving deposit:', error);
+            this.showNotification('Error approving deposit', 'error');
+        }
+    }
+    
+    async rejectDeposit(docId) {
+        if (!db || !this.isAdmin) return;
+        
+        const reason = prompt('Enter rejection reason:', 'Invalid transaction');
+        if (!reason) return;
+        
+        try {
+            await db.collection('deposit_requests').doc(docId).update({
+                status: 'rejected',
+                rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                rejectedBy: 'admin',
+                rejectionReason: reason
+            });
+            
+            this.loadAdminPendingRequests();
+            this.showNotification('❌ Deposit rejected', 'warning');
+            
+        } catch (error) {
+            console.error('❌ Error rejecting deposit:', error);
+            this.showNotification('Error rejecting deposit', 'error');
+        }
+    }
+    
+    async approveWithdrawal(docId) {
+        if (!db || !this.isAdmin) return;
+        
+        try {
+            await db.collection('withdrawals').doc(docId).update({
+                status: 'completed',
+                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                completedBy: 'admin'
+            });
+            
+            this.loadAdminPendingRequests();
+            this.showNotification('✅ Withdrawal approved and marked as paid', 'success');
+            
+        } catch (error) {
+            console.error('❌ Error approving withdrawal:', error);
+            this.showNotification('Error approving withdrawal', 'error');
+        }
+    }
+    
+    async rejectWithdrawal(docId) {
+        if (!db || !this.isAdmin) return;
+        
+        try {
+            const withdrawalDoc = await db.collection('withdrawals').doc(docId).get();
+            const withdrawalData = withdrawalDoc.data();
+            
+            // Refund user
+            const userRef = db.collection('users').doc(withdrawalData.userId);
+            await userRef.update({
+                usdtBalance: firebase.firestore.FieldValue.increment(withdrawalData.amount),
+                bnbBalance: firebase.firestore.FieldValue.increment(withdrawalData.fee || 0)
+            });
+            
+            // Update withdrawal status
+            await db.collection('withdrawals').doc(docId).update({
+                status: 'rejected',
+                rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                rejectedBy: 'admin',
+                rejectionReason: 'Refunded to user'
+            });
+            
+            this.loadAdminPendingRequests();
+            this.showNotification('❌ Withdrawal rejected and refunded', 'warning');
+            
+        } catch (error) {
+            console.error('❌ Error rejecting withdrawal:', error);
+            this.showNotification('Error rejecting withdrawal', 'error');
+        }
     }
     
     // ============================================
     // UI UTILITIES
     // ============================================
-    showPage(pageName) {
-        if (this.currentPage === pageName) return;
-        
-        // Hide all pages
-        this.elements.pages.forEach(page => {
-            page.style.display = 'none';
-            page.classList.remove('active');
-        });
-        
-        // Update navigation
-        this.elements.navButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.page === pageName) {
-                btn.classList.add('active');
-            }
-        });
-        
-        // Show selected page
-        const pageElement = document.getElementById(`${pageName}-page`);
-        if (pageElement) {
-            pageElement.style.display = 'block';
-            setTimeout(() => {
-                pageElement.classList.add('active');
-            }, 10);
-        }
-        
-        this.currentPage = pageName;
-    }
-    
-    openModal(modalType, content) {
+    openModal(modalId, content = null) {
         // Close any open modal first
         this.closeModal();
         
-        const modal = document.getElementById(`${modalType}`);
+        const modal = document.getElementById(modalId);
         if (!modal) return;
         
-        // Set content
-        const modalBody = modal.querySelector('.modal-body');
-        if (modalBody && content) {
-            modalBody.innerHTML = content;
+        // Set content if provided
+        if (content) {
+            const modalBody = modal.querySelector('.modal-body');
+            if (modalBody) {
+                modalBody.innerHTML = content;
+            }
         }
         
-        // Show modal
+        // Show modal and overlay
         this.elements.modalOverlay.classList.add('active');
         modal.classList.add('active');
         
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
         
-        this.currentModal = modalType;
+        this.currentModal = modalId;
     }
     
     closeModal() {
@@ -1312,13 +2512,16 @@ class AlienMuskApp {
             this.elements.modalOverlay.classList.remove('active');
         }
         
-        // Restore scroll
+        // Restore body scroll
         document.body.style.overflow = '';
         
         this.currentModal = null;
     }
     
     showNotification(message, type = 'info') {
+        const notificationCenter = document.getElementById('notification-center');
+        if (!notificationCenter) return;
+        
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.innerHTML = `
@@ -1333,17 +2536,14 @@ class AlienMuskApp {
             </button>
         `;
         
-        const center = this.elements.notificationCenter;
-        if (center) {
-            center.appendChild(notification);
-            
-            // Auto-remove after 4 seconds
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.remove();
-                }
-            }, 4000);
-        }
+        notificationCenter.appendChild(notification);
+        
+        // Auto-remove after duration
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, CONFIG.UI.NOTIFICATION_DURATION);
     }
     
     showLoading() {
@@ -1365,66 +2565,28 @@ class AlienMuskApp {
     }
     
     // ============================================
-    // DATA MANAGEMENT
-    // ============================================
-    saveData() {
-        if (!this.state.user.id || this.isProcessing) return;
-        
-        this.isProcessing = true;
-        
-        try {
-            // Prepare data
-            const dataToSave = {
-                user: this.state.user,
-                wallet: this.state.wallet,
-                mining: this.state.mining,
-                staking: this.state.staking,
-                lastSave: Date.now()
-            };
-            
-            // Save to localStorage
-            localStorage.setItem(`alien_musk_data_${this.state.user.id}`, JSON.stringify(dataToSave));
-            
-            // Save to Firebase if available
-            if (db) {
-                this.saveToFirebase();
-            }
-            
-            console.log('💾 Data saved');
-            
-        } catch (error) {
-            console.error('Save error:', error);
-        } finally {
-            this.isProcessing = false;
-        }
-    }
-    
-    async saveToFirebase() {
-        if (!db || !this.state.user.id) return;
-        
-        try {
-            await db.collection('users').doc(this.state.user.id).set({
-                userId: this.state.user.id,
-                username: this.state.user.username,
-                balance: this.state.user.balance,
-                miningLevel: this.state.user.miningLevel,
-                referralCode: this.state.user.referralCode,
-                referralCount: this.state.user.referralCount,
-                lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-            
-        } catch (error) {
-            console.error('Firebase save error:', error);
-        }
-    }
-    
-    // ============================================
     // UTILITY FUNCTIONS
     // ============================================
+    generateReferralCode(userId) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = 'ALIEN-';
+        
+        // Add user ID segment
+        const idSegment = userId.slice(-3).toUpperCase();
+        code += idSegment;
+        
+        // Add random characters
+        for (let i = 0; i < 3; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        
+        return code;
+    }
+    
     formatNumber(num, decimals = 0) {
         if (typeof num !== 'number' || isNaN(num)) return '0';
         
-        // Format large numbers
+        // Handle large numbers
         if (num >= 1000000) {
             return (num / 1000000).toFixed(decimals) + 'M';
         } else if (num >= 1000) {
@@ -1435,6 +2597,17 @@ class AlienMuskApp {
             minimumFractionDigits: decimals,
             maximumFractionDigits: decimals
         });
+    }
+    
+    calculateTotalBalanceUSD() {
+        if (!this.walletData) return 0;
+        
+        const amskValue = this.walletData.AMSK * CONFIG.PRICES.AMSK;
+        const usdtValue = this.walletData.USDT * CONFIG.PRICES.USDT;
+        const bnbValue = this.walletData.BNB * CONFIG.PRICES.BNB;
+        const tonValue = this.walletData.TON * CONFIG.PRICES.TON;
+        
+        return amskValue + usdtValue + bnbValue + tonValue;
     }
     
     copyToClipboard(text) {
@@ -1449,7 +2622,9 @@ class AlienMuskApp {
             return;
         }
         
-        navigator.clipboard.writeText(text).catch(err => {
+        navigator.clipboard.writeText(text).then(() => {
+            // Success handled by caller
+        }).catch(err => {
             console.error('Copy error:', err);
         });
     }
@@ -1460,16 +2635,14 @@ class AlienMuskApp {
     setupEventListeners() {
         console.log('🎯 Setting up event listeners...');
         
-        // Navigation
-        if (this.elements.navButtons) {
-            this.elements.navButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const page = btn.dataset.page;
-                    this.showPage(page);
-                });
+        // Navigation buttons
+        this.elements.navButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = btn.dataset.page;
+                this.showPage(page);
             });
-        }
+        });
         
         // Mining button
         if (this.elements.startMiningBtn) {
@@ -1477,48 +2650,49 @@ class AlienMuskApp {
         }
         
         // Upgrade buttons
-        if (this.elements.upgradeButtons) {
-            this.elements.upgradeButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const card = e.target.closest('.upgrade-card');
-                    if (card) {
-                        this.upgradeMining(card.dataset.level);
-                    }
-                });
+        this.elements.upgradeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = e.target.closest('.upgrade-card');
+                if (card) {
+                    this.upgradeMining(card.dataset.level);
+                }
             });
-        }
+        });
         
         // Booster buttons
-        if (this.elements.boosterButtons) {
-            this.elements.boosterButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const card = e.target.closest('.booster-card');
-                    if (card) {
-                        this.activateBooster(card.dataset.booster);
-                    }
-                });
+        this.elements.boosterButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = e.target.closest('.booster-card');
+                if (card) {
+                    this.activateBooster(card.dataset.booster);
+                }
             });
-        }
+        });
         
         // Staking buttons
-        if (this.elements.stakeButtons) {
-            this.elements.stakeButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const planId = btn.dataset.plan;
-                    this.openStakeModal(planId);
-                });
+        this.elements.stakeButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const planId = btn.dataset.plan;
+                this.openStakeModal(planId);
             });
-        }
+        });
         
         // Quick action buttons
-        if (this.elements.quickButtons) {
-            this.elements.quickButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const action = btn.dataset.action;
-                    this.handleQuickAction(action);
-                });
+        this.elements.quickButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = btn.dataset.action;
+                this.handleQuickAction(action);
             });
-        }
+        });
+        
+        // Asset action buttons
+        this.elements.assetActionButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = btn.dataset.action;
+                const currency = btn.dataset.currency;
+                this.handleAssetAction(action, currency);
+            });
+        });
         
         // Referral buttons
         if (this.elements.copyRefCode) {
@@ -1530,11 +2704,9 @@ class AlienMuskApp {
         }
         
         // Modal close buttons
-        if (this.elements.closeModalButtons) {
-            this.elements.closeModalButtons.forEach(btn => {
-                btn.addEventListener('click', () => this.closeModal());
-            });
-        }
+        this.elements.closeModalButtons.forEach(btn => {
+            btn.addEventListener('click', () => this.closeModal());
+        });
         
         // Modal overlay
         if (this.elements.modalOverlay) {
@@ -1547,7 +2719,7 @@ class AlienMuskApp {
         
         // Window events
         window.addEventListener('beforeunload', () => {
-            this.saveData();
+            this.saveUserData();
         });
         
         console.log('✅ Event listeners setup complete');
@@ -1570,6 +2742,30 @@ class AlienMuskApp {
         }
     }
     
+    handleAssetAction(action, currency) {
+        switch (action) {
+            case 'send':
+                this.showNotification('Send functionality coming soon!', 'info');
+                break;
+            case 'receive':
+                this.openDepositModal(currency);
+                break;
+            case 'swap':
+                this.openSwapModal();
+                break;
+            case 'deposit':
+                this.openDepositModal(currency);
+                break;
+            case 'withdraw':
+                if (currency === 'USDT') {
+                    this.openWithdrawModal();
+                } else {
+                    this.showNotification('Withdrawals available only for USDT', 'info');
+                }
+                break;
+        }
+    }
+    
     // ============================================
     // BACKGROUND SERVICES
     // ============================================
@@ -1581,51 +2777,57 @@ class AlienMuskApp {
         
         // Auto-save every 30 seconds
         this.timers.autosave = setInterval(() => {
-            this.saveData();
+            this.saveUserData();
         }, 30000);
         
-        // Check for expired boosters
+        // Check for expired boosters every minute
         this.timers.boosters = setInterval(() => {
             this.checkExpiredBoosters();
+        }, 60000);
+        
+        // Update user last active every minute
+        this.timers.activity = setInterval(() => {
+            if (this.userData) {
+                this.userData.lastActive = new Date().toISOString();
+            }
         }, 60000);
         
         console.log('⏱️ Background services started');
     }
     
     updateMiningTimer() {
-        if (!this.state.mining.active) return;
+        if (!this.miningData || !this.miningData.isActive || !this.elements.miningTimer) return;
         
         const now = Date.now();
-        const timeLeft = this.state.mining.nextReward - now;
-        
-        const timerElement = this.elements.miningTimer;
-        if (!timerElement) return;
+        const timeLeft = this.miningData.nextReward - now;
         
         if (timeLeft <= 0) {
-            timerElement.textContent = 'READY!';
-            timerElement.style.color = '#00ff88';
+            this.elements.miningTimer.textContent = 'READY!';
+            this.elements.miningTimer.style.color = '#00ff88';
             this.updateMiningButton();
         } else {
             const hours = Math.floor(timeLeft / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
             
-            timerElement.textContent = 
+            this.elements.miningTimer.textContent = 
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            timerElement.style.color = '#ffffff';
+            this.elements.miningTimer.style.color = '#ffffff';
         }
     }
     
     checkExpiredBoosters() {
+        if (!this.miningData || !this.miningData.activeBoosters) return;
+        
         const now = Date.now();
-        const activeBoosters = this.state.mining.activeBoosters.filter(booster => {
+        const activeBoosters = this.miningData.activeBoosters.filter(booster => {
             return booster.expiresAt > now;
         });
         
-        if (activeBoosters.length !== this.state.mining.activeBoosters.length) {
-            this.state.mining.activeBoosters = activeBoosters;
+        if (activeBoosters.length !== this.miningData.activeBoosters.length) {
+            this.miningData.activeBoosters = activeBoosters;
             this.updateHomePage();
-            this.saveData();
+            this.saveUserData();
         }
     }
 }
@@ -1651,9 +2853,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.copyToClipboard = (text) => {
         if (app) app.copyToClipboard(text);
     };
+    
+    window.showNotification = (message, type) => {
+        if (app) app.showNotification(message, type);
+    };
 });
 
-console.log('👽 Alien Musk Platform v2.0 loaded!');
+console.log('👽 Alien Musk Platform v2.0 - Professional Edition loaded!');
 
 // ============================================
 // END OF FILE
