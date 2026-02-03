@@ -1,871 +1,1162 @@
 /* ===========================================
-   ALIEN MUSK - Ultimate Crypto Platform
+   ALIEN MUSK - Ultimate Quantum Mining Platform
    Main Application JavaScript
-   Version: 7.0.0 (Perfect & Professional)
-   Created with ❤️ for the best partner
+   Version: 4.0.0
    =========================================== */
 
-'use strict';
-
-// ============================================================================
-// CONFIGURATION CONSTANTS
-// ============================================================================
-const CONFIG = {
-    // Token Economics
-    TOKEN: {
-        PRICE: 0.0002,
-        SYMBOL: 'AMSK',
-        DECIMALS: 2
-    },
+// App Configuration
+const APP_CONFIG = {
+    // Token Prices
+    AMSK_PRICE: 0.0002,
+    BNB_PRICE: 300,
+    TON_PRICE: 2,
     
     // Mining Configuration
-    MINING: {
-        LEVELS: {
-            1: { name: 'Beginner', cost: 0, reward: 2500, hashrate: '2,500', duration: 3600000 },
-            2: { name: 'Advanced', cost: 5, reward: 5000, hashrate: '5,000', duration: 3600000 },
-            3: { name: 'Pro', cost: 20, reward: 10000, hashrate: '10,000', duration: 3600000 },
-            4: { name: 'Expert', cost: 100, reward: 25000, hashrate: '25,000', duration: 3600000 }
-        },
-        INITIAL_LEVEL: 1
+    MINING_LEVELS: {
+        1: { name: "مبتدئ", cost: 0, reward: 2500, hashrate: 2500, duration: 3600000 },
+        2: { name: "متقدم", cost: 5, reward: 5000, hashrate: 5000, duration: 3600000 },
+        3: { name: "محترف", cost: 20, reward: 10000, hashrate: 10000, duration: 3600000 },
+        4: { name: "خبير", cost: 100, reward: 25000, hashrate: 25000, duration: 3600000 }
     },
     
-    // Staking Configuration
-    STAKING: {
-        PLANS: {
-            1: { id: 'silver', name: 'Silver Plan', amount: 10, duration: 7, apr: 40, dailyReward: 40 },
-            2: { id: 'gold', name: 'Gold Plan', amount: 50, duration: 15, apr: 50, dailyReward: 250 },
-            3: { id: 'diamond', name: 'Diamond Plan', amount: 100, duration: 30, apr: 60, dailyReward: 600 }
-        },
-        MIN_AMOUNT: 10
+    // Booster Configuration
+    BOOSTERS: {
+        "2x": { multiplier: 2, duration: 24 * 60 * 60 * 1000, price: 10000 },
+        "3x": { multiplier: 3, duration: 12 * 60 * 60 * 1000, price: 15000 },
+        "5x": { multiplier: 5, duration: 6 * 60 * 60 * 1000, price: 25000 }
     },
     
-    // Swap Configuration
-    SWAP: {
-        RATES: {
-            AMSK_TO_USDT: 0.0002,
-            USDT_TO_AMSK: 5000
-        },
-        MIN_AMSK: 250000,
-        FEE: 0.01
+    // Staking Plans
+    STAKING_PLANS: {
+        1: { name: "فضة", amount: 10, duration: 7, apr: 40, dailyReward: 40 },
+        2: { name: "ذهب", amount: 50, duration: 15, apr: 50, dailyReward: 250 },
+        3: { name: "ماس", amount: 100, duration: 30, apr: 60, dailyReward: 600 }
     },
     
-    // Wallet Configuration
-    WALLET: {
-        MIN_DEPOSIT: 10,
-        MIN_WITHDRAWAL: 100,
-        NETWORK_FEE: 0.0005
+    // Referral Rewards
+    REFERRAL_REWARDS: {
+        10: { reward: 250000, title: "10 محالين" },
+        25: { reward: 1000000, title: "25 محالين" },
+        50: { reward: 5000000, title: "50 محالين" },
+        100: { reward: 25000000, title: "100 محالين" }
     },
     
-    // Referral Configuration
-    REFERRAL: {
-        GOALS: [10, 25, 50, 100],
-        REWARDS: {
-            10: 250000,
-            25: 1000000,
-            50: 5000000,
-            100: 25000000
-        }
-    }
+    // Swap Rates
+    SWAP_RATES: {
+        AMSK_TO_USDT: 0.0002,
+        USDT_TO_AMSK: 5000,
+        BNB_TO_AMSK: 300000,
+        TON_TO_AMSK: 2000
+    },
+    
+    // Minimum Limits
+    MIN_DEPOSIT: {
+        USDT: 10,
+        BNB: 0.02,
+        TON: 10
+    },
+    MIN_WITHDRAWAL: 100,
+    MIN_SWAP_AMSK: 250000,
+    WITHDRAWAL_FEE: 0.0005,
+    
+    // Deposit Addresses
+    DEPOSIT_ADDRESSES: {
+        USDT: "0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58",
+        BNB: "0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58",
+        TON: "UQCJhJZ0VDm3ei6sljWtV5JO3dAGwca8mPGJ9yVPBtPJlier"
+    },
+    
+    // Admin Settings
+    ADMIN_SECRET: "ALIENMUSK2024",
+    ADMIN_USER_ID: "1653918641"
 };
 
-// ============================================================================
-// MAIN APPLICATION CLASS
-// ============================================================================
+/* ===========================================
+   MAIN APPLICATION CLASS
+   =========================================== */
+
 class AlienMuskApp {
     constructor() {
-        this.initialized = false;
+        this.isInitialized = false;
         this.timers = {};
         this.currentPlan = null;
-        
-        // Initialize immediately
-        this.initialize();
+        this.currentBooster = null;
+        this.init();
     }
     
-    // ============================================================================
-    // INITIALIZATION
-    // ============================================================================
-    async initialize() {
+    async init() {
+        if (this.isInitialized) return;
+        
+        console.log('👽 جارٍ تنشيط منصة ALIEN MUSK...');
+        this.showLoading();
+        
         try {
-            console.group('🚀 Alien Musk App Initialization');
+            // Initialize Telegram WebApp
+            await this.initTelegramWebApp();
             
-            // Show loading state
-            this.showLoading();
+            // Initialize State
+            this.state = this.getInitialState();
             
-            // Initialize core systems
-            await this.initializeCore();
+            // Load saved state
+            this.loadState();
+            
+            // Cache DOM Elements
+            this.cacheDOM();
             
             // Initialize UI
-            await this.initializeUI();
+            this.initUI();
             
-            // Start background services
-            this.startServices();
+            // Setup Event Listeners
+            this.setupEventListeners();
             
-            // Hide loading and show app
+            // Start Timers
+            this.startTimers();
+            
+            // Setup Admin Access
+            this.setupAdminAccess();
+            
+            this.isInitialized = true;
+            
+            // Hide loading after 1 second
             setTimeout(() => {
                 this.hideLoading();
-                this.initialized = true;
-                this.showWelcome();
-                
-                console.log('✅ Application initialized successfully');
-                console.groupEnd();
-            }, 800);
+                this.showNotification('🚀 تم تنشيط المنصة الكمومية بنجاح!', 'success');
+                console.log('✅ تم تهيئة التطبيق بنجاح');
+            }, 1000);
             
         } catch (error) {
-            console.error('❌ Initialization failed:', error);
-            this.showError('Failed to initialize application');
+            console.error('❌ فشل تهيئة التطبيق:', error);
+            this.showNotification('فشل تحميل التطبيق. يرجى تحديث الصفحة.', 'error');
             this.hideLoading();
         }
     }
     
-    async initializeCore() {
-        // Initialize application state
-        this.state = {
-            user: this.getUserData(),
-            mining: this.getMiningState(),
-            staking: this.getStakingState(),
-            wallet: this.getWalletState(),
-            referral: this.getReferralState()
-        };
-        
-        console.log('💾 Core state initialized:', this.state);
+    /* ===========================================
+       INITIALIZATION METHODS
+       =========================================== */
+    
+    async initTelegramWebApp() {
+        return new Promise((resolve) => {
+            if (window.Telegram?.WebApp) {
+                this.tg = window.Telegram.WebApp;
+                this.tg.expand();
+                this.tg.enableClosingConfirmation();
+                this.tg.ready();
+                console.log('✅ تم تهيئة Telegram WebApp');
+            } else {
+                console.warn('⚠️ Telegram WebApp غير موجود، استخدام بيانات تجريبية');
+                this.tg = {
+                    initDataUnsafe: {
+                        user: {
+                            id: APP_CONFIG.ADMIN_USER_ID,
+                            username: 'alien_musk_user',
+                            first_name: 'Alien',
+                            last_name: 'Musk',
+                            photo_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
+                        }
+                    },
+                    expand: () => {},
+                    ready: () => {},
+                    enableClosingConfirmation: () => {}
+                };
+            }
+            resolve();
+        });
     }
     
-    async initializeUI() {
-        // Cache DOM elements
-        this.elements = this.cacheElements();
+    getInitialState() {
+        const user = this.tg?.initDataUnsafe?.user || {};
         
-        // Setup event listeners
-        this.setupEventListeners();
-        
-        // Initialize UI components
-        this.initializeComponents();
-        
-        // Render initial state
-        this.render();
-        
-        console.log('🎨 UI initialized successfully');
-    }
-    
-    // ============================================================================
-    // STATE MANAGEMENT
-    // ============================================================================
-    getUserData() {
         return {
-            id: 'ALIEN001',
-            name: 'Alien',
-            username: 'alien_musk',
-            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien',
-            joined: new Date().toISOString()
-        };
-    }
-    
-    getMiningState() {
-        return {
-            level: 1,
-            active: true,
-            nextReward: Date.now() + CONFIG.MINING.LEVELS[1].duration,
-            minedToday: 2500,
-            totalMined: 2500,
-            lastClaim: Date.now(),
-            efficiency: 1.0
-        };
-    }
-    
-    getStakingState() {
-        return {
-            active: [],
-            completed: [],
-            totalEarned: 0,
-            totalStaked: 0
-        };
-    }
-    
-    getWalletState() {
-        return {
+            // User Info
+            user: {
+                id: user.id || Date.now().toString(),
+                username: user.username || 'alien_user',
+                firstName: user.first_name || 'Alien',
+                lastName: user.last_name || 'Musk',
+                photoUrl: user.photo_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
+            },
+            
+            // Balances
             balances: {
                 AMSK: 2500,
                 USDT: 100.00,
-                BNB: 0.00
+                BNB: 0.5,
+                TON: 50
             },
-            addresses: {
-                USDT: '0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58',
-                BNB: '0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58'
+            
+            // Mining
+            mining: {
+                level: 1,
+                isActive: true,
+                lastReward: Date.now(),
+                nextReward: Date.now() + APP_CONFIG.MINING_LEVELS[1].duration,
+                totalMined: 2500,
+                minedToday: 2500,
+                efficiency: 1.0,
+                activeBoosters: []
             },
-            transactions: []
+            
+            // Staking
+            staking: {
+                activeStakes: [],
+                completedStakes: [],
+                totalEarned: 0,
+                totalStaked: 0
+            },
+            
+            // Referral
+            referral: {
+                code: 'ALIEN-M7B9X2',
+                referrals: [],
+                totalCount: 0,
+                earned: 0,
+                claimedRewards: []
+            },
+            
+            // Transactions
+            transactions: {
+                deposits: [],
+                withdrawals: [],
+                swaps: []
+            },
+            
+            // Admin
+            admin: {
+                isLoggedIn: false,
+                pendingDeposits: [],
+                pendingWithdrawals: []
+            }
         };
     }
     
-    getReferralState() {
-        return {
-            code: 'ALIEN-M7B9X2',
-            total: 0,
-            active: [],
-            earned: 0,
-            claimed: []
+    cacheDOM() {
+        this.elements = {
+            // Loading Screen
+            loadingScreen: document.getElementById('loading-screen'),
+            
+            // Header Elements
+            totalBalance: document.getElementById('total-balance'),
+            notificationCount: document.getElementById('notification-count'),
+            userAvatar: document.getElementById('user-avatar'),
+            
+            // Navigation
+            navItems: document.querySelectorAll('.nav-item'),
+            
+            // Home Page
+            homePage: document.getElementById('home-page'),
+            welcomeText: document.getElementById('welcome-text'),
+            userId: document.getElementById('user-id'),
+            
+            // Balance
+            totalAmsk: document.getElementById('total-amsk'),
+            usdEquivalent: document.getElementById('usd-equivalent'),
+            
+            // Mining
+            currentHashrate: document.getElementById('current-hashrate'),
+            miningTimer: document.getElementById('mining-timer'),
+            nextReward: document.getElementById('next-reward'),
+            startMiningBtn: document.getElementById('start-mining'),
+            
+            // Mining Stats
+            minedToday: document.getElementById('mined-today'),
+            totalMined: document.getElementById('total-mined'),
+            stakingEarned: document.getElementById('staking-earned'),
+            miningLevel: document.getElementById('mining-level'),
+            
+            // Upgrade Cards
+            upgradeCards: document.querySelectorAll('.upgrade-card'),
+            upgradeBtns: document.querySelectorAll('.upgrade-btn'),
+            
+            // Boosters
+            boosterCards: document.querySelectorAll('.booster-card'),
+            boosterBtns: document.querySelectorAll('.booster-btn'),
+            
+            // Referral
+            refCount: document.getElementById('ref-count'),
+            totalRefs: document.getElementById('total-refs'),
+            refEarned: document.getElementById('ref-earned'),
+            nextGoal: document.getElementById('next-goal'),
+            progressText: document.getElementById('progress-text'),
+            progressFill: document.getElementById('progress-fill'),
+            goalReward: document.getElementById('goal-reward'),
+            refCode: document.getElementById('ref-code'),
+            copyRefCode: document.getElementById('copy-ref-code'),
+            shareRef: document.getElementById('share-ref'),
+            
+            // Other Pages
+            miningPage: document.getElementById('mining-page'),
+            stakingPage: document.getElementById('staking-page'),
+            walletPage: document.getElementById('wallet-page'),
+            
+            // Modals
+            modalOverlay: document.getElementById('modal-overlay'),
+            depositModal: document.getElementById('deposit-modal'),
+            withdrawModal: document.getElementById('withdraw-modal'),
+            swapModal: document.getElementById('swap-modal'),
+            stakeModal: document.getElementById('stake-modal'),
+            boosterModal: document.getElementById('booster-modal'),
+            closeModalBtns: document.querySelectorAll('.close-modal'),
+            
+            // Admin Panel
+            adminPanel: document.getElementById('admin-panel'),
+            
+            // Notification Center
+            notificationCenter: document.getElementById('notification-center')
         };
     }
     
-    // ============================================================================
-    // DOM MANAGEMENT
-    // ============================================================================
-    cacheElements() {
-        const elements = {};
-        
-        // Cache by category for better organization
-        const categories = {
-            navigation: ['nav-buttons', 'tab-contents'],
-            header: ['header-balance', 'user-avatar', 'notification-count'],
-            home: [
-                'welcome-text', 'user-id', 'total-amsk', 'usd-equivalent',
-                'current-hashrate', 'mining-timer', 'next-reward', 'start-mining',
-                'mined-today', 'total-mined', 'staking-earned', 'mining-level'
-            ],
-            referral: [
-                'ref-count', 'total-refs', 'ref-earned', 'next-goal',
-                'progress-text', 'progress-fill', 'goal-reward', 'ref-code'
-            ],
-            wallet: [
-                'wallet-total-amsk', 'wallet-total-usd', 'wallet-amsk',
-                'wallet-amsk-value', 'wallet-usdt', 'wallet-usdt-value'
-            ],
-            modals: ['modal-overlay', 'deposit-modal', 'withdraw-modal', 'swap-modal', 'stake-modal']
-        };
-        
-        // Cache all elements
-        Object.values(categories).flat().forEach(id => {
-            elements[id] = document.getElementById(id);
-        });
-        
-        // Cache element groups
-        elements.navButtons = document.querySelectorAll('.nav-btn');
-        elements.tabContents = document.querySelectorAll('.tab-content');
-        elements.levelCards = document.querySelectorAll('.level-card');
-        elements.stakeButtons = document.querySelectorAll('.stake-btn');
-        elements.quickButtons = document.querySelectorAll('.quick-btn');
-        elements.modalClosers = document.querySelectorAll('.close-modal');
-        
-        return elements;
-    }
-    
-    setupEventListeners() {
-        console.log('🔗 Setting up event listeners...');
-        
-        // Navigation
-        this.elements.navButtons?.forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleNavigation(e));
-        });
-        
-        // Mining Actions
-        this.elements['start-mining']?.addEventListener('click', () => this.handleMining());
-        
-        // Level Upgrades
-        this.elements.levelCards?.forEach(card => {
-            const btn = card.querySelector('.upgrade-btn:not(.active-btn)');
-            btn?.addEventListener('click', () => this.upgradeMining(card.dataset.level));
-        });
-        
-        // Referral Actions
-        document.getElementById('copy-ref-code')?.addEventListener('click', () => this.copyReferralCode());
-        document.getElementById('share-ref')?.addEventListener('click', () => this.shareReferralLink());
-        
-        // Staking Actions
-        this.elements.stakeButtons?.forEach(btn => {
-            btn.addEventListener('click', (e) => this.openStakeModal(e.target.dataset.plan));
-        });
-        
-        // Quick Actions
-        this.elements.quickButtons?.forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleQuickAction(e.target.dataset.action));
-        });
-        
-        // Modal Controls
-        this.elements.modalClosers?.forEach(btn => {
-            btn.addEventListener('click', () => this.closeModal());
-        });
-        this.elements['modal-overlay']?.addEventListener('click', () => this.closeModal());
-        
-        // Calculator
-        document.getElementById('calc-amount')?.addEventListener('input', () => this.updateCalculator());
-        document.getElementById('calc-duration')?.addEventListener('change', () => this.updateCalculator());
-        
-        console.log('✅ Event listeners setup complete');
-    }
-    
-    initializeComponents() {
+    initUI() {
         // Set user information
-        this.elements['welcome-text'].textContent = `Welcome, ${this.state.user.name}!`;
-        this.elements['user-id'].textContent = this.state.user.id;
-        this.elements['user-avatar'].src = this.state.user.avatar;
-        this.elements['ref-code'].textContent = this.state.referral.code;
+        this.elements.welcomeText.textContent = `مرحبًا، ${this.state.user.firstName}!`;
+        this.elements.userId.textContent = this.state.user.id.substring(0, 8);
+        this.elements.userAvatar.src = this.state.user.photoUrl;
+        
+        // Update all UI components
+        this.updateHeader();
+        this.updateHomePage();
+        
+        // Show home page
+        this.showPage('home');
     }
     
-    // ============================================================================
-    // RENDER ENGINE
-    // ============================================================================
-    render() {
-        this.renderHeader();
-        this.renderHomeTab();
-        this.renderStakingTab();
-        this.renderWalletTab();
-        this.renderMiningTimer();
+    /* ===========================================
+       UI UPDATE METHODS
+       =========================================== */
+    
+    updateHeader() {
+        const totalBalance = this.calculateTotalBalance();
+        this.elements.totalBalance.textContent = `$${this.formatNumber(totalBalance, 2)}`;
+        
+        // Update notification count
+        const pendingCount = this.state.admin.pendingDeposits.length + 
+                           this.state.admin.pendingWithdrawals.length;
+        this.elements.notificationCount.textContent = pendingCount > 0 ? pendingCount : '';
     }
     
-    renderHeader() {
-        const totalValue = this.calculateTotalPortfolio();
-        this.elements['header-balance'].textContent = `$${this.formatNumber(totalValue, 2)}`;
-    }
-    
-    renderHomeTab() {
-        const { mining, wallet, staking, referral } = this.state;
-        const level = CONFIG.MINING.LEVELS[mining.level];
+    updateHomePage() {
+        // Update balance
+        const totalAMSK = this.state.balances.AMSK;
+        this.elements.totalAmsk.textContent = this.formatNumber(totalAMSK);
+        this.elements.usdEquivalent.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
         
-        // Balance
-        this.elements['total-amsk'].textContent = this.formatNumber(wallet.balances.AMSK);
-        this.elements['usd-equivalent'].textContent = this.formatNumber(
-            wallet.balances.AMSK * CONFIG.TOKEN.PRICE, 2
-        );
+        // Update mining info
+        const miningLevel = APP_CONFIG.MINING_LEVELS[this.state.mining.level];
+        this.elements.currentHashrate.textContent = this.formatNumber(miningLevel.hashrate);
+        this.elements.nextReward.textContent = `${this.formatNumber(miningLevel.reward)} AMSK`;
         
-        // Mining Info
-        this.elements['current-hashrate'].textContent = level.hashrate;
-        this.elements['next-reward'].textContent = `${this.formatNumber(level.reward)} AMSK`;
-        
-        // Statistics
-        this.elements['mined-today'].textContent = this.formatNumber(mining.minedToday);
-        this.elements['total-mined'].textContent = this.formatNumber(mining.totalMined);
-        this.elements['staking-earned'].textContent = this.formatNumber(staking.totalEarned);
-        this.elements['mining-level'].textContent = mining.level;
-        
-        // Referral Info
-        this.elements['ref-count'].textContent = referral.total;
-        this.elements['total-refs'].textContent = referral.total;
-        this.elements['ref-earned'].textContent = `${this.formatNumber(referral.earned)} AMSK`;
-        
-        // Update referral progress
-        this.updateReferralProgress();
-        
-        // Update mining button state
-        this.updateMiningButton();
-        
-        // Update mining levels
+        // Update mining level cards
         this.updateMiningLevels();
-    }
-    
-    renderStakingTab() {
-        this.updateStakesList();
-        this.updateCalculator();
-    }
-    
-    renderWalletTab() {
-        const { wallet } = this.state;
         
-        // Total Portfolio
-        this.elements['wallet-total-amsk'].textContent = this.formatNumber(wallet.balances.AMSK);
-        this.elements['wallet-total-usd'].textContent = this.formatNumber(
-            wallet.balances.AMSK * CONFIG.TOKEN.PRICE, 2
-        );
+        // Update stats
+        this.elements.minedToday.textContent = this.formatNumber(this.state.mining.minedToday);
+        this.elements.totalMined.textContent = this.formatNumber(this.state.mining.totalMined);
+        this.elements.stakingEarned.textContent = this.formatNumber(this.state.staking.totalEarned);
+        this.elements.miningLevel.textContent = this.state.mining.level;
         
-        // AMSK Balance
-        this.elements['wallet-amsk'].textContent = this.formatNumber(wallet.balances.AMSK);
-        this.elements['wallet-amsk-value'].textContent = this.formatNumber(
-            wallet.balances.AMSK * CONFIG.TOKEN.PRICE, 2
-        );
+        // Update referral info
+        this.updateReferralInfo();
         
-        // USDT Balance
-        this.elements['wallet-usdt'].textContent = this.formatNumber(wallet.balances.USDT, 2);
-        this.elements['wallet-usdt-value'].textContent = this.formatNumber(wallet.balances.USDT, 2);
-    }
-    
-    // ============================================================================
-    // MINING SYSTEM
-    // ============================================================================
-    handleMining() {
-        if (!this.state.mining.active) {
-            this.startMining();
-        } else if (Date.now() >= this.state.mining.nextReward) {
-            this.claimMiningReward();
-        } else {
-            this.showNotification('⏳ Mining in progress...', 'info');
-        }
-    }
-    
-    startMining() {
-        this.state.mining.active = true;
-        this.state.mining.nextReward = Date.now() + CONFIG.MINING.LEVELS[this.state.mining.level].duration;
-        
-        this.render();
-        this.saveState();
-        this.showNotification('⛏️ Mining started successfully!', 'success');
-    }
-    
-    claimMiningReward() {
-        const level = CONFIG.MINING.LEVELS[this.state.mining.level];
-        const reward = level.reward;
-        
-        // Update balances
-        this.state.wallet.balances.AMSK += reward;
-        this.state.mining.minedToday += reward;
-        this.state.mining.totalMined += reward;
-        this.state.mining.lastClaim = Date.now();
-        
-        // Reset timer
-        this.state.mining.nextReward = Date.now() + level.duration;
-        
-        this.render();
-        this.saveState();
-        this.showNotification(`💰 Claimed ${this.formatNumber(reward)} AMSK!`, 'success');
-    }
-    
-    upgradeMining(targetLevel) {
-        targetLevel = parseInt(targetLevel);
-        const currentLevel = this.state.mining.level;
-        const targetData = CONFIG.MINING.LEVELS[targetLevel];
-        
-        // Validations
-        if (targetLevel <= currentLevel) {
-            this.showNotification('⚠️ Already at or above this level', 'warning');
-            return;
-        }
-        
-        if (this.state.wallet.balances.USDT < targetData.cost) {
-            this.showNotification(`❌ Need ${targetData.cost} USDT to upgrade`, 'error');
-            return;
-        }
-        
-        // Process upgrade
-        this.state.wallet.balances.USDT -= targetData.cost;
-        this.state.mining.level = targetLevel;
-        
-        this.render();
-        this.saveState();
-        this.showNotification(`⚡ Upgraded to ${targetData.name}!`, 'success');
-    }
-    
-    updateMiningButton() {
-        const btn = this.elements['start-mining'];
-        if (!btn) return;
-        
-        if (!this.state.mining.active) {
-            btn.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
-            btn.disabled = false;
-        } else if (Date.now() >= this.state.mining.nextReward) {
-            btn.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
-            btn.disabled = false;
-        } else {
-            btn.innerHTML = '<i class="fas fa-clock"></i><span>Mining...</span>';
-            btn.disabled = true;
-        }
+        // Update mining button
+        this.updateMiningButton();
     }
     
     updateMiningLevels() {
-        this.elements.levelCards?.forEach(card => {
+        this.elements.upgradeCards.forEach(card => {
             const level = parseInt(card.dataset.level);
-            const levelData = CONFIG.MINING.LEVELS[level];
-            const isCurrent = level === this.state.mining.level;
-            const canAfford = this.state.wallet.balances.USDT >= levelData.cost;
+            const levelData = APP_CONFIG.MINING_LEVELS[level];
+            const isCurrentLevel = level === this.state.mining.level;
+            const canAfford = this.state.balances.USDT >= levelData.cost;
             
             const btn = card.querySelector('.upgrade-btn');
-            if (!btn) return;
-            
-            if (isCurrent) {
-                btn.textContent = 'Active';
-                btn.disabled = true;
+            if (isCurrentLevel) {
+                btn.textContent = 'نشط';
                 btn.classList.add('active-btn');
-                card.classList.add('active-level');
+                btn.disabled = true;
+                card.classList.add('active');
             } else if (level < this.state.mining.level) {
-                btn.textContent = 'Upgraded';
-                btn.disabled = true;
+                btn.textContent = 'تم الترقية';
                 btn.classList.add('active-btn');
+                btn.disabled = true;
             } else {
-                btn.textContent = canAfford ? 'Upgrade' : `${levelData.cost} USDT`;
+                btn.textContent = canAfford ? 'ترقية' : `${levelData.cost} USDT`;
                 btn.disabled = !canAfford;
-                card.classList.remove('active-level');
+                btn.classList.remove('active-btn');
+                card.classList.remove('active');
             }
         });
     }
     
-    // ============================================================================
-    // STAKING SYSTEM
-    // ============================================================================
-    openStakeModal(planId) {
-        const plan = CONFIG.STAKING.PLANS[planId];
-        if (!plan) return;
+    updateMiningButton() {
+        const btn = this.elements.startMiningBtn;
         
-        this.currentPlan = plan;
-        
-        // Update modal content
-        const planDisplay = document.getElementById('stake-plan-display');
-        if (planDisplay) {
-            planDisplay.innerHTML = `
-                <div class="selected-plan">
-                    <div class="plan-header">
-                        <div class="plan-icon ${plan.id}">
-                            <i class="fas fa-gem"></i>
-                        </div>
-                        <div class="plan-info">
-                            <h4>${plan.name}</h4>
-                            <div class="plan-minimum">Minimum: ${plan.amount} USDT</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        if (!this.state.mining.isActive) {
+            btn.innerHTML = '<i class="fas fa-play"></i><span>تشغيل المحرك الكمومي</span>';
+            btn.disabled = false;
+        } else if (Date.now() >= this.state.mining.nextReward) {
+            btn.innerHTML = '<i class="fas fa-gift"></i><span>مطالبة بالمكافأة</span>';
+            btn.disabled = false;
+        } else {
+            btn.innerHTML = '<i class="fas fa-clock"></i><span>جاري التعدين...</span>';
+            btn.disabled = true;
         }
-        
-        // Update preview
-        document.getElementById('available-usdt').textContent = 
-            this.formatNumber(this.state.wallet.balances.USDT, 2);
-        document.getElementById('stake-duration').textContent = `${plan.duration} Days`;
-        document.getElementById('stake-apr').textContent = `${plan.apr}%`;
-        document.getElementById('stake-daily').textContent = `${plan.dailyReward} AMSK`;
-        document.getElementById('stake-total').textContent = 
-            `${this.formatNumber(plan.dailyReward * plan.duration)} AMSK`;
-        
-        // Set amount input
-        const amountInput = document.getElementById('stake-amount');
-        if (amountInput) {
-            amountInput.value = plan.amount;
-            amountInput.min = plan.amount;
-        }
-        
-        this.openModal('stake-modal');
     }
     
-    updateStakesList() {
-        const container = document.getElementById('active-stakes-list');
-        if (!container) return;
+    updateReferralInfo() {
+        const refCount = this.state.referral.totalCount;
+        this.elements.refCount.textContent = refCount;
+        this.elements.totalRefs.textContent = refCount;
+        this.elements.refEarned.textContent = `${this.formatNumber(this.state.referral.earned)} AMSK`;
+        this.elements.refCode.textContent = this.state.referral.code;
         
-        if (this.state.staking.active.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p>No active stakes</p>
-                </div>
-            `;
+        // Find next goal
+        let nextGoal = 10;
+        let goalReward = 250000;
+        
+        const goals = Object.keys(APP_CONFIG.REFERRAL_REWARDS).map(Number).sort((a, b) => a - b);
+        for (const goal of goals) {
+            if (refCount < goal) {
+                nextGoal = goal;
+                goalReward = APP_CONFIG.REFERRAL_REWARDS[goal].reward;
+                break;
+            }
+        }
+        
+        // Update progress
+        const progress = Math.min((refCount / nextGoal) * 100, 100);
+        this.elements.nextGoal.textContent = `${nextGoal} محالين`;
+        this.elements.progressText.textContent = `${Math.round(progress)}%`;
+        this.elements.progressFill.style.width = `${progress}%`;
+        this.elements.goalReward.textContent = `${this.formatNumber(goalReward)} AMSK`;
+    }
+    
+    /* ===========================================
+       PAGE NAVIGATION
+       =========================================== */
+    
+    showPage(pageName) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // Remove active class from all nav items
+        this.elements.navItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Show selected page
+        const pageElement = document.getElementById(`${pageName}-page`);
+        if (pageElement) {
+            pageElement.classList.add('active');
+        }
+        
+        // Activate corresponding nav item
+        const navItem = document.querySelector(`.nav-item[data-page="${pageName}"]`);
+        if (navItem) {
+            navItem.classList.add('active');
+        }
+        
+        // Update page content
+        switch (pageName) {
+            case 'home':
+                this.updateHomePage();
+                break;
+            case 'mining':
+                this.updateMiningPage();
+                break;
+            case 'staking':
+                this.updateStakingPage();
+                break;
+            case 'wallet':
+                this.updateWalletPage();
+                break;
+        }
+    }
+    
+    updateMiningPage() {
+        // سيتم إضافة محتوى صفحة التعدين هنا
+        console.log('Updating mining page...');
+    }
+    
+    updateStakingPage() {
+        // سيتم إضافة محتوى صفحة الستيكينغ هنا
+        console.log('Updating staking page...');
+    }
+    
+    updateWalletPage() {
+        // سيتم إضافة محتوى صفحة المحفظة هنا
+        console.log('Updating wallet page...');
+    }
+    
+    /* ===========================================
+       EVENT LISTENERS SETUP
+       =========================================== */
+    
+    setupEventListeners() {
+        // Navigation
+        this.elements.navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = item.dataset.page;
+                this.showPage(page);
+            });
+        });
+        
+        // Mining Actions
+        this.elements.startMiningBtn.addEventListener('click', () => this.handleMining());
+        
+        // Level Upgrades
+        this.elements.upgradeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                if (btn.disabled) return;
+                const card = e.target.closest('.upgrade-card');
+                this.upgradeMining(card.dataset.level);
+            });
+        });
+        
+        // Boosters
+        this.elements.boosterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = e.target.closest('.booster-card');
+                this.activateBooster(card.dataset.booster);
+            });
+        });
+        
+        // Referral Actions
+        this.elements.copyRefCode.addEventListener('click', () => this.copyReferralCode());
+        this.elements.shareRef.addEventListener('click', () => this.shareReferralLink());
+        
+        // Modal Controls
+        this.setupModalListeners();
+        
+        // Save state on unload
+        window.addEventListener('beforeunload', () => this.saveState());
+        window.addEventListener('pagehide', () => this.saveState());
+    }
+    
+    setupModalListeners() {
+        // Close modals
+        this.elements.closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.closeAllModals());
+        });
+        
+        this.elements.modalOverlay.addEventListener('click', () => this.closeAllModals());
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeAllModals();
+            }
+        });
+    }
+    
+    setupAdminAccess() {
+        let clickCount = 0;
+        let lastClickTime = 0;
+        const logo = document.querySelector('.brand-section');
+        
+        logo.addEventListener('click', () => {
+            const now = Date.now();
+            if (now - lastClickTime > 2000) clickCount = 0;
+            
+            lastClickTime = now;
+            clickCount++;
+            
+            if (clickCount >= 10) {
+                this.showAdminLogin();
+                clickCount = 0;
+            }
+        });
+    }
+    
+    /* ===========================================
+       MINING SYSTEM
+       =========================================== */
+    
+    handleMining() {
+        if (!this.state.mining.isActive) {
+            this.startMining();
             return;
         }
         
-        // Render stakes list
-        container.innerHTML = this.state.staking.active.map(stake => `
-            <div class="stake-item">
-                <div class="stake-header">
-                    <div class="stake-name">${stake.plan.name} Plan</div>
-                    <div class="stake-amount">${this.formatNumber(stake.amount, 2)} USDT</div>
-                </div>
-                <div class="stake-details">
-                    <div class="detail">
-                        <span>Started:</span>
-                        <span>${new Date(stake.startTime).toLocaleDateString()}</span>
-                    </div>
-                    <div class="detail">
-                        <span>Ends:</span>
-                        <span>${new Date(stake.endTime).toLocaleDateString()}</span>
-                    </div>
-                    <div class="detail">
-                        <span>Earned:</span>
-                        <span>${this.formatNumber(stake.earned)} AMSK</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    updateCalculator() {
-        const amount = parseFloat(document.getElementById('calc-amount')?.value) || 10;
-        const duration = parseInt(document.getElementById('calc-duration')?.value) || 30;
-        
-        // Find appropriate plan
-        let plan = CONFIG.STAKING.PLANS[1];
-        if (amount >= 100) plan = CONFIG.STAKING.PLANS[3];
-        else if (amount >= 50) plan = CONFIG.STAKING.PLANS[2];
-        
-        const dailyReward = (amount / plan.amount) * plan.dailyReward;
-        const totalReward = dailyReward * duration;
-        
-        document.getElementById('calc-daily').textContent = `${this.formatNumber(dailyReward)} AMSK`;
-        document.getElementById('calc-total').textContent = `${this.formatNumber(totalReward)} AMSK`;
-        document.getElementById('calc-apr').textContent = `${plan.apr}%`;
-    }
-    
-    // ============================================================================
-    // WALLET SYSTEM
-    // ============================================================================
-    handleQuickAction(action) {
-        switch (action) {
-            case 'swap':
-                this.openSwapModal();
-                break;
-            case 'deposit':
-                this.openDepositModal();
-                break;
-            case 'withdraw':
-                this.openWithdrawModal();
-                break;
-            case 'history':
-                this.showNotification('📊 Transaction history coming soon!', 'info');
-                break;
+        // Check if reward is ready
+        if (Date.now() >= this.state.mining.nextReward) {
+            this.claimMiningReward();
+        } else {
+            this.showNotification('جاري التعدين... المكافأة غير جاهزة بعد.', 'info');
         }
     }
     
-    openDepositModal() {
-        this.openModal('deposit-modal');
+    startMining() {
+        this.state.mining.isActive = true;
+        this.state.mining.lastReward = Date.now();
+        this.state.mining.nextReward = Date.now() + APP_CONFIG.MINING_LEVELS[this.state.mining.level].duration;
+        
+        this.updateMiningButton();
+        this.showNotification('✅ تم تشغيل التعدين بنجاح!', 'success');
+        this.updateHomePage();
+        this.saveState();
     }
     
-    openWithdrawModal() {
-        document.getElementById('withdraw-balance').textContent = 
-            this.formatNumber(this.state.wallet.balances.USDT, 2);
-        this.openModal('withdraw-modal');
+    claimMiningReward() {
+        const miningLevel = APP_CONFIG.MINING_LEVELS[this.state.mining.level];
+        let reward = miningLevel.reward;
+        
+        // Apply booster multiplier
+        if (this.state.mining.activeBoosters.length > 0) {
+            const activeBooster = this.state.mining.activeBoosters[0];
+            reward *= activeBooster.multiplier;
+        }
+        
+        // Add reward to balance
+        this.state.balances.AMSK += reward;
+        this.state.mining.totalMined += reward;
+        this.state.mining.minedToday += reward;
+        
+        // Reset timer
+        this.state.mining.lastReward = Date.now();
+        this.state.mining.nextReward = Date.now() + miningLevel.duration;
+        
+        // Update UI
+        this.updateHomePage();
+        this.updateHeader();
+        
+        // Show notification
+        this.showNotification(`💰 تمت المطالبة بـ ${this.formatNumber(reward)} AMSK من التعدين!`, 'success');
+        
+        // Save state
+        this.saveState();
     }
     
-    openSwapModal() {
-        document.getElementById('swap-from-balance').textContent = 
-            this.formatNumber(this.state.wallet.balances.AMSK);
-        document.getElementById('swap-to-balance').textContent = 
-            this.formatNumber(this.state.wallet.balances.USDT, 2);
-        this.openModal('swap-modal');
+    upgradeMining(level) {
+        level = parseInt(level);
+        const levelData = APP_CONFIG.MINING_LEVELS[level];
+        
+        if (level <= this.state.mining.level) {
+            this.showNotification('أنت بالفعل في هذا المستوى أو أعلى!', 'warning');
+            return;
+        }
+        
+        if (this.state.balances.USDT < levelData.cost) {
+            this.showNotification(`رصيد USDT غير كافي. تحتاج إلى ${levelData.cost} USDT.`, 'error');
+            return;
+        }
+        
+        // Deduct cost
+        this.state.balances.USDT -= levelData.cost;
+        this.state.mining.level = level;
+        
+        // Update UI
+        this.updateHomePage();
+        this.updateHeader();
+        
+        // Show notification
+        this.showNotification(`⚡ تم الترقية إلى مستوى ${levelData.name}!`, 'success');
+        
+        // Save state
+        this.saveState();
     }
     
-    // ============================================================================
-    // REFERRAL SYSTEM
-    // ============================================================================
+    /* ===========================================
+       BOOSTER SYSTEM
+       =========================================== */
+    
+    activateBooster(boosterType) {
+        const booster = APP_CONFIG.BOOSTERS[boosterType];
+        
+        if (!booster) {
+            this.showNotification('المعزز غير موجود!', 'error');
+            return;
+        }
+        
+        if (this.state.balances.AMSK < booster.price) {
+            this.showNotification(`رصيد AMSK غير كافي. تحتاج إلى ${booster.price} AMSK.`, 'error');
+            return;
+        }
+        
+        // Check if already has active booster
+        if (this.state.mining.activeBoosters.length > 0) {
+            this.showNotification('لديك معزز نشط بالفعل!', 'warning');
+            return;
+        }
+        
+        // Deduct price
+        this.state.balances.AMSK -= booster.price;
+        
+        // Add booster
+        this.state.mining.activeBoosters.push({
+            type: boosterType,
+            multiplier: booster.multiplier,
+            activatedAt: Date.now(),
+            expiresAt: Date.now() + booster.duration
+        });
+        
+        // Update UI
+        this.updateHomePage();
+        this.updateHeader();
+        
+        // Show notification
+        this.showNotification(`⚡ تم تفعيل معزز ${boosterType}! الإنتاج ×${booster.multiplier}`, 'success');
+        
+        // Save state
+        this.saveState();
+    }
+    
+    updateBoosters() {
+        // Remove expired boosters
+        const now = Date.now();
+        this.state.mining.activeBoosters = this.state.mining.activeBoosters.filter(booster => {
+            return booster.expiresAt > now;
+        });
+    }
+    
+    /* ===========================================
+       REFERRAL SYSTEM
+       =========================================== */
+    
     copyReferralCode() {
-        navigator.clipboard.writeText(this.state.referral.code)
-            .then(() => this.showNotification('📋 Referral code copied!', 'success'))
-            .catch(() => this.showNotification('Failed to copy', 'error'));
+        this.copyToClipboard(this.state.referral.code);
+        this.showNotification('✅ تم نسخ كود الإحالة!', 'success');
     }
     
     shareReferralLink() {
-        const message = `🚀 Join Alien Musk - Earn 2,500 AMSK/hour!\n\nUse my code: ${this.state.referral.code}`;
+        const link = `https://t.me/AlienMuskBot?start=ref-${this.state.referral.code}`;
+        const message = `🚀 انضم إلى ALIEN MUSK واحصل على AMSK مجانًا!\n\nاستخدم كود الإحالة الخاص بي: ${this.state.referral.code}\n\n${link}`;
         
         if (navigator.share) {
             navigator.share({
-                title: 'Alien Musk - Quantum Mining',
-                text: message
+                title: 'ALIEN MUSK - منصة التعدين الكمومية',
+                text: message,
+                url: link
+            }).catch(() => {
+                this.copyToClipboard(message);
+                this.showNotification('✅ تم نسخ رابط الإحالة! شاركه مع أصدقائك.', 'info');
             });
         } else {
-            navigator.clipboard.writeText(message);
-            this.showNotification('📤 Link copied! Share with friends.', 'info');
+            this.copyToClipboard(message);
+            this.showNotification('✅ تم نسخ رابط الإحالة! شاركه مع أصدقائك.', 'info');
         }
     }
     
-    updateReferralProgress() {
-        const progress = (this.state.referral.total / 10) * 100;
-        const progressFill = this.elements['progress-fill'];
-        const progressText = this.elements['progress-text'];
+    addReferral(userId) {
+        // Check if already referred
+        if (this.state.referral.referrals.includes(userId)) {
+            return;
+        }
         
-        if (progressFill) progressFill.style.width = `${Math.min(progress, 100)}%`;
-        if (progressText) progressText.textContent = `${Math.min(Math.round(progress), 100)}%`;
+        // Add referral
+        this.state.referral.referrals.push(userId);
+        this.state.referral.totalCount++;
+        
+        // Add reward (20,000 AMSK per referral)
+        this.state.balances.AMSK += 20000;
+        this.state.referral.earned += 20000;
+        
+        // Check for milestone rewards
+        this.checkReferralMilestones();
+        
+        // Update UI
+        this.updateHomePage();
+        this.updateHeader();
+        
+        // Show notification
+        this.showNotification(`🎉 تمت إضافة محال جديد! +20,000 AMSK`, 'success');
+        
+        // Save state
+        this.saveState();
     }
     
-    // ============================================================================
-    // NAVIGATION & MODALS
-    // ============================================================================
-    handleNavigation(event) {
-        event.preventDefault();
-        const tab = event.currentTarget.dataset.tab;
+    checkReferralMilestones() {
+        const refCount = this.state.referral.totalCount;
         
-        // Update navigation
-        this.elements.navButtons?.forEach(btn => btn.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        
-        // Update content
-        this.elements.tabContents?.forEach(content => content.classList.remove('active'));
-        document.getElementById(`${tab}-tab`)?.classList.add('active');
-        
-        // Update tab-specific content
-        switch (tab) {
-            case 'home':
-                this.renderHomeTab();
-                break;
-            case 'staking':
-                this.renderStakingTab();
-                break;
-            case 'wallet':
-                this.renderWalletTab();
-                break;
+        for (const [count, data] of Object.entries(APP_CONFIG.REFERRAL_REWARDS)) {
+            const countNum = parseInt(count);
+            if (refCount >= countNum && !this.state.referral.claimedRewards.includes(countNum)) {
+                this.claimMilestoneReward(countNum, data.reward);
+            }
         }
     }
+    
+    claimMilestoneReward(milestone, reward) {
+        // Add reward
+        this.state.balances.AMSK += reward;
+        this.state.referral.earned += reward;
+        this.state.referral.claimedRewards.push(milestone);
+        
+        // Show notification
+        this.showNotification(`🏆 وصلت إلى ${milestone} محالين! +${this.formatNumber(reward)} AMSK`, 'success');
+        
+        // Update UI
+        this.updateHomePage();
+        this.updateHeader();
+        
+        // Save state
+        this.saveState();
+    }
+    
+    /* ===========================================
+       MODAL MANAGEMENT
+       =========================================== */
     
     openModal(modalId) {
-        this.elements['modal-overlay']?.classList.add('active');
-        document.getElementById(modalId)?.classList.add('active');
+        // Close any open modals
+        this.closeAllModals();
+        
+        // Show overlay and modal
+        this.elements.modalOverlay.classList.add('active');
+        document.getElementById(modalId).classList.add('active');
+        
+        // Prevent body scroll
         document.body.style.overflow = 'hidden';
     }
     
-    closeModal() {
-        this.elements['modal-overlay']?.classList.remove('active');
-        document.querySelectorAll('.modal.active').forEach(modal => {
+    closeAllModals() {
+        // Hide all modals and overlay
+        this.elements.modalOverlay.classList.remove('active');
+        document.querySelectorAll('.modal').forEach(modal => {
             modal.classList.remove('active');
         });
+        
+        // Restore body scroll
         document.body.style.overflow = '';
     }
     
-    // ============================================================================
-    // SERVICES & TIMERS
-    // ============================================================================
-    startServices() {
-        // Mining timer
-        this.timers.mining = setInterval(() => this.updateMiningTimer(), 1000);
+    /* ===========================================
+       ADMIN SYSTEM
+       =========================================== */
+    
+    showAdminLogin() {
+        const password = prompt('أدخل كلمة مرور المشرف:');
+        
+        if (password === APP_CONFIG.ADMIN_SECRET && this.state.user.id === APP_CONFIG.ADMIN_USER_ID) {
+            this.state.admin.isLoggedIn = true;
+            this.showAdminPanel();
+            this.showNotification('👑 مرحبًا بك أيها المشرف!', 'success');
+        } else {
+            this.showNotification('❌ الوصول مرفوض!', 'error');
+        }
+    }
+    
+    showAdminPanel() {
+        this.elements.adminPanel.innerHTML = `
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2><i class="fas fa-user-shield"></i> لوحة تحكم المشرف</h2>
+                    <button id="close-admin" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">المستخدمين النشطين</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value">${this.formatNumber(this.state.balances.AMSK)}</div>
+                            <div class="stat-label">AMSK الموزعة</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h3><i class="fas fa-download"></i> طلبات الإيداع المعلقة</h3>
+                    <div class="pending-list" id="admin-deposits-list">
+                        ${this.state.admin.pendingDeposits.length === 0 ? 
+                            '<p class="empty-state">لا توجد طلبات إيداع معلقة</p>' : 
+                            this.state.admin.pendingDeposits.map(deposit => `
+                                <div class="pending-item">
+                                    <div class="pending-info">
+                                        <div class="user">المستخدم: ${deposit.userId}</div>
+                                        <div class="amount">${deposit.amount} ${deposit.currency}</div>
+                                    </div>
+                                    <div class="pending-actions">
+                                        <button class="admin-btn approve" data-id="${deposit.id}">
+                                            <i class="fas fa-check"></i> قبول
+                                        </button>
+                                        <button class="admin-btn reject" data-id="${deposit.id}">
+                                            <i class="fas fa-times"></i> رفض
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+                
+                <div class="admin-section">
+                    <h3><i class="fas fa-upload"></i> طلبات السحب المعلقة</h3>
+                    <div class="pending-list" id="admin-withdrawals-list">
+                        ${this.state.admin.pendingWithdrawals.length === 0 ? 
+                            '<p class="empty-state">لا توجد طلبات سحب معلقة</p>' : 
+                            this.state.admin.pendingWithdrawals.map(withdrawal => `
+                                <div class="pending-item">
+                                    <div class="pending-info">
+                                        <div class="user">المستخدم: ${withdrawal.userId}</div>
+                                        <div class="amount">${withdrawal.amount} ${withdrawal.currency}</div>
+                                    </div>
+                                    <div class="pending-actions">
+                                        <button class="admin-btn pay" data-id="${withdrawal.id}">
+                                            <i class="fas fa-money-bill-wave"></i> دفع
+                                        </button>
+                                        <button class="admin-btn reject" data-id="${withdrawal.id}">
+                                            <i class="fas fa-times"></i> رفض
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+                
+                <div class="admin-actions">
+                    <button id="refresh-admin" class="admin-btn">
+                        <i class="fas fa-sync-alt"></i> تحديث
+                    </button>
+                    <button id="logout-admin" class="admin-btn logout">
+                        <i class="fas fa-sign-out-alt"></i> خروج
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Show admin panel
+        this.elements.adminPanel.classList.add('active');
+        
+        // Add event listeners
+        document.getElementById('close-admin').addEventListener('click', () => {
+            this.elements.adminPanel.classList.remove('active');
+        });
+        
+        document.getElementById('logout-admin').addEventListener('click', () => {
+            this.state.admin.isLoggedIn = false;
+            this.elements.adminPanel.classList.remove('active');
+            this.showNotification('تم تسجيل خروج المشرف', 'info');
+        });
+        
+        document.getElementById('refresh-admin').addEventListener('click', () => {
+            this.showAdminPanel();
+            this.showNotification('تم تحديث البيانات', 'success');
+        });
+        
+        // Admin button listeners
+        document.querySelectorAll('.admin-btn.approve, .admin-btn.reject, .admin-btn.pay').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = e.target.closest('button').dataset.id;
+                const action = e.target.closest('button').classList.contains('approve') ? 'approve' : 
+                              e.target.closest('button').classList.contains('pay') ? 'pay' : 'reject';
+                
+                this.handleAdminAction(id, action);
+            });
+        });
+    }
+    
+    handleAdminAction(id, action) {
+        // Find and process the request
+        console.log(`Admin action: ${action} on request ${id}`);
+        this.showNotification(`تم ${action === 'approve' ? 'قبول' : action === 'pay' ? 'دفع' : 'رفض'} الطلب`, 'success');
+        
+        // Update admin panel
+        setTimeout(() => {
+            this.showAdminPanel();
+        }, 500);
+    }
+    
+    /* ===========================================
+       UTILITY METHODS
+       =========================================== */
+    
+    calculateTotalBalance() {
+        const amskValue = this.state.balances.AMSK * APP_CONFIG.AMSK_PRICE;
+        const usdtValue = this.state.balances.USDT;
+        const bnbValue = this.state.balances.BNB * APP_CONFIG.BNB_PRICE;
+        const tonValue = this.state.balances.TON * APP_CONFIG.TON_PRICE;
+        
+        return amskValue + usdtValue + bnbValue + tonValue;
+    }
+    
+    formatNumber(num, decimals = 0) {
+        if (typeof num !== 'number' || isNaN(num)) return '0';
+        
+        if (decimals > 0) {
+            return num.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+        
+        return num.toLocaleString('en-US');
+    }
+    
+    copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => this.showNotification('📋 تم النسخ إلى الحافظة!', 'success'))
+            .catch(() => this.showNotification('فشل النسخ', 'error'));
+    }
+    
+    showNotification(message, type = 'info') {
+        const notificationCenter = this.elements.notificationCenter;
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        
+        let icon = 'fa-info-circle';
+        switch (type) {
+            case 'success': icon = 'fa-check-circle'; break;
+            case 'error': icon = 'fa-exclamation-circle'; break;
+            case 'warning': icon = 'fa-exclamation-triangle'; break;
+        }
+        
+        notification.innerHTML = `
+            <div class="notification-icon">
+                <i class="fas ${icon}"></i>
+            </div>
+            <div class="notification-content">
+                ${message}
+            </div>
+        `;
+        
+        notificationCenter.appendChild(notification);
+        
+        // Auto-remove after 4 seconds
+        setTimeout(() => {
+            notification.style.animation = 'slideInRight 0.3s ease reverse';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
+    }
+    
+    showLoading() {
+        this.elements.loadingScreen.classList.add('active');
+    }
+    
+    hideLoading() {
+        this.elements.loadingScreen.classList.remove('active');
+    }
+    
+    /* ===========================================
+       TIMERS
+       =========================================== */
+    
+    startTimers() {
+        // Mining Timer
+        this.timers.mining = setInterval(() => {
+            this.updateMiningTimer();
+        }, 1000);
+        
+        // Booster Checker
+        this.timers.booster = setInterval(() => {
+            this.updateBoosters();
+        }, 60000);
         
         // Auto-save every 30 seconds
-        this.timers.autosave = setInterval(() => this.saveState(), 30000);
-        
-        // Background updates
-        this.timers.background = setInterval(() => this.backgroundUpdate(), 5000);
+        this.timers.autosave = setInterval(() => {
+            this.saveState();
+        }, 30000);
     }
     
     updateMiningTimer() {
-        const timerElement = this.elements['mining-timer'];
-        if (!timerElement || !this.state.mining.active) return;
+        if (!this.state.mining.isActive) return;
         
         const now = Date.now();
         const timeLeft = this.state.mining.nextReward - now;
         
         if (timeLeft <= 0) {
-            timerElement.textContent = 'READY!';
-            timerElement.style.color = '#00D4AA';
+            // Reward is ready
+            this.elements.miningTimer.textContent = 'جاهز!';
+            this.elements.miningTimer.style.color = 'var(--secondary)';
+            
             this.updateMiningButton();
-            return;
-        }
-        
-        const hours = Math.floor(timeLeft / 3600000);
-        const minutes = Math.floor((timeLeft % 3600000) / 60000);
-        const seconds = Math.floor((timeLeft % 60000) / 1000);
-        
-        timerElement.textContent = 
-            `${hours.toString().padStart(2, '0')}:` +
-            `${minutes.toString().padStart(2, '0')}:` +
-            `${seconds.toString().padStart(2, '0')}`;
-        
-        timerElement.style.color = '#FFFFFF';
-    }
-    
-    backgroundUpdate() {
-        // Update mining button if reward is ready
-        if (this.state.mining.active && Date.now() >= this.state.mining.nextReward) {
-            this.updateMiningButton();
+        } else {
+            // Update timer
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            this.elements.miningTimer.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            this.elements.miningTimer.style.color = 'var(--text-primary)';
         }
     }
     
-    // ============================================================================
-    // UTILITIES
-    // ============================================================================
-    calculateTotalPortfolio() {
-        const { wallet } = this.state;
-        return (wallet.balances.AMSK * CONFIG.TOKEN.PRICE) + wallet.balances.USDT;
-    }
-    
-    formatNumber(num, decimals = 0) {
-        if (typeof num !== 'number' || isNaN(num)) return '0';
-        return num.toLocaleString('en-US', {
-            minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals
-        });
-    }
+    /* ===========================================
+       STATE MANAGEMENT
+       =========================================== */
     
     saveState() {
+        if (!this.state) return;
+        
         try {
-            localStorage.setItem('alien_musk_state', JSON.stringify(this.state));
+            const stateString = JSON.stringify(this.state);
+            localStorage.setItem('alien_musk_state', stateString);
         } catch (error) {
-            console.warn('Could not save state:', error);
+            console.error('Failed to save state:', error);
         }
     }
     
     loadState() {
         try {
-            const saved = localStorage.getItem('alien_musk_state');
-            if (saved) {
-                this.state = JSON.parse(saved);
-                this.render();
+            const savedState = localStorage.getItem('alien_musk_state');
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                this.state = { ...this.state, ...parsedState };
+                return true;
             }
         } catch (error) {
-            console.warn('Could not load state:', error);
+            console.error('Failed to load state:', error);
         }
-    }
-    
-    showLoading() {
-        document.getElementById('loading-spinner')?.classList.add('active');
-    }
-    
-    hideLoading() {
-        document.getElementById('loading-spinner')?.classList.remove('active');
-    }
-    
-    showNotification(message, type = 'info') {
-        const container = document.getElementById('notification-center');
-        if (!container) return;
-        
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <div class="notification-icon">
-                <i class="fas fa-${this.getNotificationIcon(type)}"></i>
-            </div>
-            <div class="notification-content">${message}</div>
-        `;
-        
-        container.appendChild(notification);
-        
-        // Auto-remove after 4 seconds
-        setTimeout(() => {
-            notification.style.opacity = '0';
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        }, 4000);
-    }
-    
-    getNotificationIcon(type) {
-        const icons = {
-            success: 'check-circle',
-            error: 'exclamation-circle',
-            warning: 'exclamation-triangle',
-            info: 'info-circle'
-        };
-        return icons[type] || 'info-circle';
-    }
-    
-    showWelcome() {
-        this.showNotification('🚀 Welcome to Alien Musk! Start mining now!', 'success');
-    }
-    
-    showError(message) {
-        this.showNotification(`❌ ${message}`, 'error');
+        return false;
     }
 }
 
-// ============================================================================
-// APPLICATION BOOTSTRAP
-// ============================================================================
+/* ===========================================
+   APP INITIALIZATION
+   =========================================== */
+
+// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Create global instance
-    window.AlienMusk = new AlienMuskApp();
+    // Create and initialize the app
+    window.alienMuskApp = new AlienMuskApp();
     
-    // Force UI update after full load
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            if (window.AlienMusk && window.AlienMusk.initialized) {
-                window.AlienMusk.render();
-            }
-        }, 1000);
-    });
-    
-    console.log('👽 Alien Musk Platform is ready!');
+    // Make app accessible globally
+    window.AlienMusk = window.alienMuskApp;
 });
 
-// ============================================================================
-// GLOBAL HELPER FUNCTIONS
-// ============================================================================
-window.formatCurrency = (amount, currency = 'USD') => {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: currency
-    }).format(amount);
+// Global helper functions
+window.formatNumber = (num, decimals = 0) => {
+    if (typeof num !== 'number' || isNaN(num)) return '0';
+    return num.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    });
 };
 
 window.copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-        .then(() => console.log('Copied to clipboard:', text))
-        .catch(err => console.error('Copy failed:', err));
+        .then(() => {
+            if (window.alienMuskApp) {
+                window.alienMuskApp.showNotification('📋 تم النسخ إلى الحافظة!', 'success');
+            }
+        })
+        .catch(() => {
+            if (window.alienMuskApp) {
+                window.alienMuskApp.showNotification('فشل النسخ', 'error');
+            }
+        });
 };
 
-/* ===========================================
-   END OF ALIEN MUSK APPLICATION
-   =========================================== */
+console.log('👽 تم تحميل منصة ALIEN MUSK بنجاح!');
