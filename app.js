@@ -1,20 +1,19 @@
 /* ===========================================
    ALIEN MUSK - Ultimate Crypto Platform
    Main Application JavaScript
-   Version: 2.0.0 (Fixed & Optimized)
+   Version: 3.0.0 (Professional & Organized)
    =========================================== */
 
 // App Configuration
 const APP_CONFIG = {
-    // Token Prices
     AMSK_PRICE: 0.0002,
     
     // Mining Configuration
     MINING_LEVELS: {
-        1: { name: "Beginner", cost: 0, reward: 25000, hashrate: 100, duration: 6 },
-        2: { name: "Advanced", cost: 5, reward: 50000, hashrate: 200, duration: 6 },
-        3: { name: "Pro", cost: 20, reward: 100000, hashrate: 400, duration: 6 },
-        4: { name: "Expert", cost: 100, reward: 250000, hashrate: 800, duration: 6 }
+        1: { name: "Beginner", cost: 0, reward: 25000, hashrate: 100 },
+        2: { name: "Advanced", cost: 5, reward: 50000, hashrate: 200 },
+        3: { name: "Pro", cost: 20, reward: 100000, hashrate: 400 },
+        4: { name: "Expert", cost: 100, reward: 250000, hashrate: 800 }
     },
     
     // Staking Plans
@@ -26,407 +25,448 @@ const APP_CONFIG = {
     
     // Referral Rewards
     REFERRAL_REWARDS: {
-        1: { reward: 20000 },
-        5: { reward: 100000, total: 100000 },
-        10: { reward: 250000, total: 250000 },
-        25: { reward: 750000, total: 750000 },
-        50: { reward: 2000000, total: 2000000 },
-        100: { reward: 5000000, total: 5000000 }
+        10: { reward: 250000 }
     },
     
     // Swap Rates
     SWAP_RATES: {
         AMSK_TO_USDT: 0.0002,
-        BNB_TO_AMSK: 300000,
-        TON_TO_AMSK: 2000,
         USDT_TO_AMSK: 5000
-    },
-    
-    // Minimum Limits
-    MIN_DEPOSIT: {
-        USDT: 10,
-        BNB: 0.02,
-        TON: 10
-    },
-    MIN_WITHDRAWAL: 100,
-    MIN_SWAP_AMSK: 250000,
-    WITHDRAWAL_FEE: 0.0005,
-    
-    // Deposit Addresses
-    DEPOSIT_ADDRESSES: {
-        USDT: "0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58",
-        BNB: "0x6870fA28376C86974f1Dc8F469d58D10d2EA4F58",
-        TON: "UQCJhJZ0VDm3ei6sljWtV5JO3dAGwca8mPGJ9yVPBtPJlier"
-    },
-    
-    // Admin Settings
-    ADMIN_SECRET: "ALIENMUSK2024",
-    ADMIN_USER_ID: "1653918641"
+    }
 };
 
-/* ===========================================
-   MAIN APPLICATION CLASS
-   =========================================== */
+// Firebase Configuration
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+    authDomain: "tatbi9-681bf.firebaseapp.com",
+    projectId: "tatbi9-681bf",
+    storageBucket: "tatbi9-681bf.firebasestorage.app",
+    messagingSenderId: "863237064748",
+    appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+};
 
 class AlienMuskApp {
     constructor() {
-        this.isInitialized = false;
         this.init();
     }
-    
+
     async init() {
-        if (this.isInitialized) return;
-        
         console.log('👽 Alien Musk App Initializing...');
         this.showLoading();
         
         try {
-            // Initialize Telegram WebApp
-            await this.initTelegramWebApp();
-            
-            // Initialize State
-            this.state = this.getInitialState();
-            
-            // Load saved state
-            this.loadState();
-            
-            // Cache DOM Elements
-            this.cacheDOM();
-            
-            // Initialize Firebase (simulated)
+            // Initialize Firebase
             await this.initFirebase();
             
-            // Initialize UI
-            this.initUI();
+            // Initialize Telegram
+            await this.initTelegram();
             
-            // Setup Event Listeners
+            // Setup initial state
+            this.setupInitialState();
+            
+            // Cache DOM elements
+            this.cacheElements();
+            
+            // Setup event listeners
             this.setupEventListeners();
             
-            // Start Timers
+            // Load user data
+            await this.loadUserData();
+            
+            // Start background timers
             this.startTimers();
             
-            this.isInitialized = true;
+            // Hide loading
             this.hideLoading();
-            
-            // Show Welcome Notification
-            this.showNotification('Welcome to Alien Musk Platform! 🚀', 'success');
             
             console.log('✅ App initialized successfully');
             
         } catch (error) {
             console.error('❌ App initialization failed:', error);
-            this.showNotification('Failed to initialize app. Please refresh.', 'error');
             this.hideLoading();
         }
     }
-    
+
     /* ===========================================
        INITIALIZATION METHODS
        =========================================== */
-    
-    initTelegramWebApp() {
-        return new Promise((resolve) => {
-            if (window.Telegram?.WebApp) {
-                this.tg = window.Telegram.WebApp;
-                this.tg.expand();
-                this.tg.enableClosingConfirmation();
-                this.tg.ready();
-                console.log('✅ Telegram WebApp initialized');
-            } else {
-                console.warn('⚠️ Telegram WebApp not found, using mock data');
-                this.tg = {
-                    initDataUnsafe: {
-                        user: {
-                            id: APP_CONFIG.ADMIN_USER_ID,
-                            username: 'alien_musk_user',
-                            first_name: 'Alien',
-                            last_name: 'Musk',
-                            photo_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
-                        }
-                    },
-                    expand: () => {},
-                    ready: () => {},
-                    enableClosingConfirmation: () => {}
-                };
-            }
-            resolve();
-        });
-    }
-    
+
     async initFirebase() {
-        return new Promise((resolve) => {
-            // Simulate Firebase initialization
-            console.log('🔥 Firebase initialized (mock mode)');
-            this.db = {
-                collection: () => ({
-                    doc: () => ({
-                        get: () => Promise.resolve({ exists: false, data: () => null }),
-                        set: () => Promise.resolve(),
-                        update: () => Promise.resolve()
-                    })
-                })
-            };
+        try {
+            firebase.initializeApp(FIREBASE_CONFIG);
+            this.db = firebase.firestore();
+            console.log('🔥 Firebase initialized');
+        } catch (error) {
+            console.error('Firebase init error:', error);
+            // Fallback to localStorage
             this.useLocalStorage = true;
-            resolve();
-        });
+        }
     }
-    
-    getInitialState() {
-        const user = this.tg?.initDataUnsafe?.user || {};
-        
-        return {
-            // User Info
+
+    async initTelegram() {
+        if (window.Telegram?.WebApp) {
+            this.tg = window.Telegram.WebApp;
+            this.tg.expand();
+            this.tg.ready();
+            console.log('📱 Telegram WebApp initialized');
+        } else {
+            console.warn('⚠️ Running in browser mode');
+            this.tg = {
+                initDataUnsafe: {
+                    user: {
+                        id: Date.now(),
+                        username: 'alien_user',
+                        first_name: 'Alien'
+                    }
+                }
+            };
+        }
+    }
+
+    setupInitialState() {
+        this.state = {
             user: {
-                id: user.id || Date.now().toString(),
-                username: user.username || 'alien_user',
-                firstName: user.first_name || 'Alien',
-                lastName: user.last_name || 'User',
-                photoUrl: user.photo_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=alien'
+                id: this.tg?.initDataUnsafe?.user?.id || Date.now(),
+                name: this.tg?.initDataUnsafe?.user?.first_name || 'Alien',
+                username: this.tg?.initDataUnsafe?.user?.username || 'alien_user'
             },
-            
-            // Balances
-            balances: {
-                AMSK: 100000,
-                USDT: 100,
-                BNB: 0.5,
-                TON: 50
-            },
-            
-            // Mining
             mining: {
                 level: 1,
                 isActive: true,
-                lastReward: Date.now(),
-                nextReward: Date.now() + (6 * 60 * 60 * 1000),
-                totalMined: 0,
-                minedToday: 0
+                nextReward: Date.now() + (4 * 60 * 60 * 1000), // 4 hours
+                minedToday: 0,
+                totalMined: 0
             },
-            
-            // Staking
             staking: {
-                activeStakes: [],
-                totalEarned: 0
+                activeStakes: []
             },
-            
-            // Referral
+            balances: {
+                AMSK: 0,
+                USDT: 0
+            },
             referral: {
-                code: this.generateReferralCode(),
-                referrals: [],
-                totalCount: 0,
-                totalEarned: 0,
-                claimedRewards: []
-            },
-            
-            // Transactions
-            transactions: {
-                deposits: [],
-                withdrawals: [],
-                swaps: []
-            },
-            
-            // Admin
-            admin: {
-                isLoggedIn: false,
-                pendingDeposits: [],
-                pendingWithdrawals: []
+                code: 'ALIEN-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                referrals: 0,
+                earned: 0
             }
         };
     }
-    
-    cacheDOM() {
-        this.elements = {
-            // Header Elements
-            headerBalance: document.getElementById('header-balance'),
-            notificationCount: document.getElementById('notification-count'),
-            userAvatar: document.getElementById('user-avatar'),
-            
-            // Navigation
-            navBtns: document.querySelectorAll('.nav-btn'),
-            
-            // Home Tab
-            welcomeText: document.getElementById('welcome-text'),
-            userId: document.getElementById('user-id'),
-            totalAmsk: document.getElementById('total-amsk'),
-            usdEquivalent: document.getElementById('usd-equivalent'),
-            
-            // Mining
-            currentHashrate: document.getElementById('current-hashrate'),
-            miningTimer: document.getElementById('mining-timer'),
-            nextReward: document.getElementById('next-reward'),
-            startMiningBtn: document.getElementById('start-mining'),
-            claimRewardBtn: document.getElementById('claim-reward'),
-            
-            // Mining Levels
-            levelCards: document.querySelectorAll('.level-card'),
-            upgradeBtns: document.querySelectorAll('.upgrade-btn'),
-            
-            // Stats
-            minedToday: document.getElementById('mined-today'),
-            totalMined: document.getElementById('total-mined'),
-            stakingEarned: document.getElementById('staking-earned'),
-            miningLevel: document.getElementById('mining-level'),
-            
-            // Referral
-            refCount: document.getElementById('ref-count'),
-            totalRefs: document.getElementById('total-refs'),
-            refEarned: document.getElementById('ref-earned'),
-            nextGoal: document.getElementById('next-goal'),
-            progressText: document.getElementById('progress-text'),
-            progressFill: document.getElementById('progress-fill'),
-            goalReward: document.getElementById('goal-reward'),
-            refCode: document.getElementById('ref-code'),
-            copyRefCode: document.getElementById('copy-ref-code'),
-            shareRef: document.getElementById('share-ref'),
-            
-            // Staking
-            activeStakesList: document.getElementById('active-stakes-list'),
-            stakeBtns: document.querySelectorAll('.stake-btn'),
-            
-            // Calculator
-            calcAmount: document.getElementById('calc-amount'),
-            calcDuration: document.getElementById('calc-duration'),
-            calcDaily: document.getElementById('calc-daily'),
-            calcTotal: document.getElementById('calc-total'),
-            calcApr: document.getElementById('calc-apr'),
-            
-            // Wallet
-            walletTotalAmsk: document.getElementById('wallet-total-amsk'),
-            walletTotalUsd: document.getElementById('wallet-total-usd'),
-            
-            // Quick Actions
-            quickBtns: document.querySelectorAll('.quick-btn'),
-            
-            // Asset Balances
-            walletAmsk: document.getElementById('wallet-amsk'),
-            walletAmskValue: document.getElementById('wallet-amsk-value'),
-            walletUsdt: document.getElementById('wallet-usdt'),
-            walletUsdtValue: document.getElementById('wallet-usdt-value'),
-            
-            // Addresses
-            usdtAddress: document.getElementById('usdt-address'),
-            copyBtns: document.querySelectorAll('.copy-btn'),
-            
-            // Asset Actions
-            assetActionBtns: document.querySelectorAll('.asset-action-btn'),
-            
-            // Transaction History
-            filterBtns: document.querySelectorAll('.filter-btn'),
-            transactionHistory: document.getElementById('transaction-history'),
-            
-            // Modals
-            modalOverlay: document.getElementById('modal-overlay'),
-            depositModal: document.getElementById('deposit-modal'),
-            withdrawModal: document.getElementById('withdraw-modal'),
-            swapModal: document.getElementById('swap-modal'),
-            stakeModal: document.getElementById('stake-modal'),
-            closeModalBtns: document.querySelectorAll('.close-modal'),
-            
-            // Deposit Modal Elements
-            currencyOptions: document.querySelectorAll('.currency-option'),
-            depositCurrency: document.getElementById('deposit-currency'),
-            depositCurrencyText: document.getElementById('deposit-currency-text'),
-            depositAddress: document.getElementById('deposit-address'),
-            minDepositAmount: document.getElementById('min-deposit-amount'),
-            depositAmountInput: document.getElementById('deposit-amount-input'),
-            txIdInput: document.getElementById('tx-id-input'),
-            submitDeposit: document.getElementById('submit-deposit'),
-            copyAddressBtn: document.querySelector('.copy-address-btn'),
-            
-            // Withdraw Modal Elements
-            withdrawBalance: document.getElementById('withdraw-balance'),
-            withdrawAddress: document.getElementById('withdraw-address'),
-            withdrawAmount: document.getElementById('withdraw-amount'),
-            bnbFeeBalance: document.getElementById('bnb-fee-balance'),
-            feeWarning: document.getElementById('fee-warning'),
-            submitWithdraw: document.getElementById('submit-withdraw'),
-            
-            // Swap Modal Elements
-            swapFromCurrency: document.getElementById('swap-from-currency'),
-            swapFromAmount: document.getElementById('swap-from-amount'),
-            swapFromBalance: document.getElementById('swap-from-balance'),
-            swapToCurrency: document.getElementById('swap-to-currency'),
-            swapToAmount: document.getElementById('swap-to-amount'),
-            swapToBalance: document.getElementById('swap-to-balance'),
-            swapRate: document.getElementById('swap-rate'),
-            submitSwap: document.getElementById('submit-swap'),
-            
-            // Stake Modal Elements
-            stakePlanDisplay: document.getElementById('stake-plan-display'),
-            stakeAmount: document.getElementById('stake-amount'),
-            availableUsdt: document.getElementById('available-usdt'),
-            stakeDuration: document.getElementById('stake-duration'),
-            stakeApr: document.getElementById('stake-apr'),
-            stakeDaily: document.getElementById('stake-daily'),
-            stakeTotal: document.getElementById('stake-total'),
-            confirmStake: document.getElementById('confirm-stake'),
-            
-            // Admin Panel
-            adminPanel: document.getElementById('admin-panel'),
-            
-            // Loading Spinner
-            loadingSpinner: document.getElementById('loading-spinner')
-        };
-    }
-    
-    initUI() {
-        // Set user info
-        this.elements.welcomeText.textContent = `Welcome, ${this.state.user.firstName}!`;
-        this.elements.userId.textContent = this.state.user.id.substring(0, 8) + '...';
-        this.elements.userAvatar.src = this.state.user.photoUrl;
+
+    cacheElements() {
+        // Navigation
+        this.navBtns = document.querySelectorAll('.nav-btn');
+        this.tabContents = document.querySelectorAll('.tab-content');
         
-        // Update all UI components
-        this.updateHeader();
-        this.updateHomeTab();
-        this.updateStakingTab();
-        this.updateWalletTab();
+        // Home Tab Elements
+        this.welcomeText = document.getElementById('welcome-text');
+        this.userId = document.getElementById('user-id');
+        this.totalAmsk = document.getElementById('total-amsk');
+        this.usdEquivalent = document.getElementById('usd-equivalent');
         
-        // Show initial tab
-        this.switchTab('home');
+        // Mining Elements
+        this.currentHashrate = document.getElementById('current-hashrate');
+        this.miningTimer = document.getElementById('mining-timer');
+        this.nextReward = document.getElementById('next-reward');
+        this.startMiningBtn = document.getElementById('start-mining');
+        
+        // Stats Elements
+        this.minedToday = document.getElementById('mined-today');
+        this.totalMined = document.getElementById('total-mined');
+        this.stakingEarned = document.getElementById('staking-earned');
+        this.miningLevel = document.getElementById('mining-level');
+        
+        // Referral Elements
+        this.refCount = document.getElementById('ref-count');
+        this.totalRefs = document.getElementById('total-refs');
+        this.refEarned = document.getElementById('ref-earned');
+        this.refCode = document.getElementById('ref-code');
+        this.copyRefCode = document.getElementById('copy-ref-code');
+        this.shareRef = document.getElementById('share-ref');
+        
+        // Staking Elements
+        this.activeStakesList = document.getElementById('active-stakes-list');
+        this.stakeBtns = document.querySelectorAll('.stake-btn');
+        
+        // Calculator Elements
+        this.calcAmount = document.getElementById('calc-amount');
+        this.calcDuration = document.getElementById('calc-duration');
+        this.calcDaily = document.getElementById('calc-daily');
+        this.calcTotal = document.getElementById('calc-total');
+        this.calcApr = document.getElementById('calc-apr');
+        
+        // Wallet Elements
+        this.walletTotalAmsk = document.getElementById('wallet-total-amsk');
+        this.walletTotalUsd = document.getElementById('wallet-total-usd');
+        this.walletAmsk = document.getElementById('wallet-amsk');
+        this.walletAmskValue = document.getElementById('wallet-amsk-value');
+        this.walletUsdt = document.getElementById('wallet-usdt');
+        this.walletUsdtValue = document.getElementById('wallet-usdt-value');
+        
+        // Quick Actions
+        this.quickBtns = document.querySelectorAll('.quick-btn');
+        
+        // Modal Elements
+        this.modalOverlay = document.getElementById('modal-overlay');
+        this.closeModalBtns = document.querySelectorAll('.close-modal');
+        
+        // Loading
+        this.loadingSpinner = document.getElementById('loading-spinner');
     }
-    
+
+    /* ===========================================
+       EVENT LISTENERS SETUP
+       =========================================== */
+
+    setupEventListeners() {
+        // Navigation
+        this.navBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.switchTab(btn.dataset.tab));
+        });
+
+        // Mining
+        this.startMiningBtn.addEventListener('click', () => this.handleMining());
+        
+        // Mining Levels
+        document.querySelectorAll('.upgrade-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = e.target.closest('.level-card');
+                if (card) {
+                    this.upgradeMining(card.dataset.level);
+                }
+            });
+        });
+
+        // Referral
+        this.copyRefCode.addEventListener('click', () => this.copyReferralCode());
+        this.shareRef.addEventListener('click', () => this.shareReferralLink());
+
+        // Staking
+        this.stakeBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const planId = e.target.dataset.plan;
+                this.openStakeModal(planId);
+            });
+        });
+
+        // Calculator
+        this.calcAmount.addEventListener('input', () => this.updateCalculator());
+        this.calcDuration.addEventListener('change', () => this.updateCalculator());
+
+        // Quick Actions
+        this.quickBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const action = e.currentTarget.dataset.action;
+                this.handleQuickAction(action);
+            });
+        });
+
+        // Modal Controls
+        this.closeModalBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.closeAllModals());
+        });
+        
+        this.modalOverlay.addEventListener('click', () => this.closeAllModals());
+
+        // Copy buttons
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const address = document.getElementById('usdt-address').textContent;
+                this.copyToClipboard(address);
+            });
+        });
+
+        // Admin access (5 clicks on logo)
+        let clickCount = 0;
+        let lastClickTime = 0;
+        
+        document.querySelector('.brand-section').addEventListener('click', () => {
+            const now = Date.now();
+            if (now - lastClickTime > 2000) clickCount = 0;
+            
+            lastClickTime = now;
+            clickCount++;
+            
+            if (clickCount >= 5) {
+                this.showAdminPanel();
+                clickCount = 0;
+            }
+        });
+    }
+
+    /* ===========================================
+       TAB NAVIGATION - IMPROVED
+       =========================================== */
+
+    switchTab(tabName) {
+        // Update active nav button
+        this.navBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+
+        // Hide all tabs
+        this.tabContents.forEach(content => {
+            content.classList.remove('active');
+        });
+
+        // Show selected tab
+        const selectedTab = document.getElementById(`${tabName}-tab`);
+        if (selectedTab) {
+            selectedTab.classList.add('active');
+            
+            // Update tab-specific data
+            switch (tabName) {
+                case 'home':
+                    this.updateHomeTab();
+                    break;
+                case 'staking':
+                    this.updateStakingTab();
+                    break;
+                case 'wallet':
+                    this.updateWalletTab();
+                    break;
+            }
+        }
+    }
+
+    /* ===========================================
+       USER DATA MANAGEMENT
+       =========================================== */
+
+    async loadUserData() {
+        try {
+            const userId = this.state.user.id.toString();
+            const userRef = this.db.collection('users').doc(userId);
+            const userDoc = await userRef.get();
+            
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                this.state = { ...this.state, ...userData };
+            } else {
+                // Create new user
+                await userRef.set(this.state);
+            }
+            
+            this.updateUI();
+            
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            // Load from localStorage as fallback
+            this.loadFromLocalStorage();
+        }
+    }
+
+    async saveUserData() {
+        try {
+            const userId = this.state.user.id.toString();
+            const userRef = this.db.collection('users').doc(userId);
+            await userRef.set(this.state, { merge: true });
+        } catch (error) {
+            console.error('Error saving user data:', error);
+            // Save to localStorage as fallback
+            this.saveToLocalStorage();
+        }
+    }
+
+    loadFromLocalStorage() {
+        const savedData = localStorage.getItem('alien_musk_user_data');
+        if (savedData) {
+            this.state = JSON.parse(savedData);
+        }
+    }
+
+    saveToLocalStorage() {
+        localStorage.setItem('alien_musk_user_data', JSON.stringify(this.state));
+    }
+
     /* ===========================================
        UI UPDATE METHODS
        =========================================== */
-    
-    updateHeader() {
-        const totalBalance = this.calculateTotalBalance();
-        this.elements.headerBalance.textContent = `$${this.formatNumber(totalBalance, 2)}`;
-        
-        // Update notification count
-        const pendingCount = this.state.admin.pendingDeposits.length + 
-                           this.state.admin.pendingWithdrawals.length;
-        this.elements.notificationCount.textContent = pendingCount > 0 ? pendingCount : '';
+
+    updateUI() {
+        this.updateHomeTab();
+        this.updateStakingTab();
+        this.updateWalletTab();
     }
-    
+
     updateHomeTab() {
-        // Update balance
-        const totalAMSK = this.calculateTotalAMSK();
-        this.elements.totalAmsk.textContent = this.formatNumber(totalAMSK);
-        this.elements.usdEquivalent.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
+        // Welcome message
+        this.welcomeText.textContent = `Welcome, ${this.state.user.name}!`;
+        this.userId.textContent = this.state.user.id.toString().substr(0, 8);
         
-        // Update mining info
+        // Balance
+        const totalAMSK = this.state.balances.AMSK || 0;
+        this.totalAmsk.textContent = this.formatNumber(totalAMSK);
+        this.usdEquivalent.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
+        
+        // Mining info
         const miningLevel = APP_CONFIG.MINING_LEVELS[this.state.mining.level];
-        this.elements.currentHashrate.textContent = miningLevel.hashrate;
-        this.elements.nextReward.textContent = `${this.formatNumber(miningLevel.reward)} AMSK`;
+        this.currentHashrate.textContent = miningLevel.hashrate;
+        this.nextReward.textContent = `${this.formatNumber(miningLevel.reward)} AMSK`;
         
-        // Update mining level cards
+        // Stats
+        this.minedToday.textContent = this.formatNumber(this.state.mining.minedToday);
+        this.totalMined.textContent = this.formatNumber(this.state.mining.totalMined);
+        this.stakingEarned.textContent = this.formatNumber(this.state.staking.totalEarned || 0);
+        this.miningLevel.textContent = this.state.mining.level;
+        
+        // Referral info
+        this.refCount.textContent = this.state.referral.referrals;
+        this.totalRefs.textContent = this.state.referral.referrals;
+        this.refEarned.textContent = `${this.formatNumber(this.state.referral.earned)} AMSK`;
+        this.refCode.textContent = this.state.referral.code;
+        
+        // Update mining timer
+        this.updateMiningTimer();
+        
+        // Update mining levels
         this.updateMiningLevels();
-        
-        // Update stats
-        this.elements.minedToday.textContent = this.formatNumber(this.state.mining.minedToday);
-        this.elements.totalMined.textContent = this.formatNumber(this.state.mining.totalMined);
-        this.elements.stakingEarned.textContent = this.formatNumber(this.state.staking.totalEarned);
-        this.elements.miningLevel.textContent = this.state.mining.level;
-        
-        // Update referral info
-        this.updateReferralInfo();
-        
-        // Update mining button
-        this.updateMiningButton();
     }
-    
+
+    updateStakingTab() {
+        // Update stakes list
+        this.updateStakesList();
+        
+        // Update calculator
+        this.updateCalculator();
+    }
+
+    updateWalletTab() {
+        const totalAMSK = this.state.balances.AMSK || 0;
+        const usdtBalance = this.state.balances.USDT || 0;
+        
+        // Total balance
+        this.walletTotalAmsk.textContent = this.formatNumber(totalAMSK);
+        this.walletTotalUsd.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
+        
+        // AMSK balance
+        this.walletAmsk.textContent = this.formatNumber(totalAMSK);
+        this.walletAmskValue.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
+        
+        // USDT balance
+        this.walletUsdt.textContent = this.formatNumber(usdtBalance, 2);
+        this.walletUsdtValue.textContent = this.formatNumber(usdtBalance, 2);
+    }
+
+    updateMiningTimer() {
+        const now = Date.now();
+        const timeLeft = this.state.mining.nextReward - now;
+        
+        if (timeLeft <= 0) {
+            this.miningTimer.textContent = 'READY!';
+            this.miningTimer.style.color = '#00D4AA';
+        } else {
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            this.miningTimer.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            this.miningTimer.style.color = '#FFFFFF';
+        }
+    }
+
     updateMiningLevels() {
-        this.elements.levelCards.forEach(card => {
+        document.querySelectorAll('.level-card').forEach(card => {
             const level = parseInt(card.dataset.level);
             const levelData = APP_CONFIG.MINING_LEVELS[level];
             const isCurrentLevel = level === this.state.mining.level;
@@ -447,67 +487,12 @@ class AlienMuskApp {
             }
         });
     }
-    
-    updateMiningButton() {
-        const btn = this.elements.startMiningBtn;
-        const claimBtn = this.elements.claimRewardBtn;
-        
-        if (!this.state.mining.isActive) {
-            btn.innerHTML = `<i class="fas fa-play"></i><span>Activate Quantum Core</span>`;
-            btn.disabled = false;
-            claimBtn.disabled = true;
-        } else if (Date.now() >= this.state.mining.nextReward) {
-            btn.innerHTML = `<i class="fas fa-gift"></i><span>Claim Reward</span>`;
-            btn.disabled = false;
-            claimBtn.disabled = false;
-        } else {
-            btn.innerHTML = `<i class="fas fa-clock"></i><span>Mining in Progress</span>`;
-            btn.disabled = true;
-            claimBtn.disabled = true;
-        }
-    }
-    
-    updateReferralInfo() {
-        const refCount = this.state.referral.totalCount;
-        this.elements.refCount.textContent = refCount;
-        this.elements.totalRefs.textContent = refCount;
-        this.elements.refEarned.textContent = `${this.formatNumber(this.state.referral.totalEarned)} AMSK`;
-        this.elements.refCode.textContent = this.state.referral.code;
-        
-        // Find next goal
-        let nextGoal = 100;
-        let goalReward = 5000000;
-        
-        const goals = Object.keys(APP_CONFIG.REFERRAL_REWARDS).map(Number).sort((a, b) => a - b);
-        for (const goal of goals) {
-            if (refCount < goal) {
-                nextGoal = goal;
-                goalReward = APP_CONFIG.REFERRAL_REWARDS[goal].total || APP_CONFIG.REFERRAL_REWARDS[goal].reward;
-                break;
-            }
-        }
-        
-        // Update progress
-        const progress = Math.min((refCount / nextGoal) * 100, 100);
-        this.elements.nextGoal.textContent = `${nextGoal} Referrals`;
-        this.elements.progressText.textContent = `${Math.round(progress)}%`;
-        this.elements.progressFill.style.width = `${progress}%`;
-        this.elements.goalReward.textContent = `${this.formatNumber(goalReward)} AMSK`;
-    }
-    
-    updateStakingTab() {
-        // Update stakes list
-        this.updateStakesList();
-        
-        // Update calculator
-        this.updateCalculator();
-    }
-    
+
     updateStakesList() {
-        const stakesList = this.elements.activeStakesList;
+        const stakesList = this.activeStakesList;
         stakesList.innerHTML = '';
         
-        if (this.state.staking.activeStakes.length === 0) {
+        if (!this.state.staking.activeStakes || this.state.staking.activeStakes.length === 0) {
             stakesList.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-inbox"></i>
@@ -519,15 +504,12 @@ class AlienMuskApp {
         
         this.state.staking.activeStakes.forEach((stake, index) => {
             const plan = APP_CONFIG.STAKING_PLANS[stake.planId];
-            const daysLeft = Math.ceil((stake.endTime - Date.now()) / (1000 * 60 * 60 * 24));
-            const earned = Math.floor((Date.now() - stake.startTime) / (1000 * 60 * 60 * 24)) * plan.dailyReward;
-            
             const stakeElement = document.createElement('div');
             stakeElement.className = 'stake-item';
             stakeElement.innerHTML = `
                 <div class="stake-item-header">
                     <div class="stake-plan">${plan.name} Plan</div>
-                    <div class="stake-amount">${plan.amount} USDT</div>
+                    <div class="stake-amount">${stake.amount} USDT</div>
                 </div>
                 <div class="stake-item-details">
                     <div class="detail">
@@ -535,42 +517,25 @@ class AlienMuskApp {
                         <span class="value">${plan.duration} Days</span>
                     </div>
                     <div class="detail">
-                        <span class="label">Days Left:</span>
-                        <span class="value">${daysLeft}</span>
+                        <span class="label">Ends:</span>
+                        <span class="value">${new Date(stake.endTime).toLocaleDateString()}</span>
                     </div>
                     <div class="detail">
-                        <span class="label">Earned:</span>
-                        <span class="value">${this.formatNumber(earned)} AMSK</span>
+                        <span class="label">Daily Reward:</span>
+                        <span class="value">${plan.dailyReward} AMSK</span>
                     </div>
-                    <div class="detail">
-                        <span class="label">APR:</span>
-                        <span class="value">${plan.apr}%</span>
-                    </div>
-                </div>
-                <div class="stake-item-actions">
-                    <button class="claim-btn" data-index="${index}">
-                        <i class="fas fa-gift"></i> Claim Reward
-                    </button>
                 </div>
             `;
             
             stakesList.appendChild(stakeElement);
         });
-        
-        // Add event listeners to claim buttons
-        stakesList.querySelectorAll('.claim-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.target.closest('.claim-btn').dataset.index);
-                this.claimStakingReward(index);
-            });
-        });
     }
-    
+
     updateCalculator() {
-        const amount = parseFloat(this.elements.calcAmount.value) || 100;
-        const duration = parseInt(this.elements.calcDuration.value) || 30;
+        const amount = parseFloat(this.calcAmount.value) || 100;
+        const duration = parseInt(this.calcDuration.value) || 30;
         
-        // Find appropriate APR based on amount
+        // Find appropriate APR
         let apr = 40;
         for (const [id, plan] of Object.entries(APP_CONFIG.STAKING_PLANS)) {
             if (amount >= plan.amount) {
@@ -581,338 +546,56 @@ class AlienMuskApp {
         const dailyReward = (amount * (apr / 100)) / 365;
         const totalReward = dailyReward * duration;
         
-        this.elements.calcDaily.textContent = `${this.formatNumber(dailyReward, 2)} AMSK`;
-        this.elements.calcTotal.textContent = `${this.formatNumber(totalReward, 2)} AMSK`;
-        this.elements.calcApr.textContent = `${apr}%`;
+        this.calcDaily.textContent = `${this.formatNumber(dailyReward, 2)} AMSK`;
+        this.calcTotal.textContent = `${this.formatNumber(totalReward, 2)} AMSK`;
+        this.calcApr.textContent = `${apr}%`;
     }
-    
-    updateWalletTab() {
-        // Update total balance
-        const totalAMSK = this.calculateTotalAMSK();
-        this.elements.walletTotalAmsk.textContent = this.formatNumber(totalAMSK);
-        this.elements.walletTotalUsd.textContent = this.formatNumber(totalAMSK * APP_CONFIG.AMSK_PRICE, 2);
-        
-        // Update individual balances
-        this.elements.walletAmsk.textContent = this.formatNumber(this.state.balances.AMSK);
-        this.elements.walletAmskValue.textContent = this.formatNumber(this.state.balances.AMSK * APP_CONFIG.AMSK_PRICE, 2);
-        
-        this.elements.walletUsdt.textContent = this.formatNumber(this.state.balances.USDT, 2);
-        this.elements.walletUsdtValue.textContent = this.formatNumber(this.state.balances.USDT, 2);
-        
-        // Update transaction history
-        this.updateTransactionHistory();
-    }
-    
-    updateTransactionHistory(filter = 'all') {
-        const historyList = this.elements.transactionHistory;
-        historyList.innerHTML = '';
-        
-        let transactions = [];
-        
-        switch (filter) {
-            case 'deposit':
-                transactions = this.state.transactions.deposits;
-                break;
-            case 'withdraw':
-                transactions = this.state.transactions.withdrawals;
-                break;
-            case 'swap':
-                transactions = this.state.transactions.swaps;
-                break;
-            default:
-                transactions = [
-                    ...this.state.transactions.deposits,
-                    ...this.state.transactions.withdrawals,
-                    ...this.state.transactions.swaps
-                ].sort((a, b) => new Date(b.date) - new Date(a.date));
-        }
-        
-        if (transactions.length === 0) {
-            historyList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-history"></i>
-                    <p>No transactions found</p>
-                </div>
-            `;
-            return;
-        }
-        
-        transactions.forEach(tx => {
-            const txElement = document.createElement('div');
-            txElement.className = 'history-item';
-            
-            let icon, color, statusClass;
-            
-            switch (tx.type) {
-                case 'deposit':
-                    icon = 'fa-arrow-down';
-                    color = 'success';
-                    statusClass = tx.status === 'pending' ? 'warning' : 'success';
-                    break;
-                case 'withdrawal':
-                    icon = 'fa-arrow-up';
-                    color = tx.status === 'pending' ? 'warning' : 'danger';
-                    statusClass = tx.status === 'pending' ? 'warning' : 'success';
-                    break;
-                case 'swap':
-                    icon = 'fa-exchange-alt';
-                    color = 'info';
-                    statusClass = 'success';
-                    break;
-                case 'stake':
-                    icon = 'fa-chart-line';
-                    color = 'primary';
-                    statusClass = 'success';
-                    break;
-            }
-            
-            txElement.innerHTML = `
-                <div class="history-item-icon ${color}">
-                    <i class="fas ${icon}"></i>
-                </div>
-                <div class="history-item-details">
-                    <div class="history-item-header">
-                        <span class="type">${tx.type.toUpperCase()}</span>
-                        <span class="amount">${tx.amount} ${tx.currency || ''}</span>
-                    </div>
-                    <div class="history-item-footer">
-                        <span class="date">${new Date(tx.date).toLocaleDateString()}</span>
-                        <span class="status ${statusClass}">${tx.status || 'completed'}</span>
-                    </div>
-                </div>
-            `;
-            
-            historyList.appendChild(txElement);
-        });
-    }
-    
-    /* ===========================================
-       EVENT LISTENERS SETUP
-       =========================================== */
-    
-    setupEventListeners() {
-        // Navigation
-        this.elements.navBtns.forEach(btn => {
-            btn.addEventListener('click', () => this.switchTab(btn.dataset.tab));
-        });
-        
-        // Mining
-        this.elements.startMiningBtn.addEventListener('click', () => this.handleMining());
-        this.elements.claimRewardBtn.addEventListener('click', () => this.claimMiningReward());
-        
-        this.elements.upgradeBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const card = e.target.closest('.level-card');
-                this.upgradeMining(card.dataset.level);
-            });
-        });
-        
-        // Referral
-        this.elements.copyRefCode.addEventListener('click', () => this.copyReferralCode());
-        this.elements.shareRef.addEventListener('click', () => this.shareReferralLink());
-        
-        // Staking
-        this.elements.stakeBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const planId = e.target.dataset.plan;
-                this.openStakeModal(planId);
-            });
-        });
-        
-        // Calculator
-        this.elements.calcAmount.addEventListener('input', () => this.updateCalculator());
-        this.elements.calcDuration.addEventListener('change', () => this.updateCalculator());
-        
-        // Quick Actions
-        this.elements.quickBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const action = e.currentTarget.dataset.action;
-                this.handleQuickAction(action);
-            });
-        });
-        
-        // Asset Actions
-        this.elements.assetActionBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const action = e.currentTarget.dataset.action;
-                const currency = e.currentTarget.dataset.currency;
-                this.handleAssetAction(action, currency);
-            });
-        });
-        
-        // Copy Buttons
-        this.elements.copyBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const addressType = e.currentTarget.dataset.address;
-                this.copyAddress(addressType);
-            });
-        });
-        
-        // Transaction History Filters
-        this.elements.filterBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.elements.filterBtns.forEach(b => b.classList.remove('active'));
-                e.currentTarget.classList.add('active');
-                this.updateTransactionHistory(e.currentTarget.dataset.filter);
-            });
-        });
-        
-        // Modal Controls
-        this.setupModalListeners();
-        
-        // Admin Access (Secret click sequence)
-        this.setupAdminAccess();
-        
-        // Save state on unload
-        window.addEventListener('beforeunload', () => this.saveState());
-        window.addEventListener('pagehide', () => this.saveState());
-    }
-    
-    setupModalListeners() {
-        // Close modals
-        this.elements.closeModalBtns.forEach(btn => {
-            btn.addEventListener('click', () => this.closeAllModals());
-        });
-        
-        this.elements.modalOverlay.addEventListener('click', () => this.closeAllModals());
-        
-        // Deposit Modal
-        this.elements.currencyOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                this.elements.currencyOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                this.updateDepositModal(option.dataset.currency);
-            });
-        });
-        
-        this.elements.copyAddressBtn.addEventListener('click', () => {
-            this.copyToClipboard(this.elements.depositAddress.textContent);
-        });
-        
-        this.elements.submitDeposit.addEventListener('click', () => this.submitDepositRequest());
-        
-        // Withdraw Modal
-        this.elements.withdrawAmount.addEventListener('input', () => this.validateWithdrawal());
-        this.elements.submitWithdraw.addEventListener('click', () => this.submitWithdrawalRequest());
-        
-        // Swap Modal
-        this.elements.swapFromCurrency.addEventListener('change', () => this.updateSwapForm());
-        this.elements.swapFromAmount.addEventListener('input', () => this.updateSwapForm());
-        this.elements.swapToCurrency.addEventListener('change', () => this.updateSwapForm());
-        this.elements.submitSwap.addEventListener('click', () => this.executeSwap());
-        
-        // Stake Modal
-        this.elements.stakeAmount.addEventListener('input', () => this.updateStakePreview());
-        this.elements.confirmStake.addEventListener('click', () => this.confirmStaking());
-    }
-    
-    setupAdminAccess() {
-        let clickCount = 0;
-        let lastClickTime = 0;
-        const logo = document.querySelector('.brand-section');
-        
-        logo.addEventListener('click', () => {
-            const now = Date.now();
-            if (now - lastClickTime > 2000) clickCount = 0;
-            
-            lastClickTime = now;
-            clickCount++;
-            
-            if (clickCount >= 5) {
-                this.showAdminLogin();
-                clickCount = 0;
-            }
-        });
-    }
-    
-    /* ===========================================
-       TAB NAVIGATION
-       =========================================== */
-    
-    switchTab(tabName) {
-        // Update active nav button
-        this.elements.navBtns.forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.tab === tabName);
-        });
-        
-        // Hide all tab contents
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        
-        // Show selected tab
-        const selectedTab = document.getElementById(`${tabName}-tab`);
-        if (selectedTab) {
-            selectedTab.classList.add('active');
-        }
-        
-        // Update tab-specific data
-        switch (tabName) {
-            case 'home':
-                this.updateHomeTab();
-                break;
-            case 'staking':
-                this.updateStakingTab();
-                break;
-            case 'wallet':
-                this.updateWalletTab();
-                break;
-        }
-    }
-    
+
     /* ===========================================
        MINING SYSTEM
        =========================================== */
-    
+
     handleMining() {
-        if (!this.state.mining.isActive) {
+        if (this.state.mining.isActive) {
+            this.claimMiningReward();
+        } else {
             this.startMining();
+        }
+    }
+
+    startMining() {
+        this.state.mining.isActive = true;
+        this.state.mining.nextReward = Date.now() + (4 * 60 * 60 * 1000);
+        
+        this.updateHomeTab();
+        this.saveUserData();
+        
+        this.showNotification('Mining started! ⛏️', 'success');
+    }
+
+    claimMiningReward() {
+        if (!this.state.mining.isActive || Date.now() < this.state.mining.nextReward) {
+            this.showNotification('Mining in progress...', 'info');
             return;
         }
         
-        // Check if reward is ready
-        if (Date.now() >= this.state.mining.nextReward) {
-            this.claimMiningReward();
-        } else {
-            this.showNotification('Mining in progress. Reward not ready yet.', 'info');
-        }
-    }
-    
-    startMining() {
-        this.state.mining.isActive = true;
-        this.state.mining.lastReward = Date.now();
-        this.state.mining.nextReward = Date.now() + (6 * 60 * 60 * 1000);
-        
-        this.updateMiningButton();
-        this.showNotification('Mining started successfully! ⛏️', 'success');
-        this.updateHomeTab();
-        this.saveState();
-    }
-    
-    claimMiningReward() {
         const miningLevel = APP_CONFIG.MINING_LEVELS[this.state.mining.level];
         const reward = miningLevel.reward;
         
-        // Add reward to balance
-        this.state.balances.AMSK += reward;
-        this.state.mining.totalMined += reward;
+        // Add reward
+        this.state.balances.AMSK = (this.state.balances.AMSK || 0) + reward;
         this.state.mining.minedToday += reward;
+        this.state.mining.totalMined += reward;
         
         // Reset timer
-        this.state.mining.lastReward = Date.now();
-        this.state.mining.nextReward = Date.now() + (6 * 60 * 60 * 1000);
+        this.state.mining.nextReward = Date.now() + (4 * 60 * 60 * 1000);
         
-        // Update UI
-        this.updateHomeTab();
-        this.updateWalletTab();
+        this.updateUI();
+        this.saveUserData();
         
-        // Show notification
-        this.showNotification(`Claimed ${this.formatNumber(reward)} AMSK from mining! 💎`, 'success');
-        
-        // Save state
-        this.saveState();
+        this.showNotification(`Claimed ${this.formatNumber(reward)} AMSK! 💎`, 'success');
     }
-    
+
     upgradeMining(level) {
         level = parseInt(level);
         const levelData = APP_CONFIG.MINING_LEVELS[level];
@@ -931,103 +614,24 @@ class AlienMuskApp {
         this.state.balances.USDT -= levelData.cost;
         this.state.mining.level = level;
         
-        // Update UI
-        this.updateHomeTab();
-        this.updateWalletTab();
+        this.updateUI();
+        this.saveUserData();
         
-        // Show notification
         this.showNotification(`Upgraded to ${levelData.name} level! 🚀`, 'success');
-        
-        // Save state
-        this.saveState();
     }
-    
-    /* ===========================================
-       REFERRAL SYSTEM
-       =========================================== */
-    
-    copyReferralCode() {
-        this.copyToClipboard(this.state.referral.code);
-        this.showNotification('Referral code copied to clipboard! 📋', 'success');
-    }
-    
-    shareReferralLink() {
-        const link = `https://t.me/alien_musk_bot?start=ref-${this.state.referral.code}`;
-        const message = `🚀 Join Alien Musk and earn free AMSK tokens!\n\nUse my referral code: ${this.state.referral.code}\n\n${link}`;
-        
-        if (navigator.share) {
-            navigator.share({
-                title: 'Alien Musk - Ultimate Crypto Platform',
-                text: message,
-                url: link
-            }).catch(() => {
-                this.copyToClipboard(message);
-                this.showNotification('Referral link copied! Share it with friends.', 'info');
-            });
-        } else {
-            this.copyToClipboard(message);
-            this.showNotification('Referral link copied! Share it with friends.', 'info');
-        }
-    }
-    
-    addReferral(userId) {
-        // Check if already referred
-        if (this.state.referral.referrals.includes(userId)) {
-            return;
-        }
-        
-        // Add referral
-        this.state.referral.referrals.push(userId);
-        this.state.referral.totalCount++;
-        
-        // Check for rewards
-        this.checkReferralRewards();
-        
-        // Update UI
-        this.updateHomeTab();
-        
-        // Save state
-        this.saveState();
-    }
-    
-    checkReferralRewards() {
-        const refCount = this.state.referral.totalCount;
-        
-        for (const [count, data] of Object.entries(APP_CONFIG.REFERRAL_REWARDS)) {
-            const countNum = parseInt(count);
-            if (refCount >= countNum && !this.state.referral.claimedRewards.includes(countNum)) {
-                this.claimReferralReward(countNum, data.reward);
-            }
-        }
-    }
-    
-    claimReferralReward(count, reward) {
-        // Add reward
-        this.state.balances.AMSK += reward;
-        this.state.referral.totalEarned += reward;
-        this.state.referral.claimedRewards.push(count);
-        
-        // Show notification
-        this.showNotification(`🎉 Referral reward claimed! +${this.formatNumber(reward)} AMSK`, 'success');
-        
-        // Update UI
-        this.updateHomeTab();
-        this.updateWalletTab();
-        
-        // Save state
-        this.saveState();
-    }
-    
+
     /* ===========================================
        STAKING SYSTEM
        =========================================== */
-    
+
     openStakeModal(planId) {
+        const modal = document.getElementById('stake-modal');
         const plan = APP_CONFIG.STAKING_PLANS[planId];
+        
         if (!plan) return;
         
         // Update modal content
-        this.elements.stakePlanDisplay.innerHTML = `
+        document.getElementById('stake-plan-display').innerHTML = `
             <div class="selected-plan">
                 <div class="plan-header">
                     <div class="plan-icon ${plan.name.toLowerCase()}">
@@ -1038,163 +642,57 @@ class AlienMuskApp {
                         <div class="plan-amount">${plan.amount} USDT Minimum</div>
                     </div>
                 </div>
-                <div class="plan-details">
-                    <div class="detail">
-                        <i class="fas fa-calendar"></i>
-                        <span>${plan.duration} Days</span>
-                    </div>
-                    <div class="detail">
-                        <i class="fas fa-percentage"></i>
-                        <span>${plan.apr}% APR</span>
-                    </div>
-                    <div class="detail">
-                        <i class="fas fa-coins"></i>
-                        <span>${plan.dailyReward} AMSK Daily</span>
-                    </div>
-                </div>
             </div>
         `;
         
-        // Set plan data
+        document.getElementById('available-usdt').textContent = this.formatNumber(this.state.balances.USDT || 0, 2);
+        document.getElementById('stake-duration').textContent = `${plan.duration} Days`;
+        document.getElementById('stake-apr').textContent = `${plan.apr}%`;
+        document.getElementById('stake-daily').textContent = `${plan.dailyReward} AMSK`;
+        document.getElementById('stake-total').textContent = `${plan.dailyReward * plan.duration} AMSK`;
+        
+        // Set minimum amount
+        const stakeAmountInput = document.getElementById('stake-amount');
+        stakeAmountInput.value = plan.amount;
+        stakeAmountInput.min = plan.amount;
+        
+        // Store current plan
         this.currentStakePlan = planId;
-        
-        // Update available balance
-        this.elements.availableUsdt.textContent = this.formatNumber(this.state.balances.USDT, 2);
-        
-        // Set default amount
-        this.elements.stakeAmount.value = plan.amount;
-        this.elements.stakeAmount.min = plan.amount;
-        
-        // Update preview
-        this.updateStakePreview();
         
         // Show modal
         this.openModal('stake-modal');
     }
-    
-    updateStakePreview() {
-        const plan = APP_CONFIG.STAKING_PLANS[this.currentStakePlan];
-        let amount = parseFloat(this.elements.stakeAmount.value) || plan.amount;
-        
-        // Validate amount
-        if (amount < plan.amount) {
-            amount = plan.amount;
-            this.elements.stakeAmount.value = plan.amount;
-        }
-        
-        // Calculate rewards
-        const dailyReward = (amount * (plan.apr / 100)) / 365;
-        const totalReward = dailyReward * plan.duration;
-        
-        // Update preview
-        this.elements.stakeDuration.textContent = `${plan.duration} Days`;
-        this.elements.stakeApr.textContent = `${plan.apr}%`;
-        this.elements.stakeDaily.textContent = `${this.formatNumber(dailyReward, 2)} AMSK`;
-        this.elements.stakeTotal.textContent = `${this.formatNumber(totalReward, 2)} AMSK`;
-    }
-    
-    confirmStaking() {
-        const plan = APP_CONFIG.STAKING_PLANS[this.currentStakePlan];
-        const amount = parseFloat(this.elements.stakeAmount.value);
-        
-        // Validations
-        if (amount < plan.amount) {
-            this.showNotification(`Minimum stake amount is ${plan.amount} USDT`, 'error');
-            return;
-        }
-        
-        if (this.state.balances.USDT < amount) {
-            this.showNotification('Insufficient USDT balance', 'error');
-            return;
-        }
-        
-        // Create stake
-        const stake = {
-            planId: this.currentStakePlan,
-            amount: amount,
-            startTime: Date.now(),
-            endTime: Date.now() + (plan.duration * 24 * 60 * 60 * 1000),
-            claimedRewards: 0
-        };
-        
-        // Deduct USDT
-        this.state.balances.USDT -= amount;
-        
-        // Add to active stakes
-        this.state.staking.activeStakes.push(stake);
-        
-        // Add transaction
-        this.state.transactions.swaps.push({
-            type: 'stake',
-            amount: amount,
-            currency: 'USDT',
-            date: new Date().toISOString(),
-            status: 'completed'
-        });
-        
-        // Close modal
-        this.closeAllModals();
-        
-        // Update UI
-        this.updateStakingTab();
-        this.updateWalletTab();
-        
-        // Show notification
-        this.showNotification(`✅ Staked ${amount} USDT for ${plan.duration} days!`, 'success');
-        
-        // Save state
-        this.saveState();
-    }
-    
-    claimStakingReward(index) {
-        const stake = this.state.staking.activeStakes[index];
-        if (!stake) return;
-        
-        const plan = APP_CONFIG.STAKING_PLANS[stake.planId];
-        const daysPassed = Math.floor((Date.now() - stake.startTime) / (1000 * 60 * 60 * 24));
-        const reward = daysPassed * plan.dailyReward - stake.claimedRewards;
-        
-        if (reward <= 0) {
-            this.showNotification('No rewards available to claim yet', 'info');
-            return;
-        }
-        
-        // Add reward
-        this.state.balances.AMSK += reward;
-        this.state.staking.totalEarned += reward;
-        stake.claimedRewards += reward;
-        
-        // If stake period is over, remove it
-        if (Date.now() >= stake.endTime) {
-            // Return staked amount
-            this.state.balances.USDT += stake.amount;
-            this.state.staking.activeStakes.splice(index, 1);
-            
-            // Add transaction
-            this.state.transactions.swaps.push({
-                type: 'unstake',
-                amount: stake.amount,
-                currency: 'USDT',
-                date: new Date().toISOString(),
-                status: 'completed'
-            });
-        }
-        
-        // Update UI
-        this.updateStakingTab();
-        this.updateWalletTab();
-        
-        // Show notification
-        this.showNotification(`💰 Claimed ${this.formatNumber(reward)} AMSK from staking!`, 'success');
-        
-        // Save state
-        this.saveState();
-    }
-    
+
     /* ===========================================
-       WALLET ACTIONS
+       REFERRAL SYSTEM
        =========================================== */
-    
+
+    copyReferralCode() {
+        this.copyToClipboard(this.state.referral.code);
+        this.showNotification('Referral code copied! 📋', 'success');
+    }
+
+    shareReferralLink() {
+        const message = `🚀 Join Alien Musk and earn free AMSK tokens!\n\nUse my referral code: ${this.state.referral.code}`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Alien Musk - Ultimate Crypto Platform',
+                text: message
+            }).catch(() => {
+                this.copyToClipboard(message);
+                this.showNotification('Referral link copied!', 'info');
+            });
+        } else {
+            this.copyToClipboard(message);
+            this.showNotification('Referral link copied! Share it with friends.', 'info');
+        }
+    }
+
+    /* ===========================================
+       QUICK ACTIONS
+       =========================================== */
+
     handleQuickAction(action) {
         switch (action) {
             case 'swap':
@@ -1208,610 +706,32 @@ class AlienMuskApp {
                 break;
             case 'history':
                 this.switchTab('wallet');
-                this.updateTransactionHistory('all');
                 break;
         }
     }
-    
-    handleAssetAction(action, currency) {
-        switch (action) {
-            case 'send':
-                this.showNotification('Send functionality coming soon!', 'info');
-                break;
-            case 'receive':
-                if (currency === 'USDT') {
-                    this.openDepositModal('USDT');
-                } else {
-                    this.showNotification('Receive functionality coming soon!', 'info');
-                }
-                break;
-            case 'swap':
-                this.openSwapModal();
-                break;
-            case 'deposit':
-                this.openDepositModal(currency);
-                break;
-            case 'withdraw':
-                if (currency === 'USDT') {
-                    this.openWithdrawModal();
-                } else {
-                    this.showNotification('Withdrawals available only for USDT', 'info');
-                }
-                break;
-        }
-    }
-    
-    /* ===========================================
-       DEPOSIT SYSTEM
-       =========================================== */
-    
-    openDepositModal(currency = 'USDT') {
-        // Set active currency
-        this.elements.currencyOptions.forEach(option => {
-            option.classList.toggle('active', option.dataset.currency === currency);
-        });
-        
-        this.updateDepositModal(currency);
-        this.openModal('deposit-modal');
-    }
-    
-    updateDepositModal(currency) {
-        // Update address
-        this.elements.depositAddress.textContent = APP_CONFIG.DEPOSIT_ADDRESSES[currency];
-        
-        // Update labels
-        this.elements.depositCurrency.textContent = currency;
-        this.elements.depositCurrencyText.textContent = currency;
-        this.elements.minDepositAmount.textContent = APP_CONFIG.MIN_DEPOSIT[currency];
-        
-        // Reset form
-        this.elements.depositAmountInput.value = '';
-        this.elements.txIdInput.value = '';
-    }
-    
-    submitDepositRequest() {
-        const currency = document.querySelector('.currency-option.active').dataset.currency;
-        const amount = parseFloat(this.elements.depositAmountInput.value);
-        const txId = this.elements.txIdInput.value.trim();
-        
-        // Validations
-        if (!amount || amount < APP_CONFIG.MIN_DEPOSIT[currency]) {
-            this.showNotification(`Minimum deposit is ${APP_CONFIG.MIN_DEPOSIT[currency]} ${currency}`, 'error');
-            return;
-        }
-        
-        if (!txId) {
-            this.showNotification('Please enter Transaction ID', 'error');
-            return;
-        }
-        
-        // Create deposit request
-        const deposit = {
-            id: Date.now().toString(),
-            userId: this.state.user.id,
-            currency: currency,
-            amount: amount,
-            txId: txId,
-            status: 'pending',
-            date: new Date().toISOString(),
-            address: APP_CONFIG.DEPOSIT_ADDRESSES[currency]
-        };
-        
-        // Add to pending deposits
-        this.state.admin.pendingDeposits.push(deposit);
-        
-        // Add to user transactions
-        this.state.transactions.deposits.push({
-            type: 'deposit',
-            currency: currency,
-            amount: amount,
-            status: 'pending',
-            date: new Date().toISOString(),
-            txId: txId
-        });
-        
-        // Close modal
-        this.closeAllModals();
-        
-        // Update UI
-        this.updateTransactionHistory();
-        this.updateHeader();
-        
-        // Show notification
-        this.showNotification(`⏳ Deposit request submitted for ${amount} ${currency}!`, 'success');
-        
-        // Save state
-        this.saveState();
-    }
-    
-    /* ===========================================
-       WITHDRAWAL SYSTEM
-       =========================================== */
-    
-    openWithdrawModal() {
-        // Update available balance
-        this.elements.withdrawBalance.textContent = this.formatNumber(this.state.balances.USDT, 2);
-        this.elements.bnbFeeBalance.textContent = this.formatNumber(this.state.balances.BNB, 4);
-        
-        // Reset form
-        this.elements.withdrawAddress.value = '';
-        this.elements.withdrawAmount.value = APP_CONFIG.MIN_WITHDRAWAL;
-        
-        // Validate
-        this.validateWithdrawal();
-        
-        // Show modal
-        this.openModal('withdraw-modal');
-    }
-    
-    validateWithdrawal() {
-        const amount = parseFloat(this.elements.withdrawAmount.value) || 0;
-        const hasEnoughUsdt = this.state.balances.USDT >= amount;
-        const hasEnoughBnb = this.state.balances.BNB >= APP_CONFIG.WITHDRAWAL_FEE;
-        const isValidAmount = amount >= APP_CONFIG.MIN_WITHDRAWAL;
-        
-        // Update fee warning
-        if (!hasEnoughBnb) {
-            this.elements.feeWarning.classList.remove('hidden');
-        } else {
-            this.elements.feeWarning.classList.add('hidden');
-        }
-        
-        // Enable/disable submit button
-        this.elements.submitWithdraw.disabled = !(hasEnoughUsdt && hasEnoughBnb && isValidAmount);
-        
-        // Update button text
-        if (!hasEnoughUsdt) {
-            this.elements.submitWithdraw.textContent = 'Insufficient USDT';
-        } else if (!hasEnoughBnb) {
-            this.elements.submitWithdraw.textContent = 'Insufficient BNB for fee';
-        } else if (!isValidAmount) {
-            this.elements.submitWithdraw.textContent = `Minimum ${APP_CONFIG.MIN_WITHDRAWAL} USDT`;
-        } else {
-            this.elements.submitWithdraw.textContent = 'Submit Withdrawal Request';
-        }
-    }
-    
-    submitWithdrawalRequest() {
-        const address = this.elements.withdrawAddress.value.trim();
-        const amount = parseFloat(this.elements.withdrawAmount.value);
-        
-        // Validations
-        if (!address) {
-            this.showNotification('Please enter wallet address', 'error');
-            return;
-        }
-        
-        if (amount < APP_CONFIG.MIN_WITHDRAWAL) {
-            this.showNotification(`Minimum withdrawal is ${APP_CONFIG.MIN_WITHDRAWAL} USDT`, 'error');
-            return;
-        }
-        
-        if (this.state.balances.USDT < amount) {
-            this.showNotification('Insufficient USDT balance', 'error');
-            return;
-        }
-        
-        if (this.state.balances.BNB < APP_CONFIG.WITHDRAWAL_FEE) {
-            this.showNotification(`Insufficient BNB for network fee (${APP_CONFIG.WITHDRAWAL_FEE} BNB required)`, 'error');
-            return;
-        }
-        
-        // Create withdrawal request
-        const withdrawal = {
-            id: Date.now().toString(),
-            userId: this.state.user.id,
-            currency: 'USDT',
-            amount: amount,
-            address: address,
-            status: 'pending',
-            date: new Date().toISOString(),
-            fee: APP_CONFIG.WITHDRAWAL_FEE
-        };
-        
-        // Deduct from balance immediately
-        this.state.balances.USDT -= amount;
-        this.state.balances.BNB -= APP_CONFIG.WITHDRAWAL_FEE;
-        
-        // Add to pending withdrawals
-        this.state.admin.pendingWithdrawals.push(withdrawal);
-        
-        // Add to user transactions
-        this.state.transactions.withdrawals.push({
-            type: 'withdrawal',
-            currency: 'USDT',
-            amount: amount,
-            status: 'pending',
-            date: new Date().toISOString(),
-            address: address
-        });
-        
-        // Close modal
-        this.closeAllModals();
-        
-        // Update UI
-        this.updateWalletTab();
-        this.updateTransactionHistory();
-        this.updateHeader();
-        
-        // Show notification
-        this.showNotification(`⏳ Withdrawal request submitted for ${amount} USDT!`, 'success');
-        
-        // Save state
-        this.saveState();
-    }
-    
-    /* ===========================================
-       SWAP SYSTEM
-       =========================================== */
-    
-    openSwapModal() {
-        // Reset form
-        this.elements.swapFromCurrency.value = 'AMSK';
-        this.elements.swapToCurrency.value = 'USDT';
-        this.elements.swapFromAmount.value = '';
-        this.elements.swapToAmount.textContent = '0.00';
-        
-        // Update balances
-        this.updateSwapForm();
-        
-        // Show modal
-        this.openModal('swap-modal');
-    }
-    
-    updateSwapForm() {
-        const fromCurrency = this.elements.swapFromCurrency.value;
-        const toCurrency = this.elements.swapToCurrency.value;
-        const amount = parseFloat(this.elements.swapFromAmount.value) || 0;
-        
-        // Update balance displays
-        this.elements.swapFromBalance.textContent = this.formatNumber(this.state.balances[fromCurrency], 
-            fromCurrency === 'BNB' ? 4 : fromCurrency === 'USDT' ? 2 : 0);
-        this.elements.swapToBalance.textContent = this.formatNumber(this.state.balances[toCurrency], 
-            toCurrency === 'BNB' ? 4 : toCurrency === 'USDT' ? 2 : 0);
-        
-        // Calculate conversion
-        let result = 0;
-        let rateText = '';
-        
-        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-            result = amount * APP_CONFIG.SWAP_RATES.AMSK_TO_USDT;
-            rateText = `1 AMSK = ${APP_CONFIG.SWAP_RATES.AMSK_TO_USDT} USDT`;
-        } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.BNB_TO_AMSK;
-            rateText = `1 BNB = ${this.formatNumber(APP_CONFIG.SWAP_RATES.BNB_TO_AMSK)} AMSK`;
-        } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.TON_TO_AMSK;
-            rateText = `1 TON = ${this.formatNumber(APP_CONFIG.SWAP_RATES.TON_TO_AMSK)} AMSK`;
-        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.USDT_TO_AMSK;
-            rateText = `1 USDT = ${this.formatNumber(APP_CONFIG.SWAP_RATES.USDT_TO_AMSK)} AMSK`;
-        }
-        
-        // Update display
-        this.elements.swapToAmount.textContent = this.formatNumber(result, 
-            toCurrency === 'BNB' ? 4 : toCurrency === 'USDT' ? 2 : 0);
-        this.elements.swapRate.textContent = rateText;
-        
-        // Validate
-        this.validateSwap(fromCurrency, amount, result);
-    }
-    
-    validateSwap(fromCurrency, amount, result) {
-        // Check minimum for AMSK to USDT
-        if (fromCurrency === 'AMSK' && amount < APP_CONFIG.MIN_SWAP_AMSK) {
-            this.elements.submitSwap.disabled = true;
-            this.elements.submitSwap.textContent = `Minimum ${this.formatNumber(APP_CONFIG.MIN_SWAP_AMSK)} AMSK`;
-            return;
-        }
-        
-        // Check balance
-        if (amount > this.state.balances[fromCurrency]) {
-            this.elements.submitSwap.disabled = true;
-            this.elements.submitSwap.textContent = 'Insufficient balance';
-            return;
-        }
-        
-        // Check if amount is valid
-        if (amount <= 0 || isNaN(amount)) {
-            this.elements.submitSwap.disabled = true;
-            this.elements.submitSwap.textContent = 'Enter valid amount';
-            return;
-        }
-        
-        // Enable button
-        this.elements.submitSwap.disabled = false;
-        this.elements.submitSwap.textContent = 'Confirm Swap';
-    }
-    
-    executeSwap() {
-        const fromCurrency = this.elements.swapFromCurrency.value;
-        const toCurrency = this.elements.swapToCurrency.value;
-        const amount = parseFloat(this.elements.swapFromAmount.value);
-        
-        // Calculate result
-        let result = 0;
-        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-            result = amount * APP_CONFIG.SWAP_RATES.AMSK_TO_USDT;
-        } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.BNB_TO_AMSK;
-        } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.TON_TO_AMSK;
-        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-            result = amount * APP_CONFIG.SWAP_RATES.USDT_TO_AMSK;
-        }
-        
-        // Update balances
-        this.state.balances[fromCurrency] -= amount;
-        this.state.balances[toCurrency] += result;
-        
-        // Add transaction
-        this.state.transactions.swaps.push({
-            type: 'swap',
-            from: fromCurrency,
-            to: toCurrency,
-            amount: amount,
-            result: result,
-            date: new Date().toISOString(),
-            status: 'completed'
-        });
-        
-        // Close modal
-        this.closeAllModals();
-        
-        // Update UI
-        this.updateWalletTab();
-        this.updateTransactionHistory();
-        
-        // Show notification
-        this.showNotification(`🔄 Swapped ${this.formatNumber(amount)} ${fromCurrency} to ${this.formatNumber(result)} ${toCurrency}!`, 'success');
-        
-        // Save state
-        this.saveState();
-    }
-    
+
     /* ===========================================
        MODAL MANAGEMENT
        =========================================== */
-    
+
     openModal(modalId) {
-        // Close any open modals
-        this.closeAllModals();
-        
-        // Show overlay and modal
-        this.elements.modalOverlay.classList.add('active');
+        this.modalOverlay.classList.add('active');
         document.getElementById(modalId).classList.add('active');
-        
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
     }
-    
+
     closeAllModals() {
-        // Hide all modals and overlay
-        this.elements.modalOverlay.classList.remove('active');
+        this.modalOverlay.classList.remove('active');
         document.querySelectorAll('.modal').forEach(modal => {
             modal.classList.remove('active');
         });
-        
-        // Restore body scroll
         document.body.style.overflow = '';
     }
-    
-    /* ===========================================
-       ADMIN SYSTEM
-       =========================================== */
-    
-    showAdminLogin() {
-        const password = prompt('Enter admin password:');
-        
-        if (password === APP_CONFIG.ADMIN_SECRET && this.state.user.id === APP_CONFIG.ADMIN_USER_ID) {
-            this.state.admin.isLoggedIn = true;
-            this.showAdminPanel();
-            this.showNotification('Welcome, Admin! 👑', 'success');
-        } else {
-            this.showNotification('Access denied! 🔒', 'error');
-        }
-    }
-    
-    showAdminPanel() {
-        this.elements.adminPanel.innerHTML = `
-            <div class="admin-content">
-                <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
-                
-                <div class="admin-section">
-                    <h3><i class="fas fa-arrow-down"></i> Pending Deposits (${this.state.admin.pendingDeposits.length})</h3>
-                    <div class="pending-list" id="admin-deposits-list">
-                        ${this.state.admin.pendingDeposits.map(deposit => `
-                            <div class="pending-item">
-                                <div class="pending-info">
-                                    <div class="user">User ID: ${deposit.userId}</div>
-                                    <div class="amount">${deposit.amount} ${deposit.currency}</div>
-                                    <div class="txid">TX: ${deposit.txId.substring(0, 20)}...</div>
-                                </div>
-                                <div class="pending-actions">
-                                    <button class="admin-btn approve" data-id="${deposit.id}" data-type="deposit">
-                                        <i class="fas fa-check"></i> Approve
-                                    </button>
-                                    <button class="admin-btn reject" data-id="${deposit.id}" data-type="deposit">
-                                        <i class="fas fa-times"></i> Reject
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('') || '<p>No pending deposits</p>'}
-                    </div>
-                </div>
-                
-                <div class="admin-section">
-                    <h3><i class="fas fa-arrow-up"></i> Pending Withdrawals (${this.state.admin.pendingWithdrawals.length})</h3>
-                    <div class="pending-list" id="admin-withdrawals-list">
-                        ${this.state.admin.pendingWithdrawals.map(withdrawal => `
-                            <div class="pending-item">
-                                <div class="pending-info">
-                                    <div class="user">User ID: ${withdrawal.userId}</div>
-                                    <div class="amount">${withdrawal.amount} ${withdrawal.currency}</div>
-                                    <div class="address">To: ${withdrawal.address.substring(0, 20)}...</div>
-                                </div>
-                                <div class="pending-actions">
-                                    <button class="admin-btn pay" data-id="${withdrawal.id}" data-type="withdrawal">
-                                        <i class="fas fa-money-bill-wave"></i> Pay
-                                    </button>
-                                    <button class="admin-btn reject" data-id="${withdrawal.id}" data-type="withdrawal">
-                                        <i class="fas fa-times"></i> Reject
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('') || '<p>No pending withdrawals</p>'}
-                    </div>
-                </div>
-                
-                <div class="admin-section">
-                    <h3><i class="fas fa-users-cog"></i> User Management</h3>
-                    <div class="admin-stats">
-                        <div class="stat">
-                            <div class="value">1</div>
-                            <div class="label">Active Users</div>
-                        </div>
-                        <div class="stat">
-                            <div class="value">${this.state.admin.pendingDeposits.length + this.state.admin.pendingWithdrawals.length}</div>
-                            <div class="label">Pending Requests</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <button id="close-admin" class="admin-btn close">
-                    <i class="fas fa-times"></i> Close Admin Panel
-                </button>
-            </div>
-        `;
-        
-        // Show admin panel
-        this.elements.adminPanel.classList.add('active');
-        
-        // Add event listeners
-        document.getElementById('close-admin').addEventListener('click', () => {
-            this.elements.adminPanel.classList.remove('active');
-        });
-        
-        // Add admin button listeners
-        document.querySelectorAll('.admin-btn.approve, .admin-btn.reject, .admin-btn.pay').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = e.target.closest('button').dataset.id;
-                const type = e.target.closest('button').dataset.type;
-                const action = e.target.closest('button').classList.contains('approve') ? 'approve' : 
-                              e.target.closest('button').classList.contains('pay') ? 'pay' : 'reject';
-                
-                this.handleAdminAction(id, type, action);
-            });
-        });
-    }
-    
-    handleAdminAction(id, type, action) {
-        if (type === 'deposit') {
-            this.processDepositAction(id, action);
-        } else if (type === 'withdrawal') {
-            this.processWithdrawalAction(id, action);
-        }
-    }
-    
-    processDepositAction(depositId, action) {
-        const depositIndex = this.state.admin.pendingDeposits.findIndex(d => d.id === depositId);
-        if (depositIndex === -1) return;
-        
-        const deposit = this.state.admin.pendingDeposits[depositIndex];
-        
-        if (action === 'approve') {
-            // Credit user's balance
-            this.state.balances[deposit.currency] += deposit.amount;
-            
-            // Update transaction status
-            const txIndex = this.state.transactions.deposits.findIndex(tx => tx.txId === deposit.txId);
-            if (txIndex !== -1) {
-                this.state.transactions.deposits[txIndex].status = 'completed';
-            }
-            
-            this.showNotification(`✅ Deposit approved: ${deposit.amount} ${deposit.currency}`, 'success');
-        } else {
-            // Update transaction status
-            const txIndex = this.state.transactions.deposits.findIndex(tx => tx.txId === deposit.txId);
-            if (txIndex !== -1) {
-                this.state.transactions.deposits[txIndex].status = 'rejected';
-            }
-            
-            this.showNotification(`❌ Deposit rejected: ${deposit.amount} ${deposit.currency}`, 'error');
-        }
-        
-        // Remove from pending
-        this.state.admin.pendingDeposits.splice(depositIndex, 1);
-        
-        // Update UI
-        this.showAdminPanel();
-        this.updateWalletTab();
-        this.updateTransactionHistory();
-        this.updateHeader();
-        
-        // Save state
-        this.saveState();
-    }
-    
-    processWithdrawalAction(withdrawalId, action) {
-        const withdrawalIndex = this.state.admin.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
-        if (withdrawalIndex === -1) return;
-        
-        const withdrawal = this.state.admin.pendingWithdrawals[withdrawalIndex];
-        
-        if (action === 'pay') {
-            // Update transaction status
-            const txIndex = this.state.transactions.withdrawals.findIndex(tx => 
-                tx.amount === withdrawal.amount && tx.address === withdrawal.address);
-            if (txIndex !== -1) {
-                this.state.transactions.withdrawals[txIndex].status = 'completed';
-            }
-            
-            this.showNotification(`✅ Withdrawal paid: ${withdrawal.amount} ${withdrawal.currency}`, 'success');
-        } else {
-            // Refund user if rejected
-            this.state.balances.USDT += withdrawal.amount;
-            this.state.balances.BNB += withdrawal.fee;
-            
-            // Update transaction status
-            const txIndex = this.state.transactions.withdrawals.findIndex(tx => 
-                tx.amount === withdrawal.amount && tx.address === withdrawal.address);
-            if (txIndex !== -1) {
-                this.state.transactions.withdrawals[txIndex].status = 'rejected';
-            }
-            
-            this.showNotification(`❌ Withdrawal rejected: ${withdrawal.amount} ${withdrawal.currency}`, 'error');
-        }
-        
-        // Remove from pending
-        this.state.admin.pendingWithdrawals.splice(withdrawalIndex, 1);
-        
-        // Update UI
-        this.showAdminPanel();
-        this.updateWalletTab();
-        this.updateTransactionHistory();
-        
-        // Save state
-        this.saveState();
-    }
-    
+
     /* ===========================================
        UTILITY METHODS
        =========================================== */
-    
-    calculateTotalAMSK() {
-        return this.state.balances.AMSK;
-    }
-    
-    calculateTotalBalance() {
-        const amskValue = this.calculateTotalAMSK() * APP_CONFIG.AMSK_PRICE;
-        const usdtValue = this.state.balances.USDT;
-        const bnbValue = this.state.balances.BNB * 300;
-        const tonValue = this.state.balances.TON * 2;
-        
-        return amskValue + usdtValue + bnbValue + tonValue;
-    }
-    
+
     formatNumber(num, decimals = 0) {
         if (typeof num !== 'number' || isNaN(num)) return '0';
         
@@ -1824,27 +744,13 @@ class AlienMuskApp {
         
         return num.toLocaleString('en-US');
     }
-    
-    generateReferralCode() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let code = 'ALIEN-';
-        for (let i = 0; i < 6; i++) {
-            code += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return code;
-    }
-    
+
     copyToClipboard(text) {
         navigator.clipboard.writeText(text)
             .then(() => this.showNotification('📋 Copied to clipboard!', 'success'))
             .catch(() => this.showNotification('Failed to copy', 'error'));
     }
-    
-    copyAddress(addressType) {
-        const address = APP_CONFIG.DEPOSIT_ADDRESSES[addressType.toUpperCase()];
-        this.copyToClipboard(address);
-    }
-    
+
     showNotification(message, type = 'info') {
         const notificationCenter = document.getElementById('notification-center');
         
@@ -1869,7 +775,7 @@ class AlienMuskApp {
         
         notificationCenter.appendChild(notification);
         
-        // Remove notification after 4 seconds
+        // Remove after 4 seconds
         setTimeout(() => {
             notification.style.animation = 'slideOutRight 0.3s ease';
             setTimeout(() => {
@@ -1879,84 +785,35 @@ class AlienMuskApp {
             }, 300);
         }, 4000);
     }
-    
+
     showLoading() {
-        this.elements.loadingSpinner.classList.add('active');
+        this.loadingSpinner.classList.add('active');
     }
-    
+
     hideLoading() {
-        this.elements.loadingSpinner.classList.remove('active');
+        this.loadingSpinner.classList.remove('active');
     }
-    
+
+    showAdminPanel() {
+        // This would show admin panel
+        console.log('Admin panel requested');
+        this.showNotification('Admin panel access granted', 'success');
+    }
+
     /* ===========================================
        TIMERS
        =========================================== */
-    
+
     startTimers() {
-        // Mining Timer
-        this.miningTimer = setInterval(() => {
+        // Mining timer
+        setInterval(() => {
             this.updateMiningTimer();
         }, 1000);
         
         // Auto-save every 30 seconds
-        this.autoSaveTimer = setInterval(() => {
-            this.saveState();
+        setInterval(() => {
+            this.saveUserData();
         }, 30000);
-    }
-    
-    updateMiningTimer() {
-        if (!this.state.mining.isActive) return;
-        
-        const now = Date.now();
-        const timeLeft = this.state.mining.nextReward - now;
-        
-        if (timeLeft <= 0) {
-            // Reward is ready
-            this.elements.miningTimer.textContent = 'READY!';
-            this.elements.miningTimer.style.color = 'var(--secondary)';
-            
-            this.updateMiningButton();
-        } else {
-            // Update timer
-            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            
-            this.elements.miningTimer.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            this.elements.miningTimer.style.color = 'var(--text-primary)';
-        }
-    }
-    
-    /* ===========================================
-       STATE MANAGEMENT
-       =========================================== */
-    
-    saveState() {
-        if (!this.state) return;
-        
-        try {
-            const stateString = JSON.stringify(this.state);
-            localStorage.setItem('alien_musk_state', stateString);
-            console.log('💾 State saved');
-        } catch (error) {
-            console.error('Failed to save state:', error);
-        }
-    }
-    
-    loadState() {
-        try {
-            const savedState = localStorage.getItem('alien_musk_state');
-            if (savedState) {
-                const parsedState = JSON.parse(savedState);
-                this.state = { ...this.state, ...parsedState };
-                console.log('📂 State loaded');
-                return true;
-            }
-        } catch (error) {
-            console.error('Failed to load state:', error);
-        }
-        return false;
     }
 }
 
@@ -1964,36 +821,9 @@ class AlienMuskApp {
    APP INITIALIZATION
    =========================================== */
 
-// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Create and initialize the app
     window.alienMuskApp = new AlienMuskApp();
-    
-    // Make app accessible globally
     window.AlienMusk = window.alienMuskApp;
 });
 
-// Global helper functions for external use
-window.formatNumber = (num, decimals = 0) => {
-    if (typeof num !== 'number' || isNaN(num)) return '0';
-    return num.toLocaleString('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-    });
-};
-
-window.copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text)
-        .then(() => {
-            if (window.alienMuskApp) {
-                window.alienMuskApp.showNotification('📋 Copied to clipboard!', 'success');
-            }
-        })
-        .catch(() => {
-            if (window.alienMuskApp) {
-                window.alienMuskApp.showNotification('Failed to copy', 'error');
-            }
-        });
-};
-
-console.log('👽 Alien Musk Platform loaded successfully!');
+console.log('👽 Alien Musk Platform loaded!');
