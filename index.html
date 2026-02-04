@@ -30,6 +30,7 @@
             --alien-green: #00ff88;
             --alien-blue: #00d4ff;
             --alien-purple: #9d4edd;
+            --alien-pink: #ff0080;
             --alien-dark: #0a0a0f;
             --alien-darker: #050510;
             --alien-card: #1a1a2e;
@@ -588,7 +589,6 @@
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--alien-border);
             display: flex;
-            justify-content: space-around;
             padding: 10px 0;
             z-index: 100;
             box-shadow: var(--shadow-nav);
@@ -611,6 +611,29 @@
             max-width: 100px;
         }
         
+        /* ترتيب جديد للأيقونات */
+        .nav-item:nth-child(1) i { color: var(--alien-green); } /* Home */
+        .nav-item:nth-child(2) i { color: var(--alien-blue); }  /* Wallet */
+        .nav-item:nth-child(3) i { color: var(--alien-purple); } /* Staking */
+        .nav-item:nth-child(4) i { color: var(--alien-pink); }  /* Referral */
+        
+        .nav-item.active:nth-child(1) { 
+            background: rgba(0, 255, 136, 0.15); 
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        .nav-item.active:nth-child(2) { 
+            background: rgba(0, 212, 255, 0.15); 
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        .nav-item.active:nth-child(3) { 
+            background: rgba(157, 78, 221, 0.15); 
+            border: 1px solid rgba(157, 78, 221, 0.3);
+        }
+        .nav-item.active:nth-child(4) { 
+            background: rgba(255, 0, 128, 0.15); 
+            border: 1px solid rgba(255, 0, 128, 0.3);
+        }
+        
         .nav-item i {
             font-size: 20px;
             transition: all 0.2s ease;
@@ -623,17 +646,16 @@
         }
         
         .nav-item.active {
-            color: var(--alien-green);
-            background: rgba(0, 255, 136, 0.1);
+            color: var(--alien-text);
         }
         
         .nav-item.active i {
-            color: var(--alien-green);
+            color: inherit;
             transform: translateY(-2px);
         }
         
         .nav-item.active span {
-            color: var(--alien-green);
+            color: inherit;
             font-weight: 600;
         }
         
@@ -1295,9 +1317,6 @@
         }
     </style>
     
-    <!-- External CSS -->
-    <link rel="stylesheet" href="style.css">
-    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👽</text></svg>">
 </head>
@@ -1664,19 +1683,20 @@
         </div>
     </div>
 
-    <!-- VIP Bottom Navigation (Fixed Bottom) -->
+    <!-- VIP Bottom Navigation (Fixed Bottom) - ORDER CHANGED -->
     <nav class="bottom-nav">
+        <!-- الترتيب الجديد: Home - Wallet - Staking - Referral -->
         <div class="nav-item active" onclick="switchToPage('home')">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
-        <div class="nav-item" onclick="switchToPage('staking')">
-            <i class="fas fa-gem"></i>
-            <span>Staking</span>
-        </div>
         <div class="nav-item" onclick="switchToPage('wallet')">
             <i class="fas fa-wallet"></i>
             <span>Wallet</span>
+        </div>
+        <div class="nav-item" onclick="switchToPage('staking')">
+            <i class="fas fa-gem"></i>
+            <span>Staking</span>
         </div>
         <div class="nav-item" onclick="switchToPage('referral')">
             <i class="fas fa-users"></i>
@@ -1708,7 +1728,8 @@
                 item.classList.remove('active');
             });
             document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.querySelector('span').textContent.toLowerCase() === pageName.toLowerCase()) {
+                const spanText = item.querySelector('span').textContent.toLowerCase();
+                if (spanText === pageName.toLowerCase()) {
                     item.classList.add('active');
                 }
             });
@@ -1717,7 +1738,10 @@
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
-            document.getElementById(pageName + '-page').classList.add('active');
+            const targetPage = document.getElementById(pageName + '-page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
             console.log('Switched to page:', pageName);
         }
@@ -1873,10 +1897,24 @@
                         const currentUsd = parseFloat(document.getElementById('total-balance-usd').textContent);
                         document.getElementById('total-balance-usd').textContent = (currentUsd + (reward * 0.0002)).toFixed(2);
                         
+                        // Update wallet balance too
+                        document.getElementById('wallet-balance-amsk').textContent = (currentBalance + reward).toLocaleString();
+                        document.getElementById('wallet-balance-usd').textContent = (currentUsd + (reward * 0.0002)).toFixed(2);
+                        document.getElementById('wallet-amsk-balance').textContent = (currentBalance + reward).toLocaleString() + ' AMSK';
+                        document.getElementById('wallet-amsk-value').textContent = '$' + (currentUsd + (reward * 0.0002)).toFixed(2);
+                        
                         this.classList.remove('claim-mode');
                         this.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
                         
                         document.getElementById('mining-timer-display').textContent = '01:00:00';
+                        
+                        // Update total mined
+                        const totalMined = parseInt(document.getElementById('total-mined').textContent.replace(/,/g, '')) + reward;
+                        document.getElementById('total-mined').textContent = totalMined.toLocaleString();
+                        
+                        // Update mined today
+                        const minedToday = parseInt(document.getElementById('mined-today').textContent.replace(/,/g, '')) + reward;
+                        document.getElementById('mined-today').textContent = minedToday.toLocaleString();
                         
                         showMessage(`💰 +${reward.toLocaleString()} AMSK claimed!`, 'success');
                     } else {
@@ -1884,7 +1922,7 @@
                         this.innerHTML = '<i class="fas fa-pause"></i><span>Mining...</span>';
                         this.classList.add('claim-mode');
                         
-                        let timeLeft = 3600; // 1 hour in seconds
+                        let timeLeft = 5; // 5 ثواني فقط للاختبار
                         const timer = setInterval(() => {
                             timeLeft--;
                             const hours = Math.floor(timeLeft / 3600);
@@ -1935,8 +1973,19 @@
             // Initialize upgrade buttons
             document.querySelectorAll('.upgrade-btn:not(.active-btn)').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    showMessage('⚡ Upgrade requires USDT. Deposit first!', 'warning');
+                    const cost = this.textContent.replace(' USDT', '');
+                    showMessage(`⚡ Upgrade requires ${cost} USDT. Deposit first!`, 'warning');
                 });
+            });
+            
+            // Initialize wallet buttons
+            document.querySelectorAll('.wallet-action-btn').forEach(btn => {
+                if (!btn.onclick) {
+                    btn.addEventListener('click', function() {
+                        const action = this.querySelector('span').textContent;
+                        showMessage(`${action} feature coming soon!`, 'info');
+                    });
+                }
             });
         });
         
