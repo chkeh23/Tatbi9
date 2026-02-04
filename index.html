@@ -8,14 +8,1294 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS -->
+    <!-- Inline CSS for immediate loading -->
+    <style>
+        /* =========================================== */
+        /* VIP CSS - ALIEN MUSK QUANTUM MINING */
+        /* =========================================== */
+        
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            /* VIP Colors */
+            --alien-green: #00ff88;
+            --alien-blue: #00d4ff;
+            --alien-purple: #9d4edd;
+            --alien-dark: #0a0a0f;
+            --alien-darker: #050510;
+            --alien-card: #1a1a2e;
+            --alien-border: #2a2a4a;
+            --alien-text: #ffffff;
+            --alien-text-light: #a0a0c0;
+            
+            /* VIP Gradients */
+            --gradient-alien: linear-gradient(135deg, var(--alien-green), var(--alien-blue));
+            --gradient-card: linear-gradient(145deg, #1a1a2e, #16213e);
+            --gradient-header: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(22,33,62,0.95));
+            
+            /* VIP Shadows */
+            --shadow-alien: 0 0 20px rgba(0, 255, 136, 0.3);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-nav: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            
+            /* VIP Radius */
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            
+            /* VIP Spacing */
+            --space-xs: 8px;
+            --space-sm: 12px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--alien-dark);
+            color: var(--alien-text);
+            font-size: 14px;
+            line-height: 1.5;
+            direction: rtl;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* VIP LOADING SCREEN */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--alien-darker);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: var(--space-xl);
+            max-width: 320px;
+            width: 90%;
+        }
+        
+        .alien-logo {
+            font-size: 48px;
+            margin-bottom: var(--space-lg);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .loading-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-alien);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+        }
+        
+        .loading-subtitle {
+            font-size: 16px;
+            color: var(--alien-text-light);
+            margin-bottom: var(--space-xl);
+            font-weight: 300;
+        }
+        
+        .loading-progress {
+            margin-top: var(--space-xl);
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: var(--space-sm);
+        }
+        
+        #loading-progress-bar {
+            height: 100%;
+            width: 25%;
+            background: var(--gradient-alien);
+            border-radius: var(--radius-sm);
+            transition: width 0.3s ease;
+        }
+        
+        #loading-progress-text {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        
+        /* VIP HEADER */
+        .app-header {
+            background: var(--gradient-header);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--alien-border);
+            padding: var(--space-sm) var(--space-md);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: 8px 12px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .logo i {
+            font-size: 20px;
+            color: var(--alien-green);
+        }
+        
+        .logo span {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--alien-green), var(--alien-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .user-info-mini {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .user-avatar-mini {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--alien-green);
+            box-shadow: var(--shadow-alien);
+        }
+        
+        .user-details-mini {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .username-mini {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--alien-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+        
+        .user-id-mini {
+            font-size: 10px;
+            color: var(--alien-text-light);
+            font-family: monospace;
+            direction: ltr;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .total-balance-header {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            text-align: left;
+        }
+        
+        .balance-amount-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+        
+        .balance-amount-header i {
+            font-size: 14px;
+            color: var(--alien-blue);
+        }
+        
+        .balance-amount-header span:first-of-type {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--alien-text);
+            font-family: monospace;
+        }
+        
+        .balance-amount-header .currency {
+            font-size: 12px;
+            color: var(--alien-text-light);
+        }
+        
+        .balance-usd-header {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            text-align: left;
+        }
+        
+        /* VIP CONTENT AREA */
+        #app-container {
+            display: none;
+            padding-top: 64px; /* للهيدر الثابت */
+            padding-bottom: 80px; /* لشريط التنقل الثابت */
+            min-height: 100vh;
+        }
+        
+        /* VIP PAGES */
+        .page {
+            display: none;
+            padding: var(--space-md);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* VIP MINING SECTION */
+        .mining-section {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--alien-border);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .mining-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--alien-border);
+        }
+        
+        .mining-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .mining-header h3 i {
+            color: var(--alien-green);
+            font-size: 20px;
+        }
+        
+        .mining-stats {
+            display: flex;
+            gap: var(--space-lg);
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--alien-green);
+            font-family: monospace;
+        }
+        
+        .mining-timer-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.1);
+        }
+        
+        .timer-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .timer-display i {
+            font-size: 20px;
+            color: var(--alien-green);
+        }
+        
+        .timer-display span {
+            font-size: 24px;
+            font-weight: 700;
+            font-family: monospace;
+            color: var(--alien-text);
+            letter-spacing: 2px;
+        }
+        
+        .next-reward {
+            font-size: 14px;
+            color: var(--alien-text-light);
+        }
+        
+        .next-reward span {
+            color: var(--alien-green);
+            font-weight: 600;
+        }
+        
+        .mining-action-btn {
+            width: 100%;
+            padding: var(--space-lg);
+            background: var(--gradient-alien);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: var(--space-lg);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+        }
+        
+        .mining-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 255, 136, 0.4);
+        }
+        
+        .mining-action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .mining-action-btn.claim-mode {
+            background: linear-gradient(135deg, var(--alien-purple), #7b2cbf);
+            box-shadow: 0 4px 20px rgba(157, 78, 221, 0.3);
+        }
+        
+        .mining-info {
+            display: flex;
+            justify-content: space-around;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 14px;
+            color: var(--alien-text-light);
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-sm);
+        }
+        
+        .info-item i {
+            font-size: 14px;
+            color: var(--alien-green);
+        }
+        
+        .info-item span span {
+            color: var(--alien-text);
+            font-weight: 600;
+        }
+        
+        /* VIP UPGRADE CARDS */
+        .upgrade-section {
+            background: var(--alien-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--alien-border);
+        }
+        
+        .upgrade-section h4 {
+            font-size: 16px;
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--alien-text);
+        }
+        
+        .upgrade-section h4 i {
+            color: var(--alien-green);
+        }
+        
+        .upgrade-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            border: 1px solid var(--alien-border);
+            transition: all 0.2s ease;
+        }
+        
+        .upgrade-card.active {
+            border-color: var(--alien-green);
+            box-shadow: var(--shadow-alien);
+        }
+        
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        .upgrade-level {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--alien-text-light);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+        }
+        
+        .upgrade-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--alien-text);
+        }
+        
+        .upgrade-stats {
+            margin-bottom: var(--space-md);
+        }
+        
+        .upgrade-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--alien-text-light);
+            margin-bottom: 6px;
+        }
+        
+        .upgrade-stat i {
+            font-size: 12px;
+            width: 16px;
+            text-align: center;
+            color: var(--alien-green);
+        }
+        
+        .upgrade-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--alien-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .upgrade-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .upgrade-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .upgrade-btn.active-btn {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--alien-green);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+        
+        /* VIP BOTTOM NAVIGATION - FIXED */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--gradient-header);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--alien-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 100;
+            box-shadow: var(--shadow-nav);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--alien-text-light);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 100px;
+        }
+        
+        .nav-item i {
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item span {
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--alien-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .nav-item.active i {
+            color: var(--alien-green);
+            transform: translateY(-2px);
+        }
+        
+        .nav-item.active span {
+            color: var(--alien-green);
+            font-weight: 600;
+        }
+        
+        .nav-item:not(.active):hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--alien-text);
+        }
+        
+        /* VIP STAKING PAGE CONTENT */
+        .staking-content {
+            padding: var(--space-md);
+        }
+        
+        .staking-card {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--alien-border);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .staking-card h4 {
+            font-size: 16px;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--alien-text);
+        }
+        
+        .staking-card h4 i {
+            color: var(--alien-purple);
+        }
+        
+        .staking-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .plan-item {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            border: 1px solid var(--alien-border);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        
+        .plan-item:hover {
+            border-color: var(--alien-purple);
+            transform: translateY(-2px);
+        }
+        
+        .plan-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--alien-text);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .plan-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--alien-purple);
+            margin-bottom: 4px;
+            font-family: monospace;
+        }
+        
+        .plan-duration {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            margin-bottom: 4px;
+        }
+        
+        .plan-apr {
+            font-size: 13px;
+            color: var(--alien-green);
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .plan-reward {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            margin-bottom: var(--space-md);
+        }
+        
+        .stake-plan-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, var(--alien-purple), #7b2cbf);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .stake-plan-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+        }
+        
+        /* VIP WALLET PAGE CONTENT */
+        .wallet-content {
+            padding: var(--space-md);
+        }
+        
+        .wallet-balance-card {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--alien-border);
+            box-shadow: var(--shadow-card);
+            text-align: center;
+        }
+        
+        .wallet-balance-card h4 {
+            font-size: 16px;
+            margin-bottom: var(--space-md);
+            color: var(--alien-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .wallet-balance-card h4 i {
+            color: var(--alien-blue);
+        }
+        
+        .wallet-balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--alien-green);
+            margin-bottom: 4px;
+            font-family: monospace;
+        }
+        
+        .wallet-balance-usd {
+            font-size: 14px;
+            color: var(--alien-text-light);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .wallet-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .wallet-action-btn {
+            padding: var(--space-md);
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid var(--alien-border);
+            border-radius: var(--radius-md);
+            color: var(--alien-text);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .wallet-action-btn i {
+            font-size: 20px;
+            color: var(--alien-blue);
+        }
+        
+        .wallet-action-btn:hover {
+            border-color: var(--alien-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.2);
+        }
+        
+        .wallet-assets {
+            margin-top: var(--space-lg);
+        }
+        
+        .wallet-assets h5 {
+            font-size: 15px;
+            color: var(--alien-text);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .wallet-assets h5 i {
+            color: var(--alien-green);
+        }
+        
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+        
+        .asset-item {
+            display: flex;
+            align-items: center;
+            padding: var(--space-md);
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--alien-border);
+            gap: var(--space-md);
+        }
+        
+        .asset-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .asset-icon i {
+            font-size: 18px;
+            color: var(--alien-green);
+        }
+        
+        .asset-icon.usdt {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+        
+        .asset-icon.usdt i {
+            color: #3b82f6;
+        }
+        
+        .asset-icon.ton {
+            background: rgba(0, 168, 232, 0.1);
+            border-color: rgba(0, 168, 232, 0.2);
+        }
+        
+        .asset-icon.ton i {
+            color: #00a8e8;
+        }
+        
+        .asset-details {
+            flex: 1;
+        }
+        
+        .asset-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--alien-text);
+            margin-bottom: 2px;
+        }
+        
+        .asset-balance {
+            font-size: 12px;
+            color: var(--alien-text-light);
+            font-family: monospace;
+        }
+        
+        .asset-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--alien-text);
+            text-align: left;
+        }
+        
+        /* VIP REFERRAL PAGE CONTENT */
+        .referral-content {
+            padding: var(--space-md);
+        }
+        
+        .referral-code-card {
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--alien-border);
+            box-shadow: var(--shadow-card);
+            text-align: center;
+        }
+        
+        .referral-code-card h4 {
+            font-size: 16px;
+            margin-bottom: var(--space-md);
+            color: var(--alien-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .referral-code-card h4 i {
+            color: var(--alien-pink);
+        }
+        
+        .referral-code-display {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--alien-pink);
+            font-family: monospace;
+            padding: var(--space-md);
+            background: rgba(255, 0, 128, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            margin-bottom: var(--space-lg);
+            letter-spacing: 1px;
+        }
+        
+        .referral-link-card {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            border: 1px solid var(--alien-border);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .link-input-group {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        .link-input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--alien-border);
+            border-radius: var(--radius-sm);
+            color: var(--alien-text);
+            font-size: 13px;
+            font-family: monospace;
+        }
+        
+        .copy-link-btn {
+            padding: 0 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--alien-blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-link-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+        
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+        
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .share-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .share-btn.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .referral-rewards {
+            margin-top: var(--space-xl);
+        }
+        
+        .referral-rewards h5 {
+            font-size: 15px;
+            color: var(--alien-text);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .referral-rewards h5 i {
+            color: var(--alien-green);
+        }
+        
+        .rewards-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+        
+        .reward-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md);
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--alien-border);
+        }
+        
+        .reward-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .reward-icon i {
+            font-size: 18px;
+            color: var(--alien-green);
+        }
+        
+        .reward-details {
+            flex: 1;
+        }
+        
+        .reward-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--alien-text);
+            margin-bottom: 2px;
+        }
+        
+        .reward-amount {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--alien-pink);
+            font-family: monospace;
+        }
+        
+        /* VIP MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+            opacity: 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--alien-border);
+            box-shadow: var(--shadow-card);
+        }
+        
+        .modal.active {
+            display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-md);
+            border-bottom: 1px solid var(--alien-border);
+        }
+        
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--alien-text);
+        }
+        
+        .modal-header h3 i {
+            color: var(--alien-green);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--alien-text-light);
+            font-size: 24px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--alien-text);
+        }
+        
+        /* VIP NOTIFICATIONS */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .message {
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid;
+        }
+        
+        .message i {
+            font-size: 18px;
+        }
+        
+        .message.success {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--alien-green);
+        }
+        
+        .message.error {
+            background: rgba(255, 68, 68, 0.15);
+            border-color: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+        
+        .message.warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        
+        .message.info {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--alien-blue);
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .app-header {
+                padding: 10px 14px;
+                height: 60px;
+            }
+            
+            #app-container {
+                padding-top: 60px;
+                padding-bottom: 70px;
+            }
+            
+            .logo span {
+                font-size: 14px;
+            }
+            
+            .user-avatar-mini {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .username-mini {
+                max-width: 100px;
+            }
+            
+            .upgrade-cards,
+            .staking-plans-grid,
+            .wallet-actions,
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                padding: 8px 0;
+            }
+            
+            .nav-item {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            
+            .nav-item i {
+                font-size: 18px;
+            }
+        }
+        
+        /* HIDE */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+    
+    <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
     
     <!-- Favicon -->
@@ -27,7 +1307,7 @@
         <div class="loading-container">
             <div class="alien-logo">👽</div>
             <div class="loading-title">ALIEN MUSK</div>
-            <div class="loading-subtitle">Quantum Mining Platform v6.0</div>
+            <div class="loading-subtitle">Quantum Mining Platform v4.1</div>
             <div class="loading-progress">
                 <div class="progress-bar">
                     <div id="loading-progress-bar"></div>
@@ -39,10 +1319,10 @@
 
     <!-- VIP App Container -->
     <div id="app-container">
-        <!-- VIP Header (Fixed Top) - PROFESSIONAL -->
+        <!-- VIP Header (Fixed Top) -->
         <header class="app-header">
             <div class="header-left">
-                <div class="logo" onclick="handleLogoClick()">
+                <div class="logo">
                     <i class="fas fa-robot"></i>
                     <span>Alien Musk</span>
                 </div>
@@ -61,35 +1341,15 @@
                 <div class="total-balance-header">
                     <div class="balance-amount-header">
                         <i class="fas fa-gem"></i>
-                        <span id="total-balance-amsk">10,000</span>
+                        <span id="total-balance-amsk">2,500</span>
                         <span class="currency">AMSK</span>
                     </div>
                     <div class="balance-usd-header">
-                        ≈ $<span id="total-balance-usd">2.00</span>
+                        ≈ $<span id="total-balance-usd">0.50</span>
                     </div>
                 </div>
             </div>
         </header>
-
-        <!-- VIP Navigation Bar (REORDERED: Home ← Left, Wallet → Right) -->
-        <nav class="main-nav">
-            <button class="nav-btn active" data-page="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-btn" data-page="staking">
-                <i class="fas fa-gem"></i>
-                <span>Staking</span>
-            </button>
-            <button class="nav-btn" data-page="referral">
-                <i class="fas fa-users"></i>
-                <span>Referral</span>
-            </button>
-            <button class="nav-btn" data-page="wallet">
-                <i class="fas fa-wallet"></i>
-                <span>Wallet</span>
-            </button>
-        </nav>
 
         <!-- VIP Home Page -->
         <div id="home-page" class="page active">
@@ -111,7 +1371,7 @@
                 <div class="mining-timer-card">
                     <div class="timer-display">
                         <i class="fas fa-clock"></i>
-                        <span id="mining-timer-display">READY</span>
+                        <span id="mining-timer-display">01:00:00</span>
                     </div>
                     <div class="next-reward">
                         Next reward: <span id="next-reward-amount">2,500</span> AMSK
@@ -126,11 +1386,11 @@
                 <div class="mining-info">
                     <div class="info-item">
                         <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">10,000</span> AMSK</span>
+                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">10,000</span> AMSK</span>
+                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
                     </div>
                 </div>
             </div>
@@ -138,8 +1398,7 @@
             <div class="upgrade-section">
                 <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
                 <div class="upgrade-cards">
-                    <!-- Level 1 - Beginner -->
-                    <div class="upgrade-card active" data-level="1">
+                    <div class="upgrade-card" data-level="1">
                         <div class="upgrade-header">
                             <div class="upgrade-level">Level 1</div>
                             <div class="upgrade-name">Beginner</div>
@@ -154,10 +1413,9 @@
                                 <span>Reward: 2,500 AMSK</span>
                             </div>
                         </div>
-                        <button class="upgrade-btn active-btn">Active</button>
+                        <button class="upgrade-btn active-btn" disabled>Active</button>
                     </div>
                     
-                    <!-- Level 2 - Advanced -->
                     <div class="upgrade-card" data-level="2">
                         <div class="upgrade-header">
                             <div class="upgrade-level">Level 2</div>
@@ -177,250 +1435,182 @@
                                 <span>Cost: 5 USDT</span>
                             </div>
                         </div>
-                        <button class="upgrade-btn">5 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 3 - Pro -->
-                    <div class="upgrade-card" data-level="3">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 3</div>
-                            <div class="upgrade-name">Pro</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 12,500</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 12,500 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 20 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">20 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 4 - Expert -->
-                    <div class="upgrade-card" data-level="4">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 4</div>
-                            <div class="upgrade-name">Expert</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 25,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 25,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 100 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">100 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 5 - VIP -->
-                    <div class="upgrade-card" data-level="5">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 5</div>
-                            <div class="upgrade-name">VIP</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 100,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 100,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 500 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">500 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 6 - Master -->
-                    <div class="upgrade-card" data-level="6">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 6</div>
-                            <div class="upgrade-name">Master</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 250,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 250,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 1,000 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">1,000 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 7 - Quantum -->
-                    <div class="upgrade-card" data-level="7">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 7</div>
-                            <div class="upgrade-name">Quantum</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 1,000,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 1,000,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 5,000 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">5,000 USDT Required</button>
-                    </div>
-                    
-                    <!-- Level 8 - Cosmic -->
-                    <div class="upgrade-card" data-level="8">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 8</div>
-                            <div class="upgrade-name">Cosmic</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 10,000 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">10,000 USDT Required</button>
+                        <button class="upgrade-btn">5 USDT</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- VIP Staking Page - ENHANCED -->
+        <!-- VIP Staking Page -->
         <div id="staking-page" class="page">
             <div class="staking-content">
                 <div class="staking-card">
                     <h4><i class="fas fa-gem"></i> Staking Platform</h4>
                     <div class="staking-info">
                         <p style="color: var(--alien-text-light); margin-bottom: var(--space-md);">
-                            Stake your USDT and earn AMSK tokens with high APR returns. Choose your amount and duration.
+                            Stake your USDT and earn AMSK tokens with high APR returns. Funds are locked for the duration.
                         </p>
-                        <div class="total-staked-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid var(--alien-border);">
                             <span style="color: var(--alien-text-light);">Total Staked:</span>
-                            <span id="total-staked" style="color: var(--alien-green); font-weight: 800; font-family: monospace; font-size: var(--font-lg);">0.00 USDT</span>
+                            <span id="total-staked" style="color: var(--alien-green); font-weight: 700; font-family: monospace; font-size: 18px;">0 USDT</span>
                         </div>
                     </div>
                     
                     <div class="staking-plans-grid">
-                        <!-- Silver Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Silver Plan</div>
-                            <div class="plan-amount">10 - 1,000 USDT</div>
+                            <div class="plan-amount">10 USDT</div>
                             <div class="plan-duration">7 Days</div>
                             <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward">≈ 40 AMSK/day per 10 USDT</div>
+                            <div class="plan-reward">40 AMSK/Day</div>
                             <button class="stake-plan-btn" data-plan="1">Stake Now</button>
                         </div>
                         
-                        <!-- Gold Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Gold Plan</div>
-                            <div class="plan-amount">50 - 5,000 USDT</div>
+                            <div class="plan-amount">50 USDT</div>
                             <div class="plan-duration">15 Days</div>
                             <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward">≈ 83 AMSK/day per 50 USDT</div>
+                            <div class="plan-reward">250 AMSK/Day</div>
                             <button class="stake-plan-btn" data-plan="2">Stake Now</button>
                         </div>
                         
-                        <!-- Diamond Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Diamond Plan</div>
-                            <div class="plan-amount">100 - 10,000 USDT</div>
+                            <div class="plan-amount">100 USDT</div>
                             <div class="plan-duration">30 Days</div>
                             <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward">≈ 200 AMSK/day per 100 USDT</div>
+                            <div class="plan-reward">600 AMSK/Day</div>
                             <button class="stake-plan-btn" data-plan="3">Stake Now</button>
-                        </div>
-                        
-                        <!-- Quantum Plan -->
-                        <div class="plan-item premium">
-                            <div class="plan-name">Quantum Plan</div>
-                            <div class="plan-amount">500 - 50,000 USDT</div>
-                            <div class="plan-duration">60 Days</div>
-                            <div class="plan-apr">80% APR</div>
-                            <div class="plan-reward">≈ 667 AMSK/day per 500 USDT</div>
-                            <button class="stake-plan-btn" data-plan="4">Stake Now</button>
                         </div>
                     </div>
                 </div>
                 
                 <div class="staking-card">
                     <h4><i class="fas fa-clock"></i> Active Stakes</h4>
-                    <div id="active-stakes-list" style="min-height: 100px;">
-                        <div class="empty-stakes">
-                            <i class="fas fa-inbox"></i>
-                            <p>No active stakes</p>
-                            <small>Start staking to earn rewards</small>
+                    <div id="active-stakes-list" style="min-height: 100px; display: flex; align-items: center; justify-content: center; color: var(--alien-text-light);">
+                        No active stakes yet
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIP Wallet Page -->
+        <div id="wallet-page" class="page">
+            <div class="wallet-content">
+                <div class="wallet-balance-card">
+                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
+                    <div class="wallet-balance-amount" id="wallet-balance-amsk">2,500</div>
+                    <div class="wallet-balance-usd" id="wallet-balance-usd">≈ $0.50</div>
+                    
+                    <div class="wallet-actions">
+                        <button class="wallet-action-btn" onclick="showMessage('Deposit feature coming soon!', 'info')">
+                            <i class="fas fa-download"></i>
+                            <span>Deposit</span>
+                        </button>
+                        <button class="wallet-action-btn" onclick="showMessage('Withdraw feature coming soon!', 'info')">
+                            <i class="fas fa-upload"></i>
+                            <span>Withdraw</span>
+                        </button>
+                        <button class="wallet-action-btn" onclick="showMessage('Swap feature coming soon!', 'info')">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Swap</span>
+                        </button>
+                        <button class="wallet-action-btn" onclick="showMessage('History feature coming soon!', 'info')">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="wallet-assets">
+                    <h5><i class="fas fa-coins"></i> My Assets</h5>
+                    <div class="asset-list">
+                        <div class="asset-item">
+                            <div class="asset-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="asset-details">
+                                <div class="asset-name">Alien Musk (AMSK)</div>
+                                <div class="asset-balance" id="wallet-amsk-balance">2,500 AMSK</div>
+                            </div>
+                            <div class="asset-value" id="wallet-amsk-value">$0.50</div>
+                        </div>
+                        
+                        <div class="asset-item">
+                            <div class="asset-icon usdt">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="asset-details">
+                                <div class="asset-name">Tether (USDT)</div>
+                                <div class="asset-balance" id="wallet-usdt-balance">0.00 USDT</div>
+                            </div>
+                            <div class="asset-value" id="wallet-usdt-value">$0.00</div>
+                        </div>
+                        
+                        <div class="asset-item">
+                            <div class="asset-icon">
+                                <i class="fab fa-btc"></i>
+                            </div>
+                            <div class="asset-details">
+                                <div class="asset-name">BNB</div>
+                                <div class="asset-balance" id="wallet-bnb-balance">0.0000 BNB</div>
+                            </div>
+                            <div class="asset-value" id="wallet-bnb-value">$0.00</div>
+                        </div>
+                        
+                        <div class="asset-item">
+                            <div class="asset-icon ton">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="asset-details">
+                                <div class="asset-name">TON</div>
+                                <div class="asset-balance" id="wallet-ton-balance">0 TON</div>
+                            </div>
+                            <div class="asset-value" id="wallet-ton-value">$0.00</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- VIP Referral Page - ENHANCED -->
+        <!-- VIP Referral Page -->
         <div id="referral-page" class="page">
             <div class="referral-content">
-                <!-- Referral Stats -->
-                <div class="referral-stats-card">
-                    <h4><i class="fas fa-users"></i> Referral Program</h4>
-                    <div class="referral-info-text">
-                        <p><i class="fas fa-gift"></i> <strong>Get 10,000 AMSK for each referral</strong></p>
-                        <p><i class="fas fa-user-plus"></i> Your friend gets 10,000 AMSK welcome bonus</p>
-                    </div>
-                    <div class="referral-stats-grid">
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-count">0</div>
-                            <div class="ref-stat-label">Total Referrals</div>
+                <div class="referral-stats-card" style="background: var(--gradient-card); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-md); border: 1px solid var(--alien-border);">
+                    <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-lg); color: var(--alien-text);">
+                        <i class="fas fa-users" style="color: var(--alien-pink);"></i>
+                        Referral Program
+                    </h4>
+                    <div style="display: flex; justify-content: space-around; text-align: center;">
+                        <div>
+                            <div id="ref-count" style="font-size: 24px; font-weight: 800; color: var(--alien-pink); font-family: monospace;">0</div>
+                            <div style="font-size: 12px; color: var(--alien-text-light); margin-top: 4px;">Total Referrals</div>
                         </div>
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-earned">0</div>
-                            <div class="ref-stat-label">AMSK Earned</div>
+                        <div>
+                            <div id="ref-earned" style="font-size: 24px; font-weight: 800; color: var(--alien-green); font-family: monospace;">0</div>
+                            <div style="font-size: 12px; color: var(--alien-text-light); margin-top: 4px;">AMSK Earned</div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Referral Link Only (Removed Code Section) -->
+                <div class="referral-code-card">
+                    <h4><i class="fas fa-link"></i> Your Referral Code</h4>
+                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
+                    <button onclick="copyReferralCode()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, var(--alien-purple), #7b2cbf); border: none; border-radius: var(--radius-md); color: white; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fas fa-copy"></i>
+                        Copy Referral Code
+                    </button>
+                </div>
+                
                 <div class="referral-link-card">
-                    <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                    <h4 style="display: flex; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-md); color: var(--alien-text); font-size: 14px;">
+                        <i class="fas fa-share-alt" style="color: var(--alien-blue);"></i>
+                        Share Your Link
+                    </h4>
                     <div class="link-input-group">
-                        <input type="text" id="referral-link-input" class="link-input" 
-                               value="Generating your unique link..." readonly>
-                        <button class="copy-link-btn copy-referral-link-btn">
+                        <input type="text" id="referral-link-input" class="link-input" value="https://t.me/alienmusk_bot?start=ALIENXXXX" readonly>
+                        <button onclick="copyReferralLink()" class="copy-link-btn">
                             <i class="fas fa-copy"></i>
                         </button>
                     </div>
@@ -436,101 +1626,37 @@
                     </div>
                 </div>
                 
-                <!-- Milestone Rewards - ENHANCED -->
-                <div class="milestones-card">
-                    <h4><i class="fas fa-trophy"></i> Milestone Rewards</h4>
-                    <p class="milestones-description">
-                        Reach referral milestones and claim bonus AMSK rewards!
-                    </p>
-                    <div id="referral-milestones">
-                        <!-- Milestones will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIP Wallet Page - COMPACT & PROFESSIONAL -->
-        <div id="wallet-page" class="page">
-            <div class="wallet-content">
-                <!-- Total Balance Card - COMPACT -->
-                <div class="wallet-balance-card">
-                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
-                    <div class="wallet-balance-amount" id="wallet-balance-usd">$2.00</div>
-                    <div class="wallet-balance-subtitle">
-                        ≈ <span id="wallet-balance-amsk">10,000</span> AMSK
-                    </div>
-                    
-                    <!-- Compact Wallet Actions -->
-                    <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" onclick="openDepositModal()">
-                            <i class="fas fa-download"></i>
-                            <span>Deposit</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="openWithdrawModal()">
-                            <i class="fas fa-upload"></i>
-                            <span>Withdraw</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="openSwapModal()">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Swap</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="showTransactionHistory()">
-                            <i class="fas fa-history"></i>
-                            <span>History</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Assets List - COMPACT -->
-                <div class="assets-section">
-                    <h5><i class="fas fa-coins"></i> My Assets</h5>
-                    <div class="asset-list-compact">
-                        <!-- AMSK -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact" style="background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3);">
-                                <i class="fas fa-robot" style="color: var(--alien-green);"></i>
+                <div class="referral-rewards">
+                    <h5><i class="fas fa-gift"></i> Referral Rewards</h5>
+                    <div class="rewards-list">
+                        <div class="reward-item">
+                            <div class="reward-icon">
+                                <i class="fas fa-user-plus"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">Alien Musk (AMSK)</div>
-                                <div class="asset-balance-compact" id="wallet-amsk-balance">10,000 AMSK</div>
+                            <div class="reward-details">
+                                <div class="reward-title">Direct Referral</div>
+                                <div class="reward-amount">5,000 AMSK</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-amsk-value">$2.00</div>
                         </div>
                         
-                        <!-- USDT -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact" style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">
-                                <i class="fas fa-coins" style="color: #3b82f6;"></i>
+                        <div class="reward-item">
+                            <div class="reward-icon">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">Tether (USDT)</div>
-                                <div class="asset-balance-compact" id="wallet-usdt-balance">0.00 USDT</div>
+                            <div class="reward-details">
+                                <div class="reward-title">Level 2 Referral</div>
+                                <div class="reward-amount">2,000 AMSK</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
                         </div>
                         
-                        <!-- BNB -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact" style="background: rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.3);">
-                                <i class="fab fa-btc" style="color: #ffc107;"></i>
+                        <div class="reward-item">
+                            <div class="reward-icon">
+                                <i class="fas fa-crown"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">BNB</div>
-                                <div class="asset-balance-compact" id="wallet-bnb-balance">0.000000 BNB</div>
+                            <div class="reward-details">
+                                <div class="reward-title">Monthly Bonus</div>
+                                <div class="reward-amount">10,000 AMSK</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
-                        </div>
-                        
-                        <!-- TON -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact" style="background: rgba(0, 168, 232, 0.1); border-color: rgba(0, 168, 232, 0.3);">
-                                <i class="fas fa-rocket" style="color: #00a8e8;"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">TON</div>
-                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
                         </div>
                     </div>
                 </div>
@@ -538,56 +1664,289 @@
         </div>
     </div>
 
-    <!-- VIP Notifications Container -->
+    <!-- VIP Bottom Navigation (Fixed Bottom) -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchToPage('home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchToPage('staking')">
+            <i class="fas fa-gem"></i>
+            <span>Staking</span>
+        </div>
+        <div class="nav-item" onclick="switchToPage('wallet')">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </div>
+        <div class="nav-item" onclick="switchToPage('referral')">
+            <i class="fas fa-users"></i>
+            <span>Referral</span>
+        </div>
+    </nav>
+
+    <!-- VIP Modals -->
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <div id="deposit-modal" class="modal"></div>
+    <div id="withdraw-modal" class="modal"></div>
+    <div id="swap-modal" class="modal"></div>
+    <div id="stake-modal" class="modal"></div>
+    <div id="history-modal" class="modal"></div>
+    <div id="admin-modal" class="modal"></div>
+
+    <!-- VIP Notifications -->
     <div id="notification-container"></div>
 
     <!-- JavaScript -->
     <script src="app.js"></script>
     
-    <!-- Additional Scripts -->
+    <!-- VIP Initialization -->
     <script>
-        // Share functions
+        // VIP Navigation System
+        function switchToPage(pageName) {
+            // Update active navigation item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.querySelector('span').textContent.toLowerCase() === pageName.toLowerCase()) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Show selected page
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageName + '-page').classList.add('active');
+            
+            console.log('Switched to page:', pageName);
+        }
+        
+        // VIP Loading System
+        function updateLoadingProgress(text, percent) {
+            const bar = document.getElementById('loading-progress-bar');
+            const textEl = document.getElementById('loading-progress-text');
+            
+            if (bar) bar.style.width = percent + '%';
+            if (textEl) textEl.textContent = text;
+        }
+        
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            
+            if (appContainer) {
+                appContainer.style.display = 'block';
+            }
+        }
+        
+        // VIP Notification System
+        function showMessage(text, type = 'info') {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+            
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            
+            let icon = 'fa-info-circle';
+            switch (type) {
+                case 'success': icon = 'fa-check-circle'; break;
+                case 'error': icon = 'fa-exclamation-circle'; break;
+                case 'warning': icon = 'fa-exclamation-triangle'; break;
+            }
+            
+            message.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${text}</span>
+            `;
+            
+            container.appendChild(message);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(-50%) translateY(-10px)';
+                    setTimeout(() => {
+                        if (message.parentNode) {
+                            message.parentNode.removeChild(message);
+                        }
+                    }, 300);
+                }
+            }, 3000);
+            
+            console.log(`${type}: ${text}`);
+        }
+        
+        // VIP Referral Functions
+        function copyReferralCode() {
+            const codeElement = document.getElementById('referral-code-display');
+            if (codeElement) {
+                navigator.clipboard.writeText(codeElement.textContent)
+                    .then(() => showMessage('Referral code copied!', 'success'))
+                    .catch(() => showMessage('Failed to copy code', 'error'));
+            }
+        }
+        
+        function copyReferralLink() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (linkInput) {
+                navigator.clipboard.writeText(linkInput.value)
+                    .then(() => showMessage('Referral link copied!', 'success'))
+                    .catch(() => showMessage('Failed to copy link', 'error'));
+            }
+        }
+        
         function shareOnTelegram() {
-            const link = document.getElementById('referral-link-input')?.value || 
-                        'https://t.me/AlienMuskbot/Musk?startapp=ALIEN';
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens with quantum technology\n💰 Earn up to 2.5M AMSK per hour\n👥 Get 10,000 AMSK bonus with my link\n\nUse my referral link to start earning:\n\n${link}`;
+            const link = document.getElementById('referral-link-input').value;
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nUse my referral link to get bonus AMSK tokens:\n\n${link}`;
             const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
         
         function shareOnWhatsApp() {
-            const link = document.getElementById('referral-link-input')?.value || 
-                        'https://t.me/AlienMuskbot/Musk?startapp=ALIEN';
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens with quantum technology\n💰 Earn up to 2.5M AMSK per hour\n👥 Get 10,000 AMSK bonus with my link\n\nUse my referral link to start earning:\n\n${link}`;
+            const link = document.getElementById('referral-link-input').value;
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nUse my referral link to get bonus AMSK tokens:\n\n${link}`;
             const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
         }
         
-        // Logo click handler for admin access
-        function handleLogoClick() {
-            let clickCount = 0;
-            let lastClick = 0;
-            
-            const now = Date.now();
-            if (now - lastClick > 2000) clickCount = 0;
-            
-            clickCount++;
-            lastClick = now;
-            
-            if (clickCount >= 5) {
-                const password = prompt("Enter admin password:");
-                if (password === "Ali97$") {
-                    showMessage("🔓 Admin access activated!", "success");
-                    // You can add admin features here
-                }
-                clickCount = 0;
-            }
-        }
-        
-        // Initialize when page loads
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🎯 Page loaded successfully");
+            console.log('🚀 Alien Musk Platform Initializing...');
+            
+            updateLoadingProgress('Loading Quantum Engine...', 25);
+            
+            setTimeout(() => {
+                updateLoadingProgress('Initializing user data...', 50);
+                
+                setTimeout(() => {
+                    updateLoadingProgress('Setting up mining system...', 75);
+                    
+                    setTimeout(() => {
+                        updateLoadingProgress('Platform Ready!', 100);
+                        
+                        setTimeout(() => {
+                            hideLoadingScreen();
+                            
+                            // Generate referral code
+                            const code = 'ALIEN-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                            document.getElementById('referral-code-display').textContent = code;
+                            document.getElementById('referral-link-input').value = `https://t.me/alienmusk_bot?start=${code}`;
+                            
+                            // Generate user ID
+                            const userId = Math.floor(Math.random() * 100000000);
+                            document.getElementById('user-id-mini').textContent = `ID: ${userId}`;
+                            
+                            // Set username from Telegram or default
+                            let username = 'Alien';
+                            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+                                const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+                                username = tgUser.first_name || tgUser.username || 'Alien';
+                            }
+                            document.getElementById('username-mini').textContent = username;
+                            
+                            showMessage('👽 Welcome to Alien Musk Quantum Platform!', 'success');
+                            
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }, 500);
+            
+            // Initialize mining button
+            const miningBtn = document.getElementById('start-mining-btn');
+            if (miningBtn) {
+                miningBtn.addEventListener('click', function() {
+                    if (this.classList.contains('claim-mode')) {
+                        // Claim reward
+                        const reward = 2500;
+                        const currentBalance = parseInt(document.getElementById('total-balance-amsk').textContent.replace(/,/g, ''));
+                        document.getElementById('total-balance-amsk').textContent = (currentBalance + reward).toLocaleString();
+                        
+                        const currentUsd = parseFloat(document.getElementById('total-balance-usd').textContent);
+                        document.getElementById('total-balance-usd').textContent = (currentUsd + (reward * 0.0002)).toFixed(2);
+                        
+                        this.classList.remove('claim-mode');
+                        this.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
+                        
+                        document.getElementById('mining-timer-display').textContent = '01:00:00';
+                        
+                        showMessage(`💰 +${reward.toLocaleString()} AMSK claimed!`, 'success');
+                    } else {
+                        // Start mining
+                        this.innerHTML = '<i class="fas fa-pause"></i><span>Mining...</span>';
+                        this.classList.add('claim-mode');
+                        
+                        let timeLeft = 3600; // 1 hour in seconds
+                        const timer = setInterval(() => {
+                            timeLeft--;
+                            const hours = Math.floor(timeLeft / 3600);
+                            const minutes = Math.floor((timeLeft % 3600) / 60);
+                            const seconds = timeLeft % 60;
+                            
+                            document.getElementById('mining-timer-display').textContent = 
+                                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                            
+                            if (timeLeft <= 0) {
+                                clearInterval(timer);
+                                this.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
+                                showMessage('🎁 Mining complete! Click to claim your reward.', 'info');
+                            }
+                        }, 1000);
+                        
+                        showMessage('⚡ Quantum mining started!', 'success');
+                    }
+                });
+            }
+            
+            // Initialize staking buttons
+            document.querySelectorAll('.stake-plan-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const plan = this.getAttribute('data-plan');
+                    let planName = '';
+                    let amount = 0;
+                    
+                    switch(plan) {
+                        case '1':
+                            planName = 'Silver Plan';
+                            amount = 10;
+                            break;
+                        case '2':
+                            planName = 'Gold Plan';
+                            amount = 50;
+                            break;
+                        case '3':
+                            planName = 'Diamond Plan';
+                            amount = 100;
+                            break;
+                    }
+                    
+                    showMessage(`💎 ${planName} selected! ${amount} USDT required.`, 'info');
+                });
+            });
+            
+            // Initialize upgrade buttons
+            document.querySelectorAll('.upgrade-btn:not(.active-btn)').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showMessage('⚡ Upgrade requires USDT. Deposit first!', 'warning');
+                });
+            });
         });
+        
+        // Make functions globally available
+        window.switchToPage = switchToPage;
+        window.showMessage = showMessage;
+        window.copyReferralCode = copyReferralCode;
+        window.copyReferralLink = copyReferralLink;
+        window.shareOnTelegram = shareOnTelegram;
+        window.shareOnWhatsApp = shareOnWhatsApp;
     </script>
 </body>
 </html>
