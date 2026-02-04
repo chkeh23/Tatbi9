@@ -1,6 +1,6 @@
 // ============================================
-// ALIEN MUSK - Quantum Mining Platform v5.0
-// PROFESSIONAL EDITION - COMPLETE REFACTOR
+// ALIEN MUSK - QUANTUM MINING PLATFORM v6.0
+// PROFESSIONAL FINANCIAL TREND EDITION
 // ============================================
 
 // Telegram WebApp Initialization
@@ -24,7 +24,7 @@ try {
 }
 
 // ============================================
-// FIREBASE CONFIGURATION
+// FIREBASE CONFIGURATION - PROFESSIONAL
 // ============================================
 const FIREBASE_CONFIG = {
     apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
@@ -48,18 +48,18 @@ if (typeof firebase !== 'undefined') {
 }
 
 // ============================================
-// GLOBAL CONFIGURATION - FIXED VALUES
+// GLOBAL CONFIGURATION - UPDATED
 // ============================================
 const CONFIG = {
-    // Token Prices (FIXED - NO CHANGE)
+    // Token Prices (FIXED)
     PRICES: {
-        AMSK: 0.0002,  // 1 AMSK = 0.0002 USD
+        AMSK: 0.0002,  // 1 AMSK = $0.0002 USD
         USDT: 1.00,
         BNB: 752.00,
         TON: 1.32
     },
     
-    // Mining Configuration - 5 LEVELS
+    // Mining Configuration - 8 LEVELS (UPGRADED)
     MINING: {
         BASE_REWARD: 2500,
         DURATION: 3600000, // 1 hour in ms
@@ -69,7 +69,10 @@ const CONFIG = {
             2: { name: "Advanced", cost: 5, reward: 5000, hashrate: 5000 },
             3: { name: "Pro", cost: 20, reward: 12500, hashrate: 12500 },
             4: { name: "Expert", cost: 100, reward: 25000, hashrate: 25000 },
-            5: { name: "VIP", cost: 500, reward: 100000, hashrate: 100000 }
+            5: { name: "VIP", cost: 500, reward: 100000, hashrate: 100000 },
+            6: { name: "Master", cost: 1000, reward: 250000, hashrate: 250000 },
+            7: { name: "Quantum", cost: 5000, reward: 1000000, hashrate: 1000000 },
+            8: { name: "Cosmic", cost: 10000, reward: 2500000, hashrate: 2500000 }
         },
         
         BOOSTERS: {
@@ -79,27 +82,29 @@ const CONFIG = {
         }
     },
     
-    // Staking Configuration - CORRECT CALCULATIONS
+    // Staking Configuration - FLEXIBLE PLANS
     STAKING: {
         PLANS: {
-            1: { name: "Silver", minAmount: 10, duration: 7, apr: 40 },
-            2: { name: "Gold", minAmount: 50, duration: 15, apr: 50 },
-            3: { name: "Diamond", minAmount: 100, duration: 30, apr: 60 }
+            1: { name: "Silver", minAmount: 10, maxAmount: 1000, duration: 7, apr: 40 },
+            2: { name: "Gold", minAmount: 50, maxAmount: 5000, duration: 15, apr: 50 },
+            3: { name: "Diamond", minAmount: 100, maxAmount: 10000, duration: 30, apr: 60 },
+            4: { name: "Quantum", minAmount: 500, maxAmount: 50000, duration: 60, apr: 80 }
         }
     },
     
-    // Referral Configuration - FIXED & PROGRESSIVE
+    // Referral Configuration - ENHANCED
     REFERRAL: {
-        DIRECT_REWARD: 5000, // 5,000 AMSK for referrer
-        WELCOME_BONUS: 5000, // 5,000 AMSK for new user
+        DIRECT_REWARD: 10000, // 10,000 AMSK for referrer
+        WELCOME_BONUS: 10000, // 10,000 AMSK for new user
         
         MILESTONES: [
             { referrals: 10, reward: 50000, claimed: false },
-            { referrals: 50, reward: 250000, claimed: false },
-            { referrals: 100, reward: 1000000, claimed: false }
+            { referrals: 25, reward: 250000, claimed: false },
+            { referrals: 50, reward: 750000, claimed: false },
+            { referrals: 100, reward: 2000000, claimed: false }
         ],
         
-        BASE_URL: "https://t.me/AlienMuskBot/Alien?startapp="
+        BASE_URL: "https://t.me/AlienMuskbot/Musk?startapp="
     },
     
     // Admin Configuration
@@ -111,26 +116,27 @@ const CONFIG = {
     
     // System Configuration
     SYSTEM: {
-        AUTO_SAVE_INTERVAL: 30000, // 30 seconds
-        MINING_UPDATE_INTERVAL: 1000, // 1 second
-        DAILY_RESET_TIME: 24 * 60 * 60 * 1000 // 24 hours
+        AUTO_SAVE_INTERVAL: 30000,
+        MINING_UPDATE_INTERVAL: 1000,
+        DAILY_RESET_TIME: 24 * 60 * 60 * 1000
     }
 };
 
 // ============================================
-// USER DATA MANAGEMENT - FIXED SYSTEM
+// USER DATA MANAGEMENT - PROFESSIONAL
 // ============================================
 let userData = {
-    // CORE IDENTITY - NEVER CHANGES
+    // CORE IDENTITY - FIXED FOREVER
     id: null,
     telegramId: null,
     username: 'Alien',
     firstName: 'Alien',
     photoUrl: null,
     
-    // REFERRAL SYSTEM - FIXED FOREVER
+    // REFERRAL SYSTEM - FIXED
     referralCode: null,
     referralLink: null,
+    referredBy: null,
     
     // TIMESTAMPS
     joinedAt: null,
@@ -142,10 +148,10 @@ let userData = {
     hasReferralBonus: false
 };
 
-// WALLET DATA - PER USER
+// WALLET DATA - ENHANCED
 let walletData = {
     balances: {
-        AMSK: 2500,    // Starting bonus
+        AMSK: 10000,    // Increased starting bonus
         USDT: 0,
         BNB: 0,
         TON: 0
@@ -154,10 +160,10 @@ let walletData = {
     mining: {
         level: 1,
         active: false,
-        lastReward: null,
+        startTime: null,
         nextReward: null,
-        totalMined: 2500,
-        minedToday: 2500,
+        totalMined: 10000,
+        minedToday: 10000,
         activeBoosters: []
     },
     
@@ -184,58 +190,57 @@ let walletData = {
     lastUpdate: Date.now()
 };
 
+// Daily Stats for Mining
+let dailyStats = {
+    lastMiningReset: Date.now(),
+    minedToday: 10000
+};
+
 // GLOBAL STATE
 let adminAccess = false;
 let currentPage = 'home';
 let miningInterval = null;
 let saveInterval = null;
+let updateInterval = null;
 
 // DOM ELEMENTS CACHE
 const elements = {};
 
 // ============================================
-// INITIALIZATION - COMPLETE SETUP
+// INITIALIZATION - PROFESSIONAL SETUP
 // ============================================
 async function initApp() {
-    console.log("🚀 Initializing Alien Musk Platform v5.0...");
+    console.log("🚀 Initializing Alien Musk Platform v6.0...");
     
     try {
-        // 1. Setup Loading Progress
-        updateLoadingProgress("Initializing Quantum Engine...", 25);
-        
-        // 2. Setup User Identity (FIXED FOREVER)
+        // Setup User Identity with Telegram ID
         await setupUserIdentity();
-        updateLoadingProgress("Setting up user profile...", 50);
         
-        // 3. Load User Data from Firebase
+        // Load User Data from Firebase
         await loadUserData();
-        updateLoadingProgress("Loading mining data...", 75);
         
-        // 4. Cache DOM Elements
+        // Check for referral in URL
+        checkForReferral();
+        
+        // Cache DOM Elements
         cacheElements();
         
-        // 5. Setup Event Listeners
+        // Setup Event Listeners
         setupEventListeners();
         
-        // 6. Initialize Admin System
-        initAdminSystem();
-        
-        // 7. Setup Real-time Updates
+        // Setup Real-time Updates
         setupRealTimeUpdates();
         
-        // 8. Update UI
+        // Update UI
         updateUI();
         
-        // 9. Complete Loading
+        // Hide Loading Screen
         setTimeout(() => {
-            updateLoadingProgress("Platform Ready!", 100);
-            setTimeout(() => {
-                hideLoadingScreen();
-                showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
-                userData.isInitialized = true;
-                console.log("✅ Platform initialized successfully");
-            }, 500);
-        }, 1000);
+            hideLoadingScreen();
+            showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
+            userData.isInitialized = true;
+            console.log("✅ Platform initialized successfully");
+        }, 1500);
         
     } catch (error) {
         console.error("❌ Initialization failed:", error);
@@ -245,15 +250,16 @@ async function initApp() {
 }
 
 // ============================================
-// USER IDENTITY SYSTEM - FIXED FOREVER
+// USER IDENTITY SYSTEM - FIXED & STABLE
 // ============================================
 async function setupUserIdentity() {
     console.log("👤 Setting up user identity...");
     
-    // Use Telegram ID as primary identifier
+    let telegramId = null;
+    
+    // Get Telegram ID
     if (telegramUser) {
-        userData.id = telegramUser.id.toString();
-        userData.telegramId = telegramUser.id;
+        telegramId = telegramUser.id.toString();
         userData.username = telegramUser.username ? `@${telegramUser.username}` : 
                            telegramUser.first_name || 'Alien';
         userData.firstName = telegramUser.first_name || 'Alien';
@@ -261,21 +267,24 @@ async function setupUserIdentity() {
                            `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramUser.id}`;
     } else {
         // Fallback for development
-        userData.id = "dev_" + Date.now();
-        userData.telegramId = 0;
+        telegramId = "dev_" + Math.random().toString(36).substr(2, 9);
         userData.username = 'Alien';
         userData.firstName = 'Alien';
-        userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.id}`;
+        userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramId}`;
     }
     
+    // SET FIXED USER ID (NEVER CHANGES)
+    userData.telegramId = telegramId;
+    userData.id = `user_${telegramId}`; // Consistent ID format
+    
     // Generate FIXED referral code (once forever)
-    userData.referralCode = generateReferralCode(userData.id);
+    userData.referralCode = generateFixedReferralCode(telegramId);
     userData.referralLink = CONFIG.REFERRAL.BASE_URL + userData.referralCode;
     userData.joinedAt = new Date().toISOString();
     userData.lastActive = new Date().toISOString();
     userData.lastDailyReset = Date.now();
     
-    console.log("👤 User Identity:", {
+    console.log("👤 User Identity FIXED:", {
         id: userData.id,
         telegramId: userData.telegramId,
         referralCode: userData.referralCode,
@@ -286,27 +295,27 @@ async function setupUserIdentity() {
     await saveUserToFirebase(true);
 }
 
-function generateReferralCode(userId) {
-    // Generate a FIXED code based on user ID
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const userIdStr = userId.toString();
-    const hash = Array.from(userIdStr).reduce((acc, char) => {
+function generateFixedReferralCode(telegramId) {
+    // Generate a FIXED code based on Telegram ID
+    const base = telegramId.toString();
+    const hash = Array.from(base).reduce((acc, char) => {
         return acc + char.charCodeAt(0);
     }, 0);
     
-    const code = 'ALIEN-' + 
-        chars[hash % 26] + 
-        chars[(hash + 7) % 26] + 
-        chars[(hash + 13) % 26] + 
-        chars[(hash + 19) % 26] + 
-        (hash % 10) + 
-        ((hash + 5) % 10);
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed similar chars
+    const code = 'ALIEN' + 
+        chars[hash % 24] + 
+        chars[(hash + 7) % 24] + 
+        chars[(hash + 13) % 24] + 
+        chars[(hash + 19) % 24] + 
+        ((hash % 9) + 1) + 
+        (((hash + 5) % 9) + 1);
     
     return code;
 }
 
 // ============================================
-// DATA MANAGEMENT - FIREBASE INTEGRATION
+// DATA MANAGEMENT - FIREBASE PROFESSIONAL
 // ============================================
 async function loadUserData() {
     console.log("📂 Loading user data for:", userData.id);
@@ -325,7 +334,12 @@ async function loadUserData() {
                     walletData = { ...walletData, ...firebaseData.walletData };
                 }
                 
-                // Update referral count from referrals collection
+                // Load referral data
+                if (firebaseData.referredBy) {
+                    userData.referredBy = firebaseData.referredBy;
+                }
+                
+                // Update referral count
                 await updateReferralCount();
                 
             } else {
@@ -381,6 +395,7 @@ async function saveUserToFirebase(isNew = false) {
             photoUrl: userData.photoUrl,
             referralCode: userData.referralCode,
             referralLink: userData.referralLink,
+            referredBy: userData.referredBy,
             joinedAt: userData.joinedAt,
             lastActive: userData.lastActive,
             walletData: walletData,
@@ -418,7 +433,101 @@ async function updateReferralCount() {
 }
 
 // ============================================
-// DOM ELEMENTS CACHE
+// REFERRAL SYSTEM - ENHANCED
+// ============================================
+function checkForReferral() {
+    console.log("🔍 Checking for referral...");
+    
+    // Check Telegram start parameter
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+        const referralCode = tg.initDataUnsafe.start_param;
+        if (referralCode && referralCode !== userData.referralCode) {
+            console.log("📱 Telegram referral detected:", referralCode);
+            processReferral(referralCode);
+            return;
+        }
+    }
+    
+    // Check URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const referralCode = urlParams.get('ref') || urlParams.get('startapp') || urlParams.get('start');
+    
+    if (referralCode && referralCode !== userData.referralCode) {
+        console.log("🔗 URL referral detected:", referralCode);
+        processReferral(referralCode);
+    }
+}
+
+async function processReferral(referralCode) {
+    if (!referralCode || referralCode === userData.referralCode) {
+        console.log("⚠️ Invalid or self-referral");
+        return;
+    }
+    
+    if (userData.referredBy) {
+        console.log("⚠️ User already referred by:", userData.referredBy);
+        return;
+    }
+    
+    console.log("🎯 Processing referral:", referralCode);
+    
+    try {
+        if (db) {
+            // Find referrer
+            const usersRef = db.collection('users');
+            const querySnapshot = await usersRef.where('referralCode', '==', referralCode).get();
+            
+            if (!querySnapshot.empty) {
+                const referrerDoc = querySnapshot.docs[0];
+                const referrerData = referrerDoc.data();
+                
+                if (referrerData.telegramId === userData.telegramId) {
+                    console.log("⚠️ Cannot refer yourself");
+                    return;
+                }
+                
+                // Add referral record
+                await db.collection('referrals').add({
+                    referrerCode: referralCode,
+                    referredUserId: userData.id,
+                    referredUsername: userData.username,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update referrer's data
+                await referrerDoc.ref.update({
+                    'walletData.balances.AMSK': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD),
+                    'walletData.referrals.count': firebase.firestore.FieldValue.increment(1),
+                    'walletData.referrals.earned': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD)
+                });
+                
+                // Give welcome bonus to new user
+                walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
+                walletData.referrals.earned += CONFIG.REFERRAL.WELCOME_BONUS;
+                userData.referredBy = referralCode;
+                userData.hasReferralBonus = true;
+                
+                // Update UI
+                updateWalletUI();
+                updateTotalBalance();
+                updateReferralDisplay();
+                
+                showMessage(`🎉 Welcome bonus received! +${CONFIG.REFERRAL.WELCOME_BONUS} AMSK`, "success");
+                
+                // Save data
+                await saveUserData();
+                
+                console.log("✅ Referral processed successfully");
+            }
+        }
+        
+    } catch (error) {
+        console.error("❌ Referral processing error:", error);
+    }
+}
+
+// ============================================
+// DOM ELEMENTS CACHE - ENHANCED
 // ============================================
 function cacheElements() {
     console.log("🔍 Caching DOM elements...");
@@ -478,7 +587,7 @@ function cacheElements() {
 }
 
 // ============================================
-// UI UPDATE FUNCTIONS
+// UI UPDATE FUNCTIONS - ENHANCED
 // ============================================
 function updateUI() {
     updateUserHeader();
@@ -487,6 +596,7 @@ function updateUI() {
     updateStakingDisplay();
     updateReferralDisplay();
     updateTotalBalance();
+    updateNavigation();
 }
 
 function updateUserHeader() {
@@ -498,7 +608,7 @@ function updateUserHeader() {
     }
     
     if (elements.userIdMini) {
-        elements.userIdMini.textContent = `ID: ${userData.id.slice(-8)}`;
+        elements.userIdMini.textContent = `ID: ${userData.telegramId ? userData.telegramId.slice(-8) : userData.id.slice(-8)}`;
     }
     
     if (elements.userAvatarMini) {
@@ -515,10 +625,13 @@ function updateTotalBalance() {
     const totalBNB = walletData.balances.BNB || 0;
     const totalTON = walletData.balances.TON || 0;
     
-    const totalUSD = (totalAMSK * CONFIG.PRICES.AMSK) + 
-                    (totalUSDT * CONFIG.PRICES.USDT) + 
-                    (totalBNB * CONFIG.PRICES.BNB) + 
-                    (totalTON * CONFIG.PRICES.TON);
+    // Calculate USD values correctly
+    const amskUSD = totalAMSK * CONFIG.PRICES.AMSK;
+    const usdtUSD = totalUSDT * CONFIG.PRICES.USDT;
+    const bnbUSD = totalBNB * CONFIG.PRICES.BNB;
+    const tonUSD = totalTON * CONFIG.PRICES.TON;
+    
+    const totalUSD = amskUSD + usdtUSD + bnbUSD + tonUSD;
     
     // Update header
     if (elements.totalBalanceAmsk) {
@@ -537,6 +650,13 @@ function updateTotalBalance() {
     if (elements.walletBalanceUsd) {
         elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
     }
+    
+    console.log("💰 Balance Update:", {
+        AMSK: totalAMSK,
+        USD: totalUSD,
+        "AMSK->USD": amskUSD,
+        "USDT->USD": usdtUSD
+    });
 }
 
 function updateMiningDisplay() {
@@ -554,7 +674,7 @@ function updateMiningDisplay() {
         elements.currentHashrateDisplay.textContent = formatNumber(level.hashrate);
     }
     
-    // Update total mined
+    // Update total mined - Dynamic
     if (elements.totalMinedDisplay) {
         elements.totalMinedDisplay.textContent = formatNumber(mining.totalMined);
     }
@@ -671,7 +791,7 @@ function updateUpgradeCards() {
 function updateWalletUI() {
     const balances = walletData.balances;
     
-    // Update AMSK
+    // Update AMSK with correct USD value
     if (elements.walletAmskBalance) {
         elements.walletAmskBalance.textContent = `${formatNumber(balances.AMSK)} AMSK`;
     }
@@ -747,9 +867,10 @@ function updateActiveStakesList() {
         const progress = Math.min(((now - startTime) / (endTime - startTime)) * 100, 100);
         const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
         
-        // Calculate rewards
-        const totalRewardAMSK = (stake.amount * plan.apr / 100) * 5000; // Convert to AMSK
-        const dailyRewardAMSK = totalRewardAMSK / plan.duration;
+        // Calculate rewards CORRECTLY
+        const usdReward = (stake.amount * plan.apr / 100);
+        const amskReward = usdReward / CONFIG.PRICES.AMSK;
+        const dailyAMSK = amskReward / plan.duration;
         
         html += `
             <div class="stake-item">
@@ -779,7 +900,7 @@ function updateActiveStakesList() {
                     </div>
                     <div class="detail">
                         <i class="fas fa-gem"></i>
-                        <span>${formatNumber(dailyRewardAMSK)} AMSK/Day</span>
+                        <span>${formatNumber(dailyAMSK)} AMSK/Day</span>
                     </div>
                 </div>
                 
@@ -865,8 +986,19 @@ function updateReferralMilestones() {
     milestonesContainer.innerHTML = html;
 }
 
+function updateNavigation() {
+    // Update active nav item based on current page
+    elements.navItems.forEach(item => {
+        item.classList.remove('active');
+        const span = item.querySelector('span');
+        if (span && span.textContent.toLowerCase() === currentPage.toLowerCase()) {
+            item.classList.add('active');
+        }
+    });
+}
+
 // ============================================
-// MINING SYSTEM
+// MINING SYSTEM - PROFESSIONAL
 // ============================================
 async function startMining() {
     try {
@@ -876,9 +1008,15 @@ async function startMining() {
             return;
         }
         
+        // Check if cooldown finished
+        if (walletData.mining.nextReward && Date.now() < walletData.mining.nextReward) {
+            showMessage("Please wait for mining cooldown", "warning");
+            return;
+        }
+        
         // Start mining
         walletData.mining.active = true;
-        walletData.mining.lastReward = Date.now();
+        walletData.mining.startTime = Date.now();
         walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
         
         // Start timer
@@ -924,7 +1062,7 @@ async function claimMiningReward() {
         
         // Reset mining
         walletData.mining.active = false;
-        walletData.mining.lastReward = null;
+        walletData.mining.startTime = null;
         walletData.mining.nextReward = null;
         
         // Stop timer
@@ -1006,7 +1144,7 @@ function stopMiningTimer() {
 }
 
 // ============================================
-// STAKING SYSTEM
+// STAKING SYSTEM - FLEXIBLE PLANS
 // ============================================
 function openStakeModal(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
@@ -1015,10 +1153,12 @@ function openStakeModal(planId) {
     const maxAmount = walletData.balances.USDT || 0;
     const minAmount = plan.minAmount;
     
-    // Calculate sample rewards
+    // Calculate sample rewards correctly
     const sampleAmount = Math.max(minAmount, Math.min(100, maxAmount));
-    const sampleRewardAMSK = (sampleAmount * plan.apr / 100) * 5000;
-    const sampleDailyAMSK = sampleRewardAMSK / plan.duration;
+    const usdReward = (sampleAmount * plan.apr / 100);
+    const totalRewardAMSK = usdReward / CONFIG.PRICES.AMSK;
+    const dailyRewardAMSK = totalRewardAMSK / plan.duration;
+    const totalReturnAMSK = (sampleAmount / CONFIG.PRICES.AMSK) + totalRewardAMSK;
     
     const modalHTML = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1053,6 +1193,8 @@ function openStakeModal(planId) {
                             </div>
                             <div class="balance-info">
                                 Available: ${maxAmount.toFixed(2)} USDT
+                                <br>
+                                Min: ${minAmount} USDT | Max: ${plan.maxAmount} USDT
                             </div>
                         </div>
                         
@@ -1063,15 +1205,15 @@ function openStakeModal(planId) {
                             </div>
                             <div class="preview-item">
                                 <span>Total Reward:</span>
-                                <span id="preview-total-reward">${formatNumber(sampleRewardAMSK)} AMSK</span>
+                                <span id="preview-total-reward">${formatNumber(totalRewardAMSK)} AMSK</span>
                             </div>
                             <div class="preview-item">
                                 <span>Daily Reward:</span>
-                                <span id="preview-daily-reward">${formatNumber(sampleDailyAMSK)} AMSK</span>
+                                <span id="preview-daily-reward">${formatNumber(dailyRewardAMSK)} AMSK/day</span>
                             </div>
                             <div class="preview-item total">
                                 <span>Total Return:</span>
-                                <span id="preview-total-return">${formatNumber(sampleAmount * 5000 + sampleRewardAMSK)} AMSK</span>
+                                <span id="preview-total-return">${formatNumber(totalReturnAMSK)} AMSK</span>
                             </div>
                         </div>
                         
@@ -1110,16 +1252,19 @@ function updateStakePreview(planId) {
     // Validate amount
     if (amount < plan.minAmount) {
         amountInput.value = plan.minAmount;
+    } else if (amount > plan.maxAmount) {
+        amountInput.value = plan.maxAmount;
     } else if (amount > maxAmount) {
         amountInput.value = maxAmount;
     }
     
     const validAmount = parseFloat(amountInput.value) || plan.minAmount;
     
-    // Calculate rewards
-    const totalRewardAMSK = (validAmount * plan.apr / 100) * 5000;
+    // Calculate rewards correctly
+    const usdReward = (validAmount * plan.apr / 100);
+    const totalRewardAMSK = usdReward / CONFIG.PRICES.AMSK;
     const dailyRewardAMSK = totalRewardAMSK / plan.duration;
-    const totalReturnAMSK = (validAmount * 5000) + totalRewardAMSK;
+    const totalReturnAMSK = (validAmount / CONFIG.PRICES.AMSK) + totalRewardAMSK;
     
     // Update preview
     const totalRewardEl = document.getElementById('preview-total-reward');
@@ -1135,7 +1280,7 @@ function setMaxStakeAmount(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
     if (!plan) return;
     
-    const maxAmount = walletData.balances.USDT || 0;
+    const maxAmount = Math.min(walletData.balances.USDT, plan.maxAmount);
     const amountInput = document.getElementById('stake-amount');
     
     if (amountInput && maxAmount >= plan.minAmount) {
@@ -1160,6 +1305,11 @@ async function confirmStaking(planId) {
         // Validation
         if (!amount || amount < plan.minAmount) {
             showMessage(`Minimum stake is ${plan.minAmount} USDT`, "error");
+            return;
+        }
+        
+        if (amount > plan.maxAmount) {
+            showMessage(`Maximum stake is ${plan.maxAmount} USDT`, "error");
             return;
         }
         
@@ -1229,8 +1379,9 @@ async function claimStakeReward(stakeIndex) {
             return;
         }
         
-        // Calculate total reward
-        const totalRewardAMSK = (stake.amount * plan.apr / 100) * 5000;
+        // Calculate total reward CORRECTLY
+        const usdReward = (stake.amount * plan.apr / 100);
+        const totalRewardAMSK = usdReward / CONFIG.PRICES.AMSK;
         
         // Add reward to AMSK balance
         walletData.balances.AMSK += totalRewardAMSK;
@@ -1301,68 +1452,8 @@ function cancelStake(stakeIndex) {
 }
 
 // ============================================
-// REFERRAL SYSTEM
+// REFERRAL SYSTEM - ENHANCED
 // ============================================
-async function processReferral(code) {
-    if (!code || code === userData.referralCode || userData.hasReferralBonus) {
-        return;
-    }
-    
-    console.log("🎯 Processing referral:", code);
-    
-    try {
-        if (db) {
-            // Find referrer
-            const usersRef = db.collection('users');
-            const querySnapshot = await usersRef.where('referralCode', '==', code).get();
-            
-            if (!querySnapshot.empty) {
-                const referrerDoc = querySnapshot.docs[0];
-                const referrerData = referrerDoc.data();
-                
-                if (referrerData.telegramId === userData.telegramId) {
-                    console.log("⚠️ Cannot refer yourself");
-                    return;
-                }
-                
-                // Add referral record
-                await db.collection('referrals').add({
-                    referrerCode: code,
-                    referredUserId: userData.id,
-                    referredUsername: userData.username,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Update referrer's data
-                await referrerDoc.ref.update({
-                    'walletData.balances.AMSK': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD),
-                    'walletData.referrals.count': firebase.firestore.FieldValue.increment(1),
-                    'walletData.referrals.earned': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD)
-                });
-                
-                // Give welcome bonus to new user
-                walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
-                walletData.referrals.earned += CONFIG.REFERRAL.WELCOME_BONUS;
-                userData.hasReferralBonus = true;
-                
-                // Update UI
-                updateWalletUI();
-                updateTotalBalance();
-                
-                showMessage(`🎉 Welcome bonus received! +${CONFIG.REFERRAL.WELCOME_BONUS} AMSK`, "success");
-                
-                // Save data
-                await saveUserData();
-                
-                console.log("✅ Referral processed successfully");
-            }
-        }
-        
-    } catch (error) {
-        console.error("❌ Referral processing error:", error);
-    }
-}
-
 async function claimMilestone(referralsRequired) {
     try {
         const milestone = CONFIG.REFERRAL.MILESTONES.find(m => m.referrals === referralsRequired);
@@ -1451,30 +1542,21 @@ function hideLoadingScreen() {
 }
 
 function switchToPage(pageName) {
-    // Update navigation
-    elements.navItems.forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    // Find and activate the correct nav item
-    elements.navItems.forEach(item => {
-        const span = item.querySelector('span');
-        if (span && span.textContent.toLowerCase() === pageName.toLowerCase()) {
-            item.classList.add('active');
-        }
-    });
-    
-    // Show selected page
+    // Hide all pages
     elements.pages.forEach(page => {
         page.classList.remove('active');
     });
     
+    // Show selected page
     const targetPage = document.getElementById(`${pageName}-page`);
     if (targetPage) {
         targetPage.classList.add('active');
     }
     
+    // Update navigation
     currentPage = pageName;
+    updateNavigation();
+    
     console.log('Switched to page:', pageName);
 }
 
@@ -1521,7 +1603,6 @@ function showMessage(text, type = 'info') {
     setTimeout(() => {
         if (message.parentNode) {
             message.style.opacity = '0';
-            message.style.transform = 'translateX(-50%) translateY(-10px)';
             setTimeout(() => {
                 if (message.parentNode) {
                     message.parentNode.removeChild(message);
@@ -1568,7 +1649,8 @@ function setupEventListeners() {
         btn.addEventListener('click', (e) => {
             const card = e.target.closest('.upgrade-card');
             if (card && !btn.disabled) {
-                upgradeMiningLevel(card.dataset.level);
+                const level = card.dataset.level;
+                upgradeMiningLevel(level);
             }
         });
     });
@@ -1644,22 +1726,6 @@ function showTransactionHistory() {
 }
 
 // ============================================
-// ADMIN SYSTEM
-// ============================================
-function initAdminSystem() {
-    const logo = document.querySelector('.logo');
-    if (logo) {
-        logo.addEventListener('click', handleLogoClick);
-        console.log("💎 Admin system initialized");
-    }
-}
-
-function handleLogoClick() {
-    // Admin access via logo clicks (5 times)
-    // Implementation remains the same as before
-}
-
-// ============================================
 // REAL-TIME UPDATES
 // ============================================
 function setupRealTimeUpdates() {
@@ -1669,6 +1735,11 @@ function setupRealTimeUpdates() {
             saveUserData();
         }
     }, CONFIG.SYSTEM.AUTO_SAVE_INTERVAL);
+    
+    // Mining update interval
+    if (walletData.mining.active) {
+        startMiningTimer();
+    }
     
     // Daily reset check
     setInterval(() => {
@@ -1701,11 +1772,12 @@ window.addEventListener('beforeunload', function() {
         // Clean up intervals
         if (miningInterval) clearInterval(miningInterval);
         if (saveInterval) clearInterval(saveInterval);
+        if (updateInterval) clearInterval(updateInterval);
     }
 });
 
 // ============================================
-// GLOBAL EXPORTS
+// GLOBAL EXPORTS - PROFESSIONAL
 // ============================================
 window.switchToPage = switchToPage;
 window.showMessage = showMessage;
@@ -1718,6 +1790,11 @@ window.claimMilestone = claimMilestone;
 window.updateStakePreview = updateStakePreview;
 window.setMaxStakeAmount = setMaxStakeAmount;
 window.confirmStaking = confirmStaking;
+window.openDepositModal = openDepositModal;
+window.openWithdrawModal = openWithdrawModal;
+window.openSwapModal = openSwapModal;
+window.showTransactionHistory = showTransactionHistory;
+window.handleWalletAction = handleWalletAction;
 
 // ============================================
 // START APPLICATION
@@ -1728,4 +1805,4 @@ if (document.readyState === 'loading') {
     initApp();
 }
 
-console.log("👽 Alien Musk Quantum Platform v5.0 - Complete Refactor!");
+console.log("👽 Alien Musk Quantum Platform v6.0 - Professional Edition Loaded!");
