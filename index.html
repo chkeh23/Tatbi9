@@ -1,489 +1,354 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>👽 Alien Musk - Quantum Mining Platform</title>
+    <title>Alien Musk • Quantum Mining Platform</title>
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase v9 compat (نفس الإصدار اللي استخدمته في VIP) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <!-- CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👽</text></svg>">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Favicon - Alien emoji -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👽</text></svg>">
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="active">
+
+    <!-- Loading Screen - Cosmic Nebula Style -->
+    <div id="loadingScreen">
         <div class="loading-container">
-            <div class="alien-logo">👽</div>
-            <div class="loading-title">ALIEN MUSK</div>
-            <div class="loading-subtitle">Quantum Mining Platform v5.0</div>
-            <div class="loading-progress">
-                <div class="progress-bar">
-                    <div id="loading-progress-bar"></div>
-                </div>
-                <span id="loading-progress-text">Initializing Quantum Engine...</span>
+            <div class="nebula-logo pulsing">👽</div>
+            <h1 class="loading-title">ALIEN MUSK</h1>
+            <p class="loading-subtitle">Quantum Mining • Interstellar Wealth Generation</p>
+            <div class="nebula-spinner">
+                <div class="spinner-core"></div>
+                <div class="spinner-orbit orbit-1"></div>
+                <div class="spinner-orbit orbit-2"></div>
             </div>
+            <p id="loadingStatus">Aligning quantum core with the cosmos...</p>
         </div>
     </div>
 
-    <!-- Main App Container -->
-    <div id="app-container" class="hidden">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="header-left">
-                <div class="logo" id="admin-logo">
-                    <i class="fas fa-robot"></i>
-                    <span>Alien Musk</span>
-                </div>
-                <div class="user-info-mini">
-                    <img id="user-avatar-mini" class="user-avatar-mini" 
-                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" 
-                         alt="Avatar">
-                    <div class="user-details-mini">
-                        <span id="username-mini" class="username-mini">Alien</span>
-                        <span id="user-id-mini" class="user-id-mini">ID: Loading...</span>
-                    </div>
+    <!-- Main Home Container -->
+    <div class="container" id="homePage">
+
+        <!-- Compact Header - Space Theme -->
+        <header class="app-header compact">
+            <div class="logo">
+                <i class="fas fa-rocket-launch"></i>
+                <div>
+                    <h1>Alien Musk</h1>
+                    <div class="token-price" id="tokenPrice">1 AMSK ≈ $0.0002</div>
                 </div>
             </div>
-            
-            <div class="header-right">
-                <div class="total-balance-header">
-                    <div class="balance-amount-header">
-                        <i class="fas fa-gem"></i>
-                        <span id="total-balance-amsk">2,500</span>
-                        <span class="currency">AMSK</span>
-                    </div>
-                    <div class="balance-usd-header">
-                        ≈ $<span id="total-balance-usd">0.50</span>
-                    </div>
+            <div class="user-section compact" id="userSection">
+                <div class="user-avatar" id="userAvatar">?</div>
+                <div class="user-info compact">
+                    <div class="username" id="username">Cosmic Traveler</div>
+                    <div class="user-id" id="userId">ID: ————</div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Navigation -->
-        <nav class="main-nav">
-            <button class="nav-btn active" data-page="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-btn" data-page="staking">
-                <i class="fas fa-gem"></i>
-                <span>Staking</span>
-            </button>
-            <button class="nav-btn" data-page="wallet">
-                <i class="fas fa-wallet"></i>
-                <span>Wallet</span>
-            </button>
-            <button class="nav-btn" data-page="referral">
-                <i class="fas fa-users"></i>
-                <span>Referral</span>
-            </button>
-        </nav>
-
-        <!-- Home Page -->
-        <div id="home-page" class="page active">
-            <div class="mining-section">
-                <div class="mining-header">
-                    <h3><i class="fas fa-microchip"></i> Quantum Mining</h3>
-                    <div class="mining-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Level</span>
-                            <span id="current-mining-level" class="stat-value">1</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Hashrate</span>
-                            <span id="current-hashrate-display" class="stat-value">2,500</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mining-timer-card">
-                    <div class="timer-display">
-                        <i class="fas fa-clock"></i>
-                        <span id="mining-timer-display">01:00:00</span>
-                    </div>
-                    <div class="next-reward">
-                        Next reward: <span id="next-reward-amount">2,500</span> AMSK
-                    </div>
-                </div>
-                
-                <button id="start-mining-btn" class="mining-action-btn">
-                    <i class="fas fa-play"></i>
-                    <span>Start Mining</span>
-                </button>
-                
-                <div class="mining-info">
-                    <div class="info-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
-                    </div>
-                </div>
+        <!-- Quantum Balance Card -->
+        <div class="balance-card nebula-card">
+            <div class="balance-header">
+                <span><i class="fas fa-atom"></i> Quantum Vault</span>
+                <span class="rank-badge" id="rankBadge">Earthling</span>
             </div>
-
-            <div class="upgrade-section">
-                <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
-                <div class="upgrade-cards">
-                    <div class="upgrade-card" data-level="1">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 1</div>
-                            <div class="upgrade-name">Beginner</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500 AMSK</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn active-btn" disabled>Active</button>
-                    </div>
-                    
-                    <div class="upgrade-card" data-level="2">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 2</div>
-                            <div class="upgrade-name">Advanced</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 5,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 5,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 5 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">Upgrade</button>
-                    </div>
-                    
-                    <div class="upgrade-card" data-level="3">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 3</div>
-                            <div class="upgrade-name">Pro</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 10,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 10,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 20 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">Upgrade</button>
-                    </div>
-                    
-                    <div class="upgrade-card" data-level="4">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 4</div>
-                            <div class="upgrade-name">Expert</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 25,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 25,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 100 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn">Upgrade</button>
-                    </div>
+            <div class="balance-amount" id="balance">0</div>
+            <div class="balance-value">
+                <div class="balance-sub">Alien Musk Tokens (AMSK)</div>
+                <div class="balance-usd" id="balanceUSD">≈ $0.00</div>
+            </div>
+            <div class="balance-stats">
+                <div class="stat-item">
+                    <i class="fas fa-starship-freighter"></i>
+                    <span id="referrals">0 Voyagers</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-galaxy"></i>
+                    <span id="totalEarned">0 AMSK</span>
                 </div>
             </div>
         </div>
 
-        <!-- Staking Page -->
-        <div id="staking-page" class="page">
-            <div class="staking-content">
-                <div class="staking-card">
-                    <h4><i class="fas fa-gem"></i> Staking Platform</h4>
-                    <div class="staking-info">
-                        <p>Stake your USDT and earn AMSK tokens with high APR returns. Funds are locked for the duration.</p>
-                        <div class="total-staked-card">
-                            <span>Total Staked:</span>
-                            <span id="total-staked">0 USDT</span>
-                        </div>
-                    </div>
-                    
-                    <div class="staking-plans-grid">
-                        <div class="plan-item">
-                            <div class="plan-name">Silver Plan</div>
-                            <div class="plan-amount">10 USDT</div>
-                            <div class="plan-duration">7 Days</div>
-                            <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward">40 AMSK/Day</div>
-                            <button class="stake-plan-btn" data-plan="1">Stake Now</button>
-                        </div>
-                        
-                        <div class="plan-item">
-                            <div class="plan-name">Gold Plan</div>
-                            <div class="plan-amount">50 USDT</div>
-                            <div class="plan-duration">15 Days</div>
-                            <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward">250 AMSK/Day</div>
-                            <button class="stake-plan-btn" data-plan="2">Stake Now</button>
-                        </div>
-                        
-                        <div class="plan-item">
-                            <div class="plan-name">Diamond Plan</div>
-                            <div class="plan-amount">100 USDT</div>
-                            <div class="plan-duration">30 Days</div>
-                            <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward">600 AMSK/Day</div>
-                            <button class="stake-plan-btn" data-plan="3">Stake Now</button>
-                        </div>
-                    </div>
+        <!-- Quantum Mining Core -->
+        <div class="mining-section nebula-section">
+            <div class="mining-header">
+                <h3><i class="fas fa-microchip-ai"></i> Quantum Core</h3>
+                <div class="mining-power" id="miningPower">
+                    <i class="fas fa-bolt-lightning"></i> Yield: 2,500 AMSK / cycle
                 </div>
-                
-                <div class="staking-card">
-                    <h4><i class="fas fa-clock"></i> Active Stakes</h4>
-                    <div id="active-stakes-list" class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>No active stakes yet</p>
-                        <small>Start staking to earn rewards</small>
-                    </div>
+            </div>
+            
+            <button class="mine-btn quantum-btn" id="mineBtn">
+                <div class="mine-icon">
+                    <i class="fas fa-satellite-dish"></i>
                 </div>
+                <div class="mine-text">
+                    <div class="mine-title">Harvest Quantum Flux</div>
+                    <div class="mine-reward">+<span id="rewardAmount">2500</span> AMSK</div>
+                    <div class="mine-subtitle">Next harvest in</div>
+                </div>
+                <div class="mine-cooldown" id="cooldownTimer">—</div>
+            </button>
+            
+            <div class="next-rank-bonus cosmic-bonus" id="nextRankBonus">
+                +1,200 AMSK quantum leap bonus on next evolution
+            </div>
+            
+            <div class="energy-belt nebula-belt" id="energyBelt">
+                <div class="belt-fill cosmic-fill" id="beltFill"></div>
+                <div class="belt-knob pulsar-knob" id="beltKnob"></div>
+            </div>
+            
+            <div class="mining-tip nebula-tip">
+                <i class="fas fa-exclamation-triangle"></i>
+                Quantum cycles reset every 4 hours — remain in hyperspace!
             </div>
         </div>
 
-        <!-- Wallet Page -->
-        <div id="wallet-page" class="page">
-            <div class="wallet-content">
-                <div class="wallet-balance-card">
-                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
-                    <div class="wallet-balance-amount" id="wallet-balance-amsk">2,500</div>
-                    <div class="wallet-balance-subtitle" id="wallet-balance-usd">≈ $0.50</div>
-                    
-                    <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" onclick="openDepositModal('USDT')">
-                            <i class="fas fa-download"></i>
-                            <span>Deposit</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="openWithdrawModal()">
-                            <i class="fas fa-upload"></i>
-                            <span>Withdraw</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="openSwapModal()">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Swap</span>
-                        </button>
-                        <button class="wallet-action-btn" onclick="showTransactionHistory()">
-                            <i class="fas fa-history"></i>
-                            <span>History</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="assets-section">
-                    <h5><i class="fas fa-coins"></i> My Assets</h5>
-                    <div class="asset-list-compact">
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">Alien Musk (AMSK)</div>
-                                <div class="asset-balance-compact" id="wallet-amsk-balance">2,500 AMSK</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-amsk-value">$0.50</div>
-                        </div>
-                        
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact usdt">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">Tether (USDT)</div>
-                                <div class="asset-balance-compact" id="wallet-usdt-balance">0.00 USDT</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
-                        </div>
-                        
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact">
-                                <i class="fab fa-btc"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">BNB</div>
-                                <div class="asset-balance-compact" id="wallet-bnb-balance">0.0000 BNB</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
-                        </div>
-                        
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact ton">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">TON</div>
-                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
-                        </div>
-                    </div>
+        <!-- Floating Cosmic Activity Bar -->
+        <div id="floatingNotification" class="notification-bar cosmic-bar"></div>
+
+        <!-- Interstellar Referral Network -->
+        <div class="referral-section nebula-section">
+            <div class="section-header">
+                <h3><i class="fas fa-satellite-dish"></i> Interstellar Network</h3>
+                <div class="referral-bonus">
+                    <i class="fas fa-star-shooting"></i> +75 AMSK per voyager
                 </div>
             </div>
-        </div>
-
-        <!-- Referral Page -->
-        <div id="referral-page" class="page">
-            <div class="referral-content">
-                <div class="referral-stats-card">
-                    <h4><i class="fas fa-users"></i> Referral Program</h4>
-                    <div class="referral-stats-grid">
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-count">0</div>
-                            <div class="ref-stat-label">Total Referrals</div>
-                        </div>
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-earned">0</div>
-                            <div class="ref-stat-label">AMSK Earned</div>
-                        </div>
-                    </div>
+            
+            <div class="referral-stats cosmic-stats">
+                <div class="ref-stat">
+                    <div class="ref-stat-value" id="refCount">0</div>
+                    <div class="ref-stat-label">Voyagers</div>
                 </div>
-                
-                <div class="referral-code-card">
-                    <h4><i class="fas fa-link"></i> Your Referral Code</h4>
-                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
-                    <button class="btn-copy-code" onclick="copyReferralCode()">
-                        <i class="fas fa-copy"></i>
-                        Copy Referral Code
+                <div class="ref-stat">
+                    <div class="ref-stat-value" id="refEarned">0</div>
+                    <div class="ref-stat-label">AMSK Earned</div>
+                </div>
+                <div class="ref-stat">
+                    <div class="ref-stat-value" id="refRank">Earthling</div>
+                    <div class="ref-stat-label">Galactic Rank</div>
+                </div>
+            </div>
+
+            <div class="referral-link-container">
+                <div class="input-group cosmic-input">
+                    <div class="input-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <input type="text" class="referral-input" id="referralLink" value="Generating warp link..." readonly>
+                    <button class="copy-btn" id="copyBtn">
+                        <i class="far fa-copy"></i>
                     </button>
                 </div>
-                
-                <div class="referral-link-card">
-                    <h4><i class="fas fa-share-alt"></i> Share Your Link</h4>
-                    <div class="link-input-group">
-                        <input type="text" id="referral-link-input" class="link-input" value="Loading..." readonly>
-                        <button class="copy-link-btn" onclick="copyReferralLink()">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                <div class="referral-actions">
+                    <button class="action-btn cosmic-btn" id="shareBtn">
+                        <i class="fab fa-telegram-plane"></i> Transmit to Galaxy
+                    </button>
+                </div>
+            </div>
+
+            <div class="referral-info nebula-info">
+                <h4><i class="fas fa-broadcast-tower"></i> Expand the Invasion</h4>
+                <p>Invite fellow travelers across the cosmos and earn AMSK from every successful warp jump.</p>
+            </div>
+        </div>
+
+        <!-- Evolution Progress -->
+        <div class="progress-section nebula-section">
+            <div class="progress-header">
+                <h4><i class="fas fa-star-and-crescent"></i> Galactic Evolution</h4>
+                <div class="next-rank" id="nextRank">Next: Martian (5,000 AMSK)</div>
+            </div>
+            <div class="progress-bar nebula-progress">
+                <div class="progress-fill cosmic-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <span>Current Energy:</span>
+                    <span id="currentPoints">0 AMSK</span>
+                </div>
+                <div class="progress-stat">
+                    <span>Target:</span>
+                    <span id="targetPoints">5,000 AMSK</span>
+                </div>
+                <div class="progress-stat">
+                    <span>Remaining:</span>
+                    <span id="remainingPoints">5,000 AMSK</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wallet Page -->
+    <div id="walletPage" class="page hidden">
+        <div class="page-header">
+            <div class="back-btn" onclick="switchToPage('home')">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <h2><i class="fas fa-wallet"></i> Cosmic Vault</h2>
+        </div>
+
+        <div class="wallet-container">
+            <!-- Total Balance Compact -->
+            <div class="total-balance-card compact nebula-card">
+                <div class="total-balance-label">
+                    <i class="fas fa-chart-line"></i> Interstellar Assets
+                </div>
+                <div class="total-balance-amount" id="totalBalanceUSD">$0.00</div>
+                <div class="total-balance-sub">Total Vault Value</div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="wallet-quick-actions compact">
+                <div class="action-title">
+                    <i class="fas fa-bolt"></i> Quantum Commands
+                </div>
+                <div class="actions-grid">
+                    <div class="quick-action" onclick="openSwapModal('AMSK')">
+                        <div class="action-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="action-text">Swap AMSK</div>
                     </div>
-                    <div class="share-buttons">
-                        <button class="share-btn telegram" onclick="shareOnTelegram()">
-                            <i class="fab fa-telegram"></i>
-                            Telegram
-                        </button>
-                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                            <i class="fab fa-whatsapp"></i>
-                            WhatsApp
+                    <div class="quick-action" onclick="openDepositModal('USDT')">
+                        <div class="action-icon"><i class="fas fa-download"></i></div>
+                        <div class="action-text">Deposit USDT</div>
+                    </div>
+                    <div class="quick-action" onclick="openWithdrawalModal()">
+                        <div class="action-icon"><i class="fas fa-upload"></i></div>
+                        <div class="action-text">Withdraw</div>
+                    </div>
+                    <div class="quick-action" onclick="showTransactionHistory()">
+                        <div class="action-icon"><i class="fas fa-history"></i></div>
+                        <div class="action-text">History</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Asset Cards -->
+            <div class="crypto-grid">
+                <div class="crypto-card nebula-card" id="amskCard">
+                    <div class="crypto-header">
+                        <div class="crypto-icon"><i class="fas fa-gem"></i></div>
+                        <div class="crypto-title">
+                            <h3>AMSK Token</h3>
+                            <div class="crypto-symbol">Alien Musk Coin</div>
+                        </div>
+                        <div class="crypto-price">1 AMSK ≈ $0.0002</div>
+                    </div>
+                    <div class="crypto-balance">
+                        <div class="balance-amount" id="walletAMSK">0</div>
+                        <div class="balance-currency">AMSK</div>
+                    </div>
+                    <div class="crypto-value" id="walletAMSKValue">≈ $0.00</div>
+                    <div class="crypto-actions">
+                        <button class="action-btn-small" onclick="openSwapModal('AMSK')">
+                            <i class="fas fa-exchange-alt"></i> Swap
                         </button>
                     </div>
                 </div>
-                
-                <div class="milestones-card">
-                    <h4><i class="fas fa-trophy"></i> Milestone Rewards</h4>
-                    <div class="milestones-description">
-                        Earn bonus AMSK when you reach referral milestones
+
+                <div class="crypto-card nebula-card" id="usdtCard">
+                    <div class="crypto-header">
+                        <div class="crypto-icon usdt"><i class="fas fa-coins"></i></div>
+                        <div class="crypto-title">
+                            <h3>Tether</h3>
+                            <div class="crypto-symbol">USDT</div>
+                        </div>
+                        <div class="crypto-price">1 USDT ≈ $1.00</div>
                     </div>
-                    <div class="milestones-list">
-                        <div class="milestone-item locked">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">25 Direct Referrals</div>
-                                <div class="milestone-reward">+100,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/25</span>
-                            </div>
+                    <div class="crypto-balance">
+                        <div class="balance-amount" id="walletUSDT">0.00</div>
+                        <div class="balance-currency">USDT</div>
+                    </div>
+                    <div class="crypto-value" id="walletUSDTValue">≈ $0.00</div>
+                    <div class="crypto-actions">
+                        <button class="action-btn-small" onclick="openSwapModal('USDT')">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                        <button class="action-btn-small" onclick="openDepositModal('USDT')">
+                            <i class="fas fa-download"></i> Deposit
+                        </button>
+                        <button class="action-btn-small withdraw-btn" onclick="openWithdrawalModal()">
+                            <i class="fas fa-upload"></i> Withdraw
+                        </button>
+                    </div>
+                </div>
+
+                <div class="crypto-card nebula-card" id="bnbCard">
+                    <div class="crypto-header">
+                        <div class="crypto-icon bnb"><i class="fas fa-bolt"></i></div>
+                        <div class="crypto-title">
+                            <h3>Binance Coin</h3>
+                            <div class="crypto-symbol">BNB</div>
                         </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">50 Direct Referrals</div>
-                                <div class="milestone-reward">+250,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/50</span>
-                            </div>
-                        </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">100 Direct Referrals</div>
-                                <div class="milestone-reward">+600,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/100</span>
-                            </div>
-                        </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">250 Direct Referrals</div>
-                                <div class="milestone-reward">+1,500,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/250</span>
-                            </div>
-                        </div>
+                        <div class="crypto-price">1 BNB ≈ $875</div>
+                    </div>
+                    <div class="crypto-balance">
+                        <div class="balance-amount" id="walletBNB">0.0000</div>
+                        <div class="balance-currency">BNB</div>
+                    </div>
+                    <div class="crypto-value" id="walletBNBValue">≈ $0.00</div>
+                    <div class="crypto-actions">
+                        <button class="action-btn-small" onclick="openDepositModal('BNB')">
+                            <i class="fas fa-download"></i> Deposit
+                        </button>
+                        <button class="action-btn-small" onclick="openSwapModal('BNB')">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet Info -->
+            <div class="wallet-info-card nebula-card">
+                <div class="info-header">
+                    <i class="fas fa-shield-halved"></i>
+                    <h4>Cosmic Vault Protocols</h4>
+                </div>
+                <div class="info-content">
+                    <div class="info-item">
+                        <span>Min Withdrawal:</span>
+                        <span class="info-value">50 USDT</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Swap Rate AMSK → USDT:</span>
+                        <span class="info-value">5,000 AMSK = 1 USDT</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Network:</span>
+                        <span class="info-value">BEP-20 (Binance Smart Chain)</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Notification Container -->
-    <div id="notification-container"></div>
+    <!-- Bottom Navigation - Space Style -->
+    <div id="bottomNav" class="bottom-nav">
+        <div class="nav-item active" onclick="switchToPage('home')">
+            <i class="fas fa-home"></i><span>Orbit</span>
+        </div>
+        <div class="nav-item" onclick="switchToPage('wallet')">
+            <i class="fas fa-wallet"></i><span>Vault</span>
+        </div>
+    </div>
 
     <!-- JavaScript -->
     <script src="app.js"></script>
-    
-    <!-- Initialize App -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Alien Musk Platform - DOM Loaded');
-            if (window.initAlienMuskApp) {
-                window.initAlienMuskApp();
-            }
-        });
-    </script>
+
 </body>
 </html>
