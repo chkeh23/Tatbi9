@@ -26,13 +26,44 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* Simple loading animation */
+        #simple-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0a0a0f;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            transition: opacity 0.5s;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #00ff88;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
-    <!-- ============================================ -->
-    <!-- LOADING SCREEN - ENHANCED -->
-    <!-- ============================================ -->
-    <div id="loading-screen" class="active">
+    <!-- Simple Loading Screen -->
+    <div id="simple-loading">
+        <div class="spinner"></div>
+        <p style="color: #00ff88; font-weight: 600; margin-bottom: 5px;">Alien Musk Quantum</p>
+        <p style="color: #94a3b8; font-size: 14px;">Initializing Quantum Systems...</p>
+    </div>
+
+    <!-- Quantum Loading Screen (Will be shown by app.js) -->
+    <div id="loading-screen" class="hidden">
         <div class="loading-container">
             <div class="alien-logo">
                 <i class="fas fa-robot"></i>
@@ -46,22 +77,12 @@
                 </div>
                 <span id="loading-progress-text">Initializing Quantum Systems...</span>
             </div>
-            
-            <div class="quantum-effects">
-                <div class="quantum-particle"></div>
-                <div class="quantum-particle"></div>
-                <div class="quantum-particle"></div>
-            </div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- APP CONTAINER -->
-    <!-- ============================================ -->
+    <!-- App Container -->
     <div id="app-container" class="hidden">
-        <!-- ============================================ -->
-        <!-- HEADER - ENHANCED -->
-        <!-- ============================================ -->
+        <!-- Header -->
         <header class="app-header">
             <div class="header-left">
                 <!-- Logo with Admin Secret -->
@@ -95,9 +116,7 @@
             </div>
         </header>
 
-        <!-- ============================================ -->
-        <!-- NAVIGATION - 4 BUTTONS -->
-        <!-- ============================================ -->
+        <!-- Navigation - 4 Buttons -->
         <nav class="main-nav">
             <button class="nav-btn active" data-page="home">
                 <i class="fas fa-home"></i>
@@ -117,14 +136,10 @@
             </button>
         </nav>
 
-        <!-- ============================================ -->
-        <!-- NOTIFICATION CONTAINER -->
-        <!-- ============================================ -->
+        <!-- Notification Container -->
         <div id="notification-container"></div>
 
-        <!-- ============================================ -->
-        <!-- HOME PAGE - MINING SECTION -->
-        <!-- ============================================ -->
+        <!-- Home Page - Mining Section -->
         <div id="home-page" class="page active">
             <!-- Mining Section -->
             <section class="mining-section">
@@ -318,9 +333,7 @@
             </section>
         </div>
 
-        <!-- ============================================ -->
-        <!-- STAKING PAGE -->
-        <!-- ============================================ -->
+        <!-- Staking Page -->
         <div id="staking-page" class="page">
             <div class="staking-content">
                 <!-- Staking Card -->
@@ -385,9 +398,7 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- WALLET PAGE - COMPACT PROFESSIONAL -->
-        <!-- ============================================ -->
+        <!-- Wallet Page -->
         <div id="wallet-page" class="page">
             <div class="wallet-content">
                 <!-- Wallet Balance Card -->
@@ -475,9 +486,7 @@
             </div>
         </div>
 
-        <!-- ============================================ -->
-        <!-- REFERRAL PAGE -->
-        <!-- ============================================ -->
+        <!-- Referral Page -->
         <div id="referral-page" class="page">
             <div class="referral-content">
                 <!-- Referral Stats -->
@@ -595,59 +604,147 @@
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================================ -->
-    <script src="app.js"></script>
-    
-    <!-- Navigation System -->
+    <!-- JavaScript -->
     <script>
+        // Simple script to load app.js and handle basic loading
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🎯 Alien Musk Navigation System Loading...");
+            console.log('🚀 DOM loaded, loading Alien Musk app...');
             
-            // Setup navigation buttons
-            const navBtns = document.querySelectorAll('.nav-btn');
-            const pages = document.querySelectorAll('.page');
+            // Create script element for app.js
+            var script = document.createElement('script');
+            script.src = 'app.js';
+            script.async = true;
             
-            navBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageName = this.getAttribute('data-page');
-                    
-                    // Update active button
-                    navBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show selected page
-                    pages.forEach(page => {
-                        page.classList.remove('active');
-                        if (page.id === pageName + '-page') {
-                            page.classList.add('active');
-                        }
-                    });
-                    
-                    console.log("🚀 Switched to page:", pageName);
-                });
-            });
-            
-            // Hide loading screen after 2 seconds
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                if (loadingScreen) {
-                    loadingScreen.classList.remove('active');
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        document.getElementById('app-container').classList.remove('hidden');
-                    }, 500);
-                }
+            script.onload = function() {
+                console.log('✅ app.js loaded successfully');
                 
-                // Initialize the app
-                if (typeof initAlienMuskApp === 'function') {
-                    initAlienMuskApp();
+                // Check if initAlienMuskApp exists
+                if (typeof window.initAlienMuskApp === 'function') {
+                    console.log('🎯 Starting Alien Musk Platform...');
+                    
+                    // Hide simple loading screen
+                    var simpleLoading = document.getElementById('simple-loading');
+                    if (simpleLoading) {
+                        simpleLoading.style.opacity = '0';
+                        setTimeout(function() {
+                            simpleLoading.style.display = 'none';
+                        }, 500);
+                    }
+                    
+                    // Show quantum loading screen
+                    var quantumLoading = document.getElementById('loading-screen');
+                    if (quantumLoading) {
+                        quantumLoading.classList.remove('hidden');
+                        quantumLoading.classList.add('active');
+                    }
+                    
+                    // Initialize the app after a short delay
+                    setTimeout(function() {
+                        try {
+                            window.initAlienMuskApp();
+                        } catch (error) {
+                            console.error('❌ Error initializing app:', error);
+                            showErrorState();
+                        }
+                    }, 1000);
+                    
+                } else {
+                    console.error('❌ initAlienMuskApp function not found!');
+                    showErrorState();
                 }
-            }, 2000);
+            };
             
-            console.log("✅ Navigation system ready");
+            script.onerror = function() {
+                console.error('❌ Failed to load app.js');
+                showErrorState();
+            };
+            
+            // Add script to document
+            document.head.appendChild(script);
+            
+            // Fallback function if app.js fails
+            function showErrorState() {
+                // Hide loading screens
+                var simpleLoading = document.getElementById('simple-loading');
+                var quantumLoading = document.getElementById('loading-screen');
+                
+                if (simpleLoading) simpleLoading.style.display = 'none';
+                if (quantumLoading) quantumLoading.style.display = 'none';
+                
+                // Show app container with error message
+                var appContainer = document.getElementById('app-container');
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                    
+                    // Create error message
+                    var errorHtml = `
+                        <div style="text-align: center; padding: 40px 20px;">
+                            <div style="font-size: 48px; color: #ff4444; margin-bottom: 20px;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <h2 style="color: white; margin-bottom: 10px;">App Initialization Failed</h2>
+                            <p style="color: #94a3b8; margin-bottom: 20px;">
+                                There was an error loading the Alien Musk platform.
+                            </p>
+                            <button onclick="location.reload()" style="
+                                background: #00ff88;
+                                color: black;
+                                border: none;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                font-weight: 600;
+                                cursor: pointer;
+                            ">
+                                <i class="fas fa-redo"></i> Reload App
+                            </button>
+                        </div>
+                    `;
+                    
+                    appContainer.innerHTML = errorHtml;
+                }
+            }
+            
+            // Auto-reload if no response after 10 seconds
+            setTimeout(function() {
+                var appContainer = document.getElementById('app-container');
+                if (appContainer && appContainer.classList.contains('hidden')) {
+                    console.log('⚠️ App taking too long, checking status...');
+                    location.reload();
+                }
+            }, 10000);
         });
+        
+        // Make sure these functions are available globally
+        window.copyReferralCode = function() {
+            console.log('Copy referral code clicked');
+            if (typeof window.copyToClipboard === 'function') {
+                var code = document.getElementById('referral-code-display')?.textContent;
+                if (code) window.copyToClipboard(code);
+            }
+        };
+        
+        window.copyReferralLink = function() {
+            console.log('Copy referral link clicked');
+            if (typeof window.copyToClipboard === 'function') {
+                var link = document.getElementById('referral-link-input')?.value;
+                if (link) window.copyToClipboard(link);
+            }
+        };
+        
+        window.shareOnTelegram = function() {
+            console.log('Share on Telegram clicked');
+            alert('Share feature will be implemented in app.js');
+        };
+        
+        window.shareOnWhatsApp = function() {
+            console.log('Share on WhatsApp clicked');
+            alert('Share feature will be implemented in app.js');
+        };
+        
+        window.claimMilestone = function(milestone) {
+            console.log('Claim milestone clicked:', milestone);
+            alert('Milestone claiming will be handled in app.js');
+        };
     </script>
 </body>
 </html>
