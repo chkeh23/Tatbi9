@@ -15,7 +15,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Our Custom CSS -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="alien-style.css">
 </head>
 <body>
@@ -39,13 +39,11 @@
         <!-- Header -->
         <header class="app-header">
             <div class="header-left">
-                <!-- Logo -->
                 <div class="logo" id="admin-logo">
                     <i class="fas fa-robot"></i>
                     <span>Alien Musk</span>
                 </div>
                 
-                <!-- User Info -->
                 <div class="user-info-mini">
                     <img id="user-avatar-mini" class="user-avatar-mini" alt="Avatar">
                     <div class="user-details-mini">
@@ -55,7 +53,6 @@
                 </div>
             </div>
             
-            <!-- Balance -->
             <div class="header-right">
                 <div class="total-balance-header">
                     <div class="balance-amount-header">
@@ -72,25 +69,25 @@
 
         <!-- Navigation -->
         <nav class="main-nav">
-            <button class="nav-btn active" data-page="home">
+            <button class="nav-btn active" data-page="home" onclick="switchPage('home')">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </button>
-            <button class="nav-btn" data-page="staking">
+            <button class="nav-btn" data-page="staking" onclick="switchPage('staking')">
                 <i class="fas fa-gem"></i>
                 <span>Staking</span>
             </button>
-            <button class="nav-btn" data-page="wallet">
+            <button class="nav-btn" data-page="wallet" onclick="switchPage('wallet')">
                 <i class="fas fa-wallet"></i>
                 <span>Wallet</span>
             </button>
-            <button class="nav-btn" data-page="referral">
+            <button class="nav-btn" data-page="referral" onclick="switchPage('referral')">
                 <i class="fas fa-users"></i>
                 <span>Referral</span>
             </button>
         </nav>
 
-        <!-- Notifications -->
+        <!-- Notification Container -->
         <div id="notification-container"></div>
 
         <!-- Home Page -->
@@ -120,7 +117,7 @@
                     </div>
                 </div>
 
-                <button class="mining-action-btn" id="start-mining-btn">
+                <button class="mining-action-btn" id="start-mining-btn" onclick="handleMiningAction()">
                     <i class="fas fa-play"></i>
                     <span>Start Quantum Mining</span>
                 </button>
@@ -141,6 +138,7 @@
                 <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
                 
                 <div class="upgrade-cards">
+                    <!-- Level 1 -->
                     <div class="upgrade-card" data-level="1">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 1</span>
@@ -160,9 +158,10 @@
                                 <span>Cost: 0 USDT</span>
                             </div>
                         </div>
-                        <button class="upgrade-btn active-btn" data-level="1">Active</button>
+                        <button class="upgrade-btn active-btn" data-level="1" onclick="upgradeMiningLevel(1)">Active</button>
                     </div>
 
+                    <!-- Level 2 -->
                     <div class="upgrade-card" data-level="2">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 2</span>
@@ -182,9 +181,10 @@
                                 <span>Cost: 5 USDT</span>
                             </div>
                         </div>
-                        <button class="upgrade-btn" data-level="2">Upgrade</button>
+                        <button class="upgrade-btn" data-level="2" onclick="upgradeMiningLevel(2)">Upgrade</button>
                     </div>
 
+                    <!-- Level 3 -->
                     <div class="upgrade-card" data-level="3">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 3</span>
@@ -204,7 +204,7 @@
                                 <span>Cost: 20 USDT</span>
                             </div>
                         </div>
-                        <button class="upgrade-btn" data-level="3">Upgrade</button>
+                        <button class="upgrade-btn" data-level="3" onclick="upgradeMiningLevel(3)">Upgrade</button>
                     </div>
                 </div>
             </section>
@@ -238,7 +238,7 @@
                             <div class="plan-duration">7 Days</div>
                             <div class="plan-apr">40% APR</div>
                             <div class="plan-reward">Daily: 571 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="1">Stake Now</button>
+                            <button class="stake-plan-btn" data-plan="1" onclick="openStakeModal(1)">Stake Now</button>
                         </div>
 
                         <div class="plan-item">
@@ -247,7 +247,7 @@
                             <div class="plan-duration">15 Days</div>
                             <div class="plan-apr">50% APR</div>
                             <div class="plan-reward">Daily: 417 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="2">Stake Now</button>
+                            <button class="stake-plan-btn" data-plan="2" onclick="openStakeModal(2)">Stake Now</button>
                         </div>
 
                         <div class="plan-item">
@@ -256,7 +256,7 @@
                             <div class="plan-duration">30 Days</div>
                             <div class="plan-apr">60% APR</div>
                             <div class="plan-reward">Daily: 333 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="3">Stake Now</button>
+                            <button class="stake-plan-btn" data-plan="3" onclick="openStakeModal(3)">Stake Now</button>
                         </div>
                     </div>
                 </div>
@@ -288,19 +288,19 @@
                     <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                     
                     <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" id="deposit-btn">
+                        <button class="wallet-action-btn" id="deposit-btn" onclick="openDepositModal('USDT')">
                             <i class="fas fa-download"></i>
                             <span>Deposit</span>
                         </button>
-                        <button class="wallet-action-btn" id="withdraw-btn">
+                        <button class="wallet-action-btn" id="withdraw-btn" onclick="openWithdrawModal()">
                             <i class="fas fa-upload"></i>
                             <span>Withdraw</span>
                         </button>
-                        <button class="wallet-action-btn" id="swap-btn">
+                        <button class="wallet-action-btn" id="swap-btn" onclick="openSwapModal()">
                             <i class="fas fa-exchange-alt"></i>
                             <span>Swap</span>
                         </button>
-                        <button class="wallet-action-btn" id="history-btn">
+                        <button class="wallet-action-btn" id="history-btn" onclick="showTransactionHistory()">
                             <i class="fas fa-history"></i>
                             <span>History</span>
                         </button>
@@ -382,7 +382,7 @@
                 <div class="referral-code-card">
                     <h4><i class="fas fa-user-friends"></i> Your Referral Code</h4>
                     <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
-                    <button class="btn-copy-code" id="copy-code-btn">
+                    <button class="btn-copy-code" onclick="copyToClipboard(document.getElementById('referral-code-display').textContent)">
                         <i class="far fa-copy"></i> Copy Code
                     </button>
                 </div>
@@ -391,16 +391,16 @@
                     <h4><i class="fas fa-link"></i> Your Referral Link</h4>
                     <div class="link-input-group">
                         <input type="text" class="link-input" id="referral-link-input" readonly>
-                        <button class="copy-link-btn" id="copy-link-btn">
+                        <button class="copy-link-btn" onclick="copyToClipboard(document.getElementById('referral-link-input').value)">
                             <i class="far fa-copy"></i>
                         </button>
                     </div>
                     
                     <div class="share-buttons">
-                        <button class="share-btn telegram" id="telegram-share-btn">
+                        <button class="share-btn telegram" onclick="shareOnTelegram()">
                             <i class="fab fa-telegram"></i> Telegram
                         </button>
-                        <button class="share-btn whatsapp" id="whatsapp-share-btn">
+                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
                             <i class="fab fa-whatsapp"></i> WhatsApp
                         </button>
                     </div>
@@ -422,7 +422,7 @@
                                 <div class="milestone-reward">+50,000 AMSK</div>
                             </div>
                             <div class="milestone-action">
-                                <span class="locked-badge">0/10</span>
+                                <button class="btn-claim-milestone" onclick="claimMilestone(10)">Claim</button>
                             </div>
                         </div>
 
@@ -435,7 +435,7 @@
                                 <div class="milestone-reward">+150,000 AMSK</div>
                             </div>
                             <div class="milestone-action">
-                                <span class="locked-badge">0/25</span>
+                                <button class="btn-claim-milestone" onclick="claimMilestone(25)">Claim</button>
                             </div>
                         </div>
 
@@ -448,7 +448,7 @@
                                 <div class="milestone-reward">+350,000 AMSK</div>
                             </div>
                             <div class="milestone-action">
-                                <span class="locked-badge">0/50</span>
+                                <button class="btn-claim-milestone" onclick="claimMilestone(50)">Claim</button>
                             </div>
                         </div>
 
@@ -461,7 +461,7 @@
                                 <div class="milestone-reward">+1,000,000 AMSK</div>
                             </div>
                             <div class="milestone-action">
-                                <span class="locked-badge">0/100</span>
+                                <button class="btn-claim-milestone" onclick="claimMilestone(100)">Claim</button>
                             </div>
                         </div>
                     </div>
@@ -471,109 +471,199 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- ESSENTIAL CONNECTOR SCRIPT -->
+    <!-- CONNECTOR SCRIPT - يربط HTML مع JS -->
     <!-- ============================================ -->
     <script>
-        // Alien Musk Quantum Platform - Connector Script
-        // Minimal script to connect HTML with main app.js
+        // 👽 Alien Musk Quantum Connector
+        // يربط بين HTML و app.js بشكل مباشر
         
         console.log("🔗 Loading Alien Musk Connector...");
         
-        // Global functions accessible by app.js
-        window.AlienMusk = {
-            // DOM Ready Handler
-            onDOMReady: function(callback) {
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', callback);
-                } else {
-                    callback();
-                }
-            },
+        // تأكد من تحميل DOM أولاً
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📱 DOM Ready - Starting Alien Musk...");
             
-            // Hide Loading Screen
-            hideLoading: function() {
+            // تهيئة Telegram WebApp
+            let tg = null;
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    tg = window.Telegram.WebApp;
+                    tg.ready();
+                    tg.expand();
+                    console.log("✅ Telegram WebApp initialized");
+                }
+            } catch (e) {
+                console.log("ℹ️ Not in Telegram environment");
+            }
+            
+            // تأخير لإظهار التحميل
+            setTimeout(function() {
+                // إخفاء شاشة التحميل
                 const loadingScreen = document.getElementById('loading-screen');
                 const appContainer = document.getElementById('app-container');
                 
                 if (loadingScreen) {
                     loadingScreen.classList.remove('active');
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        if (appContainer) {
-                            appContainer.classList.remove('hidden');
-                        }
-                    }, 500);
+                    loadingScreen.style.display = 'none';
                 }
-            },
-            
-            // Show Notification
-            showMessage: function(text, type = 'info') {
-                const container = document.getElementById('notification-container');
-                if (!container) return;
                 
-                const message = document.createElement('div');
-                message.className = `message ${type}`;
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                }
                 
-                let icon = 'fa-info-circle';
-                if (type === 'success') icon = 'fa-check-circle';
-                if (type === 'error') icon = 'fa-exclamation-circle';
+                // تشغيل التطبيق الرئيسي إذا كان موجوداً
+                if (typeof initAlienMuskApp === 'function') {
+                    console.log("🚀 Starting main application...");
+                    initAlienMuskApp();
+                } else {
+                    console.error("❌ initAlienMuskApp function not found!");
+                    showMessage("Error: Application failed to load", "error");
+                }
                 
-                message.innerHTML = `<i class="fas ${icon}"></i><span>${text}</span>`;
-                container.appendChild(message);
-                
-                setTimeout(() => {
-                    if (message.parentNode) {
-                        message.remove();
-                    }
-                }, 4000);
-                
-                console.log(`Notification: ${text}`);
-            },
-            
-            // Close Modal
-            closeModal: function() {
-                const modal = document.querySelector('.modal-overlay.active');
-                if (modal) modal.remove();
-            },
-            
-            // Switch Page
-            switchPage: function(pageName) {
-                const pages = document.querySelectorAll('.page');
-                const navBtns = document.querySelectorAll('.nav-btn');
-                
-                pages.forEach(page => {
-                    page.classList.remove('active');
-                    if (page.id === `${pageName}-page`) {
-                        page.classList.add('active');
-                    }
-                });
-                
-                navBtns.forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.page === pageName) {
-                        btn.classList.add('active');
-                    }
-                });
-                
-                console.log(`Switched to page: ${pageName}`);
-            }
-        };
-        
-        // Initialize when DOM is ready
-        AlienMusk.onDOMReady(function() {
-            console.log("📱 DOM Ready - Alien Musk Platform");
-            
-            // Hide loading screen after 2 seconds
-            setTimeout(function() {
-                AlienMusk.hideLoading();
             }, 2000);
         });
         
-        console.log("✅ Alien Musk Connector Loaded");
+        // ========== دالة إظهار الرسائل ==========
+        window.showMessage = function(text, type = 'info') {
+            const container = document.getElementById('notification-container');
+            if (!container) {
+                console.log("No notification container found");
+                return;
+            }
+            
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            if (type === 'error') icon = 'fa-exclamation-circle';
+            if (type === 'warning') icon = 'fa-exclamation-triangle';
+            
+            message.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${text}</span>
+            `;
+            
+            container.appendChild(message);
+            
+            // إزالة تلقائية بعد 4 ثواني
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.style.opacity = '0';
+                    setTimeout(() => {
+                        if (message.parentNode) {
+                            message.parentNode.removeChild(message);
+                        }
+                    }, 300);
+                }
+            }, 4000);
+            
+            console.log(`${type}: ${text}`);
+        };
+        
+        // ========== دالة تغيير الصفحات ==========
+        window.switchPage = function(pageName) {
+            const pages = document.querySelectorAll('.page');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            
+            // تحديث الصفحات
+            pages.forEach(page => {
+                page.classList.remove('active');
+                if (page.id === `${pageName}-page`) {
+                    page.classList.add('active');
+                }
+            });
+            
+            // تحديث أزرار التنقل
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            console.log(`🔀 Switched to page: ${pageName}`);
+            
+            // إظهار رسالة ترحيب
+            if (pageName === 'home') showMessage("⚡ Welcome to Mining Station!", "success");
+            if (pageName === 'staking') showMessage("💎 Staking Platform Ready", "info");
+            if (pageName === 'wallet') showMessage("💰 Wallet Management Active", "info");
+            if (pageName === 'referral') showMessage("👥 Referral System Loaded", "info");
+        };
+        
+        // ========== دالة النسخ ==========
+        window.copyToClipboard = function(text) {
+            if (!text) {
+                showMessage("No text to copy", "error");
+                return;
+            }
+            
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    showMessage('✅ Copied to clipboard!', 'success');
+                })
+                .catch(err => {
+                    console.error('Copy error:', err);
+                    showMessage('❌ Failed to copy', 'error');
+                });
+        };
+        
+        // ========== دوال المشاركة ==========
+        window.shareOnTelegram = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (!linkInput || !linkInput.value) {
+                showMessage("No referral link found", "error");
+                return;
+            }
+            
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens every hour\n💰 Earn from staking and referrals\n👥 Get 10,000 AMSK bonus with my link\n\n👉 ${linkInput.value}\n\n💎 Start your quantum mining journey!`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(linkInput.value)}&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            showMessage("📤 Opening Telegram...", "info");
+        };
+        
+        window.shareOnWhatsApp = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (!linkInput || !linkInput.value) {
+                showMessage("No referral link found", "error");
+                return;
+            }
+            
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${linkInput.value}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+            showMessage("📱 Opening WhatsApp...", "info");
+        };
+        
+        // ========== دالة إغلاق النوافذ ==========
+        window.closeModal = function() {
+            const modal = document.querySelector('.modal-overlay.active');
+            if (modal) {
+                modal.remove();
+                console.log("✅ Modal closed");
+            }
+        };
+        
+        // ========== دوال النسخ المباشرة ==========
+        window.copyReferralCode = function() {
+            const codeDisplay = document.getElementById('referral-code-display');
+            if (codeDisplay) {
+                copyToClipboard(codeDisplay.textContent);
+            }
+        };
+        
+        window.copyReferralLink = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (linkInput) {
+                copyToClipboard(linkInput.value);
+            }
+        };
+        
+        console.log("✅ Alien Musk Connector Loaded Successfully");
     </script>
     
     <!-- ============================================ -->
-    <!-- MAIN APPLICATION SCRIPT -->
+    <!-- MAIN APPLICATION JS -->
     <!-- ============================================ -->
     <script src="app.js"></script>
 </body>
