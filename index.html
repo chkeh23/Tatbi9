@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +12,270 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="alien-style.css">
+    <!-- SIMPLIFIED CSS - بدون متغيرات معقدة -->
+    <style>
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0f;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* LOADING SCREEN */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #050510;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .alien-logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #00ff88;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .loading-title {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .loading-progress {
+            margin-top: 30px;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px auto;
+        }
+        
+        #loading-progress-bar {
+            height: 100%;
+            width: 25%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            border-radius: 3px;
+        }
+        
+        /* APP CONTAINER */
+        #app-container.hidden {
+            display: none;
+        }
+        
+        /* HEADER */
+        .app-header {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .user-info-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar-mini {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #00ff88;
+        }
+        
+        .total-balance-header {
+            text-align: right;
+        }
+        
+        /* NAVIGATION */
+        .main-nav {
+            display: flex;
+            background: #1a1a2e;
+            margin: 10px;
+            border-radius: 12px;
+            padding: 4px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 12px 5px;
+            background: transparent;
+            border: none;
+            color: #b0b0d0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            color: white;
+        }
+        
+        /* PAGES */
+        .page {
+            display: none;
+            padding: 15px;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* MINING SECTION */
+        .mining-section {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .mining-timer-card {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+            border: 1px solid rgba(0,255,136,0.1);
+        }
+        
+        .mining-action-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+        
+        /* BUTTONS */
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .modal-overlay.active {
+            display: block;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        
+        /* NOTIFICATIONS */
+        #notification-container {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .message.success {
+            background: rgba(0,255,136,0.15);
+            border: 1px solid rgba(0,255,136,0.3);
+            color: #00ff88;
+        }
+        
+        .message.error {
+            background: rgba(255,68,68,0.15);
+            border: 1px solid rgba(255,68,68,0.3);
+            color: #ff4444;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 480px) {
+            .app-header {
+                padding: 8px 10px;
+            }
+            
+            .page {
+                padding: 10px;
+            }
+            
+            .mining-section {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -45,7 +304,9 @@
                 </div>
                 
                 <div class="user-info-mini">
-                    <img id="user-avatar-mini" class="user-avatar-mini" alt="Avatar">
+                    <img id="user-avatar-mini" class="user-avatar-mini" 
+                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" 
+                         alt="Avatar">
                     <div class="user-details-mini">
                         <div id="username-mini" class="username-mini">Alien</div>
                         <div id="user-id-mini" class="user-id-mini">ID: Loading...</div>
@@ -94,7 +355,7 @@
         <div id="home-page" class="page active">
             <section class="mining-section">
                 <div class="mining-header">
-                    <h3><i class="fas fa-microchip"></i> Quantum Mining Station</h3>
+                    <h3><i class="fas fa-microchip"></i> Quantum Mining</h3>
                     <div class="mining-stats">
                         <div class="stat-item">
                             <div class="stat-label">Level</div>
@@ -133,81 +394,6 @@
                     </div>
                 </div>
             </section>
-
-            <section class="upgrade-section">
-                <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
-                
-                <div class="upgrade-cards">
-                    <!-- Level 1 -->
-                    <div class="upgrade-card" data-level="1">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 1</span>
-                            <span class="upgrade-name">Beginner</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 0 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn active-btn" data-level="1" onclick="upgradeMiningLevel(1)">Active</button>
-                    </div>
-
-                    <!-- Level 2 -->
-                    <div class="upgrade-card" data-level="2">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 2</span>
-                            <span class="upgrade-name">Advanced</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 5,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 5,000 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 5 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" data-level="2" onclick="upgradeMiningLevel(2)">Upgrade</button>
-                    </div>
-
-                    <!-- Level 3 -->
-                    <div class="upgrade-card" data-level="3">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 3</span>
-                            <span class="upgrade-name">Pro</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 10,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 10,000 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 20 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" data-level="3" onclick="upgradeMiningLevel(3)">Upgrade</button>
-                    </div>
-                </div>
-            </section>
         </div>
 
         <!-- Staking Page -->
@@ -215,60 +401,29 @@
             <div class="staking-content">
                 <div class="staking-card">
                     <h4><i class="fas fa-gem"></i> Quantum Staking</h4>
-                    <p>Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
+                    <p>Stake USDT to earn AMSK tokens</p>
                     
                     <div class="total-staked-card">
                         <div>
                             <div class="staked-label">Total Staked</div>
                             <div class="staked-amount" id="total-staked">0 USDT</div>
                         </div>
-                        <div class="staked-earnings">
-                            <i class="fas fa-coins"></i> Active Earnings
-                        </div>
                     </div>
-                </div>
-
-                <div class="staking-card">
-                    <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
                     
-                    <div class="staking-plans-grid">
-                        <div class="plan-item">
-                            <div class="plan-name">Silver Plan</div>
-                            <div class="plan-amount">10+ USDT</div>
-                            <div class="plan-duration">7 Days</div>
-                            <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward">Daily: 571 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="1" onclick="openStakeModal(1)">Stake Now</button>
-                        </div>
-
-                        <div class="plan-item">
-                            <div class="plan-name">Gold Plan</div>
-                            <div class="plan-amount">50+ USDT</div>
-                            <div class="plan-duration">15 Days</div>
-                            <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward">Daily: 417 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="2" onclick="openStakeModal(2)">Stake Now</button>
-                        </div>
-
-                        <div class="plan-item">
-                            <div class="plan-name">Diamond Plan</div>
-                            <div class="plan-amount">100+ USDT</div>
-                            <div class="plan-duration">30 Days</div>
-                            <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward">Daily: 333 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="3" onclick="openStakeModal(3)">Stake Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="staking-card">
-                    <h4><i class="fas fa-history"></i> Active Stakes</h4>
-                    <div class="active-stakes" id="active-stakes-list">
-                        <div class="empty-stakes">
-                            <i class="fas fa-inbox"></i>
-                            <p>No active stakes yet</p>
-                            <small>Start staking to earn rewards</small>
-                        </div>
+                    <!-- Simple staking buttons -->
+                    <div style="margin-top: 20px;">
+                        <button class="stake-plan-btn" onclick="openStakeModal(1)" 
+                                style="width: 100%; padding: 12px; margin: 5px 0; background: linear-gradient(135deg, #9d4edd, #ff0080); color: white; border: none; border-radius: 8px;">
+                            Silver Plan - 40% APR
+                        </button>
+                        <button class="stake-plan-btn" onclick="openStakeModal(2)"
+                                style="width: 100%; padding: 12px; margin: 5px 0; background: linear-gradient(135deg, #00ff88, #00d4ff); color: white; border: none; border-radius: 8px;">
+                            Gold Plan - 50% APR
+                        </button>
+                        <button class="stake-plan-btn" onclick="openStakeModal(3)"
+                                style="width: 100%; padding: 12px; margin: 5px 0; background: linear-gradient(135deg, #ffd700, #ff9900); color: white; border: none; border-radius: 8px;">
+                            Diamond Plan - 60% APR
+                        </button>
                     </div>
                 </div>
             </div>
@@ -284,78 +439,27 @@
                     <div class="wallet-balance-usd" id="wallet-balance-usd">$0.00</div>
                 </div>
 
-                <div class="staking-card">
-                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
-                    
-                    <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" id="deposit-btn" onclick="openDepositModal('USDT')">
-                            <i class="fas fa-download"></i>
-                            <span>Deposit</span>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <button class="wallet-action-btn" onclick="openDepositModal('USDT')"
+                                style="flex: 1; padding: 15px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; color: white;">
+                            <i class="fas fa-download"></i> Deposit
                         </button>
-                        <button class="wallet-action-btn" id="withdraw-btn" onclick="openWithdrawModal()">
-                            <i class="fas fa-upload"></i>
-                            <span>Withdraw</span>
-                        </button>
-                        <button class="wallet-action-btn" id="swap-btn" onclick="openSwapModal()">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Swap</span>
-                        </button>
-                        <button class="wallet-action-btn" id="history-btn" onclick="showTransactionHistory()">
-                            <i class="fas fa-history"></i>
-                            <span>History</span>
+                        <button class="wallet-action-btn" onclick="openWithdrawModal()"
+                                style="flex: 1; padding: 15px; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 8px; color: white;">
+                            <i class="fas fa-upload"></i> Withdraw
                         </button>
                     </div>
-                </div>
-
-                <div class="staking-card">
-                    <h4><i class="fas fa-coins"></i> Assets</h4>
                     
-                    <div class="assets-section">
-                        <div class="asset-list-compact">
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact amsk-icon">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">AMSK Token</div>
-                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
-                            </div>
-
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact usdt-icon">
-                                    <i class="fas fa-coins"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">USDT</div>
-                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
-                            </div>
-
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact bnb-icon">
-                                    <i class="fab fa-btc"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">BNB</div>
-                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
-                            </div>
-
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ton-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">TON</div>
-                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
-                            </div>
-                        </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="wallet-action-btn" onclick="openSwapModal()"
+                                style="flex: 1; padding: 15px; background: rgba(157,78,221,0.1); border: 1px solid rgba(157,78,221,0.3); border-radius: 8px; color: white;">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                        <button class="wallet-action-btn" onclick="showTransactionHistory()"
+                                style="flex: 1; padding: 15px; background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 8px; color: white;">
+                            <i class="fas fa-history"></i> History
+                        </button>
                     </div>
                 </div>
             </div>
@@ -365,306 +469,150 @@
         <div id="referral-page" class="page">
             <div class="referral-content">
                 <div class="referral-stats-card">
-                    <h4><i class="fas fa-chart-line"></i> Referral Statistics</h4>
-                    
-                    <div class="referral-stats-grid">
-                        <div class="ref-stat-item">
+                    <h4><i class="fas fa-chart-line"></i> Referral Stats</h4>
+                    <div style="display: flex; gap: 20px; margin-top: 15px;">
+                        <div>
                             <div class="ref-stat-value" id="ref-count">0</div>
                             <div class="ref-stat-label">Referrals</div>
                         </div>
-                        <div class="ref-stat-item">
+                        <div>
                             <div class="ref-stat-value" id="ref-earned">0</div>
                             <div class="ref-stat-label">AMSK Earned</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="referral-code-card">
+                <div class="referral-code-card" style="margin-top: 15px; padding: 15px; background: #1a1a2e; border-radius: 12px;">
                     <h4><i class="fas fa-user-friends"></i> Your Referral Code</h4>
-                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
-                    <button class="btn-copy-code" onclick="copyToClipboard(document.getElementById('referral-code-display').textContent)">
+                    <div class="referral-code-display" id="referral-code-display" 
+                         style="padding: 15px; background: rgba(255,0,128,0.1); border-radius: 8px; margin: 10px 0; font-family: monospace; color: #ff0080;">
+                        ALIEN-XXXXXX
+                    </div>
+                    <button onclick="copyToClipboard(document.getElementById('referral-code-display').textContent)"
+                            style="width: 100%; padding: 12px; background: linear-gradient(135deg, #9d4edd, #ff0080); color: white; border: none; border-radius: 8px;">
                         <i class="far fa-copy"></i> Copy Code
                     </button>
-                </div>
-
-                <div class="referral-link-card">
-                    <h4><i class="fas fa-link"></i> Your Referral Link</h4>
-                    <div class="link-input-group">
-                        <input type="text" class="link-input" id="referral-link-input" readonly>
-                        <button class="copy-link-btn" onclick="copyToClipboard(document.getElementById('referral-link-input').value)">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="share-buttons">
-                        <button class="share-btn telegram" onclick="shareOnTelegram()">
-                            <i class="fab fa-telegram"></i> Telegram
-                        </button>
-                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
-                        </button>
-                    </div>
-                </div>
-
-                <div class="milestones-card">
-                    <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
-                    <p class="milestones-description">
-                        Earn bonus rewards for reaching referral milestones!
-                    </p>
-                    
-                    <div class="milestones-list" id="milestones-list">
-                        <div class="milestone-item" data-milestone="10">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">10 Referrals</div>
-                                <div class="milestone-reward">+50,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(10)">Claim</button>
-                            </div>
-                        </div>
-
-                        <div class="milestone-item" data-milestone="25">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">25 Referrals</div>
-                                <div class="milestone-reward">+150,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(25)">Claim</button>
-                            </div>
-                        </div>
-
-                        <div class="milestone-item" data-milestone="50">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">50 Referrals</div>
-                                <div class="milestone-reward">+350,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(50)">Claim</button>
-                            </div>
-                        </div>
-
-                        <div class="milestone-item" data-milestone="100">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">100 Referrals</div>
-                                <div class="milestone-reward">+1,000,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(100)">Claim</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- CONNECTOR SCRIPT - يربط HTML مع JS -->
-    <!-- ============================================ -->
+    <!-- FIXED CONNECTOR SCRIPT -->
     <script>
-        // 👽 Alien Musk Quantum Connector
-        // يربط بين HTML و app.js بشكل مباشر
+        console.log("👽 Alien Musk Quantum Platform - Starting...");
         
-        console.log("🔗 Loading Alien Musk Connector...");
+        // Global variables
+        window.tg = null;
+        window.db = null;
+        window.firebaseApp = null;
+        window.userData = null;
+        window.walletData = null;
         
-        // تأكد من تحميل DOM أولاً
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("📱 DOM Ready - Starting Alien Musk...");
-            
-            // تهيئة Telegram WebApp
-            let tg = null;
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+        
+        // Initialize Firebase
+        function initFirebase() {
+            if (typeof firebase !== 'undefined') {
+                try {
+                    window.firebaseApp = firebase.initializeApp(firebaseConfig);
+                    window.db = firebase.firestore();
+                    console.log("✅ Firebase initialized");
+                } catch (error) {
+                    console.log("⚠️ Firebase error:", error);
+                }
+            }
+        }
+        
+        // Initialize Telegram
+        function initTelegram() {
             try {
                 if (window.Telegram && window.Telegram.WebApp) {
-                    tg = window.Telegram.WebApp;
-                    tg.ready();
-                    tg.expand();
+                    window.tg = Telegram.WebApp;
+                    window.tg.ready();
+                    window.tg.expand();
                     console.log("✅ Telegram WebApp initialized");
                 }
             } catch (e) {
-                console.log("ℹ️ Not in Telegram environment");
+                console.log("⚠️ Not in Telegram");
             }
-            
-            // تأخير لإظهار التحميل
-            setTimeout(function() {
-                // إخفاء شاشة التحميل
-                const loadingScreen = document.getElementById('loading-screen');
-                const appContainer = document.getElementById('app-container');
-                
-                if (loadingScreen) {
-                    loadingScreen.classList.remove('active');
-                    loadingScreen.style.display = 'none';
-                }
-                
-                if (appContainer) {
-                    appContainer.classList.remove('hidden');
-                }
-                
-                // تشغيل التطبيق الرئيسي إذا كان موجوداً
-                if (typeof initAlienMuskApp === 'function') {
-                    console.log("🚀 Starting main application...");
-                    initAlienMuskApp();
-                } else {
-                    console.error("❌ initAlienMuskApp function not found!");
-                    showMessage("Error: Application failed to load", "error");
-                }
-                
-            }, 2000);
-        });
+        }
         
-        // ========== دالة إظهار الرسائل ==========
-        window.showMessage = function(text, type = 'info') {
-            const container = document.getElementById('notification-container');
-            if (!container) {
-                console.log("No notification container found");
-                return;
-            }
-            
-            const message = document.createElement('div');
-            message.className = `message ${type}`;
-            
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-exclamation-circle';
-            if (type === 'warning') icon = 'fa-exclamation-triangle';
-            
-            message.innerHTML = `
-                <i class="fas ${icon}"></i>
-                <span>${text}</span>
-            `;
-            
-            container.appendChild(message);
-            
-            // إزالة تلقائية بعد 4 ثواني
-            setTimeout(() => {
-                if (message.parentNode) {
-                    message.style.opacity = '0';
-                    setTimeout(() => {
-                        if (message.parentNode) {
-                            message.parentNode.removeChild(message);
-                        }
-                    }, 300);
-                }
-            }, 4000);
-            
-            console.log(`${type}: ${text}`);
-        };
-        
-        // ========== دالة تغيير الصفحات ==========
-        window.switchPage = function(pageName) {
+        // Basic functions for HTML
+        window.switchPage = function(page) {
             const pages = document.querySelectorAll('.page');
             const navBtns = document.querySelectorAll('.nav-btn');
             
-            // تحديث الصفحات
-            pages.forEach(page => {
-                page.classList.remove('active');
-                if (page.id === `${pageName}-page`) {
-                    page.classList.add('active');
-                }
-            });
+            pages.forEach(p => p.classList.remove('active'));
+            navBtns.forEach(btn => btn.classList.remove('active'));
             
-            // تحديث أزرار التنقل
-            navBtns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.page === pageName) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            console.log(`🔀 Switched to page: ${pageName}`);
-            
-            // إظهار رسالة ترحيب
-            if (pageName === 'home') showMessage("⚡ Welcome to Mining Station!", "success");
-            if (pageName === 'staking') showMessage("💎 Staking Platform Ready", "info");
-            if (pageName === 'wallet') showMessage("💰 Wallet Management Active", "info");
-            if (pageName === 'referral') showMessage("👥 Referral System Loaded", "info");
+            document.getElementById(page + '-page').classList.add('active');
+            document.querySelector(`.nav-btn[data-page="${page}"]`).classList.add('active');
         };
         
-        // ========== دالة النسخ ==========
-        window.copyToClipboard = function(text) {
-            if (!text) {
-                showMessage("No text to copy", "error");
-                return;
-            }
+        window.showMessage = function(text, type = 'info') {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
             
-            navigator.clipboard.writeText(text)
-                .then(() => {
-                    showMessage('✅ Copied to clipboard!', 'success');
-                })
-                .catch(err => {
-                    console.error('Copy error:', err);
-                    showMessage('❌ Failed to copy', 'error');
-                });
+            const msg = document.createElement('div');
+            msg.className = `message ${type}`;
+            msg.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i> ${text}`;
+            container.appendChild(msg);
+            
+            setTimeout(() => msg.remove(), 4000);
         };
         
-        // ========== دوال المشاركة ==========
-        window.shareOnTelegram = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (!linkInput || !linkInput.value) {
-                showMessage("No referral link found", "error");
-                return;
-            }
-            
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens every hour\n💰 Earn from staking and referrals\n👥 Get 10,000 AMSK bonus with my link\n\n👉 ${linkInput.value}\n\n💎 Start your quantum mining journey!`;
-            const url = `https://t.me/share/url?url=${encodeURIComponent(linkInput.value)}&text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-            showMessage("📤 Opening Telegram...", "info");
-        };
-        
-        window.shareOnWhatsApp = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (!linkInput || !linkInput.value) {
-                showMessage("No referral link found", "error");
-                return;
-            }
-            
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${linkInput.value}`;
-            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
-            showMessage("📱 Opening WhatsApp...", "info");
-        };
-        
-        // ========== دالة إغلاق النوافذ ==========
         window.closeModal = function() {
-            const modal = document.querySelector('.modal-overlay.active');
-            if (modal) {
-                modal.remove();
-                console.log("✅ Modal closed");
-            }
+            document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
         };
         
-        // ========== دوال النسخ المباشرة ==========
-        window.copyReferralCode = function() {
-            const codeDisplay = document.getElementById('referral-code-display');
-            if (codeDisplay) {
-                copyToClipboard(codeDisplay.textContent);
-            }
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => showMessage('Copied!', 'success'))
+                .catch(() => showMessage('Failed to copy', 'error'));
         };
         
-        window.copyReferralLink = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (linkInput) {
-                copyToClipboard(linkInput.value);
-            }
-        };
-        
-        console.log("✅ Alien Musk Connector Loaded Successfully");
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📱 DOM loaded");
+            
+            initFirebase();
+            initTelegram();
+            
+            // Hide loading after 2 seconds
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('app-container').classList.remove('hidden');
+                
+                // Start main app if available
+                if (typeof initAlienMuskApp === 'function') {
+                    initAlienMuskApp();
+                } else {
+                    console.error("❌ Main app not found!");
+                    showMessage("Loading main application...", "warning");
+                    
+                    // Try to load app.js dynamically
+                    const script = document.createElement('script');
+                    script.src = 'app.js';
+                    script.onload = function() {
+                        if (typeof initAlienMuskApp === 'function') {
+                            initAlienMuskApp();
+                        }
+                    };
+                    document.head.appendChild(script);
+                }
+            }, 2000);
+        });
     </script>
     
-    <!-- ============================================ -->
-    <!-- MAIN APPLICATION JS -->
-    <!-- ============================================ -->
+    <!-- Main Application JS -->
     <script src="app.js"></script>
 </body>
 </html>
