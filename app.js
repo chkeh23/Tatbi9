@@ -1,6 +1,6 @@
 // ============================================
-// ALIEN MUSK - Quantum Mining Platform v5.0
-// VIP EDITION - FULLY INTEGRATED & PROFESSIONAL
+// ALIEN MUSK - Quantum Mining Platform v6.0 - FIXED
+// PROFESSIONAL EDITION WITH ADMIN PANEL & WALLET
 // ============================================
 
 // Telegram WebApp
@@ -41,7 +41,7 @@ if (typeof firebase !== 'undefined') {
 }
 
 // ============================================
-// CONFIGURATION
+// CONFIGURATION - UPDATED
 // ============================================
 const CONFIG = {
     // Token Prices (USD)
@@ -72,7 +72,7 @@ const CONFIG = {
         BNB_USDT: "0x790CAB511055F63db2F30AD227f7086bA3B6376a"
     },
     
-    // Mining Configuration
+    // Mining Configuration - UPDATED WITH MORE LEVELS
     MINING: {
         DURATION: 3600000, // 1 hour in ms
         
@@ -80,7 +80,9 @@ const CONFIG = {
             1: { name: "Beginner", cost: 0, reward: 2500, hashrate: 2500 },
             2: { name: "Advanced", cost: 5, reward: 5000, hashrate: 5000 },
             3: { name: "Pro", cost: 20, reward: 10000, hashrate: 10000 },
-            4: { name: "Expert", cost: 100, reward: 25000, hashrate: 25000 }
+            4: { name: "Expert", cost: 100, reward: 25000, hashrate: 25000 },
+            5: { name: "Master", cost: 500, reward: 50000, hashrate: 50000 },
+            6: { name: "Elite", cost: 1000, reward: 100000, hashrate: 100000 }
         },
         
         BOOSTERS: {
@@ -90,25 +92,46 @@ const CONFIG = {
         }
     },
     
-    // Staking Configuration
+    // Staking Configuration - FIXED CALCULATIONS
     STAKING: {
         PLANS: {
-            1: { name: "Silver", amount: 10, duration: 7, apr: 40, daily: 40 },
-            2: { name: "Gold", amount: 50, duration: 15, apr: 50, daily: 250 },
-            3: { name: "Diamond", amount: 100, duration: 30, apr: 60, daily: 600 }
+            1: { 
+                name: "Silver", 
+                minAmount: 10, 
+                maxAmount: 1000,
+                duration: 7, 
+                apr: 40, 
+                dailyPer100: 571.43 // 40% of $10 = $4 = 20,000 AMSK ÷ 7 days = 2,857.14 ÷ 10 = 285.714 per $1
+            },
+            2: { 
+                name: "Gold", 
+                minAmount: 50, 
+                maxAmount: 5000,
+                duration: 15, 
+                apr: 50, 
+                dailyPer100: 416.67 // 50% of $50 = $25 = 125,000 AMSK ÷ 15 days = 8,333.33 ÷ 50 = 166.667 per $1
+            },
+            3: { 
+                name: "Diamond", 
+                minAmount: 100, 
+                maxAmount: 10000,
+                duration: 30, 
+                apr: 60, 
+                dailyPer100: 333.33 // 60% of $100 = $60 = 300,000 AMSK ÷ 30 days = 10,000 ÷ 100 = 100 per $1
+            }
         }
     },
     
-    // Referral Configuration
+    // Referral Configuration - UPDATED WITH MILESTONES
     REFERRAL: {
         DIRECT_REWARD: 10000, // 10,000 AMSK for referrer
         WELCOME_BONUS: 5000, // 5,000 AMSK for new user
         
         MILESTONES: {
-            25: 100000,   // 100,000 AMSK
-            50: 250000,   // 250,000 AMSK
-            100: 600000,  // 600,000 AMSK
-            250: 1500000  // 1,500,000 AMSK
+            10: 50000,   // 50,000 AMSK
+            25: 150000,  // 150,000 AMSK
+            50: 350000,  // 350,000 AMSK
+            100: 1000000 // 1,000,000 AMSK
         }
     },
     
@@ -119,6 +142,14 @@ const CONFIG = {
         SECRET_CODE: "ALIEN2024"
     },
     
+    // Swap Configuration
+    SWAP: {
+        MIN_AMSK: 1000,
+        MIN_USDT: 10,
+        RATE_AMSK_USDT: 5000, // 1 USDT = 5,000 AMSK
+        FEE_PERCENT: 0.1
+    },
+    
     // UI Configuration
     UI: {
         ANIMATION_DURATION: 300,
@@ -127,7 +158,7 @@ const CONFIG = {
 };
 
 // ============================================
-// USER DATA MANAGEMENT
+// USER DATA MANAGEMENT - FIXED
 // ============================================
 let userData = {
     id: null,
@@ -139,10 +170,11 @@ let userData = {
     referredBy: null,
     joinedAt: null,
     lastActive: null,
-    isInitialized: false
+    isInitialized: false,
+    lastSaveTime: 0
 };
 
-// WALLET DATA
+// WALLET DATA - PROFESSIONAL SYSTEM
 let walletData = {
     balances: {
         AMSK: 2500,
@@ -168,9 +200,14 @@ let walletData = {
         count: 0,
         earned: 0,
         referrals: [],
-        claimedMilestones: []
+        claimedMilestones: [],
+        pendingMilestones: []
     },
-    transactions: [],
+    pendingDeposits: [],
+    pendingWithdrawals: [],
+    depositHistory: [],
+    withdrawalHistory: [],
+    usedTransactions: [],
     lastUpdate: Date.now()
 };
 
@@ -190,16 +227,16 @@ let intervals = {
 };
 
 // ============================================
-// INITIALIZATION
+// INITIALIZATION - FIXED
 // ============================================
 async function initAlienMuskApp() {
-    console.log("🚀 Initializing Alien Musk Platform v5.0...");
+    console.log("🚀 Initializing Alien Musk Platform v6.0...");
     
     try {
         // 1. Cache DOM Elements
         cacheElements();
         
-        // 2. Setup User
+        // 2. Setup User - FIXED SYSTEM
         await setupUser();
         
         // 3. Load Data
@@ -223,6 +260,12 @@ async function initAlienMuskApp() {
         // 8. Start Background Services
         startBackgroundServices();
         
+        // 9. Setup Admin System
+        initAdminSystem();
+        
+        // 10. Setup Real-time Listeners
+        setupRealTimeListeners();
+        
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
         
@@ -233,7 +276,7 @@ async function initAlienMuskApp() {
     }
 }
 
-// Cache DOM Elements
+// Cache DOM Elements - UPDATED
 function cacheElements() {
     console.log("🔍 Caching DOM elements...");
     
@@ -272,7 +315,7 @@ function cacheElements() {
     elements.totalStaked = document.getElementById('total-staked');
     elements.activeStakesList = document.getElementById('active-stakes-list');
     
-    // Wallet elements
+    // Wallet elements - UPDATED
     elements.walletBalanceAmsk = document.getElementById('wallet-balance-amsk');
     elements.walletBalanceUsd = document.getElementById('wallet-balance-usd');
     elements.walletAmskBalance = document.getElementById('wallet-amsk-balance');
@@ -284,16 +327,23 @@ function cacheElements() {
     elements.walletTonBalance = document.getElementById('wallet-ton-balance');
     elements.walletTonValue = document.getElementById('wallet-ton-value');
     
+    // Wallet action buttons
+    elements.depositBtn = document.getElementById('deposit-btn');
+    elements.withdrawBtn = document.getElementById('withdraw-btn');
+    elements.swapBtn = document.getElementById('swap-btn');
+    elements.historyBtn = document.getElementById('history-btn');
+    
     // Referral elements
     elements.referralCodeDisplay = document.getElementById('referral-code-display');
     elements.referralLinkInput = document.getElementById('referral-link-input');
     elements.refCount = document.getElementById('ref-count');
     elements.refEarned = document.getElementById('ref-earned');
+    elements.milestoneItems = document.querySelectorAll('.milestone-item');
     
     console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
 }
 
-// Setup User
+// Setup User - FIXED ID SYSTEM
 async function setupUser() {
     console.log("👤 Setting up user...");
     
@@ -303,28 +353,43 @@ async function setupUser() {
         console.log("📱 Telegram user found:", telegramUser.id);
     }
     
-    // Generate or get user ID
-    let userId = generateUserId(telegramUser);
+    // FIXED: Use Telegram ID directly or localStorage
+    if (telegramUser && telegramUser.id) {
+        userData.id = `tg_${telegramUser.id}`;
+        userData.telegramId = telegramUser.id.toString();
+        userData.username = telegramUser.username ? `@${telegramUser.username}` : 
+                           telegramUser.first_name ? telegramUser.first_name : 
+                           `User${telegramUser.id.toString().slice(-4)}`;
+        userData.firstName = telegramUser.first_name || 'Alien';
+        userData.photoUrl = telegramUser.photo_url || 
+                           `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramUser.id}`;
+    } else {
+        // For web users
+        let userId = localStorage.getItem('alien_musk_user_id');
+        if (!userId) {
+            userId = 'web_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('alien_musk_user_id', userId);
+        }
+        userData.id = userId;
+        userData.username = 'Alien';
+        userData.firstName = 'Alien';
+        userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`;
+    }
     
-    // Set user data
-    userData.id = userId;
-    userData.telegramId = telegramUser ? telegramUser.id.toString() : null;
-    userData.username = telegramUser ? 
-        (telegramUser.username ? `@${telegramUser.username}` : 
-         telegramUser.first_name ? telegramUser.first_name : 
-         `User${telegramUser.id.toString().slice(-4)}`) : 
-        'Alien';
-    userData.firstName = telegramUser ? telegramUser.first_name || 'Alien' : 'Alien';
-    userData.photoUrl = telegramUser ? 
-        (telegramUser.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramUser.id}`) : 
-        `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`;
+    // FIXED: Generate referral code once and save it
+    if (!userData.referralCode) {
+        userData.referralCode = generateReferralCode(userData.id);
+        console.log("🔗 Generated referral code:", userData.referralCode);
+    }
     
-    // Generate referral code
-    userData.referralCode = generateReferralCode(userId);
     userData.joinedAt = new Date().toISOString();
     userData.lastActive = new Date().toISOString();
     
-    console.log("👤 User initialized:", userData.id, "Ref code:", userData.referralCode);
+    console.log("👤 User initialized:", {
+        id: userData.id,
+        refCode: userData.referralCode,
+        name: userData.username
+    });
     
     // Update UI
     updateUserUI();
@@ -335,30 +400,16 @@ async function setupUser() {
     }
 }
 
-// Generate unique user ID
-function generateUserId(telegramUser) {
-    if (telegramUser && telegramUser.id) {
-        // Telegram users: tg_ + Telegram ID
-        return `tg_${telegramUser.id}`;
-    } else {
-        // Web visitors: web_ + persistent ID
-        let userId = localStorage.getItem('alien_musk_user_id');
-        if (!userId) {
-            userId = 'web_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('alien_musk_user_id', userId);
-        }
-        return userId;
-    }
-}
-
-// Generate referral code
+// Generate referral code - FIXED (Stable)
 function generateReferralCode(userId) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const randomPart = Array.from({length: 6}, () => 
+    // Use last part of user ID + fixed string
+    const idPart = userId.slice(-6).toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Removed similar characters
+    const randomPart = Array.from({length: 4}, () => 
         chars.charAt(Math.floor(Math.random() * chars.length))
     ).join('');
     
-    return `ALIEN-${randomPart}`;
+    return `ALIEN-${idPart}${randomPart}`;
 }
 
 // Update user UI
@@ -373,6 +424,9 @@ function updateUserUI() {
     
     if (elements.userAvatarMini) {
         elements.userAvatarMini.src = userData.photoUrl;
+        elements.userAvatarMini.onerror = function() {
+            this.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.id}`;
+        };
     }
     
     if (elements.referralCodeDisplay) {
@@ -385,7 +439,7 @@ function updateUserUI() {
 }
 
 // ============================================
-// DATA LOADING/SAVING
+// DATA LOADING/SAVING - PROFESSIONAL SYSTEM
 // ============================================
 async function loadUserData() {
     console.log("📂 Loading user data for:", userData.id);
@@ -396,44 +450,19 @@ async function loadUserData() {
             const loaded = await loadUserFromFirebase();
             if (loaded) {
                 console.log("✅ Data loaded from Firebase");
+                // Also load wallet data
+                await loadWalletFromFirebase();
                 return;
             }
         }
         
         // Fallback to localStorage
-        const storageKey = `alien_musk_${userData.id}`;
-        const savedData = localStorage.getItem(storageKey);
-        
-        if (savedData) {
-            const parsed = JSON.parse(savedData);
-            
-            // Merge data carefully
-            if (parsed.balances) {
-                walletData.balances = {
-                    AMSK: parsed.balances.AMSK || 2500,
-                    USDT: parsed.balances.USDT || 0,
-                    BNB: parsed.balances.BNB || 0,
-                    TON: parsed.balances.TON || 0
-                };
-            }
-            
-            if (parsed.mining) {
-                walletData.mining = parsed.mining;
-            }
-            
-            if (parsed.staking) {
-                walletData.staking = parsed.staking;
-            }
-            
-            if (parsed.referrals) {
-                walletData.referrals = parsed.referrals;
-            }
-            
-            console.log("✅ Data loaded from localStorage");
-        }
+        await loadUserFromLocalStorage();
         
     } catch (error) {
         console.error("❌ Error loading user data:", error);
+        // Initialize with default values
+        initializeDefaultData();
     }
 }
 
@@ -486,6 +515,119 @@ async function loadUserFromFirebase() {
     return false;
 }
 
+async function loadWalletFromFirebase() {
+    if (!db || !userData.id) return false;
+    
+    try {
+        const walletRef = db.collection('wallets').doc(userData.id);
+        const walletSnap = await walletRef.get();
+        
+        if (walletSnap.exists) {
+            const firebaseData = walletSnap.data();
+            
+            walletData.pendingDeposits = firebaseData.pendingDeposits || [];
+            walletData.pendingWithdrawals = firebaseData.pendingWithdrawals || [];
+            walletData.depositHistory = firebaseData.depositHistory || [];
+            walletData.withdrawalHistory = firebaseData.withdrawalHistory || [];
+            walletData.usedTransactions = firebaseData.usedTransactions || [];
+            
+            console.log("✅ Wallet data loaded from Firebase");
+            return true;
+        }
+    } catch (error) {
+        console.error("❌ Wallet Firebase load error:", error);
+    }
+    
+    return false;
+}
+
+async function loadUserFromLocalStorage() {
+    const storageKey = `alien_musk_${userData.id}`;
+    const savedData = localStorage.getItem(storageKey);
+    
+    if (savedData) {
+        try {
+            const parsed = JSON.parse(savedData);
+            
+            // Merge data carefully
+            if (parsed.balances) {
+                walletData.balances = {
+                    AMSK: parsed.balances.AMSK || 2500,
+                    USDT: parsed.balances.USDT || 0,
+                    BNB: parsed.balances.BNB || 0,
+                    TON: parsed.balances.TON || 0
+                };
+            }
+            
+            if (parsed.mining) {
+                walletData.mining = parsed.mining;
+            }
+            
+            if (parsed.staking) {
+                walletData.staking = parsed.staking;
+            }
+            
+            if (parsed.referrals) {
+                walletData.referrals = parsed.referrals;
+            }
+            
+            if (parsed.pendingDeposits) {
+                walletData.pendingDeposits = parsed.pendingDeposits;
+            }
+            
+            if (parsed.pendingWithdrawals) {
+                walletData.pendingWithdrawals = parsed.pendingWithdrawals;
+            }
+            
+            if (parsed.depositHistory) {
+                walletData.depositHistory = parsed.depositHistory;
+            }
+            
+            if (parsed.withdrawalHistory) {
+                walletData.withdrawalHistory = parsed.withdrawalHistory;
+            }
+            
+            if (parsed.usedTransactions) {
+                walletData.usedTransactions = parsed.usedTransactions;
+            }
+            
+            console.log("✅ Data loaded from localStorage");
+            
+        } catch (error) {
+            console.error("❌ Parse error:", error);
+            initializeDefaultData();
+        }
+    } else {
+        console.log("📝 No saved data found, using defaults");
+        initializeDefaultData();
+    }
+}
+
+function initializeDefaultData() {
+    walletData.balances = { AMSK: 2500, USDT: 0, BNB: 0, TON: 0 };
+    walletData.mining = {
+        level: 1,
+        active: false,
+        lastReward: null,
+        nextReward: null,
+        totalMined: 2500,
+        minedToday: 2500,
+        activeBoosters: []
+    };
+    walletData.staking = {
+        activeStakes: [],
+        totalEarned: 0,
+        totalStaked: 0
+    };
+    walletData.referrals = {
+        count: 0,
+        earned: 0,
+        referrals: [],
+        claimedMilestones: [],
+        pendingMilestones: []
+    };
+}
+
 function saveUserData() {
     if (!userData.id) {
         console.error("❌ Cannot save: No user ID");
@@ -493,7 +635,7 @@ function saveUserData() {
     }
     
     try {
-        // Update timestamp
+        // Update timestamps
         userData.lastActive = new Date().toISOString();
         walletData.lastUpdate = Date.now();
         
@@ -504,7 +646,11 @@ function saveUserData() {
             mining: walletData.mining,
             staking: walletData.staking,
             referrals: walletData.referrals,
-            transactions: walletData.transactions,
+            pendingDeposits: walletData.pendingDeposits,
+            pendingWithdrawals: walletData.pendingWithdrawals,
+            depositHistory: walletData.depositHistory,
+            withdrawalHistory: walletData.withdrawalHistory,
+            usedTransactions: walletData.usedTransactions,
             lastUpdate: walletData.lastUpdate
         };
         
@@ -514,7 +660,10 @@ function saveUserData() {
         // Save to Firebase
         if (db) {
             saveUserToFirebase();
+            saveWalletToFirebase();
         }
+        
+        userData.lastSaveTime = Date.now();
         
     } catch (error) {
         console.error("❌ Save error:", error);
@@ -553,8 +702,36 @@ function saveUserToFirebase() {
     }
 }
 
+function saveWalletToFirebase() {
+    if (!db || !userData.id) return;
+    
+    try {
+        const walletRef = db.collection('wallets').doc(userData.id);
+        
+        const firebaseData = {
+            userId: userData.id,
+            balances: walletData.balances,
+            pendingDeposits: walletData.pendingDeposits,
+            pendingWithdrawals: walletData.pendingWithdrawals,
+            depositHistory: walletData.depositHistory.slice(0, 50),
+            withdrawalHistory: walletData.withdrawalHistory.slice(0, 50),
+            usedTransactions: walletData.usedTransactions.slice(0, 100),
+            lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        walletRef.set(firebaseData, { merge: true }).then(() => {
+            console.log("✅ Wallet saved to Firebase");
+        }).catch(error => {
+            console.error("❌ Wallet Firebase save error:", error);
+        });
+        
+    } catch (error) {
+        console.error("❌ Wallet Firebase save error:", error);
+    }
+}
+
 // ============================================
-// MINING SYSTEM
+// MINING SYSTEM - FIXED
 // ============================================
 function updateMiningDisplay() {
     if (!walletData.mining) return;
@@ -582,12 +759,22 @@ function updateMiningDisplay() {
         elements.nextRewardAmount.textContent = formatNumber(nextReward);
     }
     
-    // Update stats
+    // Update stats - FIXED: Make them unique per user
     if (elements.totalMined) {
         elements.totalMined.textContent = formatNumber(mining.totalMined);
     }
     
     if (elements.minedToday) {
+        // Reset minedToday if it's a new day
+        const now = new Date();
+        const lastMinedDate = mining.lastReward ? new Date(mining.lastReward) : null;
+        if (lastMinedDate && (
+            now.getDate() !== lastMinedDate.getDate() ||
+            now.getMonth() !== lastMinedDate.getMonth() ||
+            now.getFullYear() !== lastMinedDate.getFullYear()
+        )) {
+            mining.minedToday = 0;
+        }
         elements.minedToday.textContent = formatNumber(mining.minedToday);
     }
     
@@ -650,6 +837,7 @@ function updateMiningButton() {
     } else {
         elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Mining...</span>';
         elements.startMiningBtn.classList.remove('claim-mode');
+        elements.startMiningBtn.disabled = true;
     }
 }
 
@@ -695,14 +883,18 @@ async function handleMiningAction() {
     const mining = walletData.mining;
     const now = Date.now();
     
+    // FIXED: Prevent clicking while mining is active
+    if (mining.active && mining.nextReward && now < mining.nextReward) {
+        showMessage("⏳ Mining in progress. Please wait.", "info");
+        return;
+    }
+    
     if (!mining.active) {
         // Start mining
         await startMining();
     } else if (mining.nextReward && now >= mining.nextReward) {
         // Claim reward
         await claimMiningReward();
-    } else {
-        showMessage("⏳ Mining in progress. Reward not ready yet.", "info");
     }
 }
 
@@ -806,7 +998,7 @@ async function upgradeMiningLevel(level) {
 }
 
 // ============================================
-// STAKING SYSTEM
+// STAKING SYSTEM - FIXED WITH FLEXIBLE AMOUNTS
 // ============================================
 function updateStakingDisplay() {
     updateStakingStats();
@@ -847,12 +1039,16 @@ function updateActiveStakes() {
         const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
         const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
         
+        // Calculate daily reward based on staked amount
+        const dailyReward = Math.floor((stake.amount / 100) * plan.dailyPer100);
+        const totalReward = dailyReward * plan.duration;
+        
         html += `
             <div class="stake-item">
                 <div class="stake-header">
                     <div class="stake-info">
-                        <h5>${plan.name}</h5>
-                        <span class="stake-amount">${plan.amount} USDT</span>
+                        <h5>${plan.name} - ${stake.amount} USDT</h5>
+                        <span class="stake-duration">${plan.duration} Days</span>
                     </div>
                     <span class="status-badge active">Active</span>
                 </div>
@@ -869,22 +1065,22 @@ function updateActiveStakes() {
                 
                 <div class="stake-details">
                     <div class="detail">
-                        <i class="fas fa-calendar"></i>
-                        <span>${plan.duration} Days</span>
-                    </div>
-                    <div class="detail">
                         <i class="fas fa-percentage"></i>
                         <span>${plan.apr}% APR</span>
                     </div>
                     <div class="detail">
                         <i class="fas fa-gift"></i>
-                        <span>${plan.daily} AMSK/Day</span>
+                        <span>${dailyReward.toLocaleString()} AMSK/Day</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-coins"></i>
+                        <span>Total: ${totalReward.toLocaleString()} AMSK</span>
                     </div>
                 </div>
                 
                 <div class="stake-actions">
                     <button class="btn-secondary" onclick="cancelStake(${index})" ${progress < 50 ? '' : 'disabled'}>
-                        Cancel
+                        Cancel (50% penalty)
                     </button>
                     <button class="btn-primary" onclick="claimStakeReward(${index})" ${progress >= 100 ? '' : 'disabled'}>
                         Claim
@@ -901,6 +1097,9 @@ async function openStakeModal(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
     if (!plan) return;
     
+    const usdtBalance = walletData.balances.USDT || 0;
+    const maxAmount = Math.min(usdtBalance, plan.maxAmount);
+    
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
             <div class="modal active" onclick="event.stopPropagation()">
@@ -914,40 +1113,78 @@ async function openStakeModal(planId) {
                             <i class="fas fa-gem"></i>
                         </div>
                         <div class="plan-details">
-                            <h4>${plan.name}</h4>
-                            <div class="plan-amount">${plan.amount} USDT</div>
+                            <h4>${plan.name} Plan</h4>
+                            <div class="plan-apr">${plan.apr}% APR</div>
+                            <div class="plan-duration">${plan.duration} Days</div>
                         </div>
                     </div>
                     
-                    <div class="stake-info">
-                        <div class="info-item">
-                            <span>Duration:</span>
-                            <span>${plan.duration} Days</span>
+                    <div class="stake-amount-section">
+                        <div class="amount-header">
+                            <span>Staking Amount (USDT)</span>
+                            <span class="balance">Balance: ${usdtBalance.toFixed(2)} USDT</span>
                         </div>
-                        <div class="info-item">
-                            <span>APR:</span>
-                            <span>${plan.apr}%</span>
+                        <div class="amount-input-group">
+                            <input type="number" 
+                                   id="stakeAmount" 
+                                   class="amount-input"
+                                   value="${Math.max(plan.minAmount, Math.min(100, maxAmount)).toFixed(2)}"
+                                   min="${plan.minAmount}"
+                                   max="${maxAmount}"
+                                   step="0.01"
+                                   oninput="calculateStakeReward(${planId})">
+                            <button class="max-btn" onclick="setMaxStakeAmount(${planId})">MAX</button>
                         </div>
-                        <div class="info-item">
-                            <span>Daily Reward:</span>
-                            <span>${plan.daily} AMSK</span>
+                        <div class="amount-range">
+                            <input type="range" 
+                                   id="stakeSlider" 
+                                   min="${plan.minAmount}" 
+                                   max="${maxAmount}" 
+                                   value="${Math.max(plan.minAmount, Math.min(100, maxAmount))}"
+                                   step="1"
+                                   oninput="updateStakeAmountFromSlider(${planId})">
+                            <div class="range-labels">
+                                <span>${plan.minAmount} USDT</span>
+                                <span>${maxAmount.toFixed(0)} USDT</span>
+                            </div>
                         </div>
-                        <div class="info-item total">
-                            <span>Total Reward:</span>
-                            <span>${plan.daily * plan.duration} AMSK</span>
+                    </div>
+                    
+                    <div class="stake-reward-calculation">
+                        <div class="reward-header">
+                            <i class="fas fa-calculator"></i>
+                            <span>Reward Calculation</span>
+                        </div>
+                        <div class="reward-details">
+                            <div class="reward-item">
+                                <span>Daily Reward:</span>
+                                <span id="dailyReward">0 AMSK</span>
+                            </div>
+                            <div class="reward-item">
+                                <span>Total Reward (${plan.duration} days):</span>
+                                <span id="totalReward">0 AMSK</span>
+                            </div>
+                            <div class="reward-item">
+                                <span>APR:</span>
+                                <span>${plan.apr}%</span>
+                            </div>
+                            <div class="reward-item total">
+                                <span>Total Return:</span>
+                                <span id="totalReturn">0 AMSK</span>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="stake-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>USDT will be locked for ${plan.duration} days</span>
+                        <span>USDT will be locked for ${plan.duration} days. Early cancellation incurs 50% penalty.</span>
                     </div>
                     
                     <div class="modal-actions">
                         <button class="btn-secondary" onclick="closeModal()">
                             Cancel
                         </button>
-                        <button class="btn-primary" onclick="confirmStaking(${planId})">
+                        <button class="btn-primary" id="confirmStakeBtn" onclick="confirmStaking(${planId})" ${usdtBalance >= plan.minAmount ? '' : 'disabled'}>
                             Confirm Stake
                         </button>
                     </div>
@@ -961,6 +1198,110 @@ async function openStakeModal(planId) {
     
     // Add new modal
     document.body.insertAdjacentHTML('beforeend', modalContent);
+    
+    // Initialize calculation
+    setTimeout(() => {
+        calculateStakeReward(planId);
+        updateStakeSlider(planId);
+    }, 100);
+}
+
+function calculateStakeReward(planId) {
+    const plan = CONFIG.STAKING.PLANS[planId];
+    const amountInput = document.getElementById('stakeAmount');
+    const slider = document.getElementById('stakeSlider');
+    const confirmBtn = document.getElementById('confirmStakeBtn');
+    
+    if (!amountInput || !plan) return;
+    
+    const amount = parseFloat(amountInput.value) || 0;
+    const usdtBalance = walletData.balances.USDT || 0;
+    
+    // Update slider if exists
+    if (slider) {
+        slider.value = amount;
+    }
+    
+    // Calculate rewards
+    const dailyReward = Math.floor((amount / 100) * plan.dailyPer100);
+    const totalReward = dailyReward * plan.duration;
+    const totalReturn = amount + (totalReward * CONFIG.PRICES.AMSK);
+    
+    // Update display
+    if (document.getElementById('dailyReward')) {
+        document.getElementById('dailyReward').textContent = `${dailyReward.toLocaleString()} AMSK`;
+    }
+    
+    if (document.getElementById('totalReward')) {
+        document.getElementById('totalReward').textContent = `${totalReward.toLocaleString()} AMSK`;
+    }
+    
+    if (document.getElementById('totalReturn')) {
+        document.getElementById('totalReturn').textContent = `${totalReward.toLocaleString()} AMSK (≈ $${totalReturn.toFixed(2)})`;
+    }
+    
+    // Validate amount
+    if (amount < plan.minAmount) {
+        if (confirmBtn) confirmBtn.disabled = true;
+        showMessage(`Minimum stake is ${plan.minAmount} USDT`, 'error');
+        return;
+    }
+    
+    if (amount > usdtBalance) {
+        if (confirmBtn) confirmBtn.disabled = true;
+        showMessage(`Insufficient USDT balance`, 'error');
+        return;
+    }
+    
+    if (amount > plan.maxAmount) {
+        if (confirmBtn) confirmBtn.disabled = true;
+        showMessage(`Maximum stake for this plan is ${plan.maxAmount} USDT`, 'error');
+        return;
+    }
+    
+    if (confirmBtn) confirmBtn.disabled = false;
+}
+
+function setMaxStakeAmount(planId) {
+    const plan = CONFIG.STAKING.PLANS[planId];
+    const amountInput = document.getElementById('stakeAmount');
+    const slider = document.getElementById('stakeSlider');
+    
+    if (!amountInput || !plan) return;
+    
+    const usdtBalance = walletData.balances.USDT || 0;
+    const maxAmount = Math.min(usdtBalance, plan.maxAmount);
+    
+    amountInput.value = maxAmount.toFixed(2);
+    
+    if (slider) {
+        slider.value = maxAmount;
+    }
+    
+    calculateStakeReward(planId);
+}
+
+function updateStakeAmountFromSlider(planId) {
+    const slider = document.getElementById('stakeSlider');
+    const amountInput = document.getElementById('stakeAmount');
+    
+    if (slider && amountInput) {
+        amountInput.value = parseFloat(slider.value).toFixed(2);
+        calculateStakeReward(planId);
+    }
+}
+
+function updateStakeSlider(planId) {
+    const plan = CONFIG.STAKING.PLANS[planId];
+    const slider = document.getElementById('stakeSlider');
+    
+    if (slider && plan) {
+        const usdtBalance = walletData.balances.USDT || 0;
+        const maxAmount = Math.min(usdtBalance, plan.maxAmount);
+        
+        slider.max = maxAmount;
+        slider.value = Math.max(plan.minAmount, Math.min(100, maxAmount));
+    }
 }
 
 async function confirmStaking(planId) {
@@ -970,22 +1311,39 @@ async function confirmStaking(planId) {
             throw new Error("Plan not found");
         }
         
+        const amountInput = document.getElementById('stakeAmount');
+        if (!amountInput) return;
+        
+        const amount = parseFloat(amountInput.value);
+        
+        // Validation
+        if (isNaN(amount) || amount < plan.minAmount) {
+            showMessage(`Minimum stake is ${plan.minAmount} USDT`, "error");
+            return;
+        }
+        
+        if (amount > plan.maxAmount) {
+            showMessage(`Maximum stake for this plan is ${plan.maxAmount} USDT`, "error");
+            return;
+        }
+        
         // Check USDT balance
-        if (walletData.balances.USDT < plan.amount) {
+        if (walletData.balances.USDT < amount) {
             showMessage("Insufficient USDT balance", "error");
             return;
         }
         
         // Deduct USDT
-        walletData.balances.USDT -= plan.amount;
+        walletData.balances.USDT -= amount;
         
         // Create stake object
         const stake = {
             planId: planId,
-            amount: plan.amount,
+            amount: amount,
             startTime: Date.now(),
             duration: plan.duration,
-            dailyReward: plan.daily,
+            dailyPer100: plan.dailyPer100,
+            apr: plan.apr,
             claimed: false
         };
         
@@ -994,7 +1352,7 @@ async function confirmStaking(planId) {
             walletData.staking.activeStakes = [];
         }
         walletData.staking.activeStakes.push(stake);
-        walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + plan.amount;
+        walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
         
         // Update UI
         updateWalletUI();
@@ -1005,7 +1363,7 @@ async function confirmStaking(planId) {
         closeModal();
         
         // Show success
-        showMessage(`✅ Staked ${plan.amount} USDT for ${plan.duration} days!`, "success");
+        showMessage(`✅ Staked ${amount} USDT for ${plan.duration} days!`, "success");
         
         // Save data
         saveUserData();
@@ -1013,7 +1371,7 @@ async function confirmStaking(planId) {
         // Create transaction record
         addTransaction({
             type: 'stake',
-            amount: plan.amount,
+            amount: amount,
             currency: 'USDT',
             details: `${plan.name} - ${plan.duration} days`
         });
@@ -1047,7 +1405,8 @@ async function claimStakeReward(stakeIndex) {
         }
         
         // Calculate total reward
-        const totalReward = plan.daily * plan.duration;
+        const dailyReward = Math.floor((stake.amount / 100) * plan.dailyPer100);
+        const totalReward = dailyReward * plan.duration;
         
         // Add reward to AMSK balance
         walletData.balances.AMSK += totalReward;
@@ -1068,7 +1427,7 @@ async function claimStakeReward(stakeIndex) {
         updateStakingDisplay();
         
         // Show success
-        showMessage(`💰 Claimed ${totalReward} AMSK from staking!`, "success");
+        showMessage(`💰 Claimed ${totalReward.toLocaleString()} AMSK from staking!`, "success");
         
         // Save data
         saveUserData();
@@ -1125,7 +1484,7 @@ function cancelStake(stakeIndex) {
 }
 
 // ============================================
-// WALLET SYSTEM
+// WALLET SYSTEM - PROFESSIONAL
 // ============================================
 function updateWalletUI() {
     if (!walletData.balances) return;
@@ -1190,7 +1549,7 @@ function updateTotalBalance() {
     }
     
     if (elements.walletBalanceUsd) {
-        elements.walletBalanceUsd.textContent = `≈ $${totalUSD.toFixed(2)}`;
+        elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
     }
 }
 
@@ -1208,44 +1567,121 @@ function openDepositModal(currency = 'USDT') {
                 <div class="modal-body">
                     <div class="deposit-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <span>Send only <strong>${currency}</strong> to this address</span>
+                        <div class="warning-content">
+                            <strong>Important:</strong> Send only <strong>${currency}</strong> to this address on <strong>${currency === 'TON' ? 'TON' : 'BEP20'}</strong> network.
+                            Sending other tokens or using wrong network will result in permanent loss.
+                        </div>
                     </div>
                     
                     <div class="address-card">
-                        <div class="address-label">Deposit Address:</div>
-                        <div class="address-value">${address}</div>
-                        <button class="copy-btn" onclick="copyToClipboard('${address}')">
-                            <i class="fas fa-copy"></i> Copy Address
-                        </button>
+                        <div class="address-header">
+                            <i class="fas fa-wallet"></i>
+                            <span>Your ${currency} Deposit Address</span>
+                        </div>
+                        <div class="address-container">
+                            <div class="address-value" id="depositAddressDisplay">
+                                ${address}
+                            </div>
+                            <button class="copy-btn" onclick="copyToClipboard('${address}')">
+                                <i class="far fa-copy"></i> Copy Address
+                            </button>
+                        </div>
+                        <div class="network-info">
+                            <i class="fas fa-network-wired"></i>
+                            <span>Network: ${currency === 'TON' ? 'TON' : 'BEP20 (BNB Smart Chain)'}</span>
+                        </div>
                     </div>
                     
                     <div class="deposit-form">
-                        <div class="form-group">
-                            <label>Amount (${currency})</label>
-                            <input type="number" id="deposit-amount" 
-                                   min="${minDeposit}" 
-                                   step="${currency === 'BNB' ? '0.001' : '1'}"
-                                   placeholder="Enter amount">
+                        <div class="form-section">
+                            <div class="form-section-header">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Deposit Amount</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount (${currency})</label>
+                                <input type="number" 
+                                       id="deposit-amount" 
+                                       class="form-input"
+                                       value="${minDeposit}"
+                                       min="${minDeposit}" 
+                                       step="${currency === 'BNB' ? '0.001' : '1'}"
+                                       placeholder="Enter amount">
+                                <div class="form-hint">
+                                    Minimum deposit: ${minDeposit} ${currency}
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="form-group">
-                            <label>Transaction ID</label>
-                            <input type="text" id="deposit-txid" 
-                                   placeholder="Enter transaction hash">
+                        <div class="form-section">
+                            <div class="form-section-header">
+                                <i class="fas fa-receipt"></i>
+                                <span>Transaction Verification</span>
+                            </div>
+                            <div class="form-group">
+                                <label>Transaction ID (Hash)</label>
+                                <input type="text" 
+                                       id="deposit-txid" 
+                                       class="form-input"
+                                       placeholder="${currency === 'TON' ? 'Transaction hash...' : '0x...'}"
+                                       oninput="validateTransactionHash()">
+                                <div class="form-hint">
+                                    Required to verify and process your deposit
+                                </div>
+                            </div>
+                            <div class="transaction-status" id="transactionStatus" style="display: none;">
+                                <div class="status-icon" id="statusIcon"></div>
+                                <div class="status-text" id="statusText"></div>
+                            </div>
                         </div>
                         
-                        <div class="min-deposit">
-                            <i class="fas fa-info-circle"></i>
-                            Minimum deposit: ${minDeposit} ${currency}
+                        <div class="deposit-instructions">
+                            <div class="instructions-header">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>How to Deposit</span>
+                            </div>
+                            <div class="instructions-list">
+                                <div class="instruction-step">
+                                    <span class="step-number">1</span>
+                                    <span>Copy the ${currency} address above</span>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="step-number">2</span>
+                                    <span>Send ${currency} from your wallet (${currency === 'TON' ? 'TON' : 'BEP20'} network)</span>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="step-number">3</span>
+                                    <span>Wait for transaction confirmation</span>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="step-number">4</span>
+                                    <span>Copy the Transaction Hash and paste above</span>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="step-number">5</span>
+                                    <span>Enter the exact amount you sent</span>
+                                </div>
+                                <div class="instruction-step">
+                                    <span class="step-number">6</span>
+                                    <span>Click "Submit Deposit Request"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="deposit-note">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="note-content">
+                            <strong>Note:</strong> Deposits require manual review. Your balance will be updated after verification (usually within 24 hours).
                         </div>
                     </div>
                     
                     <div class="modal-actions">
                         <button class="btn-secondary" onclick="closeModal()">
-                            Cancel
+                            <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button class="btn-primary" onclick="submitDeposit('${currency}')">
-                            Submit Deposit Request
+                        <button class="btn-primary" id="submitDepositBtn" onclick="submitDeposit('${currency}')">
+                            <i class="fas fa-paper-plane"></i> Submit Deposit Request
                         </button>
                     </div>
                 </div>
@@ -1258,12 +1694,76 @@ function openDepositModal(currency = 'USDT') {
     
     // Add new modal
     document.body.insertAdjacentHTML('beforeend', modalContent);
+    
+    setTimeout(() => {
+        validateTransactionHash();
+    }, 100);
+}
+
+function validateTransactionHash() {
+    const hashInput = document.getElementById('deposit-txid');
+    const amountInput = document.getElementById('deposit-amount');
+    const statusDiv = document.getElementById('transactionStatus');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusText = document.getElementById('statusText');
+    const submitBtn = document.getElementById('submitDepositBtn');
+    
+    if (!hashInput || !statusDiv) return;
+    
+    const hash = hashInput.value.trim();
+    
+    if (!hash) {
+        statusDiv.style.display = 'none';
+        if (submitBtn) submitBtn.disabled = !amountInput || !amountInput.value;
+        return;
+    }
+    
+    // Check if transaction already used
+    if (walletData.usedTransactions.includes(hash.toLowerCase())) {
+        statusIcon.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #ef4444;"></i>';
+        statusText.innerHTML = '<span style="color: #ef4444;">This transaction hash has already been used</span>';
+        statusDiv.style.display = 'flex';
+        statusDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+        statusDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+        if (submitBtn) submitBtn.disabled = true;
+        return;
+    }
+    
+    // Basic validation
+    const minLength = 10;
+    if (hash.length < minLength) {
+        statusIcon.innerHTML = '<i class="fas fa-times-circle" style="color: #ef4444;"></i>';
+        statusText.innerHTML = '<span style="color: #ef4444;">Invalid transaction hash (too short)</span>';
+        statusDiv.style.display = 'flex';
+        statusDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+        statusDiv.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+        if (submitBtn) submitBtn.disabled = true;
+        return;
+    }
+    
+    statusIcon.innerHTML = '<i class="fas fa-check-circle" style="color: #22c55e;"></i>';
+    statusText.innerHTML = '<span style="color: #22c55e;">Valid transaction hash detected</span>';
+    statusDiv.style.display = 'flex';
+    statusDiv.style.background = 'rgba(34, 197, 94, 0.1)';
+    statusDiv.style.border = '1px solid rgba(34, 197, 94, 0.3)';
+    
+    // Also check amount
+    const amount = parseFloat(document.getElementById('deposit-amount')?.value) || 0;
+    const currency = submitBtn?.onclick?.toString().match(/'([^']+)'/)?.[1] || 'USDT';
+    const minDeposit = CONFIG.MIN_DEPOSIT[currency] || 10;
+    
+    if (amount >= minDeposit) {
+        if (submitBtn) submitBtn.disabled = false;
+    } else {
+        if (submitBtn) submitBtn.disabled = true;
+    }
 }
 
 async function submitDeposit(currency) {
     try {
         const amount = parseFloat(document.getElementById('deposit-amount')?.value);
         const txid = document.getElementById('deposit-txid')?.value.trim();
+        const submitBtn = document.getElementById('submitDepositBtn');
         
         const minDeposit = CONFIG.MIN_DEPOSIT[currency];
         
@@ -1273,45 +1773,48 @@ async function submitDeposit(currency) {
             return;
         }
         
-        if (!txid) {
-            showMessage("Please enter transaction ID", "error");
+        if (!txid || txid.length < 10) {
+            showMessage("Please enter valid transaction ID", "error");
             return;
         }
         
         // Check if transaction already used
-        const usedTransactions = walletData.transactions.filter(t => 
-            t.type === 'deposit_request' && t.txid === txid
-        );
-        
-        if (usedTransactions.length > 0) {
+        if (walletData.usedTransactions.includes(txid.toLowerCase())) {
             showMessage("This transaction ID has already been used", "error");
             return;
         }
         
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitBtn.disabled = true;
+        }
+        
         // Create deposit request
         const depositRequest = {
-            id: 'deposit_' + Date.now(),
-            type: 'deposit_request',
+            id: 'deposit_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            userId: userData.id,
+            username: userData.username,
             currency: currency,
             amount: amount,
-            txid: txid,
+            transactionHash: txid.toLowerCase(),
             status: 'pending',
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            reviewNote: 'Awaiting manual review'
         };
         
-        // Add to transactions
-        walletData.transactions.push(depositRequest);
+        // Add to pending deposits
+        walletData.pendingDeposits.push(depositRequest);
+        walletData.usedTransactions.push(txid.toLowerCase());
         
-        // Save to Firebase if available
+        // Save to Firebase
         if (db) {
-            await db.collection('transactions').add({
-                userId: userData.id,
+            await db.collection('deposit_requests').add({
                 ...depositRequest,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
         
-        // Save local data
+        // Save user data
         saveUserData();
         
         // Close modal
@@ -1319,11 +1822,19 @@ async function submitDeposit(currency) {
         
         // Show success
         showMessage(`✅ Deposit request submitted for ${amount} ${currency}`, "success");
-        showMessage("⏳ Your deposit is pending admin review", "info");
+        setTimeout(() => {
+            showMessage("⏳ Your deposit is pending admin review. Check History for status.", "info");
+        }, 1000);
         
     } catch (error) {
         console.error("❌ Error submitting deposit:", error);
         showMessage("Failed to submit deposit request", "error");
+        
+        const submitBtn = document.getElementById('submitDepositBtn');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Deposit Request';
+            submitBtn.disabled = false;
+        }
     }
 }
 
@@ -1343,66 +1854,165 @@ function openWithdrawModal() {
                     <button class="modal-close" onclick="closeModal()">×</button>
                 </div>
                 <div class="modal-body">
-                    <div class="balance-info">
-                        <div class="balance-item">
-                            <span>Available USDT:</span>
-                            <span class="amount">${usdtBalance.toFixed(2)} USDT</span>
+                    <div class="withdrawal-balance-overview">
+                        <div class="balance-card">
+                            <div class="balance-header">
+                                <i class="fas fa-coins"></i>
+                                <span>Available Balance</span>
+                            </div>
+                            <div class="balance-amount">
+                                ${usdtBalance.toFixed(2)} <span class="balance-currency">USDT</span>
+                            </div>
+                            <div class="balance-subtitle">
+                                ≈ $${usdtBalance.toFixed(2)}
+                            </div>
                         </div>
-                        <div class="balance-item">
-                            <span>Available BNB (for fee):</span>
-                            <span class="amount ${bnbBalance >= feeBNB ? 'success' : 'error'}">
-                                ${bnbBalance.toFixed(6)} BNB
-                            </span>
+                        <div class="balance-card">
+                            <div class="balance-header">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Network Fee (BNB)</span>
+                            </div>
+                            <div class="balance-amount ${bnbBalance >= feeBNB ? 'success' : 'error'}">
+                                ${bnbBalance.toFixed(6)} <span class="balance-currency">BNB</span>
+                            </div>
+                            <div class="balance-subtitle">
+                                Required: ${feeBNB} BNB
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="withdraw-form">
-                        <div class="form-group">
-                            <label>Amount (USDT)</label>
-                            <input type="number" id="withdraw-amount" 
-                                   value="${Math.max(minWithdraw, Math.min(100, usdtBalance)).toFixed(2)}"
-                                   min="${minWithdraw}"
-                                   max="${usdtBalance}"
-                                   step="0.01"
-                                   placeholder="Enter amount">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Wallet Address (BEP20)</label>
-                            <input type="text" id="withdraw-address" 
-                                   placeholder="0x..."
-                                   maxlength="42">
-                        </div>
-                        
-                        <div class="fee-info">
-                            <div class="fee-item">
-                                <i class="fas fa-gas-pump"></i>
-                                <span>Network fee: ${feeBNB} BNB (≈ $${CONFIG.WITHDRAWAL.FEE_USD})</span>
+                    <div class="withdrawal-form">
+                        <div class="form-section">
+                            <div class="form-section-header">
+                                <i class="fas fa-wallet"></i>
+                                <span>Withdrawal Address</span>
                             </div>
-                            <div class="fee-item">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <span>Minimum withdrawal: ${minWithdraw} USDT</span>
+                            <div class="form-group">
+                                <label>BEP20 USDT Address</label>
+                                <div class="input-with-validation">
+                                    <input type="text" 
+                                           id="withdraw-address" 
+                                           class="form-input address-input"
+                                           placeholder="0x..."
+                                           oninput="validateWithdrawAddress()"
+                                           maxlength="42">
+                                    <div class="input-validation">
+                                        <i class="fas fa-check" id="addressCheck" style="display: none;"></i>
+                                        <i class="fas fa-times" id="addressError" style="display: none;"></i>
+                                    </div>
+                                </div>
+                                <div class="form-hint">
+                                    Your BEP20 USDT wallet address (must start with 0x)
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="requirements">
-                            <div class="requirement ${usdtBalance >= minWithdraw ? 'met' : 'not-met'}">
-                                <i class="fas ${usdtBalance >= minWithdraw ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-                                <span>Minimum ${minWithdraw} USDT</span>
+                        <div class="form-section">
+                            <div class="form-section-header">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Withdrawal Amount</span>
                             </div>
-                            <div class="requirement ${bnbBalance >= feeBNB ? 'met' : 'not-met'}">
-                                <i class="fas ${bnbBalance >= feeBNB ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-                                <span>${feeBNB} BNB fee available</span>
+                            <div class="form-group">
+                                <div class="amount-input-container">
+                                    <div class="amount-input-with-max">
+                                        <input type="number" 
+                                               id="withdraw-amount" 
+                                               class="form-input amount-input"
+                                               value="${usdtBalance > 0 ? Math.max(minWithdraw, Math.min(100, usdtBalance)).toFixed(2) : '0'}"
+                                               min="0"
+                                               max="${usdtBalance}"
+                                               step="0.01"
+                                               oninput="validateWithdrawAmount()">
+                                        <button class="max-amount-btn" onclick="setMaxWithdrawAmount()">
+                                            MAX
+                                        </button>
+                                    </div>
+                                    <div class="amount-slider">
+                                        <input type="range" 
+                                               id="withdraw-slider" 
+                                               min="0" 
+                                               max="${usdtBalance}" 
+                                               value="${usdtBalance > 0 ? Math.max(minWithdraw, Math.min(100, usdtBalance)) : '0'}"
+                                               step="0.01"
+                                               oninput="updateWithdrawAmountFromSlider()">
+                                    </div>
+                                    <div class="amount-range-labels">
+                                        <span>0 USDT</span>
+                                        <span>${usdtBalance.toFixed(2)} USDT</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="requirements-section">
+                            <div class="requirements-header">
+                                <i class="fas fa-clipboard-check"></i>
+                                <span>Withdrawal Requirements</span>
+                            </div>
+                            <div class="requirements-grid">
+                                <div class="requirement-card ${usdtBalance >= minWithdraw ? 'requirement-met' : 'requirement-not-met'}">
+                                    <div class="requirement-icon">
+                                        <i class="fas ${usdtBalance >= minWithdraw ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                    </div>
+                                    <div class="requirement-content">
+                                        <div class="requirement-title">Minimum Withdrawal</div>
+                                        <div class="requirement-value">${minWithdraw} USDT</div>
+                                        <div class="requirement-status">
+                                            ${usdtBalance >= minWithdraw ? '✓ Requirement met' : '✗ Not met'}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="requirement-card ${bnbBalance >= feeBNB ? 'requirement-met' : 'requirement-not-met'}">
+                                    <div class="requirement-icon">
+                                        <i class="fas ${bnbBalance >= feeBNB ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                                    </div>
+                                    <div class="requirement-content">
+                                        <div class="requirement-title">Network Fee</div>
+                                        <div class="requirement-value">${feeBNB} BNB</div>
+                                        <div class="requirement-status">
+                                            ${bnbBalance >= feeBNB ? '✓ Sufficient BNB' : '✗ Insufficient BNB'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="withdrawal-warning" id="withdrawWarning" style="display: none;">
+                            <div class="warning-header">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Cannot Proceed</span>
+                            </div>
+                            <div class="warning-text" id="withdrawWarningText"></div>
+                        </div>
+                        
+                        <div class="summary-section">
+                            <div class="summary-header">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <span>Withdrawal Summary</span>
+                            </div>
+                            <div class="summary-details">
+                                <div class="summary-row">
+                                    <span class="summary-label">Withdrawal Amount:</span>
+                                    <span class="summary-value" id="summaryAmount">${usdtBalance > 0 ? Math.max(minWithdraw, Math.min(100, usdtBalance)).toFixed(2) : '0'} USDT</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Network Fee:</span>
+                                    <span class="summary-value">${feeBNB} BNB (≈ $${CONFIG.WITHDRAWAL.FEE_USD})</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span class="summary-label">Total Cost:</span>
+                                    <span class="summary-value" id="summaryTotal">${usdtBalance > 0 ? Math.max(minWithdraw, Math.min(100, usdtBalance)).toFixed(2) : '0'} USDT + ${feeBNB} BNB</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="modal-actions">
                         <button class="btn-secondary" onclick="closeModal()">
-                            Cancel
+                            <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button class="btn-primary" onclick="submitWithdrawal()" ${canWithdraw ? '' : 'disabled'}>
-                            Submit Withdrawal
+                        <button class="btn-primary" id="confirmWithdrawBtn" onclick="submitWithdrawal()" ${canWithdraw ? '' : 'disabled'}>
+                            <i class="fas fa-paper-plane"></i> Submit Withdrawal Request
                         </button>
                     </div>
                 </div>
@@ -1415,80 +2025,238 @@ function openWithdrawModal() {
     
     // Add new modal
     document.body.insertAdjacentHTML('beforeend', modalContent);
+    
+    validateWithdrawAmount();
+    
+    setTimeout(() => {
+        const slider = document.getElementById('withdraw-slider');
+        if (slider) {
+            slider.value = usdtBalance > 0 ? Math.max(minWithdraw, Math.min(100, usdtBalance)) : 0;
+        }
+    }, 100);
+}
+
+function validateWithdrawAddress() {
+    const address = document.getElementById('withdraw-address')?.value.trim();
+    const addressCheck = document.getElementById('addressCheck');
+    const addressError = document.getElementById('addressError');
+    const warning = document.getElementById('withdrawWarning');
+    const warningText = document.getElementById('withdrawWarningText');
+    const btn = document.getElementById('confirmWithdrawBtn');
+    
+    if (!address) {
+        if (addressError) addressError.style.display = 'block';
+        if (addressCheck) addressCheck.style.display = 'none';
+        if (warning && warningText) {
+            warningText.textContent = "Please enter your USDT wallet address";
+            warning.style.display = 'block';
+        }
+        if (btn) btn.disabled = true;
+        return false;
+    }
+    
+    if (!address.startsWith('0x') || address.length !== 42) {
+        if (addressError) addressError.style.display = 'block';
+        if (addressCheck) addressCheck.style.display = 'none';
+        if (warning && warningText) {
+            warningText.textContent = "Please enter a valid BEP20 address (must start with 0x and be 42 characters)";
+            warning.style.display = 'block';
+        }
+        if (btn) btn.disabled = true;
+        return false;
+    }
+    
+    if (addressCheck) addressCheck.style.display = 'block';
+    if (addressError) addressError.style.display = 'none';
+    
+    if (warning && warningText.textContent.includes('address')) {
+        warning.style.display = 'none';
+    }
+    
+    validateWithdrawAmount();
+    
+    return true;
+}
+
+function validateWithdrawAmount() {
+    const amountInput = document.getElementById('withdraw-amount');
+    const amount = parseFloat(amountInput?.value) || 0;
+    const slider = document.getElementById('withdraw-slider');
+    const warning = document.getElementById('withdrawWarning');
+    const warningText = document.getElementById('withdrawWarningText');
+    const btn = document.getElementById('confirmWithdrawBtn');
+    const summaryAmount = document.getElementById('summaryAmount');
+    const summaryTotal = document.getElementById('summaryTotal');
+    const address = document.getElementById('withdraw-address')?.value.trim();
+    
+    if (!warning || !btn || !summaryAmount || !summaryTotal) return;
+    
+    if (slider) {
+        slider.value = amount;
+    }
+    
+    summaryAmount.textContent = amount.toFixed(2) + ' USDT';
+    summaryTotal.textContent = amount.toFixed(2) + ' USDT + ' + CONFIG.WITHDRAWAL.FEE_BNB + ' BNB';
+    
+    warning.style.display = 'none';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Withdrawal Request';
+    
+    const errors = [];
+    const minWithdraw = CONFIG.WITHDRAWAL.MIN_USDT;
+    const feeBNB = CONFIG.WITHDRAWAL.FEE_BNB;
+    const usdtBalance = walletData.balances?.USDT || 0;
+    const bnbBalance = walletData.balances?.BNB || 0;
+    
+    // Address validation
+    if (!address || !address.startsWith('0x') || address.length !== 42) {
+        errors.push("Please enter a valid BEP20 address");
+    }
+    
+    // Amount validation
+    if (amount > 0 && amount < minWithdraw) {
+        errors.push(`Minimum withdrawal is ${minWithdraw} USDT`);
+    }
+    
+    if (amount > usdtBalance) {
+        errors.push(`Insufficient USDT balance (Available: ${usdtBalance.toFixed(2)} USDT)`);
+    }
+    
+    if (bnbBalance < feeBNB) {
+        errors.push(`Insufficient BNB for network fee (Need: ${feeBNB} BNB)`);
+    }
+    
+    if (errors.length > 0) {
+        warningText.innerHTML = errors.join('<br>');
+        warning.style.display = 'block';
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-ban"></i> Cannot Withdraw';
+    }
+}
+
+function setMaxWithdrawAmount() {
+    const input = document.getElementById('withdraw-amount');
+    const slider = document.getElementById('withdraw-slider');
+    
+    if (input) {
+        const maxAmount = walletData.balances?.USDT || 0;
+        input.value = maxAmount.toFixed(2);
+        if (slider) {
+            slider.value = maxAmount;
+        }
+        validateWithdrawAmount();
+    }
+}
+
+function updateWithdrawAmountFromSlider() {
+    const slider = document.getElementById('withdraw-slider');
+    const input = document.getElementById('withdraw-amount');
+    
+    if (slider && input) {
+        input.value = parseFloat(slider.value).toFixed(2);
+        validateWithdrawAmount();
+    }
 }
 
 async function submitWithdrawal() {
+    const amount = parseFloat(document.getElementById('withdraw-amount')?.value);
+    const address = document.getElementById('withdraw-address')?.value.trim();
+    const btn = document.getElementById('confirmWithdrawBtn');
+    
+    if (!validateWithdrawAddress()) return;
+    
+    const minWithdraw = CONFIG.WITHDRAWAL.MIN_USDT;
+    const feeBNB = CONFIG.WITHDRAWAL.FEE_BNB;
+    const usdtBalance = walletData.balances?.USDT || 0;
+    const bnbBalance = walletData.balances?.BNB || 0;
+    
+    // Validation
+    if (amount < minWithdraw) {
+        showMessage(`Minimum withdrawal is ${minWithdraw} USDT`, "error");
+        return;
+    }
+    
+    if (amount > usdtBalance) {
+        showMessage("Insufficient USDT balance", "error");
+        return;
+    }
+    
+    if (!address || !address.startsWith('0x') || address.length !== 42) {
+        showMessage("Please enter valid BEP20 address", "error");
+        return;
+    }
+    
+    if (bnbBalance < feeBNB) {
+        showMessage(`Insufficient BNB for fee. Need ${feeBNB} BNB`, "error");
+        return;
+    }
+    
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        btn.disabled = true;
+    }
+    
     try {
-        const amount = parseFloat(document.getElementById('withdraw-amount')?.value);
-        const address = document.getElementById('withdraw-address')?.value.trim();
-        
-        const minWithdraw = CONFIG.WITHDRAWAL.MIN_USDT;
-        const feeBNB = CONFIG.WITHDRAWAL.FEE_BNB;
-        const usdtBalance = walletData.balances?.USDT || 0;
-        const bnbBalance = walletData.balances?.BNB || 0;
-        
-        // Validation
-        if (!amount || amount < minWithdraw) {
-            showMessage(`Minimum withdrawal is ${minWithdraw} USDT`, "error");
-            return;
-        }
-        
-        if (amount > usdtBalance) {
-            showMessage("Insufficient USDT balance", "error");
-            return;
-        }
-        
-        if (!address || !address.startsWith('0x') || address.length !== 42) {
-            showMessage("Please enter valid BEP20 address", "error");
-            return;
-        }
-        
-        if (bnbBalance < feeBNB) {
-            showMessage(`Insufficient BNB for fee. Need ${feeBNB} BNB`, "error");
-            return;
-        }
-        
         // Create withdrawal request
         const withdrawalRequest = {
-            id: 'withdrawal_' + Date.now(),
-            type: 'withdrawal_request',
+            id: 'withdrawal_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            userId: userData.id,
+            username: userData.username,
             amount: amount,
             address: address,
-            currency: 'USDT',
             fee: feeBNB,
+            currency: 'USDT',
             status: 'pending',
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            reviewNote: 'Awaiting manual processing'
         };
         
-        // Add to transactions
-        walletData.transactions.push(withdrawalRequest);
+        // Deduct balances locally
+        walletData.balances.USDT -= amount;
+        walletData.balances.BNB -= feeBNB;
+        walletData.pendingWithdrawals.push(withdrawalRequest);
         
-        // Save to Firebase if available
+        // Save to Firebase
         if (db) {
-            await db.collection('transactions').add({
-                userId: userData.id,
+            await db.collection('withdrawals').add({
                 ...withdrawalRequest,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
+        
+        // Save user data
+        saveUserData();
+        
+        // Update UI
+        updateWalletUI();
         
         // Close modal
         closeModal();
         
         // Show success
         showMessage(`✅ Withdrawal request submitted for ${amount} USDT`, "success");
-        showMessage("⏳ Your withdrawal is pending admin review", "info");
-        
-        // Save user data
-        saveUserData();
+        setTimeout(() => {
+            showMessage("⏳ Your withdrawal is pending admin review. Check History for status.", "info");
+        }, 1000);
         
     } catch (error) {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
+        
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Withdrawal Request';
+            btn.disabled = false;
+        }
     }
 }
 
 function openSwapModal() {
+    const amskBalance = walletData.balances?.AMSK || 0;
+    const usdtBalance = walletData.balances?.USDT || 0;
+    const minSwapAMSK = CONFIG.SWAP.MIN_AMSK;
+    const minSwapUSDT = CONFIG.SWAP.MIN_USDT;
+    const rate = CONFIG.SWAP.RATE_AMSK_USDT;
+    
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
             <div class="modal active" onclick="event.stopPropagation()">
@@ -1498,43 +2266,99 @@ function openSwapModal() {
                 </div>
                 <div class="modal-body">
                     <div class="swap-container">
-                        <div class="swap-from">
-                            <div class="swap-label">
-                                <span>From</span>
-                                <select id="swap-from-currency" onchange="updateSwapCalculation()">
-                                    <option value="AMSK">AMSK</option>
-                                    <option value="USDT">USDT</option>
-                                </select>
+                        <div class="swap-tabs">
+                            <button class="swap-tab active" onclick="switchSwapTab('amsk_to_usdt')">
+                                AMSK → USDT
+                            </button>
+                            <button class="swap-tab" onclick="switchSwapTab('usdt_to_amsk')">
+                                USDT → AMSK
+                            </button>
+                        </div>
+                        
+                        <div class="swap-content active" id="amsk_to_usdt">
+                            <div class="swap-from">
+                                <div class="swap-label">
+                                    <span>From</span>
+                                    <div class="token-info">
+                                        <i class="fas fa-robot"></i>
+                                        <span>AMSK</span>
+                                    </div>
+                                </div>
+                                <div class="swap-input">
+                                    <input type="number" 
+                                           id="swap-from-amsk" 
+                                           class="swap-input-field"
+                                           value="${Math.max(minSwapAMSK, Math.min(10000, amskBalance))}"
+                                           min="${minSwapAMSK}"
+                                           step="1"
+                                           oninput="calculateSwap('amsk_to_usdt')">
+                                    <div class="balance-label">
+                                        Balance: <span>${formatNumber(amskBalance)} AMSK</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="swap-input">
-                                <input type="number" 
-                                       id="swap-from-amount" 
-                                       value="1000"
-                                       min="1"
-                                       oninput="updateSwapCalculation()"
-                                       placeholder="0">
-                                <div class="balance-label">
-                                    Balance: <span id="swap-from-balance">0</span>
+                            
+                            <div class="swap-arrow">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            
+                            <div class="swap-to">
+                                <div class="swap-label">
+                                    <span>To</span>
+                                    <div class="token-info">
+                                        <i class="fas fa-coins"></i>
+                                        <span>USDT</span>
+                                    </div>
+                                </div>
+                                <div class="swap-output">
+                                    <div id="swap-to-usdt">0.00</div>
+                                    <div class="balance-label">
+                                        Balance: <span>${usdtBalance.toFixed(2)} USDT</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="swap-arrow">
-                            <i class="fas fa-exchange-alt"></i>
-                        </div>
-                        
-                        <div class="swap-to">
-                            <div class="swap-label">
-                                <span>To</span>
-                                <select id="swap-to-currency" onchange="updateSwapCalculation()">
-                                    <option value="USDT">USDT</option>
-                                    <option value="AMSK">AMSK</option>
-                                </select>
+                        <div class="swap-content" id="usdt_to_amsk" style="display: none;">
+                            <div class="swap-from">
+                                <div class="swap-label">
+                                    <span>From</span>
+                                    <div class="token-info">
+                                        <i class="fas fa-coins"></i>
+                                        <span>USDT</span>
+                                    </div>
+                                </div>
+                                <div class="swap-input">
+                                    <input type="number" 
+                                           id="swap-from-usdt" 
+                                           class="swap-input-field"
+                                           value="${Math.max(minSwapUSDT, Math.min(10, usdtBalance))}"
+                                           min="${minSwapUSDT}"
+                                           step="0.01"
+                                           oninput="calculateSwap('usdt_to_amsk')">
+                                    <div class="balance-label">
+                                        Balance: <span>${usdtBalance.toFixed(2)} USDT</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="swap-output">
-                                <div id="swap-to-amount">0.00</div>
-                                <div class="balance-label">
-                                    Balance: <span id="swap-to-balance">0</span>
+                            
+                            <div class="swap-arrow">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            
+                            <div class="swap-to">
+                                <div class="swap-label">
+                                    <span>To</span>
+                                    <div class="token-info">
+                                        <i class="fas fa-robot"></i>
+                                        <span>AMSK</span>
+                                    </div>
+                                </div>
+                                <div class="swap-output">
+                                    <div id="swap-to-amsk">0</div>
+                                    <div class="balance-label">
+                                        Balance: <span>${formatNumber(amskBalance)} AMSK</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1542,22 +2366,50 @@ function openSwapModal() {
                         <div class="swap-info">
                             <div class="info-item">
                                 <i class="fas fa-chart-line"></i>
-                                <span>Rate: 1 AMSK = ${CONFIG.PRICES.AMSK} USDT</span>
+                                <span>Rate: 1 USDT = ${rate.toLocaleString()} AMSK</span>
                             </div>
                             <div class="info-item">
                                 <i class="fas fa-percentage"></i>
-                                <span>Fee: 0%</span>
+                                <span>Fee: ${CONFIG.SWAP.FEE_PERCENT}%</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span id="swapMinInfo">Min: ${minSwapAMSK} AMSK</span>
                             </div>
                         </div>
                         
                         <div class="swap-preview">
-                            <div class="preview-item">
-                                <span>You Send:</span>
-                                <span id="preview-send">0</span>
+                            <div class="preview-header">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <span>Swap Details</span>
                             </div>
-                            <div class="preview-item">
-                                <span>You Receive:</span>
-                                <span id="preview-receive">0.00</span>
+                            <div class="preview-details">
+                                <div class="preview-item">
+                                    <span>You Send:</span>
+                                    <span id="preview-send">0</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span>You Receive:</span>
+                                    <span id="preview-receive">0.00</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span>Network Fee:</span>
+                                    <span id="preview-fee">0.00</span>
+                                </div>
+                                <div class="preview-item total">
+                                    <span>Total Receive:</span>
+                                    <span id="preview-total">0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="swap-warning" id="swapWarning" style="display: none;">
+                            <div class="warning-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="warning-content">
+                                <div class="warning-title" id="swapWarningTitle">Cannot Proceed</div>
+                                <div class="warning-text" id="swapWarningText"></div>
                             </div>
                         </div>
                     </div>
@@ -1566,7 +2418,7 @@ function openSwapModal() {
                         <button class="btn-secondary" onclick="closeModal()">
                             Cancel
                         </button>
-                        <button class="btn-primary" onclick="executeSwap()">
+                        <button class="btn-primary" id="confirmSwapBtn" onclick="executeSwap()" disabled>
                             Confirm Swap
                         </button>
                     </div>
@@ -1582,108 +2434,229 @@ function openSwapModal() {
     document.body.insertAdjacentHTML('beforeend', modalContent);
     
     // Initialize swap calculation
-    setTimeout(updateSwapCalculation, 100);
+    setTimeout(() => {
+        calculateSwap('amsk_to_usdt');
+    }, 100);
 }
 
-function updateSwapCalculation() {
-    const fromCurrency = document.getElementById('swap-from-currency')?.value;
-    const toCurrency = document.getElementById('swap-to-currency')?.value;
-    const fromAmount = parseFloat(document.getElementById('swap-from-amount')?.value) || 0;
+function switchSwapTab(tabName) {
+    // Update tabs
+    document.querySelectorAll('.swap-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
     
-    if (!fromCurrency || !toCurrency || fromAmount <= 0) return;
+    document.querySelectorAll('.swap-content').forEach(content => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+    });
     
-    // Get balances
-    const balances = walletData.balances || {};
-    const fromBalance = balances[fromCurrency] || 0;
-    const toBalance = balances[toCurrency] || 0;
-    
-    // Update balance displays
-    if (document.getElementById('swap-from-balance')) {
-        document.getElementById('swap-from-balance').textContent = 
-            fromCurrency === 'USDT' ? fromBalance.toFixed(2) : formatNumber(fromBalance);
+    // Activate selected tab
+    const activeTab = document.querySelector(`.swap-tab[onclick*="${tabName}"]`);
+    if (activeTab) {
+        activeTab.classList.add('active');
     }
     
-    if (document.getElementById('swap-to-balance')) {
-        document.getElementById('swap-to-balance').textContent = 
-            toCurrency === 'USDT' ? toBalance.toFixed(2) : formatNumber(toBalance);
+    const activeContent = document.getElementById(tabName);
+    if (activeContent) {
+        activeContent.classList.add('active');
+        activeContent.style.display = 'block';
+    }
+    
+    // Update min info
+    const minInfo = document.getElementById('swapMinInfo');
+    if (minInfo) {
+        if (tabName === 'amsk_to_usdt') {
+            minInfo.textContent = `Min: ${CONFIG.SWAP.MIN_AMSK} AMSK`;
+        } else {
+            minInfo.textContent = `Min: ${CONFIG.SWAP.MIN_USDT} USDT`;
+        }
+    }
+    
+    // Calculate for active tab
+    calculateSwap(tabName);
+}
+
+function calculateSwap(tabName) {
+    let fromAmount = 0;
+    let fromBalance = 0;
+    let toBalance = 0;
+    let minAmount = 0;
+    let rate = CONFIG.SWAP.RATE_AMSK_USDT;
+    let feePercent = CONFIG.SWAP.FEE_PERCENT / 100;
+    
+    if (tabName === 'amsk_to_usdt') {
+        const input = document.getElementById('swap-from-amsk');
+        fromAmount = parseFloat(input?.value) || 0;
+        fromBalance = walletData.balances?.AMSK || 0;
+        toBalance = walletData.balances?.USDT || 0;
+        minAmount = CONFIG.SWAP.MIN_AMSK;
+    } else {
+        const input = document.getElementById('swap-from-usdt');
+        fromAmount = parseFloat(input?.value) || 0;
+        fromBalance = walletData.balances?.USDT || 0;
+        toBalance = walletData.balances?.AMSK || 0;
+        minAmount = CONFIG.SWAP.MIN_USDT;
     }
     
     // Calculate conversion
     let toAmount = 0;
-    
-    if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-        toAmount = fromAmount * CONFIG.PRICES.AMSK;
-    } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-        toAmount = fromAmount / CONFIG.PRICES.AMSK;
+    if (tabName === 'amsk_to_usdt') {
+        toAmount = fromAmount / rate;
+    } else {
+        toAmount = fromAmount * rate;
     }
+    
+    // Apply fee
+    const fee = toAmount * feePercent;
+    const totalReceive = toAmount - fee;
     
     // Update display
-    if (document.getElementById('swap-to-amount')) {
-        document.getElementById('swap-to-amount').textContent = 
-            toCurrency === 'USDT' ? toAmount.toFixed(2) : formatNumber(toAmount);
+    if (tabName === 'amsk_to_usdt') {
+        if (document.getElementById('swap-to-usdt')) {
+            document.getElementById('swap-to-usdt').textContent = totalReceive.toFixed(2);
+        }
+        if (document.getElementById('preview-send')) {
+            document.getElementById('preview-send').textContent = `${formatNumber(fromAmount)} AMSK`;
+        }
+        if (document.getElementById('preview-receive')) {
+            document.getElementById('preview-receive').textContent = `${toAmount.toFixed(2)} USDT`;
+        }
+    } else {
+        if (document.getElementById('swap-to-amsk')) {
+            document.getElementById('swap-to-amsk').textContent = formatNumber(totalReceive);
+        }
+        if (document.getElementById('preview-send')) {
+            document.getElementById('preview-send').textContent = `${fromAmount.toFixed(2)} USDT`;
+        }
+        if (document.getElementById('preview-receive')) {
+            document.getElementById('preview-receive').textContent = `${formatNumber(toAmount)} AMSK`;
+        }
     }
     
-    if (document.getElementById('preview-send')) {
-        document.getElementById('preview-send').textContent = 
-            `${formatNumber(fromAmount)} ${fromCurrency}`;
+    // Update fee and total
+    if (document.getElementById('preview-fee')) {
+        document.getElementById('preview-fee').textContent = 
+            tabName === 'amsk_to_usdt' ? `${fee.toFixed(2)} USDT` : `${formatNumber(fee)} AMSK`;
     }
     
-    if (document.getElementById('preview-receive')) {
-        document.getElementById('preview-receive').textContent = 
-            `${toCurrency === 'USDT' ? toAmount.toFixed(2) : formatNumber(toAmount)} ${toCurrency}`;
+    if (document.getElementById('preview-total')) {
+        document.getElementById('preview-total').textContent = 
+            tabName === 'amsk_to_usdt' ? `${totalReceive.toFixed(2)} USDT` : `${formatNumber(totalReceive)} AMSK`;
+    }
+    
+    // Validate
+    const confirmBtn = document.getElementById('confirmSwapBtn');
+    const warning = document.getElementById('swapWarning');
+    const warningTitle = document.getElementById('swapWarningTitle');
+    const warningText = document.getElementById('swapWarningText');
+    
+    if (!confirmBtn || !warning) return;
+    
+    confirmBtn.disabled = true;
+    warning.style.display = 'none';
+    
+    if (fromAmount <= 0) {
+        warningTitle.textContent = "Enter Amount";
+        warningText.textContent = "Please enter an amount to swap";
+        warning.style.display = 'flex';
+        return;
+    }
+    
+    if (fromAmount < minAmount) {
+        warningTitle.textContent = "Minimum Amount";
+        warningText.textContent = `Minimum swap is ${minAmount} ${tabName === 'amsk_to_usdt' ? 'AMSK' : 'USDT'}`;
+        warning.style.display = 'flex';
+        return;
+    }
+    
+    if (fromAmount > fromBalance) {
+        warningTitle.textContent = "Insufficient Balance";
+        warningText.textContent = `You don't have enough ${tabName === 'amsk_to_usdt' ? 'AMSK' : 'USDT'}`;
+        warning.style.display = 'flex';
+        return;
+    }
+    
+    // All validations passed
+    warning.style.display = 'none';
+    confirmBtn.disabled = false;
+    
+    // Update button text
+    if (tabName === 'amsk_to_usdt') {
+        confirmBtn.textContent = `Swap for ${totalReceive.toFixed(2)} USDT`;
+    } else {
+        confirmBtn.textContent = `Swap for ${formatNumber(totalReceive)} AMSK`;
     }
 }
 
 async function executeSwap() {
+    // Determine active tab
+    const activeTab = document.querySelector('.swap-content.active');
+    if (!activeTab) return;
+    
+    const tabName = activeTab.id;
+    const confirmBtn = document.getElementById('confirmSwapBtn');
+    
+    if (confirmBtn) {
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        confirmBtn.disabled = true;
+    }
+    
     try {
-        const fromCurrency = document.getElementById('swap-from-currency')?.value;
-        const toCurrency = document.getElementById('swap-to-currency')?.value;
-        const fromAmount = parseFloat(document.getElementById('swap-from-amount')?.value) || 0;
-        
-        if (!fromCurrency || !toCurrency || fromAmount <= 0) {
-            showMessage("Please enter valid amount", "error");
-            return;
-        }
-        
-        // Get current balances
-        const fromBalance = walletData.balances[fromCurrency] || 0;
-        const toBalance = walletData.balances[toCurrency] || 0;
-        
-        // Check balance
-        if (fromAmount > fromBalance) {
-            showMessage("Insufficient balance", "error");
-            return;
-        }
-        
-        // Calculate conversion
+        let fromAmount = 0;
         let toAmount = 0;
+        let fromCurrency = '';
+        let toCurrency = '';
+        let fee = 0;
         
-        if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-            toAmount = fromAmount * CONFIG.PRICES.AMSK;
-        } else if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-            toAmount = fromAmount / CONFIG.PRICES.AMSK;
+        if (tabName === 'amsk_to_usdt') {
+            fromAmount = parseFloat(document.getElementById('swap-from-amsk')?.value) || 0;
+            toAmount = parseFloat(document.getElementById('swap-to-usdt')?.textContent) || 0;
+            fromCurrency = 'AMSK';
+            toCurrency = 'USDT';
+            fee = fromAmount * (CONFIG.SWAP.FEE_PERCENT / 100) / CONFIG.SWAP.RATE_AMSK_USDT;
         } else {
-            showMessage("Invalid swap pair", "error");
-            return;
+            fromAmount = parseFloat(document.getElementById('swap-from-usdt')?.value) || 0;
+            toAmount = parseFloat(document.getElementById('swap-to-amsk')?.textContent.replace(/,/g, '')) || 0;
+            fromCurrency = 'USDT';
+            toCurrency = 'AMSK';
+            fee = fromAmount * CONFIG.SWAP.RATE_AMSK_USDT * (CONFIG.SWAP.FEE_PERCENT / 100);
         }
         
-        // Minimum swap amounts
-        if (fromCurrency === 'AMSK' && fromAmount < 1000) {
-            showMessage("Minimum swap is 1,000 AMSK", "error");
-            return;
+        // Final validation
+        if (fromAmount <= 0 || toAmount <= 0) {
+            throw new Error("Invalid amount");
         }
         
-        if (fromCurrency === 'USDT' && fromAmount < 10) {
-            showMessage("Minimum swap is 10 USDT", "error");
-            return;
+        // Check balances
+        if (fromCurrency === 'AMSK' && fromAmount > walletData.balances.AMSK) {
+            throw new Error("Insufficient AMSK balance");
+        }
+        
+        if (fromCurrency === 'USDT' && fromAmount > walletData.balances.USDT) {
+            throw new Error("Insufficient USDT balance");
         }
         
         // Execute swap
-        walletData.balances[fromCurrency] -= fromAmount;
-        walletData.balances[toCurrency] = (toBalance || 0) + toAmount;
+        if (fromCurrency === 'AMSK') {
+            walletData.balances.AMSK -= fromAmount;
+            walletData.balances.USDT += toAmount;
+        } else {
+            walletData.balances.USDT -= fromAmount;
+            walletData.balances.AMSK += toAmount;
+        }
+        
+        // Update mining balance if AMSK changed
+        if (fromCurrency === 'AMSK' || toCurrency === 'AMSK') {
+            walletData.mining.totalMined = walletData.balances.AMSK;
+        }
+        
+        // Save data
+        saveUserData();
         
         // Update UI
         updateWalletUI();
+        updateTotalBalance();
+        updateMiningDisplay();
         
         // Close modal
         closeModal();
@@ -1694,26 +2667,33 @@ async function executeSwap() {
             "success"
         );
         
-        // Save data
-        saveUserData();
-        
         // Add transaction
         addTransaction({
             type: 'swap',
             fromAmount: fromAmount,
             fromCurrency: fromCurrency,
             toAmount: toAmount,
-            toCurrency: toCurrency
+            toCurrency: toCurrency,
+            fee: fee
         });
         
     } catch (error) {
         console.error("❌ Error executing swap:", error);
         showMessage("Failed to execute swap", "error");
+        
+        if (confirmBtn) {
+            confirmBtn.innerHTML = 'Confirm Swap';
+            confirmBtn.disabled = false;
+        }
     }
 }
 
 function showTransactionHistory() {
-    const hasTransactions = walletData.transactions && walletData.transactions.length > 0;
+    const hasTransactions = 
+        walletData.pendingDeposits.length > 0 ||
+        walletData.pendingWithdrawals.length > 0 ||
+        walletData.depositHistory.length > 0 ||
+        walletData.withdrawalHistory.length > 0;
     
     let modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1724,9 +2704,20 @@ function showTransactionHistory() {
                 </div>
                 <div class="modal-body">
                     <div class="history-tabs">
-                        <button class="tab-btn active" onclick="switchHistoryTab('all')">All</button>
-                        <button class="tab-btn" onclick="switchHistoryTab('deposits')">Deposits</button>
-                        <button class="tab-btn" onclick="switchHistoryTab('withdrawals')">Withdrawals</button>
+                        <button class="tab-btn active" onclick="switchHistoryTab('pending')">
+                            <i class="fas fa-clock"></i> Pending
+                            ${walletData.pendingDeposits.length + walletData.pendingWithdrawals.length > 0 ? 
+                              `<span class="tab-badge">${walletData.pendingDeposits.length + walletData.pendingWithdrawals.length}</span>` : ''}
+                        </button>
+                        <button class="tab-btn" onclick="switchHistoryTab('deposits')">
+                            <i class="fas fa-download"></i> Deposits
+                        </button>
+                        <button class="tab-btn" onclick="switchHistoryTab('withdrawals')">
+                            <i class="fas fa-upload"></i> Withdrawals
+                        </button>
+                        <button class="tab-btn" onclick="switchHistoryTab('all')">
+                            <i class="fas fa-list"></i> All
+                        </button>
                     </div>
                     
                     <div class="history-list" id="historyList">
@@ -1741,73 +2732,8 @@ function showTransactionHistory() {
             </div>
         `;
     } else {
-        // Filter and sort transactions
-        const sortedTransactions = [...walletData.transactions].sort((a, b) => 
-            (b.timestamp || 0) - (a.timestamp || 0)
-        );
-        
-        sortedTransactions.forEach(tx => {
-            const date = new Date(tx.timestamp).toLocaleString();
-            let icon = 'fa-exchange-alt';
-            let color = '#3b82f6';
-            let sign = '';
-            
-            switch (tx.type) {
-                case 'deposit_request':
-                    icon = 'fa-arrow-down';
-                    color = '#f59e0b';
-                    sign = '+';
-                    break;
-                case 'withdrawal_request':
-                    icon = 'fa-arrow-up';
-                    color = '#f59e0b';
-                    sign = '-';
-                    break;
-                case 'swap':
-                    icon = 'fa-exchange-alt';
-                    color = '#8b5cf6';
-                    break;
-                case 'stake':
-                    icon = 'fa-gem';
-                    color = '#ec4899';
-                    sign = '-';
-                    break;
-                case 'stake_reward':
-                    icon = 'fa-gem';
-                    color = '#10b981';
-                    sign = '+';
-                    break;
-                case 'mining_reward':
-                    icon = 'fa-microchip';
-                    color = '#10b981';
-                    sign = '+';
-                    break;
-                case 'referral_reward':
-                    icon = 'fa-users';
-                    color = '#10b981';
-                    sign = '+';
-                    break;
-            }
-            
-            modalContent += `
-                <div class="history-item">
-                    <div class="tx-icon" style="background: ${color}20; color: ${color}">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                    <div class="tx-details">
-                        <div class="tx-type">${formatTransactionType(tx.type)}</div>
-                        <div class="tx-date">${date}</div>
-                        ${tx.details ? `<div class="tx-note">${tx.details}</div>` : ''}
-                        ${tx.status === 'pending' ? `<div class="tx-status pending">Pending</div>` : ''}
-                    </div>
-                    <div class="tx-amount" style="color: ${color}">
-                        ${tx.type === 'swap' ? 
-                          `${formatNumber(tx.fromAmount)} ${tx.fromCurrency} → ${tx.toCurrency === 'USDT' ? tx.toAmount.toFixed(2) : formatNumber(tx.toAmount)} ${tx.toCurrency}` :
-                          `${sign}${formatNumber(tx.amount)} ${tx.currency || 'USDT'}`}
-                    </div>
-                </div>
-            `;
-        });
+        // Show pending by default
+        modalContent += renderPendingTransactions();
     }
     
     modalContent += `
@@ -1824,110 +2750,281 @@ function showTransactionHistory() {
     document.body.insertAdjacentHTML('beforeend', modalContent);
 }
 
-function switchHistoryTab(tabName) {
-    const historyList = document.getElementById('historyList');
-    if (!historyList) return;
-    
-    let filteredTransactions = [...walletData.transactions];
-    
-    if (tabName === 'deposits') {
-        filteredTransactions = filteredTransactions.filter(tx => tx.type === 'deposit_request');
-    } else if (tabName === 'withdrawals') {
-        filteredTransactions = filteredTransactions.filter(tx => tx.type === 'withdrawal_request');
-    }
-    
-    // Sort by timestamp
-    filteredTransactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-    
-    if (filteredTransactions.length === 0) {
-        historyList.innerHTML = `
+function renderPendingTransactions() {
+    if (walletData.pendingDeposits.length === 0 && walletData.pendingWithdrawals.length === 0) {
+        return `
             <div class="empty-state">
-                <i class="fas fa-inbox"></i>
-                <p>No transactions found</p>
+                <i class="fas fa-check-circle"></i>
+                <p>No pending transactions</p>
             </div>
         `;
-        return;
     }
     
     let html = '';
-    filteredTransactions.forEach(tx => {
-        const date = new Date(tx.timestamp).toLocaleString();
-        let icon = 'fa-exchange-alt';
-        let color = '#3b82f6';
-        let sign = '';
-        
-        switch (tx.type) {
-            case 'deposit_request':
-                icon = 'fa-arrow-down';
-                color = '#f59e0b';
-                sign = '+';
-                break;
-            case 'withdrawal_request':
-                icon = 'fa-arrow-up';
-                color = '#f59e0b';
-                sign = '-';
-                break;
-            case 'swap':
-                icon = 'fa-exchange-alt';
-                color = '#8b5cf6';
-                break;
-            case 'stake':
-                icon = 'fa-gem';
-                color = '#ec4899';
-                sign = '-';
-                break;
-            case 'stake_reward':
-                icon = 'fa-gem';
-                color = '#10b981';
-                sign = '+';
-                break;
-            case 'mining_reward':
-                icon = 'fa-microchip';
-                color = '#10b981';
-                sign = '+';
-                break;
-            case 'referral_reward':
-                icon = 'fa-users';
-                color = '#10b981';
-                sign = '+';
-                break;
-        }
-        
+    
+    // Pending deposits
+    walletData.pendingDeposits.forEach(deposit => {
+        const date = new Date(deposit.timestamp);
         html += `
-            <div class="history-item">
-                <div class="tx-icon" style="background: ${color}20; color: ${color}">
-                    <i class="fas ${icon}"></i>
+            <div class="history-item pending">
+                <div class="tx-icon">
+                    <i class="fas fa-download"></i>
                 </div>
                 <div class="tx-details">
-                    <div class="tx-type">${formatTransactionType(tx.type)}</div>
-                    <div class="tx-date">${date}</div>
-                    ${tx.details ? `<div class="tx-note">${tx.details}</div>` : ''}
-                    ${tx.status === 'pending' ? `<div class="tx-status pending">Pending</div>` : ''}
+                    <div class="tx-type">Deposit Request</div>
+                    <div class="tx-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    <div class="tx-note">${deposit.currency}: ${deposit.amount}</div>
+                    <div class="tx-status pending">Pending Review</div>
                 </div>
-                <div class="tx-amount" style="color: ${color}">
-                    ${tx.type === 'swap' ? 
-                      `${formatNumber(tx.fromAmount)} ${tx.fromCurrency} → ${tx.toCurrency === 'USDT' ? tx.toAmount.toFixed(2) : formatNumber(tx.toAmount)} ${tx.toCurrency}` :
-                      `${sign}${formatNumber(tx.amount)} ${tx.currency || 'USDT'}`}
+                <div class="tx-amount">
+                    +${deposit.amount} ${deposit.currency}
                 </div>
             </div>
         `;
     });
     
-    historyList.innerHTML = html;
+    // Pending withdrawals
+    walletData.pendingWithdrawals.forEach(withdrawal => {
+        const date = new Date(withdrawal.timestamp);
+        html += `
+            <div class="history-item pending">
+                <div class="tx-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="tx-details">
+                    <div class="tx-type">Withdrawal Request</div>
+                    <div class="tx-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    <div class="tx-note">To: ${withdrawal.address.substring(0, 8)}...${withdrawal.address.substring(withdrawal.address.length - 6)}</div>
+                    <div class="tx-status pending">Pending Processing</div>
+                </div>
+                <div class="tx-amount">
+                    -${withdrawal.amount} ${withdrawal.currency}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
 }
 
-function formatTransactionType(type) {
-    const types = {
-        'deposit_request': 'Deposit Request',
-        'withdrawal_request': 'Withdrawal Request',
-        'swap': 'Token Swap',
-        'stake': 'Staking',
-        'stake_reward': 'Staking Reward',
-        'mining_reward': 'Mining Reward',
-        'referral_reward': 'Referral Reward'
-    };
+function renderDepositHistory() {
+    if (walletData.depositHistory.length === 0) {
+        return `
+            <div class="empty-state">
+                <i class="fas fa-download"></i>
+                <p>No deposit history</p>
+            </div>
+        `;
+    }
     
-    return types[type] || type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    let html = '';
+    
+    walletData.depositHistory.forEach(deposit => {
+        const date = new Date(deposit.timestamp);
+        const status = deposit.status || 'completed';
+        const statusClass = status === 'approved' ? 'completed' : status === 'rejected' ? 'rejected' : 'pending';
+        const statusText = status === 'approved' ? 'Completed' : status === 'rejected' ? 'Rejected' : 'Pending';
+        
+        html += `
+            <div class="history-item ${statusClass}">
+                <div class="tx-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <div class="tx-details">
+                    <div class="tx-type">Deposit ${statusText}</div>
+                    <div class="tx-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    ${deposit.rejectionReason ? `<div class="tx-note">Reason: ${deposit.rejectionReason}</div>` : ''}
+                    <div class="tx-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="tx-amount">
+                    ${status === 'rejected' ? '⨯' : '+'}${deposit.amount} ${deposit.currency}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function renderWithdrawalHistory() {
+    if (walletData.withdrawalHistory.length === 0) {
+        return `
+            <div class="empty-state">
+                <i class="fas fa-upload"></i>
+                <p>No withdrawal history</p>
+            </div>
+        `;
+    }
+    
+    let html = '';
+    
+    walletData.withdrawalHistory.forEach(withdrawal => {
+        const date = new Date(withdrawal.timestamp);
+        const status = withdrawal.status || 'completed';
+        const statusClass = status === 'completed' ? 'completed' : status === 'rejected' ? 'rejected' : 'pending';
+        const statusText = status === 'completed' ? 'Completed' : status === 'rejected' ? 'Rejected' : 'Pending';
+        
+        html += `
+            <div class="history-item ${statusClass}">
+                <div class="tx-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="tx-details">
+                    <div class="tx-type">Withdrawal ${statusText}</div>
+                    <div class="tx-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    <div class="tx-note">To: ${withdrawal.address.substring(0, 8)}...${withdrawal.address.substring(withdrawal.address.length - 6)}</div>
+                    ${withdrawal.rejectionReason ? `<div class="tx-note">Reason: ${withdrawal.rejectionReason}</div>` : ''}
+                    <div class="tx-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="tx-amount">
+                    ${status === 'rejected' ? '+' : '-'}${withdrawal.amount} ${withdrawal.currency}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function renderAllTransactions() {
+    const allTransactions = [
+        ...walletData.pendingDeposits.map(t => ({ ...t, type: 'pending_deposit' })),
+        ...walletData.pendingWithdrawals.map(t => ({ ...t, type: 'pending_withdrawal' })),
+        ...walletData.depositHistory.map(t => ({ ...t, type: 'deposit' })),
+        ...walletData.withdrawalHistory.map(t => ({ ...t, type: 'withdrawal' })),
+        ...(walletData.transactions || [])
+    ];
+    
+    // Sort by timestamp (newest first)
+    allTransactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    
+    if (allTransactions.length === 0) {
+        return `
+            <div class="empty-state">
+                <i class="fas fa-history"></i>
+                <p>No transaction history</p>
+            </div>
+        `;
+    }
+    
+    let html = '';
+    
+    allTransactions.forEach(tx => {
+        const date = new Date(tx.timestamp || Date.now());
+        let icon = 'fa-exchange-alt';
+        let typeText = 'Transaction';
+        let amountSign = '';
+        let amountClass = '';
+        
+        switch (tx.type) {
+            case 'pending_deposit':
+            case 'deposit':
+                icon = 'fa-download';
+                typeText = tx.status === 'rejected' ? 'Deposit Rejected' : 
+                          tx.status === 'approved' ? 'Deposit Completed' : 'Deposit Request';
+                amountSign = tx.status === 'rejected' ? '⨯' : '+';
+                amountClass = tx.status === 'rejected' ? 'rejected' : 'completed';
+                break;
+            case 'pending_withdrawal':
+            case 'withdrawal':
+                icon = 'fa-upload';
+                typeText = tx.status === 'rejected' ? 'Withdrawal Rejected' : 
+                          tx.status === 'completed' ? 'Withdrawal Completed' : 'Withdrawal Request';
+                amountSign = tx.status === 'rejected' ? '+' : '-';
+                amountClass = tx.status === 'rejected' ? 'rejected' : 'completed';
+                break;
+            case 'swap':
+                icon = 'fa-exchange-alt';
+                typeText = 'Token Swap';
+                amountSign = '';
+                break;
+            case 'stake':
+                icon = 'fa-gem';
+                typeText = 'Staking';
+                amountSign = '-';
+                break;
+            case 'stake_reward':
+                icon = 'fa-gem';
+                typeText = 'Staking Reward';
+                amountSign = '+';
+                break;
+            case 'mining_reward':
+                icon = 'fa-microchip';
+                typeText = 'Mining Reward';
+                amountSign = '+';
+                break;
+            case 'referral_reward':
+                icon = 'fa-users';
+                typeText = 'Referral Reward';
+                amountSign = '+';
+                break;
+        }
+        
+        const status = tx.status || (tx.type.includes('pending') ? 'pending' : 'completed');
+        const statusClass = status === 'rejected' ? 'rejected' : status === 'pending' ? 'pending' : 'completed';
+        const statusText = status === 'rejected' ? 'Rejected' : status === 'pending' ? 'Pending' : 'Completed';
+        
+        html += `
+            <div class="history-item ${statusClass}">
+                <div class="tx-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="tx-details">
+                    <div class="tx-type">${typeText}</div>
+                    <div class="tx-date">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                    ${tx.details ? `<div class="tx-note">${tx.details}</div>` : ''}
+                    ${tx.rejectionReason ? `<div class="tx-note">Reason: ${tx.rejectionReason}</div>` : ''}
+                    <div class="tx-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="tx-amount ${amountClass}">
+                    ${tx.type === 'swap' ? 
+                      `${formatNumber(tx.fromAmount)} ${tx.fromCurrency} → ${tx.toCurrency === 'USDT' ? tx.toAmount.toFixed(2) : formatNumber(tx.toAmount)} ${tx.toCurrency}` :
+                      `${amountSign}${formatNumber(tx.amount)} ${tx.currency || 'USDT'}`}
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function switchHistoryTab(tabName) {
+    const historyList = document.getElementById('historyList');
+    if (!historyList) return;
+    
+    let content = '';
+    
+    switch (tabName) {
+        case 'pending':
+            content = renderPendingTransactions();
+            break;
+        case 'deposits':
+            content = renderDepositHistory();
+            break;
+        case 'withdrawals':
+            content = renderWithdrawalHistory();
+            break;
+        case 'all':
+            content = renderAllTransactions();
+            break;
+    }
+    
+    historyList.innerHTML = content;
+    
+    // Update active tab button
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+        btn.textContent.includes(tabName === 'pending' ? 'Pending' : 
+                                tabName === 'deposits' ? 'Deposits' : 
+                                tabName === 'withdrawals' ? 'Withdrawals' : 'All')
+    );
+    
+    if (activeBtn) {
+        activeBtn.classList.add('active');
+    }
 }
 
 function addTransaction(transaction) {
@@ -1936,7 +3033,7 @@ function addTransaction(transaction) {
     }
     
     walletData.transactions.push({
-        id: 'tx_' + Date.now(),
+        id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         ...transaction,
         timestamp: Date.now()
     });
@@ -1950,22 +3047,26 @@ function addTransaction(transaction) {
 }
 
 // ============================================
-// REFERRAL SYSTEM
+// REFERRAL SYSTEM - UPDATED WITH MILESTONES
 // ============================================
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
-    // Check URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    let referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
-    
     // Check Telegram start parameter
+    let referralCode = null;
     if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
         referralCode = tg.initDataUnsafe.start_param;
+        console.log("📱 Telegram referral detected:", referralCode);
+    }
+    
+    // Check URL parameters
+    if (!referralCode) {
+        const urlParams = new URLSearchParams(window.location.search);
+        referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
     }
     
     if (referralCode && referralCode !== userData.referralCode) {
-        console.log("🎯 Referral detected:", referralCode);
+        console.log("🎯 Processing referral:", referralCode);
         await processReferral(referralCode);
     }
 }
@@ -1987,6 +3088,7 @@ async function processReferral(referralCode) {
         
         // Give welcome bonus to new user
         walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
+        walletData.mining.totalMined += CONFIG.REFERRAL.WELCOME_BONUS;
         
         // Save user data
         saveUserData();
@@ -1998,6 +3100,8 @@ async function processReferral(referralCode) {
         
         // Update UI
         updateWalletUI();
+        updateMiningDisplay();
+        updateReferralDisplay();
         
         // Show success message
         showMessage(`🎉 Welcome bonus received! +${CONFIG.REFERRAL.WELCOME_BONUS.toLocaleString()} AMSK`, "success");
@@ -2034,6 +3138,7 @@ async function updateReferrerRewards(referralCode) {
                 'referrals.earned': newEarned,
                 'referrals.referrals': referrals,
                 'balances.AMSK': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD),
+                'mining.totalMined': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.DIRECT_REWARD),
                 'lastUpdate': firebase.firestore.FieldValue.serverTimestamp()
             });
             
@@ -2077,6 +3182,8 @@ async function checkMilestones(userId, referralCount) {
                     userRef.update({
                         'referrals.pendingMilestones': pendingMilestones,
                         'lastUpdate': firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        console.log(`✅ Milestone ${milestoneNum} added to pending`);
                     });
                 }
             }
@@ -2105,15 +3212,20 @@ function updateReferralDisplay() {
 }
 
 function updateMilestonesDisplay() {
-    const milestoneItems = document.querySelectorAll('.milestone-item');
-    if (!milestoneItems.length) return;
+    if (!elements.milestoneItems || elements.milestoneItems.length === 0) return;
     
     const referralCount = walletData.referrals?.count || 0;
     const claimedMilestones = walletData.referrals?.claimedMilestones || [];
     
-    milestoneItems.forEach(item => {
-        const requirement = item.querySelector('.milestone-requirement').textContent;
-        const milestoneNum = parseInt(requirement.match(/\d+/)[0]);
+    elements.milestoneItems.forEach(item => {
+        const requirement = item.querySelector('.milestone-requirement')?.textContent;
+        if (!requirement) return;
+        
+        const milestoneMatch = requirement.match(/\d+/);
+        if (!milestoneMatch) return;
+        
+        const milestoneNum = parseInt(milestoneMatch[0]);
+        const badge = item.querySelector('.milestone-action');
         
         // Remove all classes
         item.classList.remove('locked', 'can-claim', 'claimed');
@@ -2121,19 +3233,16 @@ function updateMilestonesDisplay() {
         // Check milestone status
         if (claimedMilestones.includes(milestoneNum)) {
             item.classList.add('claimed');
-            const badge = item.querySelector('.milestone-action');
             if (badge) {
                 badge.innerHTML = '<span class="claimed-badge">Claimed</span>';
             }
         } else if (referralCount >= milestoneNum) {
             item.classList.add('can-claim');
-            const badge = item.querySelector('.milestone-action');
             if (badge) {
-                badge.innerHTML = '<button class="btn-claim-milestone" onclick="claimMilestone(' + milestoneNum + ')">Claim</button>';
+                badge.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
             }
         } else {
             item.classList.add('locked');
-            const badge = item.querySelector('.milestone-action');
             if (badge) {
                 badge.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
             }
@@ -2162,6 +3271,7 @@ async function claimMilestone(milestoneNum) {
         
         // Add reward
         walletData.balances.AMSK += reward;
+        walletData.mining.totalMined += reward;
         walletData.referrals.earned += reward;
         walletData.referrals.claimedMilestones.push(milestoneNum);
         
@@ -2176,6 +3286,7 @@ async function claimMilestone(milestoneNum) {
             const userRef = db.collection('users').doc(userData.id);
             await userRef.update({
                 'balances.AMSK': firebase.firestore.FieldValue.increment(reward),
+                'mining.totalMined': firebase.firestore.FieldValue.increment(reward),
                 'referrals.earned': firebase.firestore.FieldValue.increment(reward),
                 'referrals.claimedMilestones': firebase.firestore.FieldValue.arrayUnion(milestoneNum),
                 'referrals.pendingMilestones': firebase.firestore.FieldValue.arrayRemove(milestoneNum),
@@ -2185,6 +3296,7 @@ async function claimMilestone(milestoneNum) {
         
         // Update UI
         updateWalletUI();
+        updateMiningDisplay();
         updateReferralDisplay();
         
         // Save data
@@ -2225,7 +3337,7 @@ function shareOnTelegram() {
     if (!elements.referralLinkInput) return;
     
     const link = elements.referralLinkInput.value;
-    const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nUse my referral link to get bonus AMSK tokens:\n\n${link}`;
+    const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ *Mine AMSK tokens every hour*\n💰 *Earn from staking and referrals*\n👥 *Get 10,000 AMSK bonus with my link*\n\n👉 ${link}\n\n💎 *Start your quantum mining journey!*`;
     const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
     
     window.open(url, '_blank');
@@ -2235,14 +3347,14 @@ function shareOnWhatsApp() {
     if (!elements.referralLinkInput) return;
     
     const link = elements.referralLinkInput.value;
-    const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nUse my referral link to get bonus AMSK tokens:\n\n${link}`;
+    const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${link}`;
     const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
     
     window.open(url, '_blank');
 }
 
 // ============================================
-// ADMIN SYSTEM
+// ADMIN SYSTEM - PROFESSIONAL
 // ============================================
 function initAdminSystem() {
     if (elements.adminLogo) {
@@ -2359,9 +3471,11 @@ function showAdminPanel() {
                     <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
                         <button class="tab-btn active" onclick="switchAdminTab('deposits')">
                             <i class="fas fa-download"></i> Pending Deposits
+                            <span class="tab-badge" id="pendingDepositsCount">0</span>
                         </button>
                         <button class="tab-btn" onclick="switchAdminTab('withdrawals')">
                             <i class="fas fa-upload"></i> Pending Withdrawals
+                            <span class="tab-badge" id="pendingWithdrawalsCount">0</span>
                         </button>
                         <button class="tab-btn" onclick="switchAdminTab('users')">
                             <i class="fas fa-users"></i> User Management
@@ -2438,28 +3552,31 @@ function showAdminPanel() {
     loadAdminPendingRequests('deposits');
 }
 
-async function loadAdminPendingRequests(type) {
+async function loadAdminPendingRequests(type = 'deposits') {
     if (!adminAccess || !db) return;
     
     try {
-        let collection, listId;
+        let collection, listId, countId;
         
         if (type === 'deposits') {
-            collection = 'transactions';
+            collection = 'deposit_requests';
             listId = 'adminDepositsList';
+            countId = 'pendingDepositsCount';
         } else {
-            collection = 'transactions';
+            collection = 'withdrawals';
             listId = 'adminWithdrawalsList';
+            countId = 'pendingWithdrawalsCount';
         }
         
         const query = await db.collection(collection)
-            .where('type', '==', type === 'deposits' ? 'deposit_request' : 'withdrawal_request')
             .where('status', '==', 'pending')
             .orderBy('timestamp', 'desc')
             .limit(50)
             .get();
         
         const listElement = document.getElementById(listId);
+        const countElement = document.getElementById(countId);
+        
         if (!listElement) return;
         
         if (query.empty) {
@@ -2469,13 +3586,23 @@ async function loadAdminPendingRequests(type) {
                     <p>No pending ${type}</p>
                 </div>
             `;
+            if (countElement) {
+                countElement.textContent = '0';
+            }
             return;
+        }
+        
+        if (countElement) {
+            countElement.textContent = query.size;
         }
         
         let html = '';
         query.forEach(doc => {
             const data = doc.data();
             const date = data.timestamp?.toDate ? data.timestamp.toDate() : new Date(data.timestamp || Date.now());
+            const currency = data.currency || 'USDT';
+            const safeCurrency = currency.replace(/'/g, "\\'");
+            const safeTxId = data.transactionHash ? data.transactionHash.replace(/'/g, "\\'") : '';
             
             html += `
                 <div class="transaction-card" style="margin-bottom: 10px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
@@ -2485,8 +3612,8 @@ async function loadAdminPendingRequests(type) {
                                 <i class="fas fa-${type === 'deposits' ? 'download' : 'upload'}" style="color: ${type === 'deposits' ? '#00ff88' : '#3b82f6'}"></i>
                             </div>
                             <div class="type-info">
-                                <div class="type-title" style="font-weight: 600; color: white;">${data.userId || 'Unknown User'}</div>
-                                <div class="type-subtitle" style="font-size: 12px; color: #94a3b8;">${data.amount} ${data.currency}</div>
+                                <div class="type-title" style="font-weight: 600; color: white;">${data.username || 'Unknown User'}</div>
+                                <div class="type-subtitle" style="font-size: 12px; color: #94a3b8;">ID: ${data.userId || 'Unknown'}</div>
                             </div>
                         </div>
                         <div class="transaction-status pending-badge" style="background: rgba(245,158,11,0.1); color: #f59e0b; padding: 5px 10px; border-radius: 20px; font-size: 12px; display: flex; align-items: center; gap: 5px;">
@@ -2496,22 +3623,27 @@ async function loadAdminPendingRequests(type) {
                     </div>
                     <div class="transaction-details" style="font-size: 13px; color: #94a3b8;">
                         <div style="margin-bottom: 5px;">
-                            <span>TXID:</span>
-                            <span style="font-family: monospace; margin-left: 5px;">${data.txid ? data.txid.substring(0, 12) + '...' : 'None'}</span>
+                            <span>Amount:</span>
+                            <span style="margin-left: 5px; font-weight: 600; color: white;">${data.amount} ${currency}</span>
                         </div>
+                        ${type === 'deposits' ? `
+                        <div style="margin-bottom: 5px;">
+                            <span>TXID:</span>
+                            <span style="font-family: monospace; margin-left: 5px;" title="${safeTxId}">${data.transactionHash ? data.transactionHash.substring(0, 12) + '...' + data.transactionHash.substring(data.transactionHash.length - 6) : 'None'}</span>
+                        </div>
+                        ` : `
+                        <div style="margin-bottom: 5px;">
+                            <span>Address:</span>
+                            <span style="font-family: monospace; margin-left: 5px;" title="${data.address || 'None'}">${data.address ? data.address.substring(0, 12) + '...' + data.address.substring(data.address.length - 6) : 'None'}</span>
+                        </div>
+                        `}
                         <div style="margin-bottom: 5px;">
                             <span>Date:</span>
                             <span style="margin-left: 5px;">${date.toLocaleDateString()} ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                         </div>
-                        ${type === 'withdrawals' ? `
-                        <div>
-                            <span>Address:</span>
-                            <span style="font-family: monospace; margin-left: 5px;">${data.address ? data.address.substring(0, 12) + '...' : 'None'}</span>
-                        </div>
-                        ` : ''}
                     </div>
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button onclick="adminApproveRequest('${doc.id}', '${type}', '${data.userId}', ${data.amount}, '${data.currency || 'USDT'}')" 
+                        <button onclick="adminApproveRequest('${doc.id}', '${type}', '${data.userId}', ${data.amount}, '${safeCurrency}', '${safeTxId}')" 
                                 style="flex: 1; padding: 8px; background: linear-gradient(135deg, #22c55e, #10b981); color: white; border: none; border-radius: 6px; font-weight: 600;">
                             <i class="fas fa-check"></i> Approve
                         </button>
@@ -2540,25 +3672,43 @@ async function loadAdminPendingRequests(type) {
     }
 }
 
-async function adminApproveRequest(docId, type, userId, amount, currency) {
+async function adminApproveRequest(docId, type, userId, amount, currency, txHash = '') {
     if (!adminAccess || !db) return;
     
     if (!confirm(`Approve ${type.slice(0, -1)} of ${amount} ${currency} for user ${userId}?`)) return;
     
     try {
-        // Update transaction status
-        await db.collection('transactions').doc(docId).update({
-            status: 'approved',
-            approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            approvedBy: 'admin'
-        });
-        
-        // If deposit, add balance to user
         if (type === 'deposits') {
+            // Update deposit status
+            await db.collection('deposit_requests').doc(docId).update({
+                status: 'approved',
+                approvedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                approvedBy: 'admin',
+                adminNote: 'Approved by admin'
+            });
+            
+            // Update user's balance
             const userRef = db.collection('users').doc(userId);
-            await userRef.update({
-                [`balances.${currency}`]: firebase.firestore.FieldValue.increment(amount),
-                lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+            const userSnap = await userRef.get();
+            
+            if (userSnap.exists) {
+                const userData = userSnap.data();
+                const currentBalance = userData.balances?.[currency] || 0;
+                
+                await userRef.update({
+                    [`balances.${currency}`]: currentBalance + amount,
+                    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                console.log(`✅ Added ${amount} ${currency} to user ${userId}`);
+            }
+            
+        } else {
+            // Update withdrawal status
+            await db.collection('withdrawals').doc(docId).update({
+                status: 'completed',
+                completedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                completedBy: 'admin'
             });
         }
         
@@ -2580,12 +3730,21 @@ async function adminRejectRequest(docId, type) {
     if (!reason) return;
     
     try {
-        await db.collection('transactions').doc(docId).update({
-            status: 'rejected',
-            rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            rejectedBy: 'admin',
-            rejectionReason: reason
-        });
+        if (type === 'deposits') {
+            await db.collection('deposit_requests').doc(docId).update({
+                status: 'rejected',
+                rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                rejectedBy: 'admin',
+                rejectionReason: reason
+            });
+        } else {
+            await db.collection('withdrawals').doc(docId).update({
+                status: 'rejected',
+                rejectedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                rejectedBy: 'admin',
+                rejectionReason: reason
+            });
+        }
         
         showMessage(`❌ ${type.slice(0, -1)} request rejected.`, "warning");
         
@@ -2622,16 +3781,26 @@ async function addBalanceToSpecificUser() {
     
     try {
         const userRef = db.collection('users').doc(userId);
+        const userSnap = await userRef.get();
         
-        await userRef.update({
-            'balances.AMSK': firebase.firestore.FieldValue.increment(amount),
-            lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        showMessage(`✅ Added ${amount} AMSK to user ${userId}`, "success");
-        
-        userIdInput.value = '';
-        amountInput.value = '';
+        if (userSnap.exists) {
+            const userData = userSnap.data();
+            const currentBalance = userData.balances?.AMSK || 0;
+            const currentTotalMined = userData.mining?.totalMined || 0;
+            
+            await userRef.update({
+                'balances.AMSK': currentBalance + amount,
+                'mining.totalMined': currentTotalMined + amount,
+                lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            showMessage(`✅ Added ${amount} AMSK to user ${userId}`, "success");
+            
+            userIdInput.value = '';
+            amountInput.value = '';
+        } else {
+            showMessage('User not found', 'error');
+        }
         
     } catch (error) {
         console.error("❌ Error adding balance to user:", error);
@@ -2660,6 +3829,141 @@ function switchAdminTab(tabName) {
     // Load data for active tab
     if (tabName !== 'users') {
         loadAdminPendingRequests(tabName);
+    }
+}
+
+// ============================================
+// REAL-TIME LISTENERS
+// ============================================
+function setupRealTimeListeners() {
+    if (!db || !userData.id) return;
+    
+    console.log("👂 Setting up real-time listeners...");
+    
+    // Listen for deposit updates
+    db.collection('deposit_requests')
+        .where('userId', '==', userData.id)
+        .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'modified') {
+                    const data = change.doc.data();
+                    updateUserLocalDeposit(change.doc.id, data);
+                }
+            });
+        });
+    
+    // Listen for withdrawal updates
+    db.collection('withdrawals')
+        .where('userId', '==', userData.id)
+        .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'modified') {
+                    const data = change.doc.data();
+                    updateUserLocalWithdrawal(change.doc.id, data);
+                }
+            });
+        });
+}
+
+function updateUserLocalDeposit(firebaseId, depositData) {
+    const status = depositData.status ? depositData.status.toLowerCase() : '';
+    
+    // Find in pending deposits
+    const pendingIndex = walletData.pendingDeposits.findIndex(d => 
+        d.transactionHash === depositData.transactionHash
+    );
+    
+    if (pendingIndex !== -1) {
+        if (status === 'approved') {
+            // Move from pending to history
+            const approvedDeposit = {
+                ...walletData.pendingDeposits[pendingIndex],
+                status: 'approved',
+                approvedAt: depositData.approvedAt || Date.now(),
+                adminNote: depositData.adminNote || 'Approved'
+            };
+            
+            walletData.depositHistory.unshift(approvedDeposit);
+            walletData.pendingDeposits.splice(pendingIndex, 1);
+            
+            // Add to balance
+            if (depositData.currency === 'AMSK') {
+                walletData.balances.AMSK += depositData.amount;
+                walletData.mining.totalMined += depositData.amount;
+            } else if (depositData.currency === 'USDT') {
+                walletData.balances.USDT += depositData.amount;
+            } else if (depositData.currency === 'BNB') {
+                walletData.balances.BNB += depositData.amount;
+            }
+            
+            showMessage(`✅ Deposit approved! +${depositData.amount} ${depositData.currency} added`, 'success');
+            
+        } else if (status === 'rejected') {
+            // Move from pending to history as rejected
+            const rejectedDeposit = {
+                ...walletData.pendingDeposits[pendingIndex],
+                status: 'rejected',
+                rejectedAt: depositData.rejectedAt || Date.now(),
+                rejectionReason: depositData.rejectionReason || 'Rejected'
+            };
+            
+            walletData.depositHistory.unshift(rejectedDeposit);
+            walletData.pendingDeposits.splice(pendingIndex, 1);
+            
+            showMessage(`❌ Deposit rejected: ${depositData.rejectionReason || 'No reason provided'}`, 'warning');
+        }
+        
+        saveUserData();
+        updateWalletUI();
+        updateMiningDisplay();
+    }
+}
+
+function updateUserLocalWithdrawal(firebaseId, withdrawalData) {
+    const status = withdrawalData.status ? withdrawalData.status.toLowerCase() : '';
+    
+    // Find in pending withdrawals
+    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => 
+        w.address === withdrawalData.address && 
+        Math.abs(w.amount - withdrawalData.amount) < 0.01
+    );
+    
+    if (pendingIndex !== -1) {
+        if (status === 'completed') {
+            // Move from pending to history
+            const completedWithdrawal = {
+                ...walletData.pendingWithdrawals[pendingIndex],
+                status: 'completed',
+                completedAt: withdrawalData.completedAt || Date.now(),
+                completedBy: withdrawalData.completedBy || 'admin'
+            };
+            
+            walletData.withdrawalHistory.unshift(completedWithdrawal);
+            walletData.pendingWithdrawals.splice(pendingIndex, 1);
+            
+            showMessage(`✅ Withdrawal completed! ${withdrawalData.amount} USDT sent`, 'success');
+            
+        } else if (status === 'rejected') {
+            // Move from pending to history as rejected and return funds
+            const rejectedWithdrawal = {
+                ...walletData.pendingWithdrawals[pendingIndex],
+                status: 'rejected',
+                rejectedAt: withdrawalData.rejectedAt || Date.now(),
+                rejectionReason: withdrawalData.rejectionReason || 'Rejected'
+            };
+            
+            walletData.withdrawalHistory.unshift(rejectedWithdrawal);
+            walletData.pendingWithdrawals.splice(pendingIndex, 1);
+            
+            // Return funds
+            walletData.balances.USDT += withdrawalData.amount;
+            walletData.balances.BNB += withdrawalData.fee || CONFIG.WITHDRAWAL.FEE_BNB;
+            
+            showMessage(`❌ Withdrawal rejected. Funds returned. Reason: ${withdrawalData.rejectionReason || 'No reason provided'}`, 'warning');
+        }
+        
+        saveUserData();
+        updateWalletUI();
     }
 }
 
@@ -2763,8 +4067,22 @@ function setupEventListeners() {
         });
     });
     
-    // Admin system
-    initAdminSystem();
+    // Wallet action buttons
+    if (elements.depositBtn) {
+        elements.depositBtn.addEventListener('click', () => openDepositModal('USDT'));
+    }
+    
+    if (elements.withdrawBtn) {
+        elements.withdrawBtn.addEventListener('click', openWithdrawModal);
+    }
+    
+    if (elements.swapBtn) {
+        elements.swapBtn.addEventListener('click', openSwapModal);
+    }
+    
+    if (elements.historyBtn) {
+        elements.historyBtn.addEventListener('click', showTransactionHistory);
+    }
     
     console.log("✅ Event listeners setup complete");
 }
@@ -2886,10 +4204,16 @@ window.claimStakeReward = claimStakeReward;
 window.cancelStake = cancelStake;
 window.openDepositModal = openDepositModal;
 window.submitDeposit = submitDeposit;
+window.validateTransactionHash = validateTransactionHash;
 window.openWithdrawModal = openWithdrawModal;
+window.validateWithdrawAddress = validateWithdrawAddress;
+window.validateWithdrawAmount = validateWithdrawAmount;
+window.setMaxWithdrawAmount = setMaxWithdrawAmount;
+window.updateWithdrawAmountFromSlider = updateWithdrawAmountFromSlider;
 window.submitWithdrawal = submitWithdrawal;
 window.openSwapModal = openSwapModal;
-window.updateSwapCalculation = updateSwapCalculation;
+window.switchSwapTab = switchSwapTab;
+window.calculateSwap = calculateSwap;
 window.executeSwap = executeSwap;
 window.showTransactionHistory = showTransactionHistory;
 window.switchHistoryTab = switchHistoryTab;
@@ -2911,4 +4235,33 @@ window.adminRejectRequest = adminRejectRequest;
 window.addBalanceToSpecificUser = addBalanceToSpecificUser;
 window.loadAdminPendingRequests = loadAdminPendingRequests;
 
-console.log("👽 Alien Musk Quantum Platform v5.0 - Ready!");
+// Utility functions
+window.formatNumber = formatNumber;
+window.setMaxStakeAmount = setMaxStakeAmount;
+window.updateStakeAmountFromSlider = updateStakeAmountFromSlider;
+window.calculateStakeReward = calculateStakeReward;
+window.setMaxSwap = function() {
+    const activeTab = document.querySelector('.swap-content.active');
+    if (activeTab && activeTab.id === 'amsk_to_usdt') {
+        const input = document.getElementById('swap-from-amsk');
+        if (input) {
+            input.value = walletData.balances?.AMSK || 0;
+            calculateSwap('amsk_to_usdt');
+        }
+    } else if (activeTab && activeTab.id === 'usdt_to_amsk') {
+        const input = document.getElementById('swap-from-usdt');
+        if (input) {
+            input.value = walletData.balances?.USDT || 0;
+            calculateSwap('usdt_to_amsk');
+        }
+    }
+};
+
+console.log("👽 Alien Musk Quantum Platform v6.0 - Professional Edition Ready!");
+
+// Initialize app when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAlienMuskApp);
+} else {
+    initAlienMuskApp();
+}
