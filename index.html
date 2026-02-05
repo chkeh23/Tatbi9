@@ -1593,186 +1593,7 @@
 
         <!-- Home Page -->
         <div id="home-page" class="page active">
-            <div class="mining-section">
-                <div class="mining-header">
-                    <h3><i class="fas fa-microchip"></i> Quantum Mining</h3>
-                    <div class="mining-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Level</span>
-                            <span id="current-mining-level" class="stat-value">1</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Hashrate</span>
-                            <span id="current-hashrate-display" class="stat-value">2,500</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mining-timer-card">
-                    <div class="timer-display">
-                        <i class="fas fa-clock"></i>
-                        <span id="mining-timer-display">01:00:00</span>
-                    </div>
-                    <div class="next-reward">
-                        Next reward: <span id="next-reward-amount">2,500</span> AMSK
-                    </div>
-                </div>
-                
-                <button id="start-mining-btn" class="mining-action-btn">
-                    <i class="fas fa-play"></i>
-                    <span>Start Mining</span>
-                </button>
-                
-                <div class="mining-info">
-                    <div class="info-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="upgrade-section">
-                <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
-                <div class="upgrade-cards">
-                    <!-- Level 1 -->
-                    <div class="upgrade-card" data-level="1">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 1</div>
-                            <div class="upgrade-name">Beginner</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500 AMSK</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn active-btn" disabled>Active</button>
-                    </div>
-                    
-                    <!-- Level 2 -->
-                    <div class="upgrade-card" data-level="2">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 2</div>
-                            <div class="upgrade-name">Advanced</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 5,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 5,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 5 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(2)">Upgrade</button>
-                    </div>
-                    
-                    <!-- Level 3 -->
-                    <div class="upgrade-card" data-level="3">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 3</div>
-                            <div class="upgrade-name">Pro</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 10,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 10,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 20 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(3)">20 USDT</button>
-                    </div>
-                    
-                    <!-- Level 4 -->
-                    <div class="upgrade-card" data-level="4">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 4</div>
-                            <div class="upgrade-name">Expert</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 25,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 25,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 100 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(4)">100 USDT</button>
-                    </div>
-                    
-                    <!-- Level 5 -->
-                    <div class="upgrade-card" data-level="5">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 5</div>
-                            <div class="upgrade-name">Master</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 50,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 50,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 500 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(5)">500 USDT</button>
-                    </div>
-                    
-                    <!-- Level 6 -->
-                    <div class="upgrade-card" data-level="6">
-                        <div class="upgrade-header">
-                            <div class="upgrade-level">Level 6</div>
-                            <div class="upgrade-name">Elite</div>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 100,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 100,000 AMSK</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-money-bill"></i>
-                                <span>Cost: 1,000 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(6)">1,000 USDT</button>
-                    </div>
-                </div>
-            </div>
+            <!-- Mining section will be populated by JavaScript -->
         </div>
 
         <!-- Staking Page -->
@@ -1791,32 +1612,7 @@
                     </div>
                     
                     <div class="staking-plans-grid">
-                        <div class="plan-item">
-                            <div class="plan-name">Silver Plan</div>
-                            <div class="plan-amount">10-1000 USDT</div>
-                            <div class="plan-duration">7 Days</div>
-                            <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward">~571 AMSK/Day per 100 USDT</div>
-                            <button class="stake-plan-btn" data-plan="1" onclick="openStakeModal(1)">Stake Now</button>
-                        </div>
-                        
-                        <div class="plan-item">
-                            <div class="plan-name">Gold Plan</div>
-                            <div class="plan-amount">50-5000 USDT</div>
-                            <div class="plan-duration">15 Days</div>
-                            <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward">~416 AMSK/Day per 100 USDT</div>
-                            <button class="stake-plan-btn" data-plan="2" onclick="openStakeModal(2)">Stake Now</button>
-                        </div>
-                        
-                        <div class="plan-item">
-                            <div class="plan-name">Diamond Plan</div>
-                            <div class="plan-amount">100-10000 USDT</div>
-                            <div class="plan-duration">30 Days</div>
-                            <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward">~333 AMSK/Day per 100 USDT</div>
-                            <button class="stake-plan-btn" data-plan="3" onclick="openStakeModal(3)">Stake Now</button>
-                        </div>
+                        <!-- Plans will be populated by JavaScript -->
                     </div>
                 </div>
                 
@@ -1838,8 +1634,8 @@
             <div class="wallet-content">
                 <div class="wallet-balance-card">
                     <h4><i class="fas fa-wallet"></i> Total Balance</h4>
-                    <div class="wallet-balance-amount" id="wallet-balance-amsk">2,500</div>
-                    <div class="wallet-balance-usd" id="wallet-balance-usd">≈ $0.50</div>
+                    <div class="wallet-balance-amount" id="wallet-balance-amsk">0</div>
+                    <div class="wallet-balance-usd" id="wallet-balance-usd">≈ $0.00</div>
                     
                     <div class="wallet-actions">
                         <button class="wallet-action-btn" id="deposit-btn">
@@ -1864,49 +1660,7 @@
                 <div class="wallet-assets">
                     <h5><i class="fas fa-coins"></i> My Assets</h5>
                     <div class="asset-list">
-                        <div class="asset-item">
-                            <div class="asset-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="asset-details">
-                                <div class="asset-name">Alien Musk (AMSK)</div>
-                                <div class="asset-balance" id="wallet-amsk-balance">2,500 AMSK</div>
-                            </div>
-                            <div class="asset-value" id="wallet-amsk-value">$0.50</div>
-                        </div>
-                        
-                        <div class="asset-item">
-                            <div class="asset-icon usdt">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div class="asset-details">
-                                <div class="asset-name">Tether (USDT)</div>
-                                <div class="asset-balance" id="wallet-usdt-balance">0.00 USDT</div>
-                            </div>
-                            <div class="asset-value" id="wallet-usdt-value">$0.00</div>
-                        </div>
-                        
-                        <div class="asset-item">
-                            <div class="asset-icon bnb">
-                                <i class="fab fa-btc"></i>
-                            </div>
-                            <div class="asset-details">
-                                <div class="asset-name">BNB</div>
-                                <div class="asset-balance" id="wallet-bnb-balance">0.0000 BNB</div>
-                            </div>
-                            <div class="asset-value" id="wallet-bnb-value">$0.00</div>
-                        </div>
-                        
-                        <div class="asset-item">
-                            <div class="asset-icon ton">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <div class="asset-details">
-                                <div class="asset-name">TON</div>
-                                <div class="asset-balance" id="wallet-ton-balance">0 TON</div>
-                            </div>
-                            <div class="asset-value" id="wallet-ton-value">$0.00</div>
-                        </div>
+                        <!-- Assets will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -1915,113 +1669,7 @@
         <!-- Referral Page -->
         <div id="referral-page" class="page">
             <div class="referral-content">
-                <div class="referral-stats-card">
-                    <h4><i class="fas fa-users"></i> Referral Program</h4>
-                    <div class="referral-stats">
-                        <div class="ref-stat">
-                            <div class="ref-stat-value" id="ref-count">0</div>
-                            <div class="ref-stat-label">Total Referrals</div>
-                        </div>
-                        <div class="ref-stat">
-                            <div class="ref-stat-value" id="ref-earned">0</div>
-                            <div class="ref-stat-label">AMSK Earned</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="referral-code-card">
-                    <h4><i class="fas fa-link"></i> Your Referral Code</h4>
-                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
-                    <button onclick="copyReferralCode()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--neon-purple), #7b2cbf); border: none; border-radius: var(--radius-lg); color: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;">
-                        <i class="fas fa-copy"></i>
-                        Copy Referral Code
-                    </button>
-                </div>
-                
-                <div class="referral-link-card">
-                    <h4><i class="fas fa-share-alt"></i> Share Your Link</h4>
-                    <div class="link-input-group">
-                        <input type="text" id="referral-link-input" class="link-input" value="Loading..." readonly>
-                        <button onclick="copyReferralLink()" class="copy-link-btn">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                    <div class="share-buttons">
-                        <button class="share-btn telegram" onclick="shareOnTelegram()">
-                            <i class="fab fa-telegram"></i>
-                            Telegram
-                        </button>
-                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                            <i class="fab fa-whatsapp"></i>
-                            WhatsApp
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="milestones-section">
-                    <h5><i class="fas fa-trophy"></i> Milestone Rewards</h5>
-                    <div class="milestones-list">
-                        <div class="milestone-item locked">
-                            <div class="milestone-info">
-                                <div class="milestone-icon">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <div class="milestone-details">
-                                    <div class="milestone-requirement">Refer 10 friends</div>
-                                    <div class="milestone-reward">50,000 AMSK</div>
-                                </div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/10</span>
-                            </div>
-                        </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-info">
-                                <div class="milestone-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="milestone-details">
-                                    <div class="milestone-requirement">Refer 25 friends</div>
-                                    <div class="milestone-reward">150,000 AMSK</div>
-                                </div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/25</span>
-                            </div>
-                        </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-info">
-                                <div class="milestone-icon">
-                                    <i class="fas fa-crown"></i>
-                                </div>
-                                <div class="milestone-details">
-                                    <div class="milestone-requirement">Refer 50 friends</div>
-                                    <div class="milestone-reward">350,000 AMSK</div>
-                                </div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/50</span>
-                            </div>
-                        </div>
-                        
-                        <div class="milestone-item locked">
-                            <div class="milestone-info">
-                                <div class="milestone-icon">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div class="milestone-details">
-                                    <div class="milestone-requirement">Refer 100 friends</div>
-                                    <div class="milestone-reward">1,000,000 AMSK</div>
-                                </div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/100</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Referral content will be populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -2049,18 +1697,239 @@
     <!-- Notification Container -->
     <div id="notification-container"></div>
 
-    <!-- JavaScript -->
+    <!-- Main Application JavaScript -->
     <script>
         // ============================================
         // ALIEN MUSK - Quantum Mining Platform v6.0
         // PROFESSIONAL EDITION WITH ADMIN PANEL & WALLET
         // ============================================
         
-        // هذا هو ملف JavaScript الكامل الذي قمت بتقديمه مسبقاً
-        // سيتم إدراجه هنا للحفاظ على تنظيم الكود
-        // ولكن في التطبيق الفعلي، من الأفضل فصله في ملف منفصل
-        
-        // إضافة النجوم المتحركة في الخلفية
+        // Telegram WebApp
+        let tg = null;
+        try {
+            tg = window.Telegram.WebApp;
+            if (tg) {
+                tg.ready();
+                tg.expand();
+                tg.setHeaderColor('#0a0a0f');
+                tg.setBackgroundColor('#0a0a0f');
+                console.log("✅ Telegram WebApp initialized");
+            }
+        } catch (e) {
+            console.log("⚠️ Not in Telegram environment");
+        }
+
+        // Firebase Configuration
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+
+        // Initialize Firebase
+        let firebaseApp, db;
+        if (typeof firebase !== 'undefined') {
+            try {
+                firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                db = firebase.firestore();
+                console.log("✅ Firebase initialized");
+            } catch (error) {
+                console.error("❌ Firebase error:", error);
+            }
+        }
+
+        // ============================================
+        // CONFIGURATION - UPDATED
+        // ============================================
+        const CONFIG = {
+            // Token Prices (USD)
+            PRICES: {
+                AMSK: 0.0002,
+                USDT: 1.00,
+                BNB: 752.00,
+                TON: 1.32
+            },
+            
+            // Deposit Minimums
+            MIN_DEPOSIT: {
+                USDT: 10,
+                BNB: 0.02,
+                TON: 10
+            },
+            
+            // Withdrawal Settings
+            WITHDRAWAL: {
+                MIN_USDT: 100,
+                FEE_BNB: 0.0002,
+                FEE_USD: 0.15
+            },
+            
+            // Deposit Addresses
+            ADDRESSES: {
+                TON: "UQBCqpsPGRG3BalS10iF5U8-PSXkbE5ZlpQRqPVJaGglvQDJ",
+                BNB_USDT: "0x790CAB511055F63db2F30AD227f7086bA3B6376a"
+            },
+            
+            // Mining Configuration - UPDATED WITH MORE LEVELS
+            MINING: {
+                DURATION: 60000, // 1 minute for testing (change to 3600000 for production)
+                
+                LEVELS: {
+                    1: { name: "Beginner", cost: 0, reward: 2500, hashrate: 2500 },
+                    2: { name: "Advanced", cost: 5, reward: 5000, hashrate: 5000 },
+                    3: { name: "Pro", cost: 20, reward: 10000, hashrate: 10000 },
+                    4: { name: "Expert", cost: 100, reward: 25000, hashrate: 25000 },
+                    5: { name: "Master", cost: 500, reward: 50000, hashrate: 50000 },
+                    6: { name: "Elite", cost: 1000, reward: 100000, hashrate: 100000 }
+                },
+                
+                BOOSTERS: {
+                    "2x": { multiplier: 2, duration: 86400000, price: 10000 },
+                    "3x": { multiplier: 3, duration: 43200000, price: 15000 },
+                    "5x": { multiplier: 5, duration: 21600000, price: 25000 }
+                }
+            },
+            
+            // Staking Configuration - FIXED CALCULATIONS
+            STAKING: {
+                PLANS: {
+                    1: { 
+                        name: "Silver", 
+                        minAmount: 10, 
+                        maxAmount: 1000,
+                        duration: 7, 
+                        apr: 40, 
+                        dailyPer100: 571.43
+                    },
+                    2: { 
+                        name: "Gold", 
+                        minAmount: 50, 
+                        maxAmount: 5000,
+                        duration: 15, 
+                        apr: 50, 
+                        dailyPer100: 416.67
+                    },
+                    3: { 
+                        name: "Diamond", 
+                        minAmount: 100, 
+                        maxAmount: 10000,
+                        duration: 30, 
+                        apr: 60, 
+                        dailyPer100: 333.33
+                    }
+                }
+            },
+            
+            // Referral Configuration - UPDATED WITH MILESTONES
+            REFERRAL: {
+                DIRECT_REWARD: 10000, // 10,000 AMSK for referrer
+                WELCOME_BONUS: 5000, // 5,000 AMSK for new user
+                
+                MILESTONES: {
+                    10: 50000,   // 50,000 AMSK
+                    25: 150000,  // 150,000 AMSK
+                    50: 350000,  // 350,000 AMSK
+                    100: 1000000 // 1,000,000 AMSK
+                }
+            },
+            
+            // Admin Configuration
+            ADMIN: {
+                TELEGRAM_ID: "1653918641",
+                PASSWORD: "Ali97$",
+                SECRET_CODE: "ALIEN2024"
+            },
+            
+            // Swap Configuration
+            SWAP: {
+                MIN_AMSK: 1000,
+                MIN_USDT: 10,
+                RATE_AMSK_USDT: 5000, // 1 USDT = 5,000 AMSK
+                FEE_PERCENT: 0.1
+            },
+            
+            // UI Configuration
+            UI: {
+                ANIMATION_DURATION: 300,
+                NOTIFICATION_DURATION: 4000
+            }
+        };
+
+        // ============================================
+        // USER DATA MANAGEMENT
+        // ============================================
+        let userData = {
+            id: null,
+            telegramId: null,
+            username: 'Alien',
+            firstName: 'Alien',
+            photoUrl: null,
+            referralCode: null,
+            referredBy: null,
+            joinedAt: null,
+            lastActive: null,
+            isInitialized: false,
+            lastSaveTime: 0
+        };
+
+        // WALLET DATA
+        let walletData = {
+            balances: {
+                AMSK: 2500,
+                USDT: 0,
+                BNB: 0,
+                TON: 0
+            },
+            mining: {
+                level: 1,
+                active: false,
+                lastReward: null,
+                nextReward: null,
+                totalMined: 2500,
+                minedToday: 2500,
+                activeBoosters: []
+            },
+            staking: {
+                activeStakes: [],
+                totalEarned: 0,
+                totalStaked: 0
+            },
+            referrals: {
+                count: 0,
+                earned: 0,
+                referrals: [],
+                claimedMilestones: [],
+                pendingMilestones: []
+            },
+            pendingDeposits: [],
+            pendingWithdrawals: [],
+            depositHistory: [],
+            withdrawalHistory: [],
+            usedTransactions: [],
+            lastUpdate: Date.now()
+        };
+
+        // ADMIN SYSTEM
+        let adminAccess = false;
+        let gemClickCount = 0;
+        let lastGemClickTime = 0;
+
+        // ELEMENTS CACHE
+        const elements = {};
+
+        // INTERVALS
+        let intervals = {
+            miningTimer: null,
+            autoSave: null,
+            updateTimer: null
+        };
+
+        // ============================================
+        // STAR FIELD BACKGROUND
+        // ============================================
         function createStarfield() {
             const starField = document.getElementById('star-field');
             if (!starField) return;
@@ -2081,56 +1950,1418 @@
                 starField.appendChild(star);
             }
         }
-        
-        // تهيئة التطبيق
-        document.addEventListener('DOMContentLoaded', function() {
-            createStarfield();
-            console.log('🚀 Alien Musk Quantum Platform v6.0 - Space Theme Ready!');
-        });
-        
-        // جعل الدوال متاحة عالمياً للاستخدام من قبل كود JavaScript
-        window.copyReferralCode = function() {
-            const codeElement = document.getElementById('referral-code-display');
-            if (codeElement) {
-                navigator.clipboard.writeText(codeElement.textContent)
-                    .then(() => showMessage('✅ Referral code copied!', 'success'))
-                    .catch(() => showMessage('❌ Failed to copy code', 'error'));
+
+        // ============================================
+        // INITIALIZATION - FIXED
+        // ============================================
+        async function initAlienMuskApp() {
+            console.log("🚀 Initializing Alien Musk Platform v6.0...");
+            
+            try {
+                // 1. Create star field
+                createStarfield();
+                
+                // 2. Update loading progress
+                updateLoadingProgress('Loading Quantum Engine...', 25);
+                
+                // 3. Cache DOM Elements
+                await cacheElements();
+                
+                // 4. Setup User
+                await setupUser();
+                updateLoadingProgress('Initializing user data...', 50);
+                
+                // 5. Load Data
+                await loadUserData();
+                updateLoadingProgress('Setting up mining system...', 75);
+                
+                // 6. Setup Event Listeners
+                setupEventListeners();
+                
+                // 7. Check for Referral
+                await checkForReferral();
+                
+                // 8. Generate HTML content
+                generatePageContent();
+                
+                // 9. Update UI
+                updateUI();
+                
+                // 10. Complete loading
+                updateLoadingProgress('Platform Ready!', 100);
+                
+                setTimeout(() => {
+                    hideLoading();
+                    showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
+                    
+                    // Start Background Services
+                    startBackgroundServices();
+                    
+                    // Setup Admin System
+                    initAdminSystem();
+                    
+                    // Setup Real-time Listeners
+                    setupRealTimeListeners();
+                    
+                    userData.isInitialized = true;
+                    console.log("✅ Platform initialized successfully");
+                }, 500);
+                
+            } catch (error) {
+                console.error("❌ Initialization failed:", error);
+                showMessage("Failed to initialize platform", "error");
+                hideLoading();
             }
-        };
-        
-        window.copyReferralLink = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (linkInput) {
-                navigator.clipboard.writeText(linkInput.value)
-                    .then(() => showMessage('✅ Referral link copied!', 'success'))
-                    .catch(() => showMessage('❌ Failed to copy link', 'error'));
+        }
+
+        // Loading Progress
+        function updateLoadingProgress(text, percent) {
+            const bar = document.getElementById('loading-progress-bar');
+            const textEl = document.getElementById('loading-progress-text');
+            
+            if (bar) bar.style.width = percent + '%';
+            if (textEl) textEl.textContent = text;
+        }
+
+        function hideLoading() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
             }
-        };
-        
-        window.shareOnTelegram = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (!linkInput) return;
             
-            const link = linkInput.value;
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ *Mine AMSK tokens every hour*\n💰 *Earn from staking and referrals*\n👥 *Get 10,000 AMSK bonus with my link*\n\n👉 ${link}\n\n💎 *Start your quantum mining journey!*`;
-            const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+            if (appContainer) {
+                appContainer.style.display = 'block';
+            }
+        }
+
+        // ============================================
+        // HTML CONTENT GENERATION
+        // ============================================
+        function generatePageContent() {
+            generateHomePage();
+            generateStakingPage();
+            generateWalletPage();
+            generateReferralPage();
+        }
+
+        function generateHomePage() {
+            const homePage = document.getElementById('home-page');
+            if (!homePage) return;
             
-            window.open(url, '_blank');
-        };
-        
-        window.shareOnWhatsApp = function() {
-            const linkInput = document.getElementById('referral-link-input');
-            if (!linkInput) return;
+            homePage.innerHTML = `
+                <div class="mining-section">
+                    <div class="mining-header">
+                        <h3><i class="fas fa-microchip"></i> Quantum Mining</h3>
+                        <div class="mining-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Level</span>
+                                <span id="current-mining-level" class="stat-value">1</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Hashrate</span>
+                                <span id="current-hashrate-display" class="stat-value">2,500</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mining-timer-card">
+                        <div class="timer-display">
+                            <i class="fas fa-clock"></i>
+                            <span id="mining-timer-display">01:00:00</span>
+                        </div>
+                        <div class="next-reward">
+                            Next reward: <span id="next-reward-amount">2,500</span> AMSK
+                        </div>
+                    </div>
+                    
+                    <button id="start-mining-btn" class="mining-action-btn">
+                        <i class="fas fa-play"></i>
+                        <span>Start Mining</span>
+                    </button>
+                    
+                    <div class="mining-info">
+                        <div class="info-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>Today: <span id="mined-today">2,500</span> AMSK</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upgrade-section">
+                    <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
+                    <div class="upgrade-cards" id="upgrade-cards-container">
+                        ${generateUpgradeCards()}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateUpgradeCards() {
+            let html = '';
+            for (let i = 1; i <= 6; i++) {
+                const level = CONFIG.MINING.LEVELS[i];
+                html += `
+                    <div class="upgrade-card" data-level="${i}">
+                        <div class="upgrade-header">
+                            <div class="upgrade-level">Level ${i}</div>
+                            <div class="upgrade-name">${level.name}</div>
+                        </div>
+                        <div class="upgrade-stats">
+                            <div class="upgrade-stat">
+                                <i class="fas fa-bolt"></i>
+                                <span>Hashrate: ${level.hashrate.toLocaleString()}</span>
+                            </div>
+                            <div class="upgrade-stat">
+                                <i class="fas fa-gift"></i>
+                                <span>Reward: ${level.reward.toLocaleString()} AMSK</span>
+                            </div>
+                            ${i > 1 ? `
+                            <div class="upgrade-stat">
+                                <i class="fas fa-money-bill"></i>
+                                <span>Cost: ${level.cost} USDT</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <button class="upgrade-btn" onclick="upgradeMiningLevel(${i})" ${i === 1 ? 'disabled' : ''}>
+                            ${i === 1 ? 'Active' : i > 1 ? `${level.cost} USDT` : 'Free'}
+                        </button>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        function generateStakingPage() {
+            const stakingPage = document.getElementById('staking-page');
+            if (!stakingPage) return;
             
-            const link = linkInput.value;
-            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${link}`;
-            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            stakingPage.innerHTML = `
+                <div class="staking-content">
+                    <div class="staking-card">
+                        <h4><i class="fas fa-gem"></i> Staking Platform</h4>
+                        <div class="staking-info">
+                            <p style="color: var(--star-light); margin-bottom: var(--space-md);">
+                                Stake your USDT and earn AMSK tokens with high APR returns. Funds are locked for the duration.
+                            </p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: var(--space-md); border-radius: var(--radius-md); border: var(--border-space);">
+                                <span style="color: var(--star-light);">Total Staked:</span>
+                                <span id="total-staked" style="color: var(--neon-green); font-weight: 800; font-family: 'Courier New', monospace; font-size: 22px;">0 USDT</span>
+                            </div>
+                        </div>
+                        
+                        <div class="staking-plans-grid" id="staking-plans-container">
+                            ${generateStakingPlans()}
+                        </div>
+                    </div>
+                    
+                    <div class="staking-card">
+                        <h4><i class="fas fa-clock"></i> Active Stakes</h4>
+                        <div id="active-stakes-list" style="min-height: 150px; display: flex; align-items: center; justify-content: center; color: var(--star-light); padding: var(--space-lg);">
+                            <div style="text-align: center;">
+                                <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: var(--space-md); opacity: 0.5;"></i>
+                                <p>No active stakes yet</p>
+                                <small style="opacity: 0.7;">Start staking to earn rewards</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateStakingPlans() {
+            let html = '';
+            for (let i = 1; i <= 3; i++) {
+                const plan = CONFIG.STAKING.PLANS[i];
+                html += `
+                    <div class="plan-item">
+                        <div class="plan-name">${plan.name} Plan</div>
+                        <div class="plan-amount">${plan.minAmount}-${plan.maxAmount} USDT</div>
+                        <div class="plan-duration">${plan.duration} Days</div>
+                        <div class="plan-apr">${plan.apr}% APR</div>
+                        <div class="plan-reward">~${plan.dailyPer100.toFixed(0)} AMSK/Day per 100 USDT</div>
+                        <button class="stake-plan-btn" data-plan="${i}" onclick="openStakeModal(${i})">Stake Now</button>
+                    </div>
+                `;
+            }
+            return html;
+        }
+
+        function generateWalletPage() {
+            const walletPage = document.getElementById('wallet-page');
+            if (!walletPage) return;
             
-            window.open(url, '_blank');
-        };
-        
-        // دالة العرض الرسائل
-        window.showMessage = function(text, type = 'info') {
+            walletPage.innerHTML = `
+                <div class="wallet-content">
+                    <div class="wallet-balance-card">
+                        <h4><i class="fas fa-wallet"></i> Total Balance</h4>
+                        <div class="wallet-balance-amount" id="wallet-balance-amsk">0</div>
+                        <div class="wallet-balance-usd" id="wallet-balance-usd">≈ $0.00</div>
+                        
+                        <div class="wallet-actions">
+                            <button class="wallet-action-btn" id="deposit-btn">
+                                <i class="fas fa-download"></i>
+                                <span>Deposit</span>
+                            </button>
+                            <button class="wallet-action-btn" id="withdraw-btn">
+                                <i class="fas fa-upload"></i>
+                                <span>Withdraw</span>
+                            </button>
+                            <button class="wallet-action-btn" id="swap-btn">
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>Swap</span>
+                            </button>
+                            <button class="wallet-action-btn" id="history-btn">
+                                <i class="fas fa-history"></i>
+                                <span>History</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="wallet-assets">
+                        <h5><i class="fas fa-coins"></i> My Assets</h5>
+                        <div class="asset-list" id="asset-list-container">
+                            ${generateAssetList()}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateAssetList() {
+            const assets = [
+                { symbol: 'AMSK', name: 'Alien Musk', icon: 'fa-robot', class: '' },
+                { symbol: 'USDT', name: 'Tether', icon: 'fa-coins', class: 'usdt' },
+                { symbol: 'BNB', name: 'BNB', icon: 'fab fa-btc', class: 'bnb' },
+                { symbol: 'TON', name: 'TON', icon: 'fa-rocket', class: 'ton' }
+            ];
+            
+            let html = '';
+            assets.forEach(asset => {
+                html += `
+                    <div class="asset-item">
+                        <div class="asset-icon ${asset.class}">
+                            <i class="${asset.icon}"></i>
+                        </div>
+                        <div class="asset-details">
+                            <div class="asset-name">${asset.name} (${asset.symbol})</div>
+                            <div class="asset-balance" id="wallet-${asset.symbol.toLowerCase()}-balance">0</div>
+                        </div>
+                        <div class="asset-value" id="wallet-${asset.symbol.toLowerCase()}-value">$0.00</div>
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        function generateReferralPage() {
+            const referralPage = document.getElementById('referral-page');
+            if (!referralPage) return;
+            
+            referralPage.innerHTML = `
+                <div class="referral-content">
+                    <div class="referral-stats-card">
+                        <h4><i class="fas fa-users"></i> Referral Program</h4>
+                        <div class="referral-stats">
+                            <div class="ref-stat">
+                                <div class="ref-stat-value" id="ref-count">0</div>
+                                <div class="ref-stat-label">Total Referrals</div>
+                            </div>
+                            <div class="ref-stat">
+                                <div class="ref-stat-value" id="ref-earned">0</div>
+                                <div class="ref-stat-label">AMSK Earned</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-code-card">
+                        <h4><i class="fas fa-link"></i> Your Referral Code</h4>
+                        <div class="referral-code-display" id="referral-code-display">Loading...</div>
+                        <button onclick="copyReferralCode()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--neon-purple), #7b2cbf); border: none; border-radius: var(--radius-lg); color: white; font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;">
+                            <i class="fas fa-copy"></i>
+                            Copy Referral Code
+                        </button>
+                    </div>
+                    
+                    <div class="referral-link-card">
+                        <h4><i class="fas fa-share-alt"></i> Share Your Link</h4>
+                        <div class="link-input-group">
+                            <input type="text" id="referral-link-input" class="link-input" value="Loading..." readonly>
+                            <button onclick="copyReferralLink()" class="copy-link-btn">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="share-buttons">
+                            <button class="share-btn telegram" onclick="shareOnTelegram()">
+                                <i class="fab fa-telegram"></i>
+                                Telegram
+                            </button>
+                            <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                                <i class="fab fa-whatsapp"></i>
+                                WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="milestones-section">
+                        <h5><i class="fas fa-trophy"></i> Milestone Rewards</h5>
+                        <div class="milestones-list" id="milestones-list-container">
+                            ${generateMilestones()}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateMilestones() {
+            let html = '';
+            const milestones = CONFIG.REFERRAL.MILESTONES;
+            
+            Object.keys(milestones).forEach((count, index) => {
+                const reward = milestones[count];
+                const icons = ['fa-user-plus', 'fa-users', 'fa-crown', 'fa-star'];
+                html += `
+                    <div class="milestone-item locked" data-milestone="${count}">
+                        <div class="milestone-info">
+                            <div class="milestone-icon">
+                                <i class="fas ${icons[index] || 'fa-trophy'}"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">Refer ${count} friends</div>
+                                <div class="milestone-reward">${reward.toLocaleString()} AMSK</div>
+                            </div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/${count}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            return html;
+        }
+
+        // ============================================
+        // CACHE DOM ELEMENTS
+        // ============================================
+        async function cacheElements() {
+            console.log("🔍 Caching DOM elements...");
+            
+            // Loading screen
+            elements.loadingScreen = document.getElementById('loading-screen');
+            elements.loadingProgress = document.getElementById('loading-progress-bar');
+            elements.loadingText = document.getElementById('loading-progress-text');
+            
+            // Header elements
+            elements.usernameMini = document.getElementById('username-mini');
+            elements.userIdMini = document.getElementById('user-id-mini');
+            elements.userAvatarMini = document.getElementById('user-avatar-mini');
+            elements.totalBalanceAmsk = document.getElementById('total-balance-amsk');
+            elements.totalBalanceUsd = document.getElementById('total-balance-usd');
+            elements.adminLogo = document.getElementById('admin-logo');
+            
+            // Navigation
+            elements.navBtns = document.querySelectorAll('.nav-btn');
+            elements.pages = document.querySelectorAll('.page');
+            
+            // Wait for HTML to be generated
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Mining elements
+            elements.startMiningBtn = document.getElementById('start-mining-btn');
+            elements.miningTimerDisplay = document.getElementById('mining-timer-display');
+            elements.currentMiningLevel = document.getElementById('current-mining-level');
+            elements.currentHashrateDisplay = document.getElementById('current-hashrate-display');
+            elements.nextRewardAmount = document.getElementById('next-reward-amount');
+            elements.totalMined = document.getElementById('total-mined');
+            elements.minedToday = document.getElementById('mined-today');
+            
+            // Staking elements
+            elements.stakeButtons = document.querySelectorAll('.stake-plan-btn');
+            elements.totalStaked = document.getElementById('total-staked');
+            elements.activeStakesList = document.getElementById('active-stakes-list');
+            
+            // Wallet elements
+            elements.depositBtn = document.getElementById('deposit-btn');
+            elements.withdrawBtn = document.getElementById('withdraw-btn');
+            elements.swapBtn = document.getElementById('swap-btn');
+            elements.historyBtn = document.getElementById('history-btn');
+            
+            // Referral elements
+            elements.referralCodeDisplay = document.getElementById('referral-code-display');
+            elements.referralLinkInput = document.getElementById('referral-link-input');
+            elements.refCount = document.getElementById('ref-count');
+            elements.refEarned = document.getElementById('ref-earned');
+            
+            console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
+        }
+
+        // ============================================
+        // SETUP USER - FIXED ID SYSTEM
+        // ============================================
+        async function setupUser() {
+            console.log("👤 Setting up user...");
+            
+            let telegramUser = null;
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                telegramUser = tg.initDataUnsafe.user;
+                console.log("📱 Telegram user found:", telegramUser.id);
+            }
+            
+            if (telegramUser && telegramUser.id) {
+                userData.id = `tg_${telegramUser.id}`;
+                userData.telegramId = telegramUser.id.toString();
+                userData.username = telegramUser.username ? `@${telegramUser.username}` : 
+                               telegramUser.first_name ? telegramUser.first_name : 
+                               `User${telegramUser.id.toString().slice(-4)}`;
+                userData.firstName = telegramUser.first_name || 'Alien';
+                userData.photoUrl = telegramUser.photo_url || 
+                               `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramUser.id}`;
+            } else {
+                let userId = localStorage.getItem('alien_musk_user_id');
+                if (!userId) {
+                    userId = 'web_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('alien_musk_user_id', userId);
+                }
+                userData.id = userId;
+                userData.username = 'Alien';
+                userData.firstName = 'Alien';
+                userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`;
+            }
+            
+            if (!userData.referralCode) {
+                userData.referralCode = generateReferralCode(userData.id);
+                console.log("🔗 Generated referral code:", userData.referralCode);
+            }
+            
+            userData.joinedAt = new Date().toISOString();
+            userData.lastActive = new Date().toISOString();
+            
+            console.log("👤 User initialized:", {
+                id: userData.id,
+                refCode: userData.referralCode,
+                name: userData.username
+            });
+            
+            updateUserUI();
+            
+            if (db) {
+                await syncUserWithFirebase();
+            }
+        }
+
+        function generateReferralCode(userId) {
+            const idPart = userId.slice(-6).toUpperCase().replace(/[^A-Z0-9]/g, '');
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            const randomPart = Array.from({length: 4}, () => 
+                chars.charAt(Math.floor(Math.random() * chars.length))
+            ).join('');
+            
+            return `ALIEN-${idPart}${randomPart}`;
+        }
+
+        // ============================================
+        // DATA LOADING/SAVING
+        // ============================================
+        async function loadUserData() {
+            console.log("📂 Loading user data for:", userData.id);
+            
+            try {
+                if (db) {
+                    const loaded = await loadUserFromFirebase();
+                    if (loaded) {
+                        console.log("✅ Data loaded from Firebase");
+                        await loadWalletFromFirebase();
+                        return;
+                    }
+                }
+                
+                await loadUserFromLocalStorage();
+                
+            } catch (error) {
+                console.error("❌ Error loading user data:", error);
+                initializeDefaultData();
+            }
+        }
+
+        async function loadUserFromFirebase() {
+            if (!db || !userData.id) return false;
+            
+            try {
+                const userRef = db.collection('users').doc(userData.id);
+                const userSnap = await userRef.get();
+                
+                if (userSnap.exists) {
+                    const firebaseData = userSnap.data();
+                    
+                    if (firebaseData.balances) {
+                        walletData.balances = firebaseData.balances;
+                    }
+                    
+                    if (firebaseData.mining) {
+                        walletData.mining = firebaseData.mining;
+                    }
+                    
+                    if (firebaseData.staking) {
+                        walletData.staking = firebaseData.staking;
+                    }
+                    
+                    if (firebaseData.referrals) {
+                        walletData.referrals = firebaseData.referrals;
+                    }
+                    
+                    if (firebaseData.username) {
+                        userData.username = firebaseData.username;
+                    }
+                    
+                    if (firebaseData.referralCode) {
+                        userData.referralCode = firebaseData.referralCode;
+                    }
+                    
+                    if (firebaseData.referredBy) {
+                        userData.referredBy = firebaseData.referredBy;
+                    }
+                    
+                    return true;
+                }
+            } catch (error) {
+                console.error("❌ Firebase load error:", error);
+            }
+            
+            return false;
+        }
+
+        async function loadWalletFromFirebase() {
+            if (!db || !userData.id) return false;
+            
+            try {
+                const walletRef = db.collection('wallets').doc(userData.id);
+                const walletSnap = await walletRef.get();
+                
+                if (walletSnap.exists) {
+                    const firebaseData = walletSnap.data();
+                    
+                    walletData.pendingDeposits = firebaseData.pendingDeposits || [];
+                    walletData.pendingWithdrawals = firebaseData.pendingWithdrawals || [];
+                    walletData.depositHistory = firebaseData.depositHistory || [];
+                    walletData.withdrawalHistory = firebaseData.withdrawalHistory || [];
+                    walletData.usedTransactions = firebaseData.usedTransactions || [];
+                    
+                    console.log("✅ Wallet data loaded from Firebase");
+                    return true;
+                }
+            } catch (error) {
+                console.error("❌ Wallet Firebase load error:", error);
+            }
+            
+            return false;
+        }
+
+        async function loadUserFromLocalStorage() {
+            const storageKey = `alien_musk_${userData.id}`;
+            const savedData = localStorage.getItem(storageKey);
+            
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    
+                    if (parsed.balances) {
+                        walletData.balances = {
+                            AMSK: parsed.balances.AMSK || 2500,
+                            USDT: parsed.balances.USDT || 0,
+                            BNB: parsed.balances.BNB || 0,
+                            TON: parsed.balances.TON || 0
+                        };
+                    }
+                    
+                    if (parsed.mining) {
+                        walletData.mining = parsed.mining;
+                    }
+                    
+                    if (parsed.staking) {
+                        walletData.staking = parsed.staking;
+                    }
+                    
+                    if (parsed.referrals) {
+                        walletData.referrals = parsed.referrals;
+                    }
+                    
+                    if (parsed.pendingDeposits) {
+                        walletData.pendingDeposits = parsed.pendingDeposits;
+                    }
+                    
+                    if (parsed.pendingWithdrawals) {
+                        walletData.pendingWithdrawals = parsed.pendingWithdrawals;
+                    }
+                    
+                    if (parsed.depositHistory) {
+                        walletData.depositHistory = parsed.depositHistory;
+                    }
+                    
+                    if (parsed.withdrawalHistory) {
+                        walletData.withdrawalHistory = parsed.withdrawalHistory;
+                    }
+                    
+                    if (parsed.usedTransactions) {
+                        walletData.usedTransactions = parsed.usedTransactions;
+                    }
+                    
+                    console.log("✅ Data loaded from localStorage");
+                    
+                } catch (error) {
+                    console.error("❌ Parse error:", error);
+                    initializeDefaultData();
+                }
+            } else {
+                console.log("📝 No saved data found, using defaults");
+                initializeDefaultData();
+            }
+        }
+
+        function initializeDefaultData() {
+            walletData.balances = { AMSK: 2500, USDT: 0, BNB: 0, TON: 0 };
+            walletData.mining = {
+                level: 1,
+                active: false,
+                lastReward: null,
+                nextReward: null,
+                totalMined: 2500,
+                minedToday: 2500,
+                activeBoosters: []
+            };
+            walletData.staking = {
+                activeStakes: [],
+                totalEarned: 0,
+                totalStaked: 0
+            };
+            walletData.referrals = {
+                count: 0,
+                earned: 0,
+                referrals: [],
+                claimedMilestones: [],
+                pendingMilestones: []
+            };
+        }
+
+        async function syncUserWithFirebase() {
+            if (!db || !userData.id) return;
+            
+            try {
+                const userRef = db.collection('users').doc(userData.id);
+                await userRef.set({
+                    id: userData.id,
+                    telegramId: userData.telegramId,
+                    username: userData.username,
+                    firstName: userData.firstName,
+                    photoUrl: userData.photoUrl,
+                    referralCode: userData.referralCode,
+                    referredBy: userData.referredBy,
+                    joinedAt: userData.joinedAt,
+                    lastActive: userData.lastActive,
+                    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                
+                console.log("✅ User synced with Firebase");
+            } catch (error) {
+                console.error("❌ Error syncing user with Firebase:", error);
+            }
+        }
+
+        // ============================================
+        // UI MANAGEMENT
+        // ============================================
+        function updateUserUI() {
+            if (elements.usernameMini) {
+                elements.usernameMini.textContent = userData.firstName;
+            }
+            
+            if (elements.userIdMini) {
+                elements.userIdMini.textContent = `ID: ${userData.id.slice(-8)}`;
+            }
+            
+            if (elements.userAvatarMini) {
+                elements.userAvatarMini.src = userData.photoUrl;
+                elements.userAvatarMini.onerror = function() {
+                    this.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.id}`;
+                };
+            }
+        }
+
+        function updateUI() {
+            updateUserUI();
+            updateMiningDisplay();
+            updateWalletUI();
+            updateStakingDisplay();
+            updateReferralDisplay();
+        }
+
+        function switchPage(pageName) {
+            elements.navBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            elements.pages.forEach(page => {
+                page.classList.remove('active');
+                if (page.id === `${pageName}-page`) {
+                    page.classList.add('active');
+                }
+            });
+            
+            switch (pageName) {
+                case 'home':
+                    updateMiningDisplay();
+                    break;
+                case 'staking':
+                    updateStakingDisplay();
+                    break;
+                case 'wallet':
+                    updateWalletUI();
+                    break;
+                case 'referral':
+                    updateReferralDisplay();
+                    break;
+            }
+        }
+
+        // ============================================
+        // MINING SYSTEM
+        // ============================================
+        function updateMiningDisplay() {
+            if (!walletData.mining) return;
+            
+            const mining = walletData.mining;
+            const level = CONFIG.MINING.LEVELS[mining.level];
+            
+            if (elements.currentMiningLevel) {
+                elements.currentMiningLevel.textContent = mining.level;
+            }
+            
+            if (elements.currentHashrateDisplay) {
+                elements.currentHashrateDisplay.textContent = formatNumber(level.hashrate);
+            }
+            
+            updateMiningTimer();
+            
+            if (elements.nextRewardAmount) {
+                elements.nextRewardAmount.textContent = formatNumber(level.reward);
+            }
+            
+            if (elements.totalMined) {
+                elements.totalMined.textContent = formatNumber(mining.totalMined);
+            }
+            
+            if (elements.minedToday) {
+                const now = new Date();
+                const lastMinedDate = mining.lastReward ? new Date(mining.lastReward) : null;
+                if (lastMinedDate && (
+                    now.getDate() !== lastMinedDate.getDate() ||
+                    now.getMonth() !== lastMinedDate.getMonth() ||
+                    now.getFullYear() !== lastMinedDate.getFullYear()
+                )) {
+                    mining.minedToday = 0;
+                }
+                elements.minedToday.textContent = formatNumber(mining.minedToday);
+            }
+            
+            updateUpgradeCards();
+            updateMiningButton();
+        }
+
+        function updateMiningTimer() {
+            if (!walletData.mining || !elements.miningTimerDisplay) return;
+            
+            const now = Date.now();
+            const nextRewardTime = walletData.mining.nextReward;
+            
+            if (!nextRewardTime) {
+                elements.miningTimerDisplay.textContent = "01:00:00";
+                return;
+            }
+            
+            const timeLeft = nextRewardTime - now;
+            
+            if (timeLeft <= 0) {
+                elements.miningTimerDisplay.textContent = "READY!";
+                elements.miningTimerDisplay.style.color = "#00ff88";
+                
+                if (elements.startMiningBtn) {
+                    elements.startMiningBtn.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
+                    elements.startMiningBtn.classList.add('claim-mode');
+                }
+            } else {
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                elements.miningTimerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                elements.miningTimerDisplay.style.color = "#ffffff";
+                
+                if (elements.startMiningBtn) {
+                    elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Mining...</span>';
+                    elements.startMiningBtn.classList.remove('claim-mode');
+                }
+            }
+        }
+
+        function updateMiningButton() {
+            if (!elements.startMiningBtn) return;
+            
+            const mining = walletData.mining;
+            const now = Date.now();
+            
+            if (!mining.active) {
+                elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
+                elements.startMiningBtn.classList.remove('claim-mode');
+            } else if (mining.nextReward && now >= mining.nextReward) {
+                elements.startMiningBtn.innerHTML = '<i class="fas fa-gift"></i><span>Claim Reward</span>';
+                elements.startMiningBtn.classList.add('claim-mode');
+            } else {
+                elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Mining...</span>';
+                elements.startMiningBtn.classList.remove('claim-mode');
+                elements.startMiningBtn.disabled = true;
+            }
+        }
+
+        function updateUpgradeCards() {
+            const upgradeCards = document.querySelectorAll('.upgrade-card');
+            if (!upgradeCards || !walletData) return;
+            
+            const currentLevel = walletData.mining.level;
+            const usdtBalance = walletData.balances.USDT || 0;
+            
+            upgradeCards.forEach(card => {
+                const level = parseInt(card.dataset.level);
+                const levelData = CONFIG.MINING.LEVELS[level];
+                const button = card.querySelector('.upgrade-btn');
+                
+                if (!button) return;
+                
+                if (level === currentLevel) {
+                    button.textContent = 'Active';
+                    button.classList.add('active-btn');
+                    button.disabled = true;
+                    card.classList.add('active');
+                } else if (level < currentLevel) {
+                    button.textContent = 'Upgraded';
+                    button.classList.add('active-btn');
+                    button.disabled = true;
+                    card.classList.remove('active');
+                } else {
+                    const canAfford = usdtBalance >= levelData.cost;
+                    button.textContent = canAfford ? 'Upgrade' : `${levelData.cost} USDT`;
+                    button.disabled = !canAfford;
+                    button.classList.remove('active-btn');
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        async function handleMiningAction() {
+            if (!walletData.mining) return;
+            
+            const mining = walletData.mining;
+            const now = Date.now();
+            
+            if (mining.active && mining.nextReward && now < mining.nextReward) {
+                showMessage("⏳ Mining in progress. Please wait.", "info");
+                return;
+            }
+            
+            if (!mining.active) {
+                await startMining();
+            } else if (mining.nextReward && now >= mining.nextReward) {
+                await claimMiningReward();
+            }
+        }
+
+        async function startMining() {
+            try {
+                walletData.mining.active = true;
+                walletData.mining.lastReward = Date.now();
+                walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+                
+                updateMiningDisplay();
+                saveUserData();
+                showMessage("⚡ Quantum mining started!", "success");
+                
+            } catch (error) {
+                console.error("❌ Error starting mining:", error);
+                showMessage("Failed to start mining", "error");
+            }
+        }
+
+        async function claimMiningReward() {
+            try {
+                const level = CONFIG.MINING.LEVELS[walletData.mining.level];
+                let reward = level.reward;
+                
+                walletData.mining.activeBoosters.forEach(booster => {
+                    const boosterConfig = CONFIG.MINING.BOOSTERS[booster.type];
+                    if (boosterConfig) {
+                        reward *= boosterConfig.multiplier;
+                    }
+                });
+                
+                walletData.balances.AMSK = (walletData.balances.AMSK || 0) + reward;
+                walletData.mining.totalMined = (walletData.mining.totalMined || 0) + reward;
+                walletData.mining.minedToday = (walletData.mining.minedToday || 0) + reward;
+                walletData.mining.lastReward = Date.now();
+                walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+                
+                updateMiningDisplay();
+                updateWalletUI();
+                updateTotalBalance();
+                saveUserData();
+                
+                showMessage(`💰 +${formatNumber(reward)} AMSK mined!`, "success");
+                
+            } catch (error) {
+                console.error("❌ Error claiming mining reward:", error);
+                showMessage("Failed to claim reward", "error");
+            }
+        }
+
+        async function upgradeMiningLevel(level) {
+            try {
+                level = parseInt(level);
+                const levelData = CONFIG.MINING.LEVELS[level];
+                
+                if (!levelData) {
+                    throw new Error("Invalid mining level");
+                }
+                
+                if (level <= walletData.mining.level) {
+                    showMessage("Already at or above this level!", "warning");
+                    return;
+                }
+                
+                if (walletData.balances.USDT < levelData.cost) {
+                    showMessage(`Insufficient USDT. Need ${levelData.cost} USDT.`, "error");
+                    return;
+                }
+                
+                walletData.balances.USDT -= levelData.cost;
+                walletData.mining.level = level;
+                
+                updateMiningDisplay();
+                updateWalletUI();
+                updateTotalBalance();
+                saveUserData();
+                
+                showMessage(`⚡ Upgraded to ${levelData.name} level!`, "success");
+                
+            } catch (error) {
+                console.error("❌ Error upgrading mining level:", error);
+                showMessage("Failed to upgrade mining level", "error");
+            }
+        }
+
+        // ============================================
+        // WALLET SYSTEM
+        // ============================================
+        function updateWalletUI() {
+            if (!walletData.balances) return;
+            
+            const { AMSK, USDT, BNB, TON } = walletData.balances;
+            const { PRICES } = CONFIG;
+            
+            // Update individual asset displays
+            const assets = [
+                { symbol: 'amsk', balance: AMSK, value: AMSK * PRICES.AMSK },
+                { symbol: 'usdt', balance: USDT, value: USDT * PRICES.USDT },
+                { symbol: 'bnb', balance: BNB, value: BNB * PRICES.BNB },
+                { symbol: 'ton', balance: TON, value: TON * PRICES.TON }
+            ];
+            
+            assets.forEach(asset => {
+                const balanceEl = document.getElementById(`wallet-${asset.symbol}-balance`);
+                const valueEl = document.getElementById(`wallet-${asset.symbol}-value`);
+                
+                if (balanceEl) {
+                    if (asset.symbol === 'amsk') {
+                        balanceEl.textContent = `${formatNumber(asset.balance)} AMSK`;
+                    } else if (asset.symbol === 'usdt') {
+                        balanceEl.textContent = `${asset.balance.toFixed(2)} USDT`;
+                    } else if (asset.symbol === 'bnb') {
+                        balanceEl.textContent = `${asset.balance.toFixed(4)} BNB`;
+                    } else {
+                        balanceEl.textContent = `${formatNumber(asset.balance)} TON`;
+                    }
+                }
+                
+                if (valueEl) {
+                    valueEl.textContent = `$${asset.value.toFixed(2)}`;
+                }
+            });
+            
+            updateTotalBalance();
+        }
+
+        function updateTotalBalance() {
+            if (!walletData.balances) return;
+            
+            const { AMSK, USDT, BNB, TON } = walletData.balances;
+            const { PRICES } = CONFIG;
+            
+            const totalAMSK = AMSK || 0;
+            const totalUSD = (AMSK * PRICES.AMSK) + (USDT * PRICES.USDT) + (BNB * PRICES.BNB) + (TON * PRICES.TON);
+            
+            if (elements.totalBalanceAmsk) {
+                elements.totalBalanceAmsk.textContent = formatNumber(totalAMSK);
+            }
+            
+            if (elements.totalBalanceUsd) {
+                elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
+            }
+            
+            const walletBalanceAmsk = document.getElementById('wallet-balance-amsk');
+            const walletBalanceUsd = document.getElementById('wallet-balance-usd');
+            
+            if (walletBalanceAmsk) {
+                walletBalanceAmsk.textContent = formatNumber(totalAMSK);
+            }
+            
+            if (walletBalanceUsd) {
+                walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
+            }
+        }
+
+        // ============================================
+        // STAKING SYSTEM
+        // ============================================
+        function updateStakingDisplay() {
+            updateStakingStats();
+            updateActiveStakes();
+        }
+
+        function updateStakingStats() {
+            if (elements.totalStaked) {
+                elements.totalStaked.textContent = `${walletData.staking.totalStaked} USDT`;
+            }
+        }
+
+        function updateActiveStakes() {
+            if (!elements.activeStakesList) return;
+            
+            const activeStakes = walletData.staking.activeStakes || [];
+            
+            if (!activeStakes.length) {
+                elements.activeStakesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No active stakes yet</p>
+                        <small>Start staking to earn rewards</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            activeStakes.forEach((stake, index) => {
+                const plan = CONFIG.STAKING.PLANS[stake.planId];
+                if (!plan) return;
+                
+                const now = Date.now();
+                const startTime = stake.startTime || now;
+                const durationMs = plan.duration * 24 * 60 * 60 * 1000;
+                const endTime = startTime + durationMs;
+                const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
+                const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
+                
+                const dailyReward = Math.floor((stake.amount / 100) * plan.dailyPer100);
+                const totalReward = dailyReward * plan.duration;
+                
+                html += `
+                    <div class="stake-item" style="background: linear-gradient(145deg, rgba(26,26,58,0.8), rgba(42,26,74,0.8)); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-sm); border: var(--border-space);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-sm);">
+                            <div style="font-weight: 700; color: var(--star-white);">${plan.name} - ${stake.amount} USDT</div>
+                            <span style="background: rgba(0,255,157,0.1); color: var(--neon-green); padding: 4px 8px; border-radius: var(--radius-sm); font-size: 12px;">Active</span>
+                        </div>
+                        <div style="margin-bottom: var(--space-sm);">
+                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--star-light); margin-bottom: 4px;">
+                                <span>${Math.round(progress)}%</span>
+                                <span>${daysLeft} days left</span>
+                            </div>
+                            <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                                <div style="width: ${progress}%; height: 100%; background: var(--gradient-neon);"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--star-light);">
+                            <div>${plan.apr}% APR</div>
+                            <div>${dailyReward.toLocaleString()} AMSK/Day</div>
+                            <div>Total: ${totalReward.toLocaleString()} AMSK</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            elements.activeStakesList.innerHTML = html;
+        }
+
+        // ============================================
+        // REFERRAL SYSTEM
+        // ============================================
+        async function checkForReferral() {
+            console.log("🔍 Checking for referral...");
+            
+            let referralCode = null;
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+                referralCode = tg.initDataUnsafe.start_param;
+                console.log("📱 Telegram referral detected:", referralCode);
+            }
+            
+            if (!referralCode) {
+                const urlParams = new URLSearchParams(window.location.search);
+                referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
+            }
+            
+            if (referralCode && referralCode !== userData.referralCode) {
+                console.log("🎯 Processing referral:", referralCode);
+                await processReferral(referralCode);
+            }
+        }
+
+        async function processReferral(referralCode) {
+            if (!referralCode || referralCode === userData.referralCode) {
+                console.log("⚠️ Invalid or self-referral");
+                return;
+            }
+            
+            if (userData.referredBy) {
+                console.log("⚠️ User already referred by:", userData.referredBy);
+                return;
+            }
+            
+            try {
+                userData.referredBy = referralCode;
+                walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
+                walletData.mining.totalMined += CONFIG.REFERRAL.WELCOME_BONUS;
+                
+                saveUserData();
+                
+                if (db) {
+                    await updateReferrerRewards(referralCode);
+                }
+                
+                updateWalletUI();
+                updateMiningDisplay();
+                updateReferralDisplay();
+                
+                showMessage(`🎉 Welcome bonus received! +${CONFIG.REFERRAL.WELCOME_BONUS.toLocaleString()} AMSK`, "success");
+                
+                console.log("✅ Referral processed successfully");
+                
+            } catch (error) {
+                console.error("❌ Referral processing error:", error);
+            }
+        }
+
+        function updateReferralDisplay() {
+            if (!walletData.referrals) return;
+            
+            const referrals = walletData.referrals;
+            
+            if (elements.refCount) {
+                elements.refCount.textContent = referrals.count;
+            }
+            
+            if (elements.refEarned) {
+                elements.refEarned.textContent = formatNumber(referrals.earned);
+            }
+            
+            if (elements.referralCodeDisplay) {
+                elements.referralCodeDisplay.textContent = userData.referralCode;
+            }
+            
+            if (elements.referralLinkInput) {
+                elements.referralLinkInput.value = `https://t.me/AlienMuskbot/Musk?startapp=${userData.referralCode}`;
+            }
+            
+            updateMilestonesDisplay();
+        }
+
+        function updateMilestonesDisplay() {
+            const milestoneItems = document.querySelectorAll('.milestone-item');
+            if (!milestoneItems || milestoneItems.length === 0) return;
+            
+            const referralCount = walletData.referrals?.count || 0;
+            const claimedMilestones = walletData.referrals?.claimedMilestones || [];
+            
+            milestoneItems.forEach(item => {
+                const requirement = item.querySelector('.milestone-requirement')?.textContent;
+                if (!requirement) return;
+                
+                const milestoneMatch = requirement.match(/\d+/);
+                if (!milestoneMatch) return;
+                
+                const milestoneNum = parseInt(milestoneMatch[0]);
+                const badge = item.querySelector('.milestone-action');
+                
+                item.classList.remove('locked', 'can-claim', 'claimed');
+                
+                if (claimedMilestones.includes(milestoneNum)) {
+                    item.classList.add('claimed');
+                    if (badge) {
+                        badge.innerHTML = '<span class="claimed-badge">Claimed</span>';
+                    }
+                } else if (referralCount >= milestoneNum) {
+                    item.classList.add('can-claim');
+                    if (badge) {
+                        badge.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
+                    }
+                } else {
+                    item.classList.add('locked');
+                    if (badge) {
+                        badge.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
+                    }
+                }
+            });
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        function setupEventListeners() {
+            console.log("🎯 Setting up event listeners...");
+            
+            // Navigation buttons
+            elements.navBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = btn.dataset.page;
+                    switchPage(page);
+                });
+            });
+            
+            // Mining button
+            if (elements.startMiningBtn) {
+                elements.startMiningBtn.addEventListener('click', handleMiningAction);
+            }
+            
+            // Admin logo
+            if (elements.adminLogo) {
+                elements.adminLogo.addEventListener('click', handleAdminLogoClick);
+            }
+            
+            // Wallet action buttons
+            if (elements.depositBtn) {
+                elements.depositBtn.addEventListener('click', () => {
+                    showMessage("Deposit feature coming soon!", "info");
+                });
+            }
+            
+            if (elements.withdrawBtn) {
+                elements.withdrawBtn.addEventListener('click', () => {
+                    showMessage("Withdraw feature coming soon!", "info");
+                });
+            }
+            
+            if (elements.swapBtn) {
+                elements.swapBtn.addEventListener('click', () => {
+                    showMessage("Swap feature coming soon!", "info");
+                });
+            }
+            
+            if (elements.historyBtn) {
+                elements.historyBtn.addEventListener('click', () => {
+                    showMessage("History feature coming soon!", "info");
+                });
+            }
+            
+            console.log("✅ Event listeners setup complete");
+        }
+
+        // ============================================
+        // ADMIN SYSTEM
+        // ============================================
+        function initAdminSystem() {
+            if (elements.adminLogo) {
+                console.log("💎 Admin system initialized");
+            }
+        }
+
+        function handleAdminLogoClick() {
+            const now = Date.now();
+            
+            if (now - lastGemClickTime > 2000) {
+                gemClickCount = 0;
+            }
+            
+            gemClickCount++;
+            lastGemClickTime = now;
+            
+            console.log(`💎 Logo click ${gemClickCount}/5`);
+            
+            if (gemClickCount >= 5) {
+                showAdminLogin();
+                gemClickCount = 0;
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function formatNumber(num, decimals = 0) {
+            if (typeof num !== 'number' || isNaN(num)) return '0';
+            
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(decimals) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(decimals) + 'K';
+            }
+            
+            return num.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function saveUserData() {
+            if (!userData.id) {
+                console.error("❌ Cannot save: No user ID");
+                return;
+            }
+            
+            try {
+                userData.lastActive = new Date().toISOString();
+                walletData.lastUpdate = Date.now();
+                
+                const storageKey = `alien_musk_${userData.id}`;
+                const dataToSave = {
+                    balances: walletData.balances,
+                    mining: walletData.mining,
+                    staking: walletData.staking,
+                    referrals: walletData.referrals,
+                    pendingDeposits: walletData.pendingDeposits,
+                    pendingWithdrawals: walletData.pendingWithdrawals,
+                    depositHistory: walletData.depositHistory,
+                    withdrawalHistory: walletData.withdrawalHistory,
+                    usedTransactions: walletData.usedTransactions,
+                    lastUpdate: walletData.lastUpdate
+                };
+                
+                localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+                console.log("💾 User data saved to localStorage");
+                
+                userData.lastSaveTime = Date.now();
+                
+            } catch (error) {
+                console.error("❌ Save error:", error);
+            }
+        }
+
+        function showMessage(text, type = 'info') {
             const container = document.getElementById('notification-container');
             if (!container) return;
             
@@ -2164,22 +3395,97 @@
             }, 4000);
             
             console.log(`${type}: ${text}`);
+        }
+
+        // ============================================
+        // BACKGROUND SERVICES
+        // ============================================
+        function startBackgroundServices() {
+            intervals.miningTimer = setInterval(() => {
+                updateMiningTimer();
+            }, 1000);
+            
+            intervals.autoSave = setInterval(() => {
+                if (userData.id && userData.isInitialized) {
+                    saveUserData();
+                }
+            }, 30000);
+            
+            intervals.updateTimer = setInterval(() => {
+                if (userData) {
+                    userData.lastActive = new Date().toISOString();
+                }
+            }, 60000);
+            
+            console.log("⏱️ Background services started");
+        }
+
+        // ============================================
+        // GLOBAL EXPORTS
+        // ============================================
+        window.initAlienMuskApp = initAlienMuskApp;
+        window.handleMiningAction = handleMiningAction;
+        window.upgradeMiningLevel = upgradeMiningLevel;
+        window.openStakeModal = openStakeModal;
+        window.switchPage = switchPage;
+        window.copyReferralCode = copyReferralCode;
+        window.copyReferralLink = copyReferralLink;
+        window.shareOnTelegram = shareOnTelegram;
+        window.shareOnWhatsApp = shareOnWhatsApp;
+        window.showMessage = showMessage;
+
+        // ============================================
+        // REFERRAL FUNCTIONS
+        // ============================================
+        window.copyReferralCode = function() {
+            const codeElement = document.getElementById('referral-code-display');
+            if (codeElement) {
+                navigator.clipboard.writeText(codeElement.textContent)
+                    .then(() => showMessage('✅ Referral code copied!', 'success'))
+                    .catch(() => showMessage('❌ Failed to copy code', 'error'));
+            }
         };
-        
-        // تهيئة الروابط عند التحميل
-        setTimeout(() => {
+
+        window.copyReferralLink = function() {
             const linkInput = document.getElementById('referral-link-input');
             if (linkInput) {
-                linkInput.value = window.location.href;
+                navigator.clipboard.writeText(linkInput.value)
+                    .then(() => showMessage('✅ Referral link copied!', 'success'))
+                    .catch(() => showMessage('❌ Failed to copy link', 'error'));
             }
-        }, 1000);
-    </script>
-    
-    <!-- Main Application JavaScript -->
-    <script>
-        // سيتم وضع كود JavaScript الكامل هنا
-        // لكن للحفاظ على النظافة، سيتم استدعاؤه من ملف منفصل
-        // في بيئة التطوير الفعلية
+        };
+
+        window.shareOnTelegram = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (!linkInput) return;
+            
+            const link = linkInput.value;
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ *Mine AMSK tokens every hour*\n💰 *Earn from staking and referrals*\n👥 *Get 10,000 AMSK bonus with my link*\n\n👉 ${link}\n\n💎 *Start your quantum mining journey!*`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+            
+            window.open(url, '_blank');
+        };
+
+        window.shareOnWhatsApp = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (!linkInput) return;
+            
+            const link = linkInput.value;
+            const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${link}`;
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            
+            window.open(url, '_blank');
+        };
+
+        // Initialize the app
+        console.log("👽 Alien Musk Quantum Platform v6.0 - Professional Edition Ready!");
+        
+        // Start the app when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAlienMuskApp);
+        } else {
+            initAlienMuskApp();
+        }
     </script>
 </body>
 </html>
