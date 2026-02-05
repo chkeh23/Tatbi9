@@ -15,12 +15,9 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👽</text></svg>">
-    
     <style>
         /* =========================================== */
-        /* 👽 ALIEN MUSK QUANTUM CSS - COMPLETE */
+        /* 👽 ALIEN MUSK QUANTUM CSS - COMPACT & READY */
         /* =========================================== */
         
         * {
@@ -50,7 +47,6 @@
             
             /* QUANTUM GRADIENTS */
             --gradient-quantum: linear-gradient(135deg, var(--quantum-green), var(--quantum-blue));
-            --gradient-stellar: linear-gradient(135deg, var(--quantum-purple), var(--quantum-pink));
             --gradient-space: linear-gradient(145deg, var(--space-card), #16213e);
             
             /* QUANTUM SHADOWS & GLOWS */
@@ -78,7 +74,7 @@
             --font-xl: 24px;
         }
 
-        /* BASE SPACE STYLES */
+        /* BASE STYLES */
         html, body {
             width: 100%;
             height: 100%;
@@ -91,8 +87,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* SIMPLE LOADING SCREEN */
-        #simple-loading {
+        /* LOADING SCREEN */
+        #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -125,13 +121,14 @@
         #app-container {
             min-height: 100vh;
             padding-bottom: 80px;
+            position: relative;
         }
 
         .hidden {
             display: none !important;
         }
 
-        /* QUANTUM HEADER */
+        /* HEADER */
         .app-header {
             background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(20px);
@@ -241,7 +238,7 @@
             color: var(--quantum-text-light);
         }
 
-        /* QUANTUM NAVIGATION */
+        /* NAVIGATION */
         .main-nav {
             display: flex;
             background: rgba(26, 26, 46, 0.8);
@@ -286,7 +283,7 @@
             box-shadow: var(--glow-quantum);
         }
 
-        /* QUANTUM PAGES */
+        /* PAGES */
         .page {
             display: none;
             padding: var(--space-md);
@@ -541,6 +538,565 @@
             border-color: rgba(0, 255, 136, 0.3);
         }
 
+        /* STAKING PAGE */
+        .staking-content {
+            padding: 0 var(--space-xs);
+        }
+
+        .staking-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--space-border);
+            box-shadow: var(--shadow-space);
+        }
+
+        .staking-card h4 {
+            font-size: var(--font-md);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+
+        .staking-card h4 i {
+            color: var(--quantum-purple);
+            font-size: 18px;
+        }
+
+        .total-staked-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            color: var(--quantum-text);
+            margin-bottom: var(--space-lg);
+        }
+
+        .staking-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .plan-item {
+            background: rgba(42, 42, 74, 0.5);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            border: 1px solid var(--space-border);
+            text-align: center;
+        }
+
+        .plan-name {
+            font-size: var(--font-md);
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 6px;
+        }
+
+        .plan-amount {
+            font-size: var(--font-lg);
+            font-weight: 800;
+            color: var(--quantum-purple);
+            margin-bottom: 4px;
+            font-family: monospace;
+        }
+
+        .plan-duration {
+            font-size: var(--font-sm);
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+        }
+
+        .plan-apr {
+            font-size: var(--font-md);
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: var(--space-sm);
+        }
+
+        .plan-reward {
+            font-size: var(--font-sm);
+            color: var(--quantum-text-light);
+            margin-bottom: var(--space-md);
+            min-height: 36px;
+        }
+
+        .stake-plan-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: var(--font-sm);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .active-stakes {
+            min-height: 100px;
+        }
+
+        .empty-stakes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            color: var(--quantum-text-light);
+            text-align: center;
+        }
+
+        .empty-stakes i {
+            font-size: 36px;
+            margin-bottom: var(--space-sm);
+            color: var(--quantum-text-light);
+        }
+
+        /* WALLET PAGE */
+        .wallet-content {
+            padding: 0 var(--space-xs);
+        }
+
+        .wallet-balance-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--space-border);
+            box-shadow: var(--shadow-space);
+            text-align: center;
+        }
+
+        .wallet-balance-card h4 {
+            font-size: var(--font-md);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+
+        .wallet-balance-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 18px;
+        }
+
+        .wallet-balance-amount {
+            font-size: var(--font-xl);
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 2px;
+            font-family: monospace;
+        }
+
+        .wallet-balance-subtitle {
+            font-size: var(--font-sm);
+            color: var(--quantum-text-light);
+            margin-bottom: var(--space-sm);
+        }
+
+        .wallet-actions-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: var(--space-md) 0;
+        }
+
+        .wallet-action-btn {
+            padding: 10px 6px;
+            background: rgba(42, 42, 74, 0.5);
+            border: 1px solid var(--space-border);
+            border-radius: var(--radius-sm);
+            color: var(--quantum-text);
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-height: 60px;
+        }
+
+        .wallet-action-btn i {
+            font-size: 16px;
+            color: var(--quantum-blue);
+            margin-bottom: 2px;
+        }
+
+        .wallet-action-btn span {
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .assets-section {
+            margin-top: var(--space-lg);
+        }
+
+        .assets-section h5 {
+            font-size: var(--font-md);
+            color: var(--quantum-text);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .asset-list-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .asset-item-compact {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(42, 42, 74, 0.5);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--space-border);
+            gap: 10px;
+        }
+
+        .asset-icon-compact {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+        }
+
+        .asset-details-compact {
+            flex: 1;
+        }
+
+        .asset-name-compact {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 2px;
+        }
+
+        .asset-balance-compact {
+            font-size: var(--font-xs);
+            color: var(--quantum-text-light);
+            font-family: monospace;
+        }
+
+        .asset-value-compact {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--quantum-text);
+            text-align: left;
+        }
+
+        /* REFERRAL PAGE */
+        .referral-content {
+            padding: 0 var(--space-xs);
+        }
+
+        .referral-stats-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--space-border);
+            box-shadow: var(--shadow-space);
+        }
+
+        .referral-stats-card h4 {
+            font-size: var(--font-md);
+            color: var(--quantum-text);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .referral-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-md);
+        }
+
+        .ref-stat-item {
+            text-align: center;
+            padding: var(--space-md);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ref-stat-value {
+            font-size: var(--font-xl);
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+
+        .ref-stat-label {
+            font-size: var(--font-xs);
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+        }
+
+        .referral-code-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--space-border);
+            box-shadow: var(--shadow-space);
+            text-align: center;
+        }
+
+        .referral-code-display {
+            font-size: var(--font-lg);
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            padding: var(--space-md);
+            background: rgba(255, 0, 128, 0.1);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            margin-bottom: var(--space-md);
+        }
+
+        .btn-copy-code {
+            width: 100%;
+            padding: 10px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: var(--font-sm);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .referral-link-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            border: 1px solid var(--space-border);
+        }
+
+        .link-input-group {
+            display: flex;
+            gap: 6px;
+            margin-bottom: var(--space-md);
+        }
+
+        .link-input {
+            flex: 1;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--space-border);
+            border-radius: var(--radius-sm);
+            color: var(--quantum-text);
+            font-size: var(--font-sm);
+            font-family: monospace;
+        }
+
+        .copy-link-btn {
+            padding: 0 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: var(--radius-sm);
+            color: var(--quantum-blue);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-sm);
+        }
+
+        .share-btn {
+            padding: 10px;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: var(--font-sm);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .share-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+
+        .share-btn.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .milestones-card {
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            margin-top: var(--space-md);
+            border: 1px solid var(--space-border);
+        }
+
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm);
+            background: rgba(42, 42, 74, 0.5);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--space-border);
+        }
+
+        .milestone-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .milestone-icon i {
+            font-size: 16px;
+            color: var(--quantum-green);
+        }
+
+        .milestone-details {
+            flex: 1;
+        }
+
+        .milestone-requirement {
+            font-size: var(--font-sm);
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 2px;
+        }
+
+        .milestone-reward {
+            font-size: var(--font-sm);
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+
+        .milestone-action {
+            flex-shrink: 0;
+        }
+
+        .btn-claim-milestone {
+            padding: 6px 12px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: var(--font-sm);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .claimed-badge {
+            padding: 4px 8px;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--quantum-purple);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xs);
+            font-weight: 600;
+        }
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: none;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-space);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 2001;
+            display: none;
+            border: 1px solid var(--space-border);
+            box-shadow: var(--shadow-space);
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            font-size: var(--font-lg);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--quantum-text-light);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
         /* NOTIFICATIONS */
         #notification-container {
             position: fixed;
@@ -564,7 +1120,6 @@
             font-size: var(--font-sm);
             font-weight: 600;
             box-shadow: var(--shadow-space);
-            backdrop-filter: blur(15px);
             border: 1px solid;
         }
 
@@ -614,7 +1169,13 @@
             }
             
             .mining-section,
-            .upgrade-section {
+            .upgrade-section,
+            .staking-card,
+            .wallet-balance-card,
+            .referral-stats-card,
+            .referral-code-card,
+            .referral-link-card,
+            .milestones-card {
                 padding: var(--space-md);
             }
             
@@ -640,12 +1201,35 @@
             .upgrade-cards {
                 grid-template-columns: 1fr;
             }
+            
+            .wallet-actions-compact {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            
+            .wallet-action-btn {
+                padding: 8px 4px;
+                min-height: 55px;
+            }
+            
+            .referral-stats-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+            
+            .staking-plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Simple Loading Screen -->
-    <div id="simple-loading">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="active">
         <div class="spinner"></div>
         <p style="color: #00ff88; font-weight: 600; margin-bottom: 5px;">Alien Musk Quantum</p>
         <p style="color: #94a3b8; font-size: 14px;">Initializing Quantum Systems...</p>
@@ -687,7 +1271,7 @@
             </div>
         </header>
 
-        <!-- Navigation - 4 Buttons -->
+        <!-- Navigation -->
         <nav class="main-nav">
             <button class="nav-btn active" data-page="home">
                 <i class="fas fa-home"></i>
@@ -710,7 +1294,7 @@
         <!-- Notification Container -->
         <div id="notification-container"></div>
 
-        <!-- Home Page - Mining Section -->
+        <!-- Home Page - Mining -->
         <div id="home-page" class="page active">
             <!-- Mining Section -->
             <section class="mining-section">
@@ -835,390 +1419,400 @@
             </section>
         </div>
 
-        <!-- Other pages will be added by app.js -->
-        <div id="staking-page" class="page"></div>
-        <div id="wallet-page" class="page"></div>
-        <div id="referral-page" class="page"></div>
+        <!-- Staking Page -->
+        <div id="staking-page" class="page">
+            <div class="staking-content">
+                <!-- Staking Info Card -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-gem"></i> Quantum Staking</h4>
+                    <p style="color: var(--quantum-text-light); font-size: var(--font-sm); margin-bottom: var(--space-md);">
+                        Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.
+                    </p>
+                    
+                    <!-- Total Staked -->
+                    <div class="total-staked-card">
+                        <div>
+                            <div style="font-size: var(--font-xs); color: var(--quantum-text-light);">Total Staked</div>
+                            <div style="font-size: var(--font-md); font-weight: 700;" id="total-staked">0 USDT</div>
+                        </div>
+                        <div style="color: var(--quantum-green); font-size: var(--font-sm); font-weight: 600;">
+                            <i class="fas fa-coins"></i> Active Earnings
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Staking Plans -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
+                    
+                    <div class="staking-plans-grid">
+                        <!-- Silver Plan -->
+                        <div class="plan-item">
+                            <div class="plan-name">Silver Plan</div>
+                            <div class="plan-amount">10+ USDT</div>
+                            <div class="plan-duration">7 Days</div>
+                            <div class="plan-apr">40% APR</div>
+                            <div class="plan-reward">Daily: 571 AMSK per $100</div>
+                            <button class="stake-plan-btn" data-plan="1">
+                                Stake Now
+                            </button>
+                        </div>
+
+                        <!-- Gold Plan -->
+                        <div class="plan-item">
+                            <div class="plan-name">Gold Plan</div>
+                            <div class="plan-amount">50+ USDT</div>
+                            <div class="plan-duration">15 Days</div>
+                            <div class="plan-apr">50% APR</div>
+                            <div class="plan-reward">Daily: 417 AMSK per $100</div>
+                            <button class="stake-plan-btn" data-plan="2">
+                                Stake Now
+                            </button>
+                        </div>
+
+                        <!-- Diamond Plan -->
+                        <div class="plan-item">
+                            <div class="plan-name">Diamond Plan</div>
+                            <div class="plan-amount">100+ USDT</div>
+                            <div class="plan-duration">30 Days</div>
+                            <div class="plan-apr">60% APR</div>
+                            <div class="plan-reward">Daily: 333 AMSK per $100</div>
+                            <button class="stake-plan-btn" data-plan="3">
+                                Stake Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Stakes -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-history"></i> Active Stakes</h4>
+                    <div class="active-stakes" id="active-stakes-list">
+                        <div class="empty-stakes">
+                            <i class="fas fa-inbox"></i>
+                            <p>No active stakes yet</p>
+                            <small>Start staking to earn rewards</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wallet Page -->
+        <div id="wallet-page" class="page">
+            <div class="wallet-content">
+                <!-- Total Balance Card -->
+                <div class="wallet-balance-card">
+                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
+                    <div class="wallet-balance-amount" id="wallet-balance-amsk">0</div>
+                    <div class="wallet-balance-subtitle">AMSK Tokens</div>
+                    <div class="wallet-balance-usd" id="wallet-balance-usd">$0.00</div>
+                </div>
+
+                <!-- Wallet Actions -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                    
+                    <div class="wallet-actions-compact">
+                        <button class="wallet-action-btn" id="deposit-btn">
+                            <i class="fas fa-download"></i>
+                            <span>Deposit</span>
+                        </button>
+                        <button class="wallet-action-btn" id="withdraw-btn">
+                            <i class="fas fa-upload"></i>
+                            <span>Withdraw</span>
+                        </button>
+                        <button class="wallet-action-btn" id="swap-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Swap</span>
+                        </button>
+                        <button class="wallet-action-btn" id="history-btn">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Assets Section -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-coins"></i> Assets</h4>
+                    
+                    <div class="assets-section">
+                        <div class="asset-list-compact">
+                            <!-- AMSK Asset -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact" style="border-color: var(--quantum-green); background: rgba(0, 255, 136, 0.1);">
+                                    <i class="fas fa-robot" style="color: var(--quantum-green);"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">AMSK Token</div>
+                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                            </div>
+
+                            <!-- USDT Asset -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact" style="border-color: var(--quantum-blue); background: rgba(0, 212, 255, 0.1);">
+                                    <i class="fas fa-coins" style="color: var(--quantum-blue);"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">USDT</div>
+                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            </div>
+
+                            <!-- BNB Asset -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact" style="border-color: var(--quantum-gold); background: rgba(255, 215, 0, 0.1);">
+                                    <i class="fab fa-btc" style="color: var(--quantum-gold);"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">BNB</div>
+                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            </div>
+
+                            <!-- TON Asset -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact" style="border-color: var(--quantum-cyan); background: rgba(0, 255, 255, 0.1);">
+                                    <i class="fas fa-bolt" style="color: var(--quantum-cyan);"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">TON</div>
+                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referral Page -->
+        <div id="referral-page" class="page">
+            <div class="referral-content">
+                <!-- Referral Stats -->
+                <div class="referral-stats-card">
+                    <h4><i class="fas fa-chart-line"></i> Referral Statistics</h4>
+                    
+                    <div class="referral-stats-grid">
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-count">0</div>
+                            <div class="ref-stat-label">Referrals</div>
+                        </div>
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-earned">0</div>
+                            <div class="ref-stat-label">AMSK Earned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Referral Code -->
+                <div class="referral-code-card">
+                    <h4><i class="fas fa-user-friends"></i> Your Referral Code</h4>
+                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
+                    <button class="btn-copy-code" onclick="copyReferralCode()">
+                        <i class="far fa-copy"></i> Copy Code
+                    </button>
+                </div>
+
+                <!-- Referral Link -->
+                <div class="referral-link-card">
+                    <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                    <div class="link-input-group">
+                        <input type="text" class="link-input" id="referral-link-input" readonly 
+                               value="https://t.me/AlienMuskbot/Musk?startapp=CODE">
+                        <button class="copy-link-btn" onclick="copyReferralLink()">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <button class="share-btn telegram" onclick="shareOnTelegram()">
+                            <i class="fab fa-telegram"></i> Telegram
+                        </button>
+                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Milestones -->
+                <div class="milestones-card">
+                    <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
+                    <p class="milestones-description">
+                        Earn bonus rewards for reaching referral milestones!
+                    </p>
+                    
+                    <div class="milestones-list">
+                        <!-- Milestone 1 -->
+                        <div class="milestone-item">
+                            <div class="milestone-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">10 Referrals</div>
+                                <div class="milestone-reward">+50,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/10</span>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 2 -->
+                        <div class="milestone-item">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">25 Referrals</div>
+                                <div class="milestone-reward">+150,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/25</span>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 3 -->
+                        <div class="milestone-item">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">50 Referrals</div>
+                                <div class="milestone-reward">+350,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/50</span>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 4 -->
+                        <div class="milestone-item">
+                            <div class="milestone-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">100 Referrals</div>
+                                <div class="milestone-reward">+1,000,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- JAVASCRIPT - COMPLETE ALIEN MUSK APP -->
+    <!-- MAIN JAVASCRIPT - CONNECTS EVERYTHING -->
     <!-- ============================================ -->
     <script>
-        // ALIEN MUSK - Quantum Mining Platform v6.0 - COMPLETE
-        // All JS in one file for GitHub compatibility
-
-        console.log("👽 Alien Musk Quantum Platform v6.0 Loading...");
+        // 👽 ALIEN MUSK - Quantum Platform v6.0
+        // MAIN CONNECTOR SCRIPT
+        // This connects HTML elements with the main app.js functions
+        
+        console.log("🔗 Loading Alien Musk Connector...");
 
         // Telegram WebApp
         let tg = null;
         try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
+            tg = window.Telegram.WebApp;
+            if (tg) {
                 tg.ready();
                 tg.expand();
-                console.log("✅ Telegram WebApp initialized");
+                tg.setHeaderColor('#0a0a0f');
+                tg.setBackgroundColor('#0a0a0f');
+                console.log("✅ Telegram WebApp connected");
             }
         } catch (e) {
             console.log("⚠️ Not in Telegram environment");
         }
 
-        // User Data
-        let userData = {
-            id: 'web_' + Date.now(),
-            username: 'Alien',
-            referralCode: 'ALIEN-' + Math.random().toString(36).substr(2, 6).toUpperCase()
-        };
-
-        // Wallet Data
-        let walletData = {
-            balances: {
-                AMSK: 2500,
-                USDT: 0
-            },
-            mining: {
-                level: 1,
-                active: false,
-                totalMined: 2500
-            }
-        };
-
-        // Elements Cache
-        const elements = {};
-
-        // Initialize App
-        function initAlienMuskApp() {
-            console.log("🚀 Initializing Alien Musk Platform...");
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📱 DOM fully loaded and ready");
             
-            try {
-                // Cache elements
-                cacheElements();
+            // Hide loading screen
+            setTimeout(function() {
+                const loadingScreen = document.getElementById('loading-screen');
+                const appContainer = document.getElementById('app-container');
                 
-                // Setup user
-                setupUser();
+                if (loadingScreen) {
+                    loadingScreen.classList.remove('active');
+                    loadingScreen.style.display = 'none';
+                }
                 
-                // Setup event listeners
-                setupEventListeners();
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                    console.log("✅ App container displayed");
+                }
                 
-                // Update UI
-                updateUI();
-                
-                // Hide loading
-                setTimeout(() => {
-                    document.getElementById('simple-loading').style.display = 'none';
-                    document.getElementById('app-container').classList.remove('hidden');
-                    showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
-                }, 1000);
-                
-                console.log("✅ Platform initialized successfully");
-                
-            } catch (error) {
-                console.error("❌ Initialization failed:", error);
-                showMessage("Failed to initialize platform", "error");
-                document.getElementById('simple-loading').style.display = 'none';
-                document.getElementById('app-container').classList.remove('hidden');
-            }
-        }
-
-        function cacheElements() {
-            console.log("🔍 Caching elements...");
-            
-            // Header elements
-            elements.usernameMini = document.getElementById('username-mini');
-            elements.userIdMini = document.getElementById('user-id-mini');
-            elements.userAvatarMini = document.getElementById('user-avatar-mini');
-            elements.totalBalanceAmsk = document.getElementById('total-balance-amsk');
-            elements.totalBalanceUsd = document.getElementById('total-balance-usd');
-            elements.adminLogo = document.getElementById('admin-logo');
-            
-            // Navigation
-            elements.navBtns = document.querySelectorAll('.nav-btn');
-            elements.pages = document.querySelectorAll('.page');
-            
-            // Mining elements
-            elements.startMiningBtn = document.getElementById('start-mining-btn');
-            elements.miningTimerDisplay = document.getElementById('mining-timer-display');
-            elements.currentMiningLevel = document.getElementById('current-mining-level');
-            elements.currentHashrateDisplay = document.getElementById('current-hashrate-display');
-            elements.nextRewardAmount = document.getElementById('next-reward-amount');
-            elements.totalMined = document.getElementById('total-mined');
-            
-            // Upgrade elements
-            elements.upgradeCards = document.querySelectorAll('.upgrade-card');
-            elements.upgradeButtons = document.querySelectorAll('.upgrade-btn');
-            
-            console.log("✅ Elements cached");
-        }
-
-        function setupUser() {
-            console.log("👤 Setting up user...");
-            
-            // Set user data
-            if (elements.usernameMini) {
-                elements.usernameMini.textContent = userData.username;
-            }
-            
-            if (elements.userIdMini) {
-                elements.userIdMini.textContent = `ID: ${userData.id.slice(-8)}`;
-            }
-            
-            if (elements.userAvatarMini) {
-                elements.userAvatarMini.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.id}`;
-            }
-            
-            // Setup admin logo click
-            if (elements.adminLogo) {
-                let clickCount = 0;
-                elements.adminLogo.addEventListener('click', function() {
-                    clickCount++;
-                    if (clickCount >= 5) {
-                        showMessage("🔒 Admin access activated!", "success");
-                        clickCount = 0;
-                    }
-                });
-            }
-        }
-
-        function setupEventListeners() {
-            console.log("🎯 Setting up event listeners...");
-            
-            // Navigation buttons
-            elements.navBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const pageName = this.getAttribute('data-page');
-                    
-                    // Update active button
-                    elements.navBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show selected page
-                    elements.pages.forEach(page => {
-                        page.classList.remove('active');
-                        if (page.id === pageName + '-page') {
-                            page.classList.add('active');
-                        }
-                    });
-                    
-                    console.log("🚀 Switched to page:", pageName);
-                });
-            });
-            
-            // Mining button
-            if (elements.startMiningBtn) {
-                elements.startMiningBtn.addEventListener('click', handleMiningAction);
-            }
-            
-            // Upgrade buttons
-            elements.upgradeButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const card = this.closest('.upgrade-card');
-                    if (card) {
-                        const level = card.getAttribute('data-level');
-                        upgradeMiningLevel(level);
-                    }
-                });
-            });
-            
-            console.log("✅ Event listeners setup complete");
-        }
-
-        function updateUI() {
-            updateUserUI();
-            updateMiningDisplay();
-            updateTotalBalance();
-        }
-
-        function updateUserUI() {
-            // User info is already set in setupUser
-        }
-
-        function updateMiningDisplay() {
-            if (!walletData.mining) return;
-            
-            const mining = walletData.mining;
-            
-            // Update mining level
-            if (elements.currentMiningLevel) {
-                elements.currentMiningLevel.textContent = mining.level;
-            }
-            
-            // Calculate hashrate
-            let hashrate = 2500;
-            if (mining.level === 2) hashrate = 5000;
-            if (mining.level === 3) hashrate = 10000;
-            
-            if (elements.currentHashrateDisplay) {
-                elements.currentHashrateDisplay.textContent = hashrate.toLocaleString();
-            }
-            
-            // Update next reward
-            let nextReward = hashrate;
-            if (elements.nextRewardAmount) {
-                elements.nextRewardAmount.textContent = nextReward.toLocaleString();
-            }
-            
-            // Update stats
-            if (elements.totalMined) {
-                elements.totalMined.textContent = mining.totalMined.toLocaleString();
-            }
-            
-            // Update mining button
-            updateMiningButton();
-            
-            // Update upgrade cards
-            updateUpgradeCards();
-        }
-
-        function updateMiningButton() {
-            if (!elements.startMiningBtn) return;
-            
-            const mining = walletData.mining;
-            
-            if (!mining.active) {
-                elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
-            } else {
-                elements.startMiningBtn.innerHTML = '<i class="fas fa-play"></i><span>Mining...</span>';
-                elements.startMiningBtn.disabled = true;
-            }
-        }
-
-        function updateUpgradeCards() {
-            if (!elements.upgradeCards || !walletData) return;
-            
-            const currentLevel = walletData.mining.level;
-            
-            elements.upgradeCards.forEach(card => {
-                const level = parseInt(card.getAttribute('data-level'));
-                const button = card.querySelector('.upgrade-btn');
-                
-                if (!button) return;
-                
-                if (level === currentLevel) {
-                    // Current level
-                    button.textContent = 'Active';
-                    button.classList.add('active-btn');
-                    button.disabled = true;
-                } else if (level < currentLevel) {
-                    // Lower level
-                    button.textContent = 'Upgraded';
-                    button.classList.add('active-btn');
-                    button.disabled = true;
+                // Initialize the app
+                if (typeof initAlienMuskApp === 'function') {
+                    console.log("🚀 Initializing Alien Musk App...");
+                    initAlienMuskApp();
                 } else {
-                    // Higher level
-                    button.textContent = 'Upgrade';
-                    button.disabled = false;
-                    button.classList.remove('active-btn');
-                }
-            });
-        }
-
-        function handleMiningAction() {
-            if (!walletData.mining) return;
-            
-            const mining = walletData.mining;
-            
-            if (!mining.active) {
-                // Start mining
-                startMining();
-            } else {
-                // Already mining
-                showMessage("⏳ Mining in progress...", "info");
-            }
-        }
-
-        function startMining() {
-            try {
-                walletData.mining.active = true;
-                
-                // Calculate reward
-                let reward = 2500;
-                if (walletData.mining.level === 2) reward = 5000;
-                if (walletData.mining.level === 3) reward = 10000;
-                
-                // Update balances
-                walletData.balances.AMSK += reward;
-                walletData.mining.totalMined += reward;
-                
-                // Update UI
-                updateMiningDisplay();
-                updateTotalBalance();
-                
-                // Show success
-                showMessage(`💰 +${reward.toLocaleString()} AMSK mined!`, "success");
-                
-                // Disable button temporarily
-                if (elements.startMiningBtn) {
-                    elements.startMiningBtn.disabled = true;
-                    setTimeout(() => {
-                        walletData.mining.active = false;
-                        elements.startMiningBtn.disabled = false;
-                        updateMiningButton();
-                    }, 60000); // 1 minute cooldown
+                    console.error("❌ initAlienMuskApp function not found!");
+                    showMessage("Error: App initialization failed", "error");
                 }
                 
-            } catch (error) {
-                console.error("❌ Error starting mining:", error);
-                showMessage("Failed to start mining", "error");
-            }
-        }
+            }, 1500);
+        });
 
-        function upgradeMiningLevel(level) {
-            try {
-                level = parseInt(level);
-                
-                // Check if already at this level
-                if (level <= walletData.mining.level) {
-                    showMessage("Already at or above this level!", "warning");
-                    return;
-                }
-                
-                // Check USDT balance for higher levels
-                let cost = 0;
-                if (level === 2) cost = 5;
-                if (level === 3) cost = 20;
-                
-                if (cost > 0 && walletData.balances.USDT < cost) {
-                    showMessage(`Need ${cost} USDT to upgrade!`, "error");
-                    return;
-                }
-                
-                // Deduct USDT if needed
-                if (cost > 0) {
-                    walletData.balances.USDT -= cost;
-                }
-                
-                // Upgrade level
-                walletData.mining.level = level;
-                
-                // Update UI
-                updateMiningDisplay();
-                updateTotalBalance();
-                
-                // Show success
-                showMessage(`⚡ Upgraded to level ${level}!`, "success");
-                
-            } catch (error) {
-                console.error("❌ Error upgrading mining level:", error);
-                showMessage("Failed to upgrade", "error");
+        // Global functions that HTML buttons can call
+        window.copyReferralCode = function() {
+            const codeDisplay = document.getElementById('referral-code-display');
+            if (codeDisplay) {
+                navigator.clipboard.writeText(codeDisplay.textContent)
+                    .then(() => showMessage('✅ Referral code copied!', 'success'))
+                    .catch(() => showMessage('❌ Failed to copy', 'error'));
             }
-        }
+        };
 
-        function updateTotalBalance() {
-            if (!walletData.balances) return;
-            
-            const totalAMSK = walletData.balances.AMSK || 0;
-            const totalUSD = totalAMSK * 0.001; // 1 AMSK = $0.001
-            
-            if (elements.totalBalanceAmsk) {
-                elements.totalBalanceAmsk.textContent = totalAMSK.toLocaleString();
+        window.copyReferralLink = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (linkInput) {
+                navigator.clipboard.writeText(linkInput.value)
+                    .then(() => showMessage('✅ Referral link copied!', 'success'))
+                    .catch(() => showMessage('❌ Failed to copy', 'error'));
             }
-            
-            if (elements.totalBalanceUsd) {
-                elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
-            }
-        }
+        };
 
-        function showMessage(text, type = 'info') {
+        window.shareOnTelegram = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (linkInput) {
+                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens every hour\n💰 Earn from staking and referrals\n👥 Get bonus with my link\n\n👉 ${linkInput.value}`;
+                const url = `https://t.me/share/url?url=${encodeURIComponent(linkInput.value)}&text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+            }
+        };
+
+        window.shareOnWhatsApp = function() {
+            const linkInput = document.getElementById('referral-link-input');
+            if (linkInput) {
+                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet bonus with my link\n\n${linkInput.value}`;
+                const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
+            }
+        };
+
+        // Close modal function
+        window.closeModal = function() {
+            const modal = document.querySelector('.modal-overlay.active');
+            if (modal) {
+                modal.remove();
+            }
+        };
+
+        // Show message function
+        window.showMessage = function(text, type = 'info') {
             const container = document.getElementById('notification-container');
             if (!container) return;
             
@@ -1226,8 +1820,11 @@
             message.className = `message ${type}`;
             
             let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            if (type === 'error') icon = 'fa-exclamation-circle';
+            switch (type) {
+                case 'success': icon = 'fa-check-circle'; break;
+                case 'error': icon = 'fa-exclamation-circle'; break;
+                case 'warning': icon = 'fa-exclamation-triangle'; break;
+            }
             
             message.innerHTML = `
                 <i class="fas ${icon}"></i>
@@ -1236,7 +1833,7 @@
             
             container.appendChild(message);
             
-            // Auto remove after 4 seconds
+            // Auto remove
             setTimeout(() => {
                 if (message.parentNode) {
                     message.style.opacity = '0';
@@ -1249,21 +1846,147 @@
             }, 4000);
             
             console.log(`${type}: ${text}`);
-        }
+        };
 
-        // Initialize the app when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("📱 DOM fully loaded");
-            setTimeout(initAlienMuskApp, 500);
-        });
+        // Navigation function
+        window.switchPage = function(pageName) {
+            const pages = document.querySelectorAll('.page');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            
+            // Update pages
+            pages.forEach(page => {
+                page.classList.remove('active');
+                if (page.id === `${pageName}-page`) {
+                    page.classList.add('active');
+                }
+            });
+            
+            // Update navigation buttons
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            console.log(`🚀 Switched to page: ${pageName}`);
+        };
 
-        // Make functions available globally
-        window.initAlienMuskApp = initAlienMuskApp;
-        window.handleMiningAction = handleMiningAction;
-        window.upgradeMiningLevel = upgradeMiningLevel;
+        // Make these functions available globally for app.js
+        window.tg = tg;
         window.showMessage = showMessage;
+        window.closeModal = closeModal;
+        window.switchPage = switchPage;
 
+        console.log("🔗 Connector script loaded successfully");
         console.log("👽 Alien Musk Quantum Platform v6.0 - Ready!");
+    </script>
+    
+    <!-- ============================================ -->
+    <!-- IMPORT MAIN APP.JS -->
+    <!-- ============================================ -->
+    <script>
+        // This is where the main app.js code should be placed
+        // You can either:
+        // 1. Copy-paste your entire app.js code here
+        // 2. Link it as external file: <script src="app.js"></script>
+        
+        console.log("📂 Loading main application...");
+        
+        // For now, we'll include a basic version that works with the HTML
+        // Replace this with your full app.js code
+        
+        // Basic initialization to make everything work
+        function initAlienMuskApp() {
+            console.log("🚀 Starting Alien Musk App...");
+            
+            // Basic functionality
+            setupEventListeners();
+            updateUI();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
+            }, 1000);
+        }
+        
+        function setupEventListeners() {
+            console.log("🎯 Setting up event listeners...");
+            
+            // Navigation
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const pageName = this.dataset.page;
+                    switchPage(pageName);
+                });
+            });
+            
+            // Mining button
+            const miningBtn = document.getElementById('start-mining-btn');
+            if (miningBtn) {
+                miningBtn.addEventListener('click', function() {
+                    showMessage("⚡ Mining started!", "success");
+                    this.innerHTML = '<i class="fas fa-play"></i><span>Mining...</span>';
+                    this.disabled = true;
+                    
+                    setTimeout(() => {
+                        showMessage("💰 +2,500 AMSK mined!", "success");
+                        this.innerHTML = '<i class="fas fa-play"></i><span>Start Mining</span>';
+                        this.disabled = false;
+                    }, 3000);
+                });
+            }
+            
+            // Upgrade buttons
+            const upgradeBtns = document.querySelectorAll('.upgrade-btn');
+            upgradeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const card = this.closest('.upgrade-card');
+                    if (card) {
+                        const level = card.dataset.level;
+                        showMessage(`⚡ Upgraded to level ${level}!`, "success");
+                    }
+                });
+            });
+            
+            // Stake buttons
+            const stakeBtns = document.querySelectorAll('.stake-plan-btn');
+            stakeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const plan = this.dataset.plan;
+                    showMessage(`💎 Staking plan ${plan} selected`, "info");
+                });
+            });
+            
+            // Wallet buttons
+            const depositBtn = document.getElementById('deposit-btn');
+            if (depositBtn) {
+                depositBtn.addEventListener('click', function() {
+                    showMessage("💰 Deposit feature coming soon!", "info");
+                });
+            }
+            
+            console.log("✅ Event listeners setup complete");
+        }
+        
+        function updateUI() {
+            console.log("🎨 Updating UI...");
+            
+            // Update referral code
+            const codeDisplay = document.getElementById('referral-code-display');
+            if (codeDisplay) {
+                codeDisplay.textContent = 'ALIEN-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            }
+            
+            // Update balance
+            const balanceAmsk = document.getElementById('total-balance-amsk');
+            const balanceUsd = document.getElementById('total-balance-usd');
+            if (balanceAmsk) balanceAmsk.textContent = '2,500';
+            if (balanceUsd) balanceUsd.textContent = '2.50';
+            
+            console.log("✅ UI updated");
+        }
     </script>
 </body>
 </html>
