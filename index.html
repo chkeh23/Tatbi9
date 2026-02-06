@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>👽 Alien Musk Quantum Mining</title>
+    <title>👽 Alien Musk Quantum Mining v6.0</title>
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,483 +18,2458 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS الخاص بنا - تم التصحيح -->
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- ألوان Telegram الأساسية -->
-    <meta name="theme-color" content="#0a0a0f">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- CSS كامل مضمن -->
+    <style>
+        /* =========================================== */
+        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.0 */
+        /* CSS كامل مضمن - جميع الخصائص */
+        /* =========================================== */
+        
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            /* ألوان Alien Quantum */
+            --quantum-green: #00ff88;
+            --quantum-blue: #00d4ff;
+            --quantum-purple: #9d4edd;
+            --quantum-pink: #ff0080;
+            --quantum-gold: #ffd700;
+            --quantum-cyan: #00ffff;
+            
+            /* ألوان الخلفية */
+            --space-dark: #0a0a0f;
+            --space-darker: #050510;
+            --space-card: #1a1a2e;
+            --space-card-light: #2a2a4a;
+            
+            /* ألوان النص */
+            --quantum-text: #ffffff;
+            --quantum-text-light: #b0b0d0;
+            --quantum-text-muted: #8080a0;
+            
+            /* متدرجات */
+            --gradient-quantum: linear-gradient(135deg, var(--quantum-green), var(--quantum-blue));
+            --gradient-stellar: linear-gradient(135deg, var(--quantum-purple), var(--quantum-pink));
+            --gradient-supernova: linear-gradient(135deg, var(--quantum-gold), #ff9900);
+            --gradient-space: linear-gradient(145deg, var(--space-card), #16213e);
+        }
+        
+        /* BASE STYLES */
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--space-dark);
+            color: var(--quantum-text);
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(157, 78, 221, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* LOADING SCREEN */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--space-darker);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 30px;
+            max-width: 360px;
+            width: 90%;
+            animation: quantumFadeIn 0.3s ease;
+        }
+        
+        @keyframes quantumFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alien-logo {
+            font-size: 56px;
+            margin-bottom: 20px;
+            animation: quantumFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5));
+            color: var(--quantum-green);
+        }
+        
+        @keyframes quantumFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-12px) rotate(-3deg); }
+            75% { transform: translateY(-8px) rotate(3deg); }
+        }
+        
+        .loading-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient-quantum);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            animation: quantumPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .loading-subtitle {
+            font-size: 17px;
+            color: var(--quantum-text-light);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .loading-progress {
+            margin-top: 30px;
+            width: 100%;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        #loading-progress-bar {
+            height: 100%;
+            width: 25%;
+            background: var(--gradient-quantum);
+            border-radius: 50px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #loading-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: quantumShimmer 2s infinite;
+        }
+        
+        @keyframes quantumShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        #loading-progress-text {
+            font-size: 13px;
+            color: var(--quantum-text-muted);
+            display: block;
+            text-align: center;
+        }
+        
+        /* APP CONTAINER */
+        #app-container {
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+        }
+        
+        #app-container.hidden {
+            display: none;
+        }
+        
+        /* HEADER */
+        .app-header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            animation: quantumSlideDown 0.3s ease;
+        }
+        
+        @keyframes quantumSlideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .logo:hover {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--quantum-green);
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .logo i {
+            font-size: 18px;
+            color: var(--quantum-green);
+        }
+        
+        .logo span {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            letter-spacing: 0.5px;
+        }
+        
+        .user-info-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 0;
+            transition: all 0.2s;
+        }
+        
+        .user-info-mini:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-avatar-mini {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--quantum-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            flex-shrink: 0;
+        }
+        
+        .user-details-mini {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        
+        .username-mini {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+        
+        .user-id-mini {
+            font-size: 11px;
+            color: var(--quantum-text-muted);
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .total-balance-header {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.2s;
+        }
+        
+        .total-balance-header:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--quantum-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+        
+        .balance-amount-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 2px;
+        }
+        
+        .balance-amount-header i {
+            font-size: 14px;
+            color: var(--quantum-blue);
+        }
+        
+        .balance-amount-header span:first-of-type {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            font-family: monospace;
+        }
+        
+        .balance-amount-header .currency {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            font-weight: 600;
+        }
+        
+        .balance-usd-header {
+            font-size: 11px;
+            color: var(--quantum-text-muted);
+            text-align: left;
+        }
+        
+        /* NAVIGATION */
+        .main-nav {
+            display: flex;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 50px;
+            margin: 10px 15px;
+            padding: 4px;
+            gap: 2px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 68px;
+            z-index: 900;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: quantumFadeInUp 0.3s ease;
+        }
+        
+        @keyframes quantumFadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 10px 4px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-quantum);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1;
+        }
+        
+        .nav-btn i {
+            font-size: 18px;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .nav-btn span {
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-btn.active {
+            color: white;
+            background: var(--gradient-quantum);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active::before {
+            opacity: 1;
+        }
+        
+        .nav-btn.active i {
+            transform: scale(1.1);
+            color: white;
+        }
+        
+        .nav-btn.active span {
+            color: white;
+            font-weight: 700;
+        }
+        
+        .nav-btn:not(.active):hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--quantum-text);
+        }
+        
+        .nav-btn:not(.active):hover i {
+            color: var(--quantum-green);
+        }
+        
+        /* PAGES */
+        .page {
+            display: none;
+            padding: 15px;
+            animation: quantumPageFadeIn 0.3s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes quantumPageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* MINING SECTION */
+        .mining-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mining-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-quantum);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .mining-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mining-header h3 {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .mining-header h3 i {
+            color: var(--quantum-green);
+            font-size: 18px;
+            animation: quantumPulse 2s ease-in-out infinite;
+        }
+        
+        .mining-stats {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        .stat-value {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+        
+        .mining-timer-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mining-timer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+            animation: quantumShimmerBg 3s infinite linear;
+        }
+        
+        @keyframes quantumShimmerBg {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .timer-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .timer-display i {
+            font-size: 20px;
+            color: var(--quantum-green);
+            animation: quantumSpin 20s infinite linear;
+        }
+        
+        @keyframes quantumSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .timer-display span {
+            font-size: 20px;
+            font-weight: 800;
+            font-family: monospace;
+            color: var(--quantum-text);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+        }
+        
+        .next-reward {
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .next-reward span {
+            color: var(--quantum-green);
+            font-weight: 700;
+            font-size: 17px;
+        }
+        
+        .mining-action-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mining-action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: quantumButtonShimmer 2s infinite;
+        }
+        
+        @keyframes quantumButtonShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .mining-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+        
+        .mining-action-btn:active {
+            transform: translateY(0);
+        }
+        
+        .mining-action-btn.claim-mode {
+            background: var(--gradient-stellar);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+        
+        .mining-action-btn.claim-mode::before {
+            animation: quantumButtonShimmer 1.5s infinite;
+        }
+        
+        .mining-info {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1;
+            min-width: 140px;
+            transition: all 0.2s;
+        }
+        
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+        
+        .info-item i {
+            font-size: 16px;
+            color: var(--quantum-green);
+            width: 20px;
+            text-align: center;
+        }
+        
+        .info-item span span {
+            color: var(--quantum-text);
+            font-weight: 700;
+            font-family: monospace;
+        }
+        
+        /* UPGRADE SECTION */
+        .upgrade-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upgrade-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .upgrade-section h4 {
+            font-size: 17px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .upgrade-section h4 i {
+            color: var(--quantum-blue);
+            font-size: 18px;
+        }
+        
+        .upgrade-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .upgrade-card {
+            background: linear-gradient(145deg, var(--space-card-light), #2a2a5a);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upgrade-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .upgrade-card:hover::before {
+            opacity: 1;
+        }
+        
+        .upgrade-card.active {
+            border-color: var(--quantum-green);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .upgrade-card.active::before {
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+        }
+        
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .upgrade-level {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--quantum-text-light);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .upgrade-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .upgrade-stats {
+            margin-bottom: 15px;
+        }
+        
+        .upgrade-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            margin-bottom: 6px;
+            padding: 2px 0;
+        }
+        
+        .upgrade-stat i {
+            font-size: 12px;
+            width: 16px;
+            text-align: center;
+            color: var(--quantum-green);
+        }
+        
+        .upgrade-stat:last-child i {
+            color: var(--quantum-blue);
+        }
+        
+        .upgrade-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--quantum-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upgrade-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .upgrade-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .upgrade-btn:hover:not(:disabled) {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+        
+        .upgrade-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .upgrade-btn.active-btn {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--quantum-green);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+        
+        .upgrade-btn.active-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.2);
+        }
+        
+        /* NOTIFICATIONS */
+        #notification-container {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 380px;
+            pointer-events: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            animation: quantumNotificationSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid;
+            pointer-events: auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes quantumNotificationSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .message:hover::before {
+            opacity: 1;
+        }
+        
+        .message i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        
+        .message span {
+            flex: 1;
+            line-height: 1.4;
+        }
+        
+        .message.success {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: var(--quantum-green);
+        }
+        
+        .message.error {
+            background: rgba(255, 68, 68, 0.15);
+            border-color: rgba(255, 68, 68, 0.3);
+            color: #ff4444;
+        }
+        
+        .message.warning {
+            background: rgba(255, 193, 7, 0.15);
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+        
+        .message.info {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--quantum-blue);
+        }
+        
+        /* STAKING PAGE STYLES */
+        .staking-content {
+            padding: 0 5px;
+        }
+        
+        .staking-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .staking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .staking-card h4 {
+            font-size: 17px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .staking-card h4 i {
+            color: var(--quantum-purple);
+            font-size: 18px;
+        }
+        
+        .staking-description {
+            color: var(--quantum-text-light);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .total-staked-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            color: var(--quantum-text);
+        }
+        
+        .staked-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .staked-label {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+        }
+        
+        .staked-amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            font-family: monospace;
+        }
+        
+        .staked-earnings {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text-light);
+            font-size: 13px;
+        }
+        
+        .staked-earnings i {
+            color: var(--quantum-green);
+        }
+        
+        .staking-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .plan-item {
+            background: linear-gradient(145deg, var(--space-card-light), #2a2a5a);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-item:hover {
+            border-color: var(--quantum-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+        
+        .plan-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, var(--quantum-purple), var(--quantum-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .plan-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            margin-bottom: 6px;
+            font-family: monospace;
+        }
+        
+        .plan-duration {
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            margin-bottom: 6px;
+        }
+        
+        .plan-apr {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 15px;
+        }
+        
+        .plan-reward {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 20px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+        
+        .stake-plan-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stake-plan-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .stake-plan-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .stake-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.3);
+        }
+        
+        .active-stakes {
+            min-height: 100px;
+        }
+        
+        .empty-stakes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: var(--quantum-text-light);
+            text-align: center;
+        }
+        
+        .empty-stakes i {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--quantum-text-muted);
+            opacity: 0.5;
+        }
+        
+        .empty-stakes p {
+            font-size: 17px;
+            margin-bottom: 6px;
+            color: var(--quantum-text);
+        }
+        
+        .empty-stakes small {
+            font-size: 14px;
+            color: var(--quantum-text-light);
+        }
+        
+        /* WALLET PAGE STYLES */
+        .wallet-content {
+            padding: 0 5px;
+        }
+        
+        .wallet-balance-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wallet-balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-quantum);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .wallet-balance-card h4 {
+            font-size: 17px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-balance-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 18px;
+        }
+        
+        .wallet-balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 4px;
+            font-family: monospace;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .wallet-balance-subtitle {
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            margin-bottom: 15px;
+        }
+        
+        .wallet-balance-usd {
+            font-size: 20px;
+            color: var(--quantum-text);
+            font-weight: 600;
+        }
+        
+        .wallet-actions-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-actions-card h4 {
+            font-size: 17px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-actions-card h4 i {
+            color: var(--quantum-blue);
+        }
+        
+        .wallet-actions-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .wallet-action-btn {
+            padding: 12px 8px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            min-height: 70px;
+        }
+        
+        .wallet-action-btn i {
+            font-size: 18px;
+            color: var(--quantum-blue);
+            margin-bottom: 4px;
+        }
+        
+        .wallet-action-btn span {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .wallet-action-btn:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+        
+        .wallet-assets-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-assets-card h4 {
+            font-size: 17px;
+            color: var(--quantum-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 5px;
+        }
+        
+        .wallet-assets-card h4 i {
+            color: var(--quantum-green);
+            font-size: 18px;
+        }
+        
+        .asset-list-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .asset-item-compact {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            gap: 12px;
+            transition: all 0.2s;
+        }
+        
+        .asset-item-compact:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateX(-2px);
+        }
+        
+        .asset-icon-compact {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            flex-shrink: 0;
+        }
+        
+        .ams-icon {
+            border-color: var(--quantum-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .ams-icon i {
+            color: var(--quantum-green);
+        }
+        
+        .usdt-icon {
+            border-color: var(--quantum-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .usdt-icon i {
+            color: var(--quantum-blue);
+        }
+        
+        .bnb-icon {
+            border-color: var(--quantum-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .bnb-icon i {
+            color: var(--quantum-gold);
+        }
+        
+        .ton-icon {
+            border-color: var(--quantum-purple);
+            background: rgba(157, 78, 221, 0.1);
+        }
+        
+        .ton-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .asset-details-compact {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .asset-name-compact {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .asset-balance-compact {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            font-family: monospace;
+        }
+        
+        .asset-value-compact {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            text-align: left;
+            flex-shrink: 0;
+        }
+        
+        /* REFERRAL PAGE STYLES */
+        .referral-content {
+            padding: 0 5px;
+        }
+        
+        .referral-stats-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 0, 128, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .referral-stats-card h4 {
+            font-size: 17px;
+            color: var(--quantum-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-stats-card h4 i {
+            color: var(--quantum-pink);
+            font-size: 18px;
+        }
+        
+        .referral-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .ref-stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .ref-stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 0, 128, 0.3);
+        }
+        
+        .ref-stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            margin-bottom: 6px;
+        }
+        
+        .ref-stat-label {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .referral-code-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        
+        .referral-code-card h4 {
+            font-size: 17px;
+            color: var(--quantum-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .referral-code-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 18px;
+        }
+        
+        .referral-code-display {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            padding: 15px;
+            background: rgba(255, 0, 128, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+        
+        .btn-copy-code {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-copy-code:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(157, 78, 221, 0.3);
+        }
+        
+        .referral-link-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+        
+        .referral-link-card h4 {
+            font-size: 17px;
+            color: var(--quantum-text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-link-card h4 i {
+            color: var(--quantum-green);
+            font-size: 18px;
+        }
+        
+        .link-input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .link-input {
+            flex: 1;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 14px;
+            font-family: monospace;
+            direction: ltr;
+        }
+        
+        .link-input:focus {
+            outline: none;
+            border-color: var(--quantum-blue);
+        }
+        
+        .copy-link-btn {
+            padding: 0 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: var(--quantum-blue);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+        
+        .copy-link-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .share-btn {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .share-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .share-btn.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .milestones-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+        }
+        
+        .milestones-card h4 {
+            font-size: 17px;
+            color: var(--quantum-text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .milestones-card h4 i {
+            color: var(--quantum-gold);
+            font-size: 18px;
+        }
+        
+        .milestones-description {
+            color: var(--quantum-text-light);
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            transition: all 0.2s;
+        }
+        
+        .milestone-item.can-claim {
+            border-color: var(--quantum-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+            animation: quantumPulseSuccess 2s infinite;
+        }
+        
+        .milestone-item.claimed {
+            border-color: var(--quantum-purple);
+            opacity: 0.7;
+        }
+        
+        @keyframes quantumPulseSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.6); }
+            70% { box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        
+        .milestone-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .milestone-item.claimed .milestone-icon {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: rgba(157, 78, 221, 0.2);
+        }
+        
+        .milestone-icon i {
+            font-size: 18px;
+            color: var(--quantum-green);
+        }
+        
+        .milestone-item.claimed .milestone-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .milestone-details {
+            flex: 1;
+        }
+        
+        .milestone-requirement {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+        }
+        
+        .milestone-reward {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+        
+        .milestone-action {
+            flex-shrink: 0;
+        }
+        
+        .btn-claim-milestone {
+            padding: 8px 16px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-claim-milestone:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+        
+        .claimed-badge {
+            padding: 6px 12px;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--quantum-purple);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .locked-badge {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text-light);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 10px 12px;
+                min-height: 56px;
+            }
+            
+            .logo {
+                padding: 6px 10px;
+            }
+            
+            .logo span {
+                font-size: 15px;
+            }
+            
+            .user-avatar-mini {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .username-mini {
+                max-width: 80px;
+                font-size: 13px;
+            }
+            
+            .main-nav {
+                margin: 8px 12px;
+                top: 64px;
+            }
+            
+            .nav-btn {
+                padding: 8px 3px;
+            }
+            
+            .nav-btn i {
+                font-size: 16px;
+            }
+            
+            .page {
+                padding: 12px;
+            }
+            
+            .mining-section,
+            .upgrade-section,
+            .staking-card,
+            .wallet-balance-card,
+            .referral-stats-card,
+            .referral-code-card,
+            .referral-link-card,
+            .milestones-card {
+                padding: 18px;
+            }
+            
+            .mining-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .mining-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .timer-display span {
+                font-size: 18px;
+            }
+            
+            .info-item {
+                min-width: 100%;
+            }
+            
+            .upgrade-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-actions-compact {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .wallet-action-btn {
+                padding: 10px 6px;
+                min-height: 65px;
+            }
+            
+            .wallet-action-btn i {
+                font-size: 16px;
+            }
+            
+            .wallet-action-btn span {
+                font-size: 10px;
+            }
+            
+            .referral-stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .staking-plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .asset-item-compact {
+                padding: 12px;
+            }
+            
+            .asset-icon-compact {
+                width: 36px;
+                height: 36px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            :root {
+                font-size: 14px;
+            }
+            
+            .loading-title {
+                font-size: 24px;
+            }
+            
+            .loading-subtitle {
+                font-size: 15px;
+            }
+            
+            .alien-logo {
+                font-size: 44px;
+            }
+            
+            .header-left {
+                gap: 6px;
+            }
+            
+            .logo span {
+                display: none;
+            }
+            
+            .user-info-mini {
+                padding: 5px 8px;
+            }
+            
+            .username-mini {
+                max-width: 70px;
+            }
+            
+            .main-nav {
+                border-radius: 16px;
+                margin: 6px;
+                padding: 3px;
+            }
+            
+            .nav-btn span {
+                font-size: 10px;
+            }
+            
+            .wallet-balance-amount {
+                font-size: 28px;
+            }
+            
+            .asset-name-compact {
+                font-size: 14px;
+            }
+            
+            .asset-value-compact {
+                font-size: 14px;
+            }
+            
+            .referral-code-display {
+                font-size: 18px;
+                padding: 12px;
+            }
+        }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--space-card);
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-quantum);
+            border-radius: 6px;
+            border: 1px solid var(--space-card);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
+        }
+        
+        /* SELECTION */
+        ::selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
+        
+        ::-moz-selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
+        
+        /* UTILITY CLASSES */
+        .hidden {
+            display: none !important;
+        }
+        
+        .quantum-text-gradient {
+            background: var(--gradient-quantum);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .quantum-glow {
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
+        }
+    </style>
 </head>
 <body>
     <!-- ============================================ -->
-    <!-- 👽 LOADING SCREEN -->
-    <!-- ============================================ -->
-    <div id="loading-screen" class="loading-screen active">
-        <div class="loading-container">
-            <div class="alien-logo">👽</div>
-            <h1 class="loading-title">Alien Musk Quantum</h1>
-            <p class="loading-subtitle">Initializing Quantum Systems...</p>
-            <div class="loading-progress">
-                <div class="progress-bar">
-                    <div id="loading-progress-bar" class="progress-fill"></div>
+<!-- 👽 ALIEN MUSK QUANTUM MINING v6.0 -->
+<!-- HTML الجزء 2: الجسم (Body) -->
+<!-- ============================================ -->
+<!-- التعليمات: ضع هذا الكود بعد نهاية </style> وقبل </head> -->
+<!-- تأكد من أن CSS موجود في <style> في <head> -->
+
+<!-- 👽 LOADING SCREEN -->
+<div id="loading-screen" class="loading-screen active">
+    <div class="loading-container">
+        <div class="alien-logo">👽</div>
+        <h1 class="loading-title">Alien Musk Quantum</h1>
+        <p class="loading-subtitle">Initializing Quantum Systems...</p>
+        <div class="loading-progress">
+            <div class="progress-bar">
+                <div id="loading-progress-bar" class="progress-fill"></div>
+            </div>
+            <span id="loading-progress-text" class="progress-text">Loading... 25%</span>
+        </div>
+    </div>
+</div>
+
+<!-- 👽 APP CONTAINER -->
+<div id="app-container" class="hidden">
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="logo" id="admin-logo">
+                <i class="fas fa-robot"></i>
+                <span>Alien Musk</span>
+            </div>
+            
+            <div class="user-info-mini">
+                <img id="user-avatar-mini" class="user-avatar-mini" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="Avatar">
+                <div class="user-details-mini">
+                    <div id="username-mini" class="username-mini">Alien</div>
+                    <div id="user-id-mini" class="user-id-mini">ID: Loading...</div>
                 </div>
-                <span id="loading-progress-text" class="progress-text">Loading... 25%</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="total-balance-header">
+                <div class="balance-amount-header">
+                    <i class="fas fa-coins"></i>
+                    <span id="total-balance-amsk">0</span>
+                    <span class="currency">AMSK</span>
+                </div>
+                <div class="balance-usd-header">
+                    ≈ $<span id="total-balance-usd">0.00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="main-nav">
+        <button class="nav-btn active" data-page="home" onclick="switchPage('home')">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </button>
+        <button class="nav-btn" data-page="staking" onclick="switchPage('staking')">
+            <i class="fas fa-gem"></i>
+            <span>Staking</span>
+        </button>
+        <button class="nav-btn" data-page="wallet" onclick="switchPage('wallet')">
+            <i class="fas fa-wallet"></i>
+            <span>Wallet</span>
+        </button>
+        <button class="nav-btn" data-page="referral" onclick="switchPage('referral')">
+            <i class="fas fa-users"></i>
+            <span>Referral</span>
+        </button>
+    </nav>
+
+    <!-- NOTIFICATION CONTAINER -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- ============================================ -->
+    <!-- 👽 HOME PAGE - MINING -->
+    <!-- ============================================ -->
+    <div id="home-page" class="page active">
+        <section class="mining-section">
+            <div class="mining-header">
+                <h3><i class="fas fa-microchip"></i> Quantum Mining Station</h3>
+                <div class="mining-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Level</div>
+                        <div class="stat-value" id="current-mining-level">1</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Hashrate</div>
+                        <div class="stat-value" id="current-hashrate-display">2,500</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mining-timer-card">
+                <div class="timer-display">
+                    <i class="fas fa-clock"></i>
+                    <span id="mining-timer-display">01:00:00</span>
+                </div>
+                <div class="next-reward">
+                    Next Reward: <span id="next-reward-amount">2,500</span> AMSK
+                </div>
+            </div>
+
+            <button class="mining-action-btn" id="start-mining-btn" onclick="handleMiningAction()">
+                <i class="fas fa-play"></i>
+                <span>Start Quantum Mining</span>
+            </button>
+
+            <div class="mining-info">
+                <div class="info-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-calendar-day"></i>
+                    <span>Today: <span id="mined-today">2,500</span> AMSK</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="upgrade-section">
+            <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
+            
+            <div class="upgrade-cards">
+                <!-- Level 1 -->
+                <div class="upgrade-card" data-level="1">
+                    <div class="upgrade-header">
+                        <span class="upgrade-level">Level 1</span>
+                        <span class="upgrade-name">Beginner</span>
+                    </div>
+                    <div class="upgrade-stats">
+                        <div class="upgrade-stat">
+                            <i class="fas fa-bolt"></i>
+                            <span>Hashrate: 2,500</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-gift"></i>
+                            <span>Reward: 2,500 AMSK/hour</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-coins"></i>
+                            <span>Cost: 0 USDT</span>
+                        </div>
+                    </div>
+                    <button class="upgrade-btn active-btn" onclick="upgradeMiningLevel(1)">Active</button>
+                </div>
+
+                <!-- Level 2 -->
+                <div class="upgrade-card" data-level="2">
+                    <div class="upgrade-header">
+                        <span class="upgrade-level">Level 2</span>
+                        <span class="upgrade-name">Advanced</span>
+                    </div>
+                    <div class="upgrade-stats">
+                        <div class="upgrade-stat">
+                            <i class="fas fa-bolt"></i>
+                            <span>Hashrate: 5,000</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-gift"></i>
+                            <span>Reward: 5,000 AMSK/hour</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-coins"></i>
+                            <span>Cost: 5 USDT</span>
+                        </div>
+                    </div>
+                    <button class="upgrade-btn" onclick="upgradeMiningLevel(2)">Upgrade</button>
+                </div>
+
+                <!-- Level 3 -->
+                <div class="upgrade-card" data-level="3">
+                    <div class="upgrade-header">
+                        <span class="upgrade-level">Level 3</span>
+                        <span class="upgrade-name">Pro</span>
+                    </div>
+                    <div class="upgrade-stats">
+                        <div class="upgrade-stat">
+                            <i class="fas fa-bolt"></i>
+                            <span>Hashrate: 10,000</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-gift"></i>
+                            <span>Reward: 10,000 AMSK/hour</span>
+                        </div>
+                        <div class="upgrade-stat">
+                            <i class="fas fa-coins"></i>
+                            <span>Cost: 20 USDT</span>
+                        </div>
+                    </div>
+                    <button class="upgrade-btn" onclick="upgradeMiningLevel(3)">Upgrade</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- 👽 STAKING PAGE -->
+    <!-- ============================================ -->
+    <div id="staking-page" class="page">
+        <div class="staking-content">
+            <div class="staking-card">
+                <h4><i class="fas fa-gem"></i> Quantum Staking</h4>
+                <p class="staking-description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
+                
+                <div class="total-staked-card">
+                    <div class="staked-info">
+                        <div class="staked-label">Total Staked</div>
+                        <div class="staked-amount" id="total-staked">0 USDT</div>
+                    </div>
+                    <div class="staked-earnings">
+                        <i class="fas fa-coins"></i>
+                        <span>Active Earnings</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="staking-card">
+                <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
+                
+                <div class="staking-plans-grid">
+                    <!-- Silver Plan -->
+                    <div class="plan-item">
+                        <div class="plan-name">Silver Plan</div>
+                        <div class="plan-amount">10+ USDT</div>
+                        <div class="plan-duration">7 Days</div>
+                        <div class="plan-apr">40% APR</div>
+                        <div class="plan-reward">Daily: 571 AMSK per $100</div>
+                        <button class="stake-plan-btn" onclick="openStakeModal(1)">Stake Now</button>
+                    </div>
+
+                    <!-- Gold Plan -->
+                    <div class="plan-item">
+                        <div class="plan-name">Gold Plan</div>
+                        <div class="plan-amount">50+ USDT</div>
+                        <div class="plan-duration">15 Days</div>
+                        <div class="plan-apr">50% APR</div>
+                        <div class="plan-reward">Daily: 417 AMSK per $100</div>
+                        <button class="stake-plan-btn" onclick="openStakeModal(2)">Stake Now</button>
+                    </div>
+
+                    <!-- Diamond Plan -->
+                    <div class="plan-item">
+                        <div class="plan-name">Diamond Plan</div>
+                        <div class="plan-amount">100+ USDT</div>
+                        <div class="plan-duration">30 Days</div>
+                        <div class="plan-apr">60% APR</div>
+                        <div class="plan-reward">Daily: 333 AMSK per $100</div>
+                        <button class="stake-plan-btn" onclick="openStakeModal(3)">Stake Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="staking-card">
+                <h4><i class="fas fa-history"></i> Active Stakes</h4>
+                <div class="active-stakes" id="active-stakes-list">
+                    <div class="empty-stakes">
+                        <i class="fas fa-inbox"></i>
+                        <p>No active stakes yet</p>
+                        <small>Start staking to earn rewards</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- ============================================ -->
-    <!-- 👽 APP CONTAINER -->
+    <!-- 👽 WALLET PAGE -->
     <!-- ============================================ -->
-    <div id="app-container" class="hidden">
-        <!-- HEADER -->
-        <header class="app-header">
-            <div class="header-left">
-                <div class="logo" id="admin-logo">
-                    <i class="fas fa-robot"></i>
-                    <span>Alien Musk</span>
-                </div>
+    <div id="wallet-page" class="page">
+        <div class="wallet-content">
+            <div class="wallet-balance-card">
+                <h4><i class="fas fa-wallet"></i> Total Balance</h4>
+                <div class="wallet-balance-amount" id="wallet-balance-amsk">0</div>
+                <div class="wallet-balance-subtitle">AMSK Tokens</div>
+                <div class="wallet-balance-usd" id="wallet-balance-usd">$0.00</div>
+            </div>
+
+            <div class="wallet-actions-card">
+                <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
                 
-                <div class="user-info-mini">
-                    <img id="user-avatar-mini" class="user-avatar-mini" src="https://api.dicebear.com/7.x/avataaars/svg?seed=alien" alt="Avatar">
-                    <div class="user-details-mini">
-                        <div id="username-mini" class="username-mini">Alien</div>
-                        <div id="user-id-mini" class="user-id-mini">ID: Loading...</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <div class="total-balance-header">
-                    <div class="balance-amount-header">
-                        <i class="fas fa-coins"></i>
-                        <span id="total-balance-amsk">0</span>
-                        <span class="currency">AMSK</span>
-                    </div>
-                    <div class="balance-usd-header">
-                        ≈ $<span id="total-balance-usd">0.00</span>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- NAVIGATION -->
-        <nav class="main-nav">
-            <button class="nav-btn active" data-page="home" onclick="switchPage('home')">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-btn" data-page="staking" onclick="switchPage('staking')">
-                <i class="fas fa-gem"></i>
-                <span>Staking</span>
-            </button>
-            <button class="nav-btn" data-page="wallet" onclick="switchPage('wallet')">
-                <i class="fas fa-wallet"></i>
-                <span>Wallet</span>
-            </button>
-            <button class="nav-btn" data-page="referral" onclick="switchPage('referral')">
-                <i class="fas fa-users"></i>
-                <span>Referral</span>
-            </button>
-        </nav>
-
-        <!-- NOTIFICATION CONTAINER -->
-        <div id="notification-container" class="notification-container"></div>
-
-        <!-- ============================================ -->
-        <!-- 👽 HOME PAGE - MINING -->
-        <!-- ============================================ -->
-        <div id="home-page" class="page active">
-            <section class="mining-section">
-                <div class="mining-header">
-                    <h3><i class="fas fa-microchip"></i> Quantum Mining Station</h3>
-                    <div class="mining-stats">
-                        <div class="stat-item">
-                            <div class="stat-label">Level</div>
-                            <div class="stat-value" id="current-mining-level">1</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Hashrate</div>
-                            <div class="stat-value" id="current-hashrate-display">2,500</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mining-timer-card">
-                    <div class="timer-display">
-                        <i class="fas fa-clock"></i>
-                        <span id="mining-timer-display">01:00:00</span>
-                    </div>
-                    <div class="next-reward">
-                        Next Reward: <span id="next-reward-amount">2,500</span> AMSK
-                    </div>
-                </div>
-
-                <button class="mining-action-btn" id="start-mining-btn" onclick="handleMiningAction()">
-                    <i class="fas fa-play"></i>
-                    <span>Start Quantum Mining</span>
-                </button>
-
-                <div class="mining-info">
-                    <div class="info-item">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="upgrade-section">
-                <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
-                
-                <div class="upgrade-cards">
-                    <!-- Level 1 -->
-                    <div class="upgrade-card" data-level="1">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 1</span>
-                            <span class="upgrade-name">Beginner</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 0 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn active-btn" onclick="upgradeMiningLevel(1)">Active</button>
-                    </div>
-
-                    <!-- Level 2 -->
-                    <div class="upgrade-card" data-level="2">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 2</span>
-                            <span class="upgrade-name">Advanced</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 5,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 5,000 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 5 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(2)">Upgrade</button>
-                    </div>
-
-                    <!-- Level 3 -->
-                    <div class="upgrade-card" data-level="3">
-                        <div class="upgrade-header">
-                            <span class="upgrade-level">Level 3</span>
-                            <span class="upgrade-name">Pro</span>
-                        </div>
-                        <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 10,000</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>Reward: 10,000 AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 20 USDT</span>
-                            </div>
-                        </div>
-                        <button class="upgrade-btn" onclick="upgradeMiningLevel(3)">Upgrade</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- 👽 STAKING PAGE -->
-        <!-- ============================================ -->
-        <div id="staking-page" class="page">
-            <div class="staking-content">
-                <div class="staking-card">
-                    <h4><i class="fas fa-gem"></i> Quantum Staking</h4>
-                    <p class="staking-description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
-                    
-                    <div class="total-staked-card">
-                        <div class="staked-info">
-                            <div class="staked-label">Total Staked</div>
-                            <div class="staked-amount" id="total-staked">0 USDT</div>
-                        </div>
-                        <div class="staked-earnings">
-                            <i class="fas fa-coins"></i>
-                            <span>Active Earnings</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="staking-card">
-                    <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
-                    
-                    <div class="staking-plans-grid">
-                        <!-- Silver Plan -->
-                        <div class="plan-item">
-                            <div class="plan-name">Silver Plan</div>
-                            <div class="plan-amount">10+ USDT</div>
-                            <div class="plan-duration">7 Days</div>
-                            <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward">Daily: 571 AMSK per $100</div>
-                            <button class="stake-plan-btn" onclick="openStakeModal(1)">Stake Now</button>
-                        </div>
-
-                        <!-- Gold Plan -->
-                        <div class="plan-item">
-                            <div class="plan-name">Gold Plan</div>
-                            <div class="plan-amount">50+ USDT</div>
-                            <div class="plan-duration">15 Days</div>
-                            <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward">Daily: 417 AMSK per $100</div>
-                            <button class="stake-plan-btn" onclick="openStakeModal(2)">Stake Now</button>
-                        </div>
-
-                        <!-- Diamond Plan -->
-                        <div class="plan-item">
-                            <div class="plan-name">Diamond Plan</div>
-                            <div class="plan-amount">100+ USDT</div>
-                            <div class="plan-duration">30 Days</div>
-                            <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward">Daily: 333 AMSK per $100</div>
-                            <button class="stake-plan-btn" onclick="openStakeModal(3)">Stake Now</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="staking-card">
-                    <h4><i class="fas fa-history"></i> Active Stakes</h4>
-                    <div class="active-stakes" id="active-stakes-list">
-                        <div class="empty-stakes">
-                            <i class="fas fa-inbox"></i>
-                            <p>No active stakes yet</p>
-                            <small>Start staking to earn rewards</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- 👽 WALLET PAGE -->
-        <!-- ============================================ -->
-        <div id="wallet-page" class="page">
-            <div class="wallet-content">
-                <div class="wallet-balance-card">
-                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
-                    <div class="wallet-balance-amount" id="wallet-balance-amsk">0</div>
-                    <div class="wallet-balance-subtitle">AMSK Tokens</div>
-                    <div class="wallet-balance-usd" id="wallet-balance-usd">$0.00</div>
-                </div>
-
-                <div class="wallet-actions-card">
-                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
-                    
-                    <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" id="deposit-btn" onclick="openDepositModal('USDT')">
-                            <i class="fas fa-download"></i>
-                            <span>Deposit</span>
-                        </button>
-                        <button class="wallet-action-btn" id="withdraw-btn" onclick="openWithdrawModal()">
-                            <i class="fas fa-upload"></i>
-                            <span>Withdraw</span>
-                        </button>
-                        <button class="wallet-action-btn" id="swap-btn" onclick="openSwapModal()">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Swap</span>
-                        </button>
-                        <button class="wallet-action-btn" id="history-btn" onclick="showTransactionHistory()">
-                            <i class="fas fa-history"></i>
-                            <span>History</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="wallet-assets-card">
-                    <h4><i class="fas fa-coins"></i> Assets</h4>
-                    
-                    <div class="assets-section">
-                        <div class="asset-list-compact">
-                            <!-- AMSK -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact amsk-icon">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">AMSK Token</div>
-                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
-                            </div>
-
-                            <!-- USDT -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact usdt-icon">
-                                    <i class="fas fa-coins"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">USDT</div>
-                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
-                            </div>
-
-                            <!-- BNB -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact bnb-icon">
-                                    <i class="fab fa-btc"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">BNB</div>
-                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
-                            </div>
-
-                            <!-- TON -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ton-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">TON</div>
-                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================ -->
-        <!-- 👽 REFERRAL PAGE -->
-        <!-- ============================================ -->
-        <div id="referral-page" class="page">
-            <div class="referral-content">
-                <div class="referral-stats-card">
-                    <h4><i class="fas fa-chart-line"></i> Referral Statistics</h4>
-                    
-                    <div class="referral-stats-grid">
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-count">0</div>
-                            <div class="ref-stat-label">Referrals</div>
-                        </div>
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-earned">0</div>
-                            <div class="ref-stat-label">AMSK Earned</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="referral-code-card">
-                    <h4><i class="fas fa-user-friends"></i> Your Referral Code</h4>
-                    <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
-                    <button class="btn-copy-code" onclick="copyReferralCode()">
-                        <i class="far fa-copy"></i>
-                        <span>Copy Code</span>
+                <div class="wallet-actions-compact">
+                    <button class="wallet-action-btn" id="deposit-btn" onclick="openDepositModal('USDT')">
+                        <i class="fas fa-download"></i>
+                        <span>Deposit</span>
+                    </button>
+                    <button class="wallet-action-btn" id="withdraw-btn" onclick="openWithdrawModal()">
+                        <i class="fas fa-upload"></i>
+                        <span>Withdraw</span>
+                    </button>
+                    <button class="wallet-action-btn" id="swap-btn" onclick="openSwapModal()">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Swap</span>
+                    </button>
+                    <button class="wallet-action-btn" id="history-btn" onclick="showTransactionHistory()">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
                     </button>
                 </div>
+            </div>
 
-                <div class="referral-link-card">
-                    <h4><i class="fas fa-link"></i> Your Referral Link</h4>
-                    <div class="link-input-group">
-                        <input type="text" class="link-input" id="referral-link-input" readonly value="https://t.me/AlienMuskbot/Musk?startapp=ALIEN-XXXXXX">
-                        <button class="copy-link-btn" onclick="copyReferralLink()">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="share-buttons">
-                        <button class="share-btn telegram" onclick="shareOnTelegram()">
-                            <i class="fab fa-telegram"></i>
-                            <span>Telegram</span>
-                        </button>
-                        <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                            <i class="fab fa-whatsapp"></i>
-                            <span>WhatsApp</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="milestones-card">
-                    <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
-                    <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
-                    
-                    <div class="milestones-list" id="milestones-list">
-                        <!-- Milestone 1 -->
-                        <div class="milestone-item" data-milestone="10">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
+            <div class="wallet-assets-card">
+                <h4><i class="fas fa-coins"></i> Assets</h4>
+                
+                <div class="assets-section">
+                    <div class="asset-list-compact">
+                        <!-- AMSK -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ams-icon">
+                                <i class="fas fa-robot"></i>
                             </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">10 Referrals</div>
-                                <div class="milestone-reward">+50,000 AMSK</div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">AMSK Token</div>
+                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
                             </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(10)">Claim</button>
-                            </div>
+                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
                         </div>
 
-                        <!-- Milestone 2 -->
-                        <div class="milestone-item" data-milestone="25">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-friends"></i>
+                        <!-- USDT -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact usdt-icon">
+                                <i class="fas fa-coins"></i>
                             </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">25 Referrals</div>
-                                <div class="milestone-reward">+150,000 AMSK</div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">USDT</div>
+                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
                             </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(25)">Claim</button>
-                            </div>
+                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
                         </div>
 
-                        <!-- Milestone 3 -->
-                        <div class="milestone-item" data-milestone="50">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-plus"></i>
+                        <!-- BNB -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact bnb-icon">
+                                <i class="fab fa-btc"></i>
                             </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">50 Referrals</div>
-                                <div class="milestone-reward">+350,000 AMSK</div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">BNB</div>
+                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
                             </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(50)">Claim</button>
-                            </div>
+                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
                         </div>
 
-                        <!-- Milestone 4 -->
-                        <div class="milestone-item" data-milestone="100">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
+                        <!-- TON -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ton-icon">
+                                <i class="fas fa-bolt"></i>
                             </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">100 Referrals</div>
-                                <div class="milestone-reward">+1,000,000 AMSK</div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">TON</div>
+                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
                             </div>
-                            <div class="milestone-action">
-                                <button class="btn-claim-milestone" onclick="claimMilestone(100)">Claim</button>
-                            </div>
+                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
                         </div>
                     </div>
                 </div>
@@ -503,160 +2478,363 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- 👽 CONNECTOR SCRIPT -->
+    <!-- 👽 REFERRAL PAGE -->
     <!-- ============================================ -->
-    <script>
-        // 👽 Alien Musk Quantum Connector
-        console.log("🔗 Loading Alien Musk Quantum Platform...");
-        
-        // تهيئة Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
-            authDomain: "tatbi9-681bf.firebaseapp.com",
-            projectId: "tatbi9-681bf",
-            storageBucket: "tatbi9-681bf.firebasestorage.app",
-            messagingSenderId: "863237064748",
-            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
-        };
-        
-        // تهيئة Telegram
-        let tg = null;
+    <div id="referral-page" class="page">
+        <div class="referral-content">
+            <div class="referral-stats-card">
+                <h4><i class="fas fa-chart-line"></i> Referral Statistics</h4>
+                
+                <div class="referral-stats-grid">
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-count">0</div>
+                        <div class="ref-stat-label">Referrals</div>
+                    </div>
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-earned">0</div>
+                        <div class="ref-stat-label">AMSK Earned</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="referral-code-card">
+                <h4><i class="fas fa-user-friends"></i> Your Referral Code</h4>
+                <div class="referral-code-display" id="referral-code-display">ALIEN-XXXXXX</div>
+                <button class="btn-copy-code" onclick="copyReferralCode()">
+                    <i class="far fa-copy"></i>
+                    <span>Copy Code</span>
+                </button>
+            </div>
+
+            <div class="referral-link-card">
+                <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                <div class="link-input-group">
+                    <input type="text" class="link-input" id="referral-link-input" readonly value="https://t.me/AlienMuskbot/Musk?startapp=ALIEN-XXXXXX">
+                    <button class="copy-link-btn" onclick="copyReferralLink()">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                
+                <div class="share-buttons">
+                    <button class="share-btn telegram" onclick="shareOnTelegram()">
+                        <i class="fab fa-telegram"></i>
+                        <span>Telegram</span>
+                    </button>
+                    <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="milestones-card">
+                <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
+                <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
+                
+                <div class="milestones-list" id="milestones-list">
+                    <!-- Milestone 1 -->
+                    <div class="milestone-item" data-milestone="10">
+                        <div class="milestone-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement">10 Referrals</div>
+                            <div class="milestone-reward">+50,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <button class="btn-claim-milestone" onclick="claimMilestone(10)">Claim</button>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="milestone-item" data-milestone="25">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement">25 Referrals</div>
+                            <div class="milestone-reward">+150,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <button class="btn-claim-milestone" onclick="claimMilestone(25)">Claim</button>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 3 -->
+                    <div class="milestone-item" data-milestone="50">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement">50 Referrals</div>
+                            <div class="milestone-reward">+350,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <button class="btn-claim-milestone" onclick="claimMilestone(50)">Claim</button>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 4 -->
+                    <div class="milestone-item" data-milestone="100">
+                        <div class="milestone-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement">100 Referrals</div>
+                            <div class="milestone-reward">+1,000,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <button class="btn-claim-milestone" onclick="claimMilestone(100)">Claim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================ -->
+<!-- 👽 CONNECTOR SCRIPT -->
+<!-- ============================================ -->
+<script>
+    // 👽 Alien Musk Quantum Connector
+    console.log("🔗 Loading Alien Musk Quantum Platform v6.0...");
+    
+    // Global variables
+    window.tg = null;
+    window.firebaseApp = null;
+    window.db = null;
+    
+    // Firebase Configuration
+    const FIREBASE_CONFIG = {
+        apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+        authDomain: "tatbi9-681bf.firebaseapp.com",
+        projectId: "tatbi9-681bf",
+        storageBucket: "tatbi9-681bf.firebasestorage.app",
+        messagingSenderId: "863237064748",
+        appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+    };
+    
+    // Initialize Telegram WebApp
+    function initTelegram() {
         try {
             if (window.Telegram && window.Telegram.WebApp) {
-                tg = Telegram.WebApp;
-                tg.ready();
-                tg.expand();
+                window.tg = Telegram.WebApp;
+                window.tg.ready();
+                window.tg.expand();
+                window.tg.setHeaderColor('#0a0a0f');
+                window.tg.setBackgroundColor('#0a0a0f');
                 console.log("✅ Telegram WebApp initialized");
+                return true;
             }
         } catch (e) {
-            console.log("ℹ️ Not in Telegram environment");
+            console.log("⚠️ Not in Telegram environment");
         }
-        
-        // تهيئة Firebase
-        let firebaseApp = null;
-        let db = null;
+        return false;
+    }
+    
+    // Initialize Firebase
+    function initFirebase() {
         if (typeof firebase !== 'undefined') {
             try {
-                firebaseApp = firebase.initializeApp(firebaseConfig);
-                db = firebase.firestore();
+                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                window.db = firebase.firestore();
                 console.log("✅ Firebase initialized");
+                return true;
             } catch (error) {
-                console.log("⚠️ Firebase initialization error");
+                console.error("❌ Firebase error:", error);
             }
         }
+        return false;
+    }
+    
+    // Basic HTML Functions
+    window.switchPage = function(pageName) {
+        console.log(`🔀 Switching to page: ${pageName}`);
         
-        // دوال أساسية للـ HTML
-        window.switchPage = function(pageName) {
-            // إخفاء جميع الصفحات
+        try {
+            // Update pages
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                if (page.id === `${pageName}-page`) {
+                    page.classList.add('active');
+                }
             });
             
-            // إخفاء جميع أزرار التنقل
+            // Update navigation buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
+                }
             });
             
-            // إظهار الصفحة المطلوبة
-            const page = document.getElementById(pageName + '-page');
-            if (page) {
-                page.classList.add('active');
+            // Trigger page-specific updates
+            switch(pageName) {
+                case 'home':
+                    if (typeof updateMiningDisplay === 'function') updateMiningDisplay();
+                    break;
+                case 'staking':
+                    if (typeof updateStakingDisplay === 'function') updateStakingDisplay();
+                    break;
+                case 'wallet':
+                    if (typeof updateWalletUI === 'function') updateWalletUI();
+                    break;
+                case 'referral':
+                    if (typeof updateReferralDisplay === 'function') updateReferralDisplay();
+                    break;
             }
             
-            // تفعيل زر التنقل
-            const navBtn = document.querySelector(`.nav-btn[data-page="${pageName}"]`);
-            if (navBtn) {
-                navBtn.classList.add('active');
-            }
-            
-            console.log(`🔀 Switched to ${pageName} page`);
-        };
+        } catch (error) {
+            console.error("❌ Page switch error:", error);
+        }
+    };
+    
+    window.showMessage = function(text, type = 'info') {
+        const container = document.getElementById('notification-container');
+        if (!container) {
+            console.log("No notification container found");
+            return;
+        }
         
-        window.showMessage = function(text, type = 'info') {
-            const container = document.getElementById('notification-container');
-            if (!container) return;
-            
-            const message = document.createElement('div');
-            message.className = `message ${type}`;
-            message.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : 
-                                   type === 'error' ? 'exclamation-circle' : 
-                                   type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                <span>${text}</span>
-            `;
-            
-            container.appendChild(message);
-            
-            // إزالة بعد 4 ثواني
-            setTimeout(() => {
+        const message = document.createElement('div');
+        message.className = `message ${type}`;
+        
+        let icon = 'fa-info-circle';
+        if (type === 'success') icon = 'fa-check-circle';
+        if (type === 'error') icon = 'fa-exclamation-circle';
+        if (type === 'warning') icon = 'fa-exclamation-triangle';
+        
+        message.innerHTML = `
+            <i class="fas ${icon}"></i>
+            <span>${text}</span>
+        `;
+        
+        container.appendChild(message);
+        
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            if (message.parentNode) {
                 message.style.opacity = '0';
                 setTimeout(() => {
                     if (message.parentNode) {
                         message.parentNode.removeChild(message);
                     }
                 }, 300);
-            }, 4000);
-        };
+            }
+        }, 4000);
         
-        window.closeModal = function() {
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.remove();
-            });
-        };
-        
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-                .catch(() => showMessage('❌ Failed to copy', 'error'));
-        };
-        
-        window.copyReferralCode = function() {
-            const code = document.getElementById('referral-code-display');
-            if (code) copyToClipboard(code.textContent);
-        };
-        
-        window.copyReferralLink = function() {
-            const link = document.getElementById('referral-link-input');
-            if (link) copyToClipboard(link.value);
-        };
-        
-        // بدء التطبيق عند تحميل الصفحة
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("📱 DOM Content Loaded");
-            
-            // إخفاء شاشة التحميل بعد ثانيتين
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                const appContainer = document.getElementById('app-container');
-                
-                if (loadingScreen) {
-                    loadingScreen.classList.remove('active');
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                }
-                
-                if (appContainer) {
-                    appContainer.classList.remove('hidden');
-                }
-                
-                // بدء التطبيق الرئيسي
-                if (typeof initAlienMuskApp === 'function') {
-                    console.log("🚀 Starting main application...");
-                    initAlienMuskApp();
-                } else {
-                    console.error("❌ Main app function not found!");
-                    showMessage("Application loaded successfully!", "success");
-                }
-            }, 2000);
-        });
-        
-        console.log("✅ Alien Musk Connector Loaded");
-    </script>
+        console.log(`${type}: ${text}`);
+    };
     
-    <!-- ============================================ -->
-    <!-- 👽 MAIN APPLICATION JS -->
-    <!-- ============================================ -->
-    <script src="app.js"></script>
+    window.closeModal = function() {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.remove();
+        });
+    };
+    
+    window.copyToClipboard = function(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => showMessage('✅ Copied to clipboard!', 'success'))
+            .catch(() => showMessage('❌ Failed to copy', 'error'));
+    };
+    
+    window.copyReferralCode = function() {
+        const code = document.getElementById('referral-code-display');
+        if (code) copyToClipboard(code.textContent);
+    };
+    
+    window.copyReferralLink = function() {
+        const link = document.getElementById('referral-link-input');
+        if (link) copyToClipboard(link.value);
+    };
+    
+    window.shareOnTelegram = function() {
+        const code = document.getElementById('referral-code-display');
+        if (!code) {
+            showMessage("Referral system not loaded yet", "warning");
+            return;
+        }
+        
+        const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens every hour\n💰 Earn from staking and referrals\n👥 Get 10,000 AMSK bonus with my code: ${code.textContent}\n\n💎 Start your quantum mining journey!`;
+        const url = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        showMessage("📤 Opening Telegram...", "info");
+    };
+    
+    window.shareOnWhatsApp = function() {
+        const code = document.getElementById('referral-code-display');
+        if (!code) {
+            showMessage("Referral system not loaded yet", "warning");
+            return;
+        }
+        
+        const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my code: ${code.textContent}`;
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        showMessage("📱 Opening WhatsApp...", "info");
+    };
+    
+    // Initialize everything
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("📱 DOM Content Loaded - Starting initialization...");
+        
+        // Initialize services
+        initTelegram();
+        initFirebase();
+        
+        // Hide loading screen and show app
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.classList.remove('active');
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+            
+            // Start main application
+            if (typeof initAlienMuskApp === 'function') {
+                console.log("🚀 Starting main application...");
+                initAlienMuskApp();
+            } else {
+                console.error("❌ Main app function not found!");
+                showMessage("Welcome to Alien Musk Quantum!", "success");
+            }
+        }, 2000);
+    });
+    
+    // Fallback initialization
+    setTimeout(() => {
+        if (!window.tg && !window.firebaseApp) {
+            console.log("⚠️ Using fallback initialization...");
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+            
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+            
+            showMessage("Running in standalone mode", "info");
+        }
+    }, 5000);
+    
+    console.log("✅ Alien Musk Connector Loaded Successfully");
+</script>
+
+<!-- ============================================ -->
+<!-- 👽 MAIN APPLICATION JS -->
+<!-- ============================================ -->
+<script src="app.js"></script>
 </body>
 </html>
