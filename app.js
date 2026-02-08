@@ -1,6 +1,6 @@
 // ============================================
-// 👽 ALIEN MUSK - Quantum Mining Platform v7.0
-// PROFESSIONAL MODALS EDITION - CENTERED POPUPS
+// 👽 ALIEN MUSK - Quantum Mining Platform v6.0
+// APP.JS - UPDATED TO MATCH NEW HTML STRUCTURE
 // ============================================
 
 // ============================================
@@ -69,24 +69,6 @@ const CONFIG = {
         }
     },
     
-    // Swap Configuration - NEW
-    SWAP: {
-        RATES: {
-            USDT_TO_AMSK: 5000,    // 1 USDT = 5000 AMSK
-            BNB_TO_AMSK: 3760000,  // 1 BNB = 3,760,000 AMSK
-            TON_TO_AMSK: 6600      // 1 TON = 6600 AMSK
-        },
-        FEE: 0.01 // 1% swap fee
-    },
-    
-    // Withdraw Configuration - NEW
-    WITHDRAW: {
-        MIN_AMSK: 100000, // 100,000 AMSK minimum
-        MIN_USDT: 50,     // 50 USDT minimum
-        FEE: 0.05,        // 5% withdrawal fee
-        FEE_BNB: 0.0005   // BNB fee for network
-    },
-    
     // Admin Configuration
     ADMIN: {
         TELEGRAM_ID: "1653918641",
@@ -125,8 +107,7 @@ let walletData = {
         lastReward: null,
         nextReward: null,
         totalMined: 2500,
-        minedToday: 2500,
-        lastResetDate: new Date().toDateString()
+        minedToday: 2500
     },
     staking: {
         activeStakes: [],
@@ -140,7 +121,6 @@ let walletData = {
         claimedMilestones: [],
         pendingMilestones: []
     },
-    transactions: [],
     lastUpdate: Date.now()
 };
 
@@ -153,14 +133,11 @@ let intervals = {
     autoSave: null
 };
 
-// ACTIVE MODAL TRACKING
-let activeModal = null;
-
 // ============================================
 // INITIALIZATION
 // ============================================
 async function initAlienMuskApp() {
-    console.log("🚀 Initializing Alien Musk Platform v7.0...");
+    console.log("🚀 Initializing Alien Musk Platform v6.0...");
     
     try {
         // 1. Cache DOM Elements
@@ -192,7 +169,7 @@ async function initAlienMuskApp() {
         
         // Show welcome message
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum Platform v7.0!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
         }, 1000);
         
     } catch (error) {
@@ -218,7 +195,7 @@ function cacheElements() {
     elements.totalBalanceUsd = document.getElementById('total-balance-usd');
     elements.adminLogo = document.getElementById('admin-logo');
     
-    // Navigation
+    // Navigation - FIXED: Using querySelectorAll from HTML
     elements.navBtns = document.querySelectorAll('.nav-btn');
     elements.pages = document.querySelectorAll('.page');
     
@@ -258,7 +235,7 @@ function cacheElements() {
     elements.swapBtn = document.getElementById('swap-btn');
     elements.historyBtn = document.getElementById('history-btn');
     
-    // Referral elements
+    // Referral elements - UPDATED: Only elements that exist in new HTML
     elements.referralLinkInput = document.getElementById('referral-link-input');
     elements.copyLinkBtn = document.getElementById('copy-link-btn');
     elements.telegramShareBtn = document.getElementById('telegram-share-btn');
@@ -280,6 +257,7 @@ async function setupUser() {
         console.log("📱 Telegram user found:", telegramUser.id);
     }
     
+    // FIXED: Use Telegram ID or localStorage
     if (telegramUser && telegramUser.id) {
         userData.id = `tg_${telegramUser.id}`;
         userData.telegramId = telegramUser.id.toString();
@@ -290,6 +268,7 @@ async function setupUser() {
         userData.photoUrl = telegramUser.photo_url || 
                            `https://api.dicebear.com/7.x/avataaars/svg?seed=${telegramUser.id}`;
     } else {
+        // For web users
         let userId = localStorage.getItem('alien_musk_user_id');
         if (!userId) {
             userId = 'web_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
@@ -361,7 +340,6 @@ async function loadUserData() {
     
     try {
         await loadUserFromLocalStorage();
-        resetDailyMiningIfNeeded();
         
     } catch (error) {
         console.error("❌ Error loading user data:", error);
@@ -399,10 +377,6 @@ async function loadUserFromLocalStorage() {
                 walletData.referrals = parsed.referrals;
             }
             
-            if (parsed.transactions) {
-                walletData.transactions = parsed.transactions;
-            }
-            
             console.log("✅ Data loaded from localStorage");
             
         } catch (error) {
@@ -415,15 +389,6 @@ async function loadUserFromLocalStorage() {
     }
 }
 
-function resetDailyMiningIfNeeded() {
-    const today = new Date().toDateString();
-    if (walletData.mining.lastResetDate !== today) {
-        walletData.mining.minedToday = 0;
-        walletData.mining.lastResetDate = today;
-        console.log("📅 Reset daily mining counter");
-    }
-}
-
 function initializeDefaultData() {
     walletData.balances = { AMSK: 2500, USDT: 0, BNB: 0, TON: 0 };
     walletData.mining = {
@@ -432,8 +397,7 @@ function initializeDefaultData() {
         lastReward: null,
         nextReward: null,
         totalMined: 2500,
-        minedToday: 2500,
-        lastResetDate: new Date().toDateString()
+        minedToday: 2500
     };
     walletData.staking = {
         activeStakes: [],
@@ -447,7 +411,6 @@ function initializeDefaultData() {
         claimedMilestones: [],
         pendingMilestones: []
     };
-    walletData.transactions = [];
 }
 
 function saveUserData() {
@@ -468,7 +431,6 @@ function saveUserData() {
             mining: walletData.mining,
             staking: walletData.staking,
             referrals: walletData.referrals,
-            transactions: walletData.transactions,
             lastUpdate: walletData.lastUpdate
         };
         
@@ -480,1378 +442,6 @@ function saveUserData() {
     } catch (error) {
         console.error("❌ Save error:", error);
     }
-}
-
-// ============================================
-// PROFESSIONAL MODAL SYSTEM - NEW
-// ============================================
-
-// Add modal styles dynamically
-function addModalStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        /* PROFESSIONAL MODAL STYLES - CENTERED */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            animation: modalFadeIn 0.3s ease;
-            padding: 20px;
-        }
-        
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .modal {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            animation: modalSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        
-        @keyframes modalSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .modal-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px 20px 0 0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .modal-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0;
-        }
-        
-        .modal-header h3 i {
-            color: var(--quantum-green);
-        }
-        
-        .modal-close {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        
-        .modal-close:hover {
-            background: rgba(255, 68, 68, 0.2);
-            border-color: #ff4444;
-            color: #ff4444;
-            transform: rotate(90deg);
-        }
-        
-        .modal-body {
-            padding: 25px;
-        }
-        
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            color: var(--quantum-text-light);
-            font-size: 14px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            transition: all 0.2s;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            border-color: var(--quantum-blue);
-            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
-        }
-        
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Buttons */
-        .modal-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-        }
-        
-        .btn-primary {
-            flex: 1;
-            padding: 16px;
-            background: var(--gradient-quantum);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            flex: 1;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Balance Display */
-        .balance-display {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .balance-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .balance-label {
-            color: var(--quantum-text-light);
-            font-size: 14px;
-        }
-        
-        .balance-amount {
-            color: var(--quantum-green);
-            font-size: 20px;
-            font-weight: 700;
-            font-family: monospace;
-        }
-        
-        /* Currency Selector */
-        .currency-selector {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .currency-option {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .currency-option:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: var(--quantum-blue);
-        }
-        
-        .currency-option.active {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: var(--quantum-blue);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-        }
-        
-        .currency-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-            display: block;
-        }
-        
-        .currency-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
-        }
-        
-        /* Swap Interface */
-        .swap-container {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid rgba(157, 78, 221, 0.3);
-        }
-        
-        .swap-direction {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-        
-        .swap-box {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-        
-        .swap-arrow {
-            font-size: 24px;
-            color: var(--quantum-purple);
-        }
-        
-        /* History Table */
-        .history-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .history-table th {
-            text-align: left;
-            padding: 12px 15px;
-            color: var(--quantum-text-light);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .history-table td {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .history-table tr:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-        
-        /* Admin Panel */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .admin-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .admin-card:hover {
-            border-color: #ff4444;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 68, 68, 0.2);
-        }
-        
-        .admin-card i {
-            font-size: 24px;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .admin-card-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 5px;
-        }
-        
-        .admin-card-desc {
-            font-size: 12px;
-            color: var(--quantum-text-light);
-        }
-        
-        /* Responsive */
-        @media (max-width: 480px) {
-            .modal {
-                max-width: 100%;
-                margin: 10px;
-            }
-            
-            .modal-actions {
-                flex-direction: column;
-            }
-            
-            .currency-selector {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .swap-direction {
-                flex-direction: column;
-            }
-            
-            .admin-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    `;
-    
-    document.head.appendChild(style);
-    console.log("🎨 Professional modal styles added");
-}
-
-// Modal management functions
-function showModal(content) {
-    closeModal(); // Close any existing modal
-    
-    const modalHTML = `
-        <div class="modal-overlay" id="active-modal-overlay">
-            ${content}
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    activeModal = document.getElementById('active-modal-overlay');
-    
-    // Add ESC key listener
-    document.addEventListener('keydown', handleEscKey);
-    
-    // Add click outside to close
-    if (activeModal) {
-        activeModal.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-    }
-}
-
-function closeModal() {
-    if (activeModal) {
-        activeModal.remove();
-        activeModal = null;
-    }
-    
-    // Remove ESC key listener
-    document.removeEventListener('keydown', handleEscKey);
-}
-
-function handleEscKey(e) {
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-}
-
-// ============================================
-// DEPOSIT MODAL - NEW PROFESSIONAL
-// ============================================
-function openDepositModal() {
-    const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-download"></i> Deposit Funds</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <div style="font-size: 48px; color: var(--quantum-green); margin-bottom: 15px;">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <h3 style="color: white; margin-bottom: 10px;">Deposit Crypto</h3>
-                    <p style="color: var(--quantum-text-light);">Choose cryptocurrency to deposit</p>
-                </div>
-                
-                <div class="currency-selector">
-                    <div class="currency-option active" data-currency="USDT" onclick="selectDepositCurrency('USDT')">
-                        <i class="fas fa-coins currency-icon" style="color: var(--quantum-blue);"></i>
-                        <div class="currency-name">USDT</div>
-                    </div>
-                    <div class="currency-option" data-currency="BNB" onclick="selectDepositCurrency('BNB')">
-                        <i class="fab fa-btc currency-icon" style="color: var(--quantum-gold);"></i>
-                        <div class="currency-name">BNB</div>
-                    </div>
-                    <div class="currency-option" data-currency="TON" onclick="selectDepositCurrency('TON')">
-                        <i class="fas fa-bolt currency-icon" style="color: var(--quantum-purple);"></i>
-                        <div class="currency-name">TON</div>
-                    </div>
-                    <div class="currency-option" data-currency="AMSK" onclick="selectDepositCurrency('AMSK')">
-                        <i class="fas fa-robot currency-icon" style="color: var(--quantum-green);"></i>
-                        <div class="currency-name">AMSK</div>
-                    </div>
-                </div>
-                
-                <div id="depositInfo" style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                    <h4 style="color: var(--quantum-green); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-info-circle"></i> USDT Deposit
-                    </h4>
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: var(--quantum-text-light);">Network:</span>
-                            <span style="color: white; font-weight: 600;">BEP-20 (BSC)</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="color: var(--quantum-text-light);">Min Deposit:</span>
-                            <span style="color: white; font-weight: 600;">10 USDT</span>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Wallet Address</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" 
-                                   class="form-input" 
-                                   id="depositAddress" 
-                                   value="0xbe7D6b0910d1019100c5CD32b4160cA30A8EB5D4" 
-                                   readonly
-                                   style="font-family: monospace; font-size: 14px;">
-                            <button onclick="copyDepositAddress()" 
-                                    style="padding: 0 20px; background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.3); border-radius: 12px; color: var(--quantum-blue); cursor: pointer;">
-                                <i class="far fa-copy"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Deposit Amount</label>
-                        <input type="number" 
-                               class="form-input" 
-                               id="depositAmount" 
-                               placeholder="Enter amount" 
-                               min="10" 
-                               step="0.01">
-                    </div>
-                    
-                    <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin-top: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="color: var(--quantum-text-light);">You will receive:</span>
-                            <span style="color: var(--quantum-green); font-weight: 700;" id="depositReceiveAmount">0 AMSK</span>
-                        </div>
-                        <div style="font-size: 12px; color: var(--quantum-text-light);">
-                            Rate: 1 USDT = ${CONFIG.SWAP.RATES.USDT_TO_AMSK.toLocaleString()} AMSK
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button class="btn-primary" onclick="processDeposit()">
-                        <i class="fas fa-paper-plane"></i> Confirm Deposit
-                    </button>
-                </div>
-                
-                <div style="margin-top: 20px; padding: 15px; background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); border-radius: 12px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
-                        <span style="color: #ffc107; font-weight: 600;">Important Notice</span>
-                    </div>
-                    <p style="color: rgba(255,255,255,0.8); font-size: 12px; margin: 0; line-height: 1.4;">
-                        Send only USDT (BEP-20) to this address. Sending other tokens may result in permanent loss. Deposits usually take 5-15 minutes to confirm.
-                    </p>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    showModal(modalContent);
-    updateDepositReceiveAmount();
-    
-    // Add event listeners
-    setTimeout(() => {
-        const amountInput = document.getElementById('depositAmount');
-        if (amountInput) {
-            amountInput.addEventListener('input', updateDepositReceiveAmount);
-        }
-    }, 100);
-}
-
-function selectDepositCurrency(currency) {
-    // Update active currency
-    document.querySelectorAll('.currency-option').forEach(option => {
-        option.classList.remove('active');
-        if (option.dataset.currency === currency) {
-            option.classList.add('active');
-        }
-    });
-    
-    // Update deposit info
-    const depositInfo = document.getElementById('depositInfo');
-    if (!depositInfo) return;
-    
-    let minDeposit = 10;
-    let address = '0xbe7D6b0910d1019100c5CD32b4160cA30A8EB5D4';
-    let network = 'BEP-20 (BSC)';
-    let rateText = '';
-    
-    switch (currency) {
-        case 'BNB':
-            minDeposit = 0.01;
-            address = '0xbe7D6b0910d1019100c5CD32b4160cA30A8EB5D4';
-            network = 'BEP-20 (BSC)';
-            rateText = `1 BNB = ${CONFIG.SWAP.RATES.BNB_TO_AMSK.toLocaleString()} AMSK`;
-            break;
-        case 'TON':
-            minDeposit = 5;
-            address = 'UQDZBsZgsaTeVr4EdzmrpC_D6Jcb_SJtDZxhjoYjYc9OKjpN';
-            network = 'TON';
-            rateText = `1 TON = ${CONFIG.SWAP.RATES.TON_TO_AMSK.toLocaleString()} AMSK`;
-            break;
-        case 'AMSK':
-            minDeposit = 1000;
-            address = 'Not available - AMSK is platform token';
-            network = 'Internal';
-            rateText = 'AMSK is native platform token';
-            break;
-        default: // USDT
-            minDeposit = 10;
-            address = '0xbe7D6b0910d1019100c5CD32b4160cA30A8EB5D4';
-            network = 'BEP-20 (BSC)';
-            rateText = `1 USDT = ${CONFIG.SWAP.RATES.USDT_TO_AMSK.toLocaleString()} AMSK`;
-    }
-    
-    depositInfo.innerHTML = `
-        <h4 style="color: var(--quantum-green); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-            <i class="fas fa-info-circle"></i> ${currency} Deposit
-        </h4>
-        <div style="margin-bottom: 15px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <span style="color: var(--quantum-text-light);">Network:</span>
-                <span style="color: white; font-weight: 600;">${network}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <span style="color: var(--quantum-text-light);">Min Deposit:</span>
-                <span style="color: white; font-weight: 600;">${minDeposit} ${currency}</span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Wallet Address</label>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" 
-                       class="form-input" 
-                       id="depositAddress" 
-                       value="${address}" 
-                       readonly
-                       style="font-family: monospace; font-size: 14px;">
-                <button onclick="copyDepositAddress()" 
-                        style="padding: 0 20px; background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.3); border-radius: 12px; color: var(--quantum-blue); cursor: pointer;">
-                    <i class="far fa-copy"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Deposit Amount</label>
-            <input type="number" 
-                   class="form-input" 
-                   id="depositAmount" 
-                   placeholder="Enter amount" 
-                   min="${minDeposit}" 
-                   step="${currency === 'BNB' ? '0.001' : '0.01'}">
-        </div>
-        
-        <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin-top: 15px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                <span style="color: var(--quantum-text-light);">You will receive:</span>
-                <span style="color: var(--quantum-green); font-weight: 700;" id="depositReceiveAmount">0 ${currency === 'AMSK' ? 'AMSK' : 'AMSK'}</span>
-            </div>
-            <div style="font-size: 12px; color: var(--quantum-text-light);">
-                ${rateText}
-            </div>
-        </div>
-    `;
-    
-    // Update event listener
-    const amountInput = document.getElementById('depositAmount');
-    if (amountInput) {
-        amountInput.addEventListener('input', updateDepositReceiveAmount);
-        amountInput.value = '';
-    }
-    
-    updateDepositReceiveAmount();
-}
-
-function copyDepositAddress() {
-    const addressInput = document.getElementById('depositAddress');
-    if (addressInput) {
-        navigator.clipboard.writeText(addressInput.value)
-            .then(() => showMessage('✅ Address copied to clipboard!', 'success'))
-            .catch(() => showMessage('❌ Failed to copy address', 'error'));
-    }
-}
-
-function updateDepositReceiveAmount() {
-    const amountInput = document.getElementById('depositAmount');
-    const receiveSpan = document.getElementById('depositReceiveAmount');
-    const activeCurrency = document.querySelector('.currency-option.active')?.dataset.currency || 'USDT';
-    
-    if (!amountInput || !receiveSpan) return;
-    
-    const amount = parseFloat(amountInput.value) || 0;
-    let receiveAmount = 0;
-    
-    if (activeCurrency === 'USDT') {
-        receiveAmount = amount * CONFIG.SWAP.RATES.USDT_TO_AMSK;
-    } else if (activeCurrency === 'BNB') {
-        receiveAmount = amount * CONFIG.SWAP.RATES.BNB_TO_AMSK;
-    } else if (activeCurrency === 'TON') {
-        receiveAmount = amount * CONFIG.SWAP.RATES.TON_TO_AMSK;
-    } else if (activeCurrency === 'AMSK') {
-        receiveAmount = amount; // 1:1 for AMSK
-    }
-    
-    receiveSpan.textContent = `${Math.floor(receiveAmount).toLocaleString()} AMSK`;
-}
-
-function processDeposit() {
-    const amountInput = document.getElementById('depositAmount');
-    const activeCurrency = document.querySelector('.currency-option.active')?.dataset.currency || 'USDT';
-    
-    if (!amountInput) return;
-    
-    const amount = parseFloat(amountInput.value);
-    let minAmount = 10;
-    
-    switch (activeCurrency) {
-        case 'BNB': minAmount = 0.01; break;
-        case 'TON': minAmount = 5; break;
-        case 'AMSK': minAmount = 1000; break;
-    }
-    
-    if (!amount || amount < minAmount) {
-        showMessage(`Minimum deposit is ${minAmount} ${activeCurrency}`, 'error');
-        return;
-    }
-    
-    // Simulate deposit processing
-    showMessage(`📥 Deposit request submitted for ${amount} ${activeCurrency}`, 'success');
-    
-    // In real app, you would send this to backend
-    addTransaction('deposit_request', amount, activeCurrency, 'Deposit initiated');
-    
-    setTimeout(() => {
-        showMessage(`✅ Deposit processed! Check your balance in a few minutes.`, 'success');
-        closeModal();
-    }, 2000);
-}
-
-// ============================================
-// WITHDRAW MODAL - NEW PROFESSIONAL
-// ============================================
-function openWithdrawModal() {
-    const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-upload"></i> Withdraw Funds</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <div style="font-size: 48px; color: var(--quantum-blue); margin-bottom: 15px;">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <h3 style="color: white; margin-bottom: 10px;">Withdraw Funds</h3>
-                    <p style="color: var(--quantum-text-light);">Withdraw your earnings to external wallet</p>
-                </div>
-                
-                <div class="balance-display">
-                    <div class="balance-info">
-                        <div class="balance-label">Available Balance</div>
-                        <div class="balance-amount">${walletData.balances.AMSK.toLocaleString()} AMSK</div>
-                    </div>
-                    <div style="font-size: 12px; color: var(--quantum-text-light); text-align: center;">
-                        ≈ $${(walletData.balances.AMSK * CONFIG.PRICES.AMSK).toFixed(2)}
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Withdrawal Amount (AMSK)</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="number" 
-                               class="form-input" 
-                               id="withdrawAmount" 
-                               placeholder="Enter amount" 
-                               min="${CONFIG.WITHDRAW.MIN_AMSK}" 
-                               max="${walletData.balances.AMSK}"
-                               step="1000"
-                               oninput="updateWithdrawDetails()">
-                        <button onclick="setMaxWithdraw()" 
-                                style="padding: 0 20px; background: rgba(0,212,255,0.2); border: 1px solid rgba(0,212,255,0.3); border-radius: 12px; color: var(--quantum-blue); cursor: pointer; white-space: nowrap;">
-                            Max
-                        </button>
-                    </div>
-                    <div style="font-size: 12px; color: var(--quantum-text-light); margin-top: 8px;">
-                        Minimum: ${CONFIG.WITHDRAW.MIN_AMSK.toLocaleString()} AMSK
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Withdrawal Method</label>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <div class="currency-option active" data-method="USDT" onclick="selectWithdrawMethod('USDT')">
-                            <i class="fas fa-coins currency-icon" style="color: var(--quantum-blue);"></i>
-                            <div class="currency-name">USDT</div>
-                        </div>
-                        <div class="currency-option" data-method="BNB" onclick="selectWithdrawMethod('BNB')">
-                            <i class="fab fa-btc currency-icon" style="color: var(--quantum-gold);"></i>
-                            <div class="currency-name">BNB</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Recipient Wallet Address</label>
-                    <input type="text" 
-                           class="form-input" 
-                           id="withdrawAddress" 
-                           placeholder="Enter wallet address (0x...)"
-                           style="font-family: monospace;">
-                </div>
-                
-                <div id="withdrawDetails" style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid rgba(255,193,7,0.3);">
-                    <h4 style="color: #ffc107; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-calculator"></i> Withdrawal Details
-                    </h4>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="color: var(--quantum-text-light);">Withdrawal Amount:</span>
-                        <span style="color: white; font-weight: 600;" id="withdrawAmountDisplay">0 AMSK</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="color: var(--quantum-text-light);">Fee (${CONFIG.WITHDRAW.FEE * 100}%):</span>
-                        <span style="color: #ff4444; font-weight: 600;" id="withdrawFeeDisplay">0 AMSK</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="color: var(--quantum-text-light);">Network Fee:</span>
-                        <span style="color: #ff4444; font-weight: 600;" id="networkFeeDisplay">0 BNB</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                        <span style="color: var(--quantum-text-light); font-weight: 600;">You will receive:</span>
-                        <span style="color: var(--quantum-green); font-weight: 700; font-size: 18px;" id="withdrawReceiveDisplay">0 USDT</span>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button class="btn-primary" id="confirmWithdrawBtn" onclick="processWithdrawal()" disabled>
-                        <i class="fas fa-paper-plane"></i> Confirm Withdrawal
-                    </button>
-                </div>
-                
-                <div style="margin-top: 20px; padding: 15px; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 12px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <i class="fas fa-exclamation-circle" style="color: #ff4444;"></i>
-                        <span style="color: #ff4444; font-weight: 600;">Important Notice</span>
-                    </div>
-                    <p style="color: rgba(255,255,255,0.8); font-size: 12px; margin: 0; line-height: 1.4;">
-                        • Withdrawals take 1-3 business days to process<br>
-                        • Ensure wallet address is correct<br>
-                        • Fees are non-refundable<br>
-                        • Minimum withdrawal: ${CONFIG.WITHDRAW.MIN_AMSK.toLocaleString()} AMSK
-                    </p>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    showModal(modalContent);
-    updateWithdrawDetails();
-}
-
-function selectWithdrawMethod(method) {
-    document.querySelectorAll('.currency-option').forEach(option => {
-        option.classList.remove('active');
-        if (option.dataset.method === method) {
-            option.classList.add('active');
-        }
-    });
-    updateWithdrawDetails();
-}
-
-function setMaxWithdraw() {
-    const maxAmount = walletData.balances.AMSK;
-    const amountInput = document.getElementById('withdrawAmount');
-    if (amountInput) {
-        amountInput.value = maxAmount;
-        updateWithdrawDetails();
-    }
-}
-
-function updateWithdrawDetails() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const confirmBtn = document.getElementById('confirmWithdrawBtn');
-    
-    if (!amountInput || !confirmBtn) return;
-    
-    const amount = parseFloat(amountInput.value) || 0;
-    const method = document.querySelector('.currency-option.active')?.dataset.method || 'USDT';
-    
-    // Calculate fees
-    const fee = amount * CONFIG.WITHDRAW.FEE;
-    const netAmount = amount - fee;
-    
-    // Calculate received amount
-    let receivedAmount = 0;
-    let receivedCurrency = 'USDT';
-    
-    if (method === 'USDT') {
-        receivedAmount = netAmount / CONFIG.SWAP.RATES.USDT_TO_AMSK;
-        receivedCurrency = 'USDT';
-    } else if (method === 'BNB') {
-        receivedAmount = netAmount / CONFIG.SWAP.RATES.BNB_TO_AMSK;
-        receivedCurrency = 'BNB';
-    }
-    
-    // Update displays
-    const amountDisplay = document.getElementById('withdrawAmountDisplay');
-    const feeDisplay = document.getElementById('withdrawFeeDisplay');
-    const networkFeeDisplay = document.getElementById('networkFeeDisplay');
-    const receiveDisplay = document.getElementById('withdrawReceiveDisplay');
-    
-    if (amountDisplay) amountDisplay.textContent = `${amount.toLocaleString()} AMSK`;
-    if (feeDisplay) feeDisplay.textContent = `${fee.toLocaleString()} AMSK`;
-    if (networkFeeDisplay) networkFeeDisplay.textContent = `${CONFIG.WITHDRAW.FEE_BNB} BNB`;
-    if (receiveDisplay) receiveDisplay.textContent = `${receivedAmount.toFixed(method === 'BNB' ? 4 : 2)} ${receivedCurrency}`;
-    
-    // Validate amount
-    const isValid = amount >= CONFIG.WITHDRAW.MIN_AMSK && 
-                    amount <= walletData.balances.AMSK && 
-                    amountInput.value !== '';
-    
-    confirmBtn.disabled = !isValid;
-    
-    if (amount > walletData.balances.AMSK) {
-        showMessage('Insufficient balance', 'error');
-    }
-}
-
-function processWithdrawal() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const addressInput = document.getElementById('withdrawAddress');
-    
-    if (!amountInput || !addressInput) return;
-    
-    const amount = parseFloat(amountInput.value);
-    const address = addressInput.value.trim();
-    const method = document.querySelector('.currency-option.active')?.dataset.method || 'USDT';
-    
-    // Validation
-    if (amount < CONFIG.WITHDRAW.MIN_AMSK) {
-        showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_AMSK} AMSK`, 'error');
-        return;
-    }
-    
-    if (amount > walletData.balances.AMSK) {
-        showMessage('Insufficient AMSK balance', 'error');
-        return;
-    }
-    
-    if (!address || address.length < 20) {
-        showMessage('Please enter a valid wallet address', 'error');
-        return;
-    }
-    
-    // Process withdrawal
-    const fee = amount * CONFIG.WITHDRAW.FEE;
-    const netAmount = amount - fee;
-    
-    // Deduct from balance
-    walletData.balances.AMSK -= amount;
-    
-    // Add transaction
-    addTransaction('withdrawal', -amount, 'AMSK', `Withdrawal to ${address.slice(0, 8)}...`);
-    
-    // Update UI
-    updateWalletUI();
-    updateTotalBalance();
-    
-    // Show success message
-    showMessage(`✅ Withdrawal request submitted for ${amount.toLocaleString()} AMSK`, 'success');
-    
-    // Simulate processing
-    setTimeout(() => {
-        showMessage(`📋 Withdrawal is being processed. You will receive ${netAmount.toLocaleString()} AMSK (after fees)`, 'info');
-        closeModal();
-        saveUserData();
-    }, 1500);
-}
-
-// ============================================
-// SWAP MODAL - NEW PROFESSIONAL
-// ============================================
-function openSwapModal() {
-    const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-exchange-alt"></i> Swap Tokens</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <div style="font-size: 48px; color: var(--quantum-purple); margin-bottom: 15px;">
-                        <i class="fas fa-random"></i>
-                    </div>
-                    <h3 style="color: white; margin-bottom: 10px;">Swap Tokens</h3>
-                    <p style="color: var(--quantum-text-light);">Instantly convert between tokens</p>
-                </div>
-                
-                <div class="swap-container">
-                    <div class="swap-direction">
-                        <div class="swap-box">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: var(--quantum-text-light); font-size: 14px;">From</span>
-                                <span style="color: var(--quantum-text-light); font-size: 12px;">
-                                    Balance: <span id="fromBalance">0</span>
-                                </span>
-                            </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                <select id="swapFrom" class="form-input" style="flex: 1;" onchange="updateSwap()">
-                                    <option value="USDT">USDT</option>
-                                    <option value="BNB">BNB</option>
-                                    <option value="TON">TON</option>
-                                    <option value="AMSK">AMSK</option>
-                                </select>
-                                <input type="number" 
-                                       class="form-input" 
-                                       id="swapFromAmount" 
-                                       placeholder="0.00"
-                                       min="0.01"
-                                       step="0.01"
-                                       oninput="updateSwap()"
-                                       style="flex: 2; text-align: right;">
-                            </div>
-                        </div>
-                        
-                        <div class="swap-arrow">
-                            <i class="fas fa-exchange-alt"></i>
-                        </div>
-                        
-                        <div class="swap-box">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: var(--quantum-text-light); font-size: 14px;">To</span>
-                                <span style="color: var(--quantum-text-light); font-size: 12px;">
-                                    Balance: <span id="toBalance">0</span>
-                                </span>
-                            </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                <select id="swapTo" class="form-input" style="flex: 1;" onchange="updateSwap()">
-                                    <option value="AMSK">AMSK</option>
-                                    <option value="USDT">USDT</option>
-                                    <option value="BNB">BNB</option>
-                                    <option value="TON">TON</option>
-                                </select>
-                                <input type="number" 
-                                       class="form-input" 
-                                       id="swapToAmount" 
-                                       placeholder="0.00"
-                                       readonly
-                                       style="flex: 2; text-align: right; background: rgba(0,0,0,0.3);">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px;">
-                        <div style="color: var(--quantum-text-light); font-size: 14px; margin-bottom: 5px;">
-                            Exchange Rate
-                        </div>
-                        <div style="color: white; font-weight: 600; font-size: 16px;" id="swapRate">
-                            1 USDT = ${CONFIG.SWAP.RATES.USDT_TO_AMSK.toLocaleString()} AMSK
-                        </div>
-                        <div style="color: var(--quantum-text-light); font-size: 12px; margin-top: 5px;">
-                            Fee: ${(CONFIG.SWAP.FEE * 100)}%
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="swapDetails" style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin: 20px 0; display: none;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="color: var(--quantum-text-light);">You pay:</span>
-                        <span style="color: white; font-weight: 600;" id="swapPayAmount">0</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="color: var(--quantum-text-light);">Fee:</span>
-                        <span style="color: #ff4444; font-weight: 600;" id="swapFeeAmount">0</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                        <span style="color: var(--quantum-text-light); font-weight: 600;">You receive:</span>
-                        <span style="color: var(--quantum-green); font-weight: 700;" id="swapReceiveAmount">0</span>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button class="btn-primary" id="confirmSwapBtn" onclick="confirmSwap()" disabled>
-                        <i class="fas fa-exchange-alt"></i> Confirm Swap
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    showModal(modalContent);
-    updateSwap();
-}
-
-function updateSwap() {
-    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
-    const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
-    const fromAmount = parseFloat(document.getElementById('swapFromAmount')?.value) || 0;
-    const confirmBtn = document.getElementById('confirmSwapBtn');
-    const detailsDiv = document.getElementById('swapDetails');
-    
-    // Update balances
-    const fromBalance = document.getElementById('fromBalance');
-    const toBalance = document.getElementById('toBalance');
-    
-    if (fromBalance) fromBalance.textContent = walletData.balances[fromCurrency] || 0;
-    if (toBalance) toBalance.textContent = walletData.balances[toCurrency] || 0;
-    
-    // Calculate exchange rate
-    let rate = 0;
-    let rateText = '';
-    
-    if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.USDT_TO_AMSK;
-        rateText = `1 USDT = ${rate.toLocaleString()} AMSK`;
-    } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.BNB_TO_AMSK;
-        rateText = `1 BNB = ${rate.toLocaleString()} AMSK`;
-    } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.TON_TO_AMSK;
-        rateText = `1 TON = ${rate.toLocaleString()} AMSK`;
-    } else if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-        rate = 1 / CONFIG.SWAP.RATES.USDT_TO_AMSK;
-        rateText = `1 AMSK = $${rate.toFixed(6)}`;
-    } else {
-        // Default 1:1 for same currency or unsupported pairs
-        rate = 1;
-        rateText = `1 ${fromCurrency} = 1 ${toCurrency}`;
-    }
-    
-    // Update rate display
-    const rateDisplay = document.getElementById('swapRate');
-    if (rateDisplay) rateDisplay.textContent = rateText;
-    
-    // Calculate swap
-    if (fromAmount > 0) {
-        const fee = fromAmount * CONFIG.SWAP.FEE;
-        const amountAfterFee = fromAmount - fee;
-        const receivedAmount = amountAfterFee * rate;
-        
-        // Update swap details
-        document.getElementById('swapToAmount').value = receivedAmount.toFixed(toCurrency === 'AMSK' ? 0 : 4);
-        
-        if (detailsDiv) {
-            detailsDiv.style.display = 'block';
-            document.getElementById('swapPayAmount').textContent = `${fromAmount} ${fromCurrency}`;
-            document.getElementById('swapFeeAmount').textContent = `${fee} ${fromCurrency}`;
-            document.getElementById('swapReceiveAmount').textContent = `${receivedAmount.toFixed(toCurrency === 'AMSK' ? 0 : 4)} ${toCurrency}`;
-        }
-        
-        // Validate swap
-        const isValid = fromAmount <= (walletData.balances[fromCurrency] || 0) && fromAmount > 0;
-        
-        if (confirmBtn) {
-            confirmBtn.disabled = !isValid;
-            if (fromAmount > (walletData.balances[fromCurrency] || 0)) {
-                showMessage('Insufficient balance', 'error');
-            }
-        }
-    } else {
-        if (detailsDiv) detailsDiv.style.display = 'none';
-        document.getElementById('swapToAmount').value = '';
-        if (confirmBtn) confirmBtn.disabled = true;
-    }
-}
-
-function confirmSwap() {
-    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
-    const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
-    const fromAmount = parseFloat(document.getElementById('swapFromAmount')?.value) || 0;
-    
-    if (fromAmount <= 0) {
-        showMessage('Please enter a valid amount', 'error');
-        return;
-    }
-    
-    if (fromAmount > (walletData.balances[fromCurrency] || 0)) {
-        showMessage('Insufficient balance', 'error');
-        return;
-    }
-    
-    // Calculate swap
-    let rate = 0;
-    
-    if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.USDT_TO_AMSK;
-    } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.BNB_TO_AMSK;
-    } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-        rate = CONFIG.SWAP.RATES.TON_TO_AMSK;
-    } else if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-        rate = 1 / CONFIG.SWAP.RATES.USDT_TO_AMSK;
-    } else {
-        rate = 1;
-    }
-    
-    const fee = fromAmount * CONFIG.SWAP.FEE;
-    const amountAfterFee = fromAmount - fee;
-    const receivedAmount = amountAfterFee * rate;
-    
-    // Update balances
-    walletData.balances[fromCurrency] -= fromAmount;
-    walletData.balances[toCurrency] += receivedAmount;
-    
-    // Add transactions
-    addTransaction('swap_out', -fromAmount, fromCurrency, `Swapped to ${toCurrency}`);
-    addTransaction('swap_in', receivedAmount, toCurrency, `Swapped from ${fromCurrency}`);
-    
-    // Update UI
-    updateWalletUI();
-    updateTotalBalance();
-    
-    // Show success
-    showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${receivedAmount.toFixed(2)} ${toCurrency}`, 'success');
-    
-    closeModal();
-    saveUserData();
-}
-
-// ============================================
-// HISTORY MODAL - NEW PROFESSIONAL
-// ============================================
-function showTransactionHistory() {
-    const transactions = walletData.transactions || [];
-    
-    let historyHTML = '';
-    
-    if (transactions.length === 0) {
-        historyHTML = `
-            <div style="text-align: center; padding: 40px 20px;">
-                <div style="font-size: 64px; color: var(--quantum-text-muted); opacity: 0.5; margin-bottom: 20px;">
-                    <i class="fas fa-history"></i>
-                </div>
-                <h4 style="color: var(--quantum-text); margin-bottom: 10px;">No Transactions Yet</h4>
-                <p style="color: var(--quantum-text-light);">Your transaction history will appear here</p>
-            </div>
-        `;
-    } else {
-        historyHTML = `
-            <div style="max-height: 400px; overflow-y: auto;">
-                <table class="history-table">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-        
-        transactions.forEach((tx, index) => {
-            const date = new Date(tx.timestamp || Date.now()).toLocaleString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            let typeIcon = 'fa-exchange-alt';
-            let typeColor = 'var(--quantum-blue)';
-            let typeText = 'Swap';
-            
-            if (tx.type?.includes('mining')) {
-                typeIcon = 'fa-microchip';
-                typeColor = 'var(--quantum-green)';
-                typeText = 'Mining';
-            } else if (tx.type?.includes('staking')) {
-                typeIcon = 'fa-gem';
-                typeColor = 'var(--quantum-purple)';
-                typeText = 'Staking';
-            } else if (tx.type?.includes('referral')) {
-                typeIcon = 'fa-users';
-                typeColor = 'var(--quantum-pink)';
-                typeText = 'Referral';
-            } else if (tx.type?.includes('deposit')) {
-                typeIcon = 'fa-download';
-                typeColor = 'var(--quantum-green)';
-                typeText = 'Deposit';
-            } else if (tx.type?.includes('withdrawal')) {
-                typeIcon = 'fa-upload';
-                typeColor = 'var(--quantum-orange)';
-                typeText = 'Withdrawal';
-            }
-            
-            const amountColor = tx.amount > 0 ? 'var(--quantum-green)' : '#ff4444';
-            const amountSign = tx.amount > 0 ? '+' : '';
-            
-            historyHTML += `
-                <tr>
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div style="width: 36px; height: 36px; border-radius: 8px; background: ${typeColor}20; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas ${typeIcon}" style="color: ${typeColor};"></i>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; font-weight: 600; color: white;">${typeText}</div>
-                                <div style="font-size: 12px; color: var(--quantum-text-light);">${tx.description || ''}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="color: ${amountColor}; font-weight: 700; font-size: 16px;">
-                            ${amountSign}${Math.abs(tx.amount).toLocaleString()} ${tx.currency}
-                        </div>
-                    </td>
-                    <td>
-                        <span style="padding: 4px 8px; background: rgba(0,255,136,0.1); color: var(--quantum-green); border-radius: 6px; font-size: 12px; font-weight: 600;">
-                            Completed
-                        </span>
-                    </td>
-                    <td>
-                        <div style="font-size: 12px; color: var(--quantum-text);">${date}</div>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        historyHTML += `
-                    </tbody>
-                </table>
-            </div>
-        `;
-    }
-    
-    const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-history"></i> Transaction History</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="margin-bottom: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h4 style="color: white; margin: 0;">Recent Transactions</h4>
-                        <span style="font-size: 12px; color: var(--quantum-text-light);">
-                            Total: ${transactions.length}
-                        </span>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;">
-                        <div style="background: rgba(0,255,136,0.1); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 11px; color: var(--quantum-text-light);">Mining</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--quantum-green);">
-                                ${walletData.mining.totalMined.toLocaleString()}
-                            </div>
-                        </div>
-                        <div style="background: rgba(157,78,221,0.1); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 11px; color: var(--quantum-text-light);">Staking</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--quantum-purple);">
-                                ${walletData.staking.totalEarned.toLocaleString()}
-                            </div>
-                        </div>
-                        <div style="background: rgba(255,0,128,0.1); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 11px; color: var(--quantum-text-light);">Referrals</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--quantum-pink);">
-                                ${walletData.referrals.earned.toLocaleString()}
-                            </div>
-                        </div>
-                        <div style="background: rgba(0,212,255,0.1); padding: 10px; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 11px; color: var(--quantum-text-light);">Total</div>
-                            <div style="font-size: 16px; font-weight: 700; color: var(--quantum-blue);">
-                                ${(walletData.mining.totalMined + walletData.staking.totalEarned + walletData.referrals.earned).toLocaleString()}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                ${historyHTML}
-                
-                <div style="margin-top: 20px;">
-                    <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    showModal(modalContent);
 }
 
 // ============================================
@@ -1889,6 +479,16 @@ function updateMiningDisplay() {
     }
     
     if (elements.minedToday) {
+        // Reset minedToday if it's a new day
+        const now = new Date();
+        const lastMinedDate = mining.lastReward ? new Date(mining.lastReward) : null;
+        if (lastMinedDate && (
+            now.getDate() !== lastMinedDate.getDate() ||
+            now.getMonth() !== lastMinedDate.getMonth() ||
+            now.getFullYear() !== lastMinedDate.getFullYear()
+        )) {
+            mining.minedToday = 0;
+        }
         elements.minedToday.textContent = formatNumber(mining.minedToday);
     }
     
@@ -1968,7 +568,7 @@ function updateUpgradeCards() {
         const levelData = CONFIG.MINING.LEVELS[level];
         const button = card.querySelector('.upgrade-btn');
         
-        if (!button || !levelData) return;
+        if (!button) return;
         
         if (level === currentLevel) {
             // Current level
@@ -2046,9 +646,6 @@ function claimMiningReward() {
         walletData.mining.lastReward = Date.now();
         walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
         
-        // Add transaction
-        addTransaction('mining_reward', reward, 'AMSK', `Mining Level ${walletData.mining.level}`);
-        
         // Update UI
         updateMiningDisplay();
         updateWalletUI();
@@ -2090,9 +687,6 @@ function upgradeMiningLevel(level) {
         // Deduct USDT and upgrade
         walletData.balances.USDT -= levelData.cost;
         walletData.mining.level = level;
-        
-        // Add transaction
-        addTransaction('mining_upgrade', -levelData.cost, 'USDT', `Upgrade to ${levelData.name}`);
         
         // Update UI
         updateMiningDisplay();
@@ -2178,42 +772,6 @@ function updateTotalBalance() {
     
     if (elements.walletBalanceUsd) {
         elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
-    }
-}
-
-// ============================================
-// TRANSACTION SYSTEM - NEW
-// ============================================
-function addTransaction(type, amount, currency, description = '') {
-    try {
-        const transaction = {
-            id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-            type: type,
-            amount: amount,
-            currency: currency,
-            description: description,
-            timestamp: Date.now(),
-            status: 'completed'
-        };
-        
-        if (!walletData.transactions) {
-            walletData.transactions = [];
-        }
-        
-        walletData.transactions.unshift(transaction);
-        
-        // Keep only last 100 transactions
-        if (walletData.transactions.length > 100) {
-            walletData.transactions = walletData.transactions.slice(0, 100);
-        }
-        
-        console.log(`📝 Transaction added: ${type} ${amount} ${currency} - ${description}`);
-        
-        return transaction.id;
-        
-    } catch (error) {
-        console.error("❌ Error adding transaction:", error);
-        return null;
     }
 }
 
@@ -2332,92 +890,98 @@ function openStakeModal(planId) {
     const maxAmount = Math.min(usdtBalance, plan.minAmount * 10);
     
     const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-gem"></i> ${plan.name} Staking</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="stake-plan-info">
-                    <div class="plan-icon">
-                        <i class="fas fa-gem"></i>
-                    </div>
-                    <div class="plan-details">
-                        <h4>${plan.name} Plan</h4>
-                        <div class="plan-apr">${plan.apr}% APR</div>
-                        <div class="plan-duration">${plan.duration} Days</div>
-                    </div>
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-gem"></i> ${plan.name} Staking</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
                 </div>
-                
-                <div class="stake-amount-section">
-                    <div class="amount-header">
-                        <span>Staking Amount (USDT)</span>
-                        <span class="balance">Balance: ${usdtBalance.toFixed(2)} USDT</span>
-                    </div>
-                    <div class="amount-input-group">
-                        <input type="number" 
-                               id="stakeAmount" 
-                               class="amount-input"
-                               value="${Math.max(plan.minAmount, Math.min(plan.minAmount * 2, maxAmount)).toFixed(2)}"
-                               min="${plan.minAmount}"
-                               max="${maxAmount}"
-                               step="0.01"
-                               oninput="calculateStakeReward(${planId})">
-                        <button class="max-btn" onclick="setMaxStakeAmount(${planId})">MAX</button>
-                    </div>
-                    <div class="amount-range">
-                        <input type="range" 
-                               id="stakeSlider" 
-                               min="${plan.minAmount}" 
-                               max="${maxAmount}" 
-                               value="${Math.max(plan.minAmount, Math.min(plan.minAmount * 2, maxAmount))}"
-                               step="1"
-                               oninput="updateStakeAmountFromSlider(${planId})">
-                        <div class="range-labels">
-                            <span>${plan.minAmount} USDT</span>
-                            <span>${maxAmount.toFixed(0)} USDT</span>
+                <div class="modal-body">
+                    <div class="stake-plan-info">
+                        <div class="plan-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="plan-details">
+                            <h4>${plan.name} Plan</h4>
+                            <div class="plan-apr">${plan.apr}% APR</div>
+                            <div class="plan-duration">${plan.duration} Days</div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="stake-reward-calculation">
-                    <div class="reward-header">
-                        <i class="fas fa-calculator"></i>
-                        <span>Reward Calculation</span>
+                    
+                    <div class="stake-amount-section">
+                        <div class="amount-header">
+                            <span>Staking Amount (USDT)</span>
+                            <span class="balance">Balance: ${usdtBalance.toFixed(2)} USDT</span>
+                        </div>
+                        <div class="amount-input-group">
+                            <input type="number" 
+                                   id="stakeAmount" 
+                                   class="amount-input"
+                                   value="${Math.max(plan.minAmount, Math.min(plan.minAmount * 2, maxAmount)).toFixed(2)}"
+                                   min="${plan.minAmount}"
+                                   max="${maxAmount}"
+                                   step="0.01"
+                                   oninput="calculateStakeReward(${planId})">
+                            <button class="max-btn" onclick="setMaxStakeAmount(${planId})">MAX</button>
+                        </div>
+                        <div class="amount-range">
+                            <input type="range" 
+                                   id="stakeSlider" 
+                                   min="${plan.minAmount}" 
+                                   max="${maxAmount}" 
+                                   value="${Math.max(plan.minAmount, Math.min(plan.minAmount * 2, maxAmount))}"
+                                   step="1"
+                                   oninput="updateStakeAmountFromSlider(${planId})">
+                            <div class="range-labels">
+                                <span>${plan.minAmount} USDT</span>
+                                <span>${maxAmount.toFixed(0)} USDT</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="reward-details">
-                        <div class="reward-item">
-                            <span>Daily Reward:</span>
-                            <span id="dailyReward">0 AMSK</span>
+                    
+                    <div class="stake-reward-calculation">
+                        <div class="reward-header">
+                            <i class="fas fa-calculator"></i>
+                            <span>Reward Calculation</span>
                         </div>
-                        <div class="reward-item">
-                            <span>Total Reward (${plan.duration} days):</span>
-                            <span id="totalReward">0 AMSK</span>
-                        </div>
-                        <div class="reward-item">
-                            <span>APR:</span>
-                            <span>${plan.apr}%</span>
-                        </div>
-                        <div class="reward-item total">
-                            <span>Total Return:</span>
-                            <span id="totalReturn">0 AMSK</span>
+                        <div class="reward-details">
+                            <div class="reward-item">
+                                <span>Daily Reward:</span>
+                                <span id="dailyReward">0 AMSK</span>
+                            </div>
+                            <div class="reward-item">
+                                <span>Total Reward (${plan.duration} days):</span>
+                                <span id="totalReward">0 AMSK</span>
+                            </div>
+                            <div class="reward-item">
+                                <span>APR:</span>
+                                <span>${plan.apr}%</span>
+                            </div>
+                            <div class="reward-item total">
+                                <span>Total Return:</span>
+                                <span id="totalReturn">0 AMSK</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="closeModal()">
-                        Cancel
-                    </button>
-                    <button class="btn-primary" id="confirmStakeBtn" onclick="confirmStaking(${planId})" ${usdtBalance >= plan.minAmount ? '' : 'disabled'}>
-                        Confirm Stake
-                    </button>
+                    
+                    <div class="modal-actions">
+                        <button class="btn-secondary" onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button class="btn-primary" id="confirmStakeBtn" onclick="confirmStaking(${planId})" ${usdtBalance >= plan.minAmount ? '' : 'disabled'}>
+                            Confirm Stake
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     `;
     
-    showModal(modalContent);
+    // Remove existing modals
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    
+    // Add new modal
+    document.body.insertAdjacentHTML('beforeend', modalContent);
     
     // Initialize calculation
     setTimeout(() => {
@@ -2557,9 +1121,6 @@ function confirmStaking(planId) {
         walletData.staking.activeStakes.push(stake);
         walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
         
-        // Add transaction
-        addTransaction('staking_start', -amount, 'USDT', `${plan.name} Plan`);
-        
         // Update UI
         updateWalletUI();
         updateTotalBalance();
@@ -2623,10 +1184,6 @@ function claimStakeReward(stakeIndex) {
         walletData.staking.totalEarned = (walletData.staking.totalEarned || 0) + totalReward;
         walletData.staking.totalStaked -= stake.amount;
         
-        // Add transactions
-        addTransaction('staking_reward', totalReward, 'AMSK', `${plan.name} Plan Reward`);
-        addTransaction('staking_return', stake.amount, 'USDT', `${plan.name} Plan Return`);
-        
         // Remove from active stakes
         activeStakes.splice(stakeIndex, 1);
         
@@ -2671,9 +1228,6 @@ function cancelStake(stakeIndex) {
     const returnedAmount = stake.amount * 0.5;
     walletData.balances.USDT += returnedAmount;
     walletData.staking.totalStaked -= stake.amount;
-    
-    // Add transaction
-    addTransaction('staking_cancel', returnedAmount, 'USDT', `${plan.name} Plan Cancel`);
     
     // Remove from active stakes
     activeStakes.splice(stakeIndex, 1);
@@ -2730,9 +1284,6 @@ async function processReferral(referralCode) {
         // Give welcome bonus to new user
         walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
         walletData.mining.totalMined += CONFIG.REFERRAL.WELCOME_BONUS;
-        
-        // Add transaction
-        addTransaction('referral_welcome', CONFIG.REFERRAL.WELCOME_BONUS, 'AMSK', 'Welcome Bonus');
         
         // Save user data
         saveUserData();
@@ -2836,9 +1387,6 @@ function claimMilestone(milestoneNum) {
         walletData.referrals.earned += reward;
         walletData.referrals.claimedMilestones.push(milestoneNum);
         
-        // Add transaction
-        addTransaction('referral_milestone', reward, 'AMSK', `Milestone ${milestoneNum}`);
-        
         // Update UI
         updateWalletUI();
         updateMiningDisplay();
@@ -2857,7 +1405,7 @@ function claimMilestone(milestoneNum) {
 }
 
 // ============================================
-// ADMIN SYSTEM - ENHANCED
+// ADMIN SYSTEM
 // ============================================
 function initAdminSystem() {
     if (elements.adminLogo) {
@@ -2889,38 +1437,44 @@ function initAdminSystem() {
 
 function showAdminLogin() {
     const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-lock"></i> Admin Access</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
-                    <h3 style="color: white; margin-bottom: 20px;">Administrator Access</h3>
-                    <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <input type="password" 
-                               id="adminPasswordInput" 
-                               class="form-input"
-                               placeholder="Enter password">
-                    </div>
-                    
-                    <button onclick="checkAdminPassword()" 
-                            class="btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                    
-                    <div id="adminError" style="color: #ff4444; margin-top: 15px; display: none;">
-                        <i class="fas fa-exclamation-circle"></i> <span id="adminErrorText"></span>
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-lock"></i> Admin Access</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+                        <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Administrator Access</h3>
+                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <input type="password" 
+                                   id="adminPasswordInput" 
+                                   style="width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; color: white; font-size: 16px;"
+                                   placeholder="Enter password">
+                        </div>
+                        
+                        <button onclick="checkAdminPassword()" 
+                                style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        
+                        <div id="adminError" style="color: #ff4444; margin-top: 15px; display: none;">
+                            <i class="fas fa-exclamation-circle"></i> <span id="adminErrorText"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     `;
     
-    showModal(modalContent);
+    // Remove existing modals
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    
+    // Add new modal
+    document.body.insertAdjacentHTML('beforeend', modalContent);
 }
 
 function checkAdminPassword() {
@@ -2958,157 +1512,107 @@ function checkAdminPassword() {
 
 function showAdminPanel() {
     const modalContent = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-shield"></i> Admin Panel v7.0</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="font-size: 48px; margin-bottom: 10px;">👑</div>
-                    <h3 style="color: white; margin-bottom: 10px;">Admin Dashboard</h3>
-                    <p style="color: var(--quantum-text-light); margin-bottom: 20px;">Advanced User Management System</p>
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
                 </div>
                 
-                <div class="admin-grid">
-                    <div class="admin-card" onclick="adminManageUsers()">
-                        <i class="fas fa-users" style="color: var(--quantum-blue);"></i>
-                        <div class="admin-card-title">Manage Users</div>
-                        <div class="admin-card-desc">View and manage all users</div>
-                    </div>
-                    
-                    <div class="admin-card" onclick="adminAddBalance()">
-                        <i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i>
-                        <div class="admin-card-title">Add Balance</div>
-                        <div class="admin-card-desc">Add tokens to any user</div>
-                    </div>
-                    
-                    <div class="admin-card" onclick="adminWithdrawalRequests()">
-                        <i class="fas fa-upload" style="color: var(--quantum-orange);"></i>
-                        <div class="admin-card-title">Withdrawals</div>
-                        <div class="admin-card-desc">Process withdrawal requests</div>
-                    </div>
-                    
-                    <div class="admin-card" onclick="adminSystemStats()">
-                        <i class="fas fa-chart-bar" style="color: var(--quantum-purple);"></i>
-                        <div class="admin-card-title">Statistics</div>
-                        <div class="admin-card-desc">View platform statistics</div>
-                    </div>
-                </div>
-                
-                <div style="margin: 30px 0; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid rgba(255,68,68,0.3);">
-                    <h4 style="color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                        <i class="fas fa-user-cog"></i> Current User Management
-                    </h4>
-                    
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="color: var(--quantum-text-light);">User ID:</span>
-                            <span style="color: white; font-family: monospace;">${userData.id?.slice(-8)}</span>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">👑</div>
+                        <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Admin Dashboard</h3>
+                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
+                        
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-size: 14px; color: #94a3b8; margin-bottom: 10px;">Add Balance to User</div>
+                                
+                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <input type="text" 
+                                           id="adminUserId" 
+                                           style="flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; color: white;"
+                                           placeholder="User ID">
+                                    <input type="number" 
+                                           id="adminUserAmount" 
+                                           style="flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; color: white;"
+                                           placeholder="AMSK Amount" 
+                                           min="1">
+                                </div>
+                                
+                                <button onclick="addBalanceToUser()" 
+                                        style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600;">
+                                    <i class="fas fa-plus-circle"></i> Add Balance
+                                </button>
+                            </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="color: var(--quantum-text-light);">Telegram ID:</span>
-                            <span style="color: white;">${userData.telegramId || 'N/A'}</span>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="resetUserData()" 
+                                    style="flex: 1; padding: 12px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 8px; font-weight: 600;">
+                                <i class="fas fa-trash"></i> Reset User
+                            </button>
+                            <button onclick="closeModal()" 
+                                    style="flex: 1; padding: 12px; background: linear-gradient(135deg, #6b7280, #4b5563); color: white; border: none; border-radius: 8px; font-weight: 600;">
+                                <i class="fas fa-times"></i> Close
+                            </button>
                         </div>
                     </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <button onclick="adminAddToCurrentUser('AMSK', 10000)" 
-                                style="padding: 10px; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 8px; color: var(--quantum-green); cursor: pointer;">
-                            +10K AMSK
-                        </button>
-                        <button onclick="adminAddToCurrentUser('USDT', 50)" 
-                                style="padding: 10px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); border-radius: 8px; color: var(--quantum-blue); cursor: pointer;">
-                            +50 USDT
-                        </button>
-                        <button onclick="adminResetCurrentUser()" 
-                                style="padding: 10px; background: rgba(255,68,68,0.1); border: 1px solid rgba(255,68,68,0.3); border-radius: 8px; color: #ff4444; cursor: pointer;">
-                            Reset User
-                        </button>
-                        <button onclick="adminPromoteCurrentUser()" 
-                                style="padding: 10px; background: rgba(157,78,221,0.1); border: 1px solid rgba(157,78,221,0.3); border-radius: 8px; color: var(--quantum-purple); cursor: pointer;">
-                            Promo Code
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="modal-actions">
-                    <button class="btn-secondary" onclick="closeModal()">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                    <button class="btn-primary" onclick="adminExportData()">
-                        <i class="fas fa-download"></i> Export Data
-                    </button>
                 </div>
             </div>
         </div>
     `;
     
-    showModal(modalContent);
+    // Remove existing modals
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    
+    // Add new modal
+    document.body.insertAdjacentHTML('beforeend', modalContent);
 }
 
-function adminAddToCurrentUser(currency, amount) {
-    walletData.balances[currency] = (walletData.balances[currency] || 0) + amount;
+function addBalanceToUser() {
+    const userIdInput = document.getElementById('adminUserId');
+    const amountInput = document.getElementById('adminUserAmount');
     
-    // Add transaction
-    addTransaction('admin_add', amount, currency, 'Admin bonus');
+    if (!userIdInput || !amountInput) return;
     
-    // Update UI
+    const userId = userIdInput.value.trim();
+    const amount = parseFloat(amountInput.value);
+    
+    if (!userId) {
+        showMessage('Please enter user ID', 'error');
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        showMessage('Please enter a valid amount', 'error');
+        return;
+    }
+    
+    // For demo, just add to current user
+    walletData.balances.AMSK += amount;
+    walletData.mining.totalMined += amount;
+    
     updateWalletUI();
-    updateTotalBalance();
+    updateMiningDisplay();
     
-    showMessage(`✅ Added ${amount} ${currency} to current user`, 'success');
+    showMessage(`✅ Added ${amount} AMSK to user`, "success");
+    
+    userIdInput.value = '';
+    amountInput.value = '';
     saveUserData();
 }
 
-function adminResetCurrentUser() {
-    if (!confirm("⚠️ Are you sure you want to reset ALL data for current user?\n\nThis will delete all balances, mining progress, staking data, and transaction history.\n\nThis action cannot be undone!")) return;
+function resetUserData() {
+    if (!confirm("Are you sure you want to reset all user data?")) return;
     
     initializeDefaultData();
     updateUI();
     saveUserData();
     
     showMessage("✅ User data reset successfully", "success");
-}
-
-function adminManageUsers() {
-    showMessage("👥 User Management - Coming in next update", "info");
-}
-
-function adminAddBalance() {
-    showMessage("💰 Add Balance - Coming in next update", "info");
-}
-
-function adminWithdrawalRequests() {
-    showMessage("💸 Withdrawal Requests - Coming in next update", "info");
-}
-
-function adminSystemStats() {
-    showMessage("📊 System Statistics - Coming in next update", "info");
-}
-
-function adminPromoteCurrentUser() {
-    showMessage("🎟️ Promo Code - Coming in next update", "info");
-}
-
-function adminExportData() {
-    const dataStr = JSON.stringify({
-        userData: userData,
-        walletData: walletData
-    }, null, 2);
-    
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `alien_musk_data_${userData.id}_${Date.now()}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    showMessage("📥 Data exported successfully", "success");
+    closeModal();
 }
 
 // ============================================
@@ -3116,9 +1620,6 @@ function adminExportData() {
 // ============================================
 function setupEventListeners() {
     console.log("🎯 Setting up event listeners...");
-    
-    // Add modal styles
-    addModalStyles();
     
     // Navigation buttons
     elements.navBtns.forEach(btn => {
@@ -3152,30 +1653,36 @@ function setupEventListeners() {
         });
     });
     
-    // Wallet action buttons - UPDATED: Now open professional modals
+    // Wallet action buttons
     if (elements.depositBtn) {
-        elements.depositBtn.addEventListener('click', openDepositModal);
+        elements.depositBtn.addEventListener('click', () => {
+            showMessage("💰 Deposit feature coming soon!", "info");
+        });
     }
     
     if (elements.withdrawBtn) {
-        elements.withdrawBtn.addEventListener('click', openWithdrawModal);
+        elements.withdrawBtn.addEventListener('click', () => {
+            showMessage("💸 Withdrawal feature coming soon!", "info");
+        });
     }
     
     if (elements.swapBtn) {
-        elements.swapBtn.addEventListener('click', openSwapModal);
+        elements.swapBtn.addEventListener('click', () => {
+            showMessage("🔄 Swap feature coming soon!", "info");
+        });
     }
     
     if (elements.historyBtn) {
-        elements.historyBtn.addEventListener('click', showTransactionHistory);
+        elements.historyBtn.addEventListener('click', () => {
+            showTransactionHistory();
+        });
     }
     
     // Referral actions
     if (elements.copyLinkBtn) {
         elements.copyLinkBtn.addEventListener('click', () => {
             if (elements.referralLinkInput) {
-                navigator.clipboard.writeText(elements.referralLinkInput.value)
-                    .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-                    .catch(() => showMessage('❌ Failed to copy', 'error'));
+                copyToClipboard(elements.referralLinkInput.value);
             }
         });
     }
@@ -3201,6 +1708,52 @@ function setupEventListeners() {
     }
     
     console.log("✅ Event listeners setup complete");
+}
+
+function showTransactionHistory() {
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-history"></i> Transaction History</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+                        <h3 style="color: var(--quantum-text); margin-bottom: 10px;">Transaction History</h3>
+                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Coming soon in the next update!</p>
+                        
+                        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: var(--quantum-text-light);">Mining Rewards:</span>
+                                <span style="color: var(--quantum-green); font-weight: 600;">${formatNumber(walletData.mining.totalMined)} AMSK</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: var(--quantum-text-light);">Staking Earnings:</span>
+                                <span style="color: var(--quantum-purple); font-weight: 600;">${formatNumber(walletData.staking.totalEarned)} AMSK</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--quantum-text-light);">Referral Earnings:</span>
+                                <span style="color: var(--quantum-pink); font-weight: 600;">${formatNumber(walletData.referrals.earned)} AMSK</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="closeModal()" 
+                                style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600;">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modals
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    
+    // Add new modal
+    document.body.insertAdjacentHTML('beforeend', modalContent);
 }
 
 // ============================================
@@ -3248,40 +1801,11 @@ function switchPage(pageName) {
     }
 }
 
-function showMessage(text, type = 'info') {
-    const container = document.getElementById('notification-container');
-    if (!container) return;
-    
-    const message = document.createElement('div');
-    message.className = `message ${type}`;
-    
-    let icon = 'fa-info-circle';
-    switch (type) {
-        case 'success': icon = 'fa-check-circle'; break;
-        case 'error': icon = 'fa-exclamation-circle'; break;
-        case 'warning': icon = 'fa-exclamation-triangle'; break;
+function closeModal() {
+    const modal = document.querySelector('.modal-overlay.active');
+    if (modal) {
+        modal.remove();
     }
-    
-    message.innerHTML = `
-        <i class="fas ${icon}"></i>
-        <span>${text}</span>
-    `;
-    
-    container.appendChild(message);
-    
-    // Auto remove after 4 seconds
-    setTimeout(() => {
-        if (message.parentNode) {
-            message.style.opacity = '0';
-            setTimeout(() => {
-                if (message.parentNode) {
-                    message.parentNode.removeChild(message);
-                }
-            }, 300);
-        }
-    }, 4000);
-    
-    console.log(`${type}: ${text}`);
 }
 
 // ============================================
@@ -3334,10 +1858,40 @@ function formatNumber(num, decimals = 0) {
     });
 }
 
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-        .catch(() => showMessage('❌ Failed to copy', 'error'));
+function showMessage(text, type = 'info') {
+    const container = document.getElementById('notification-container');
+    if (!container) return;
+    
+    const message = document.createElement('div');
+    message.className = `message ${type}`;
+    
+    let icon = 'fa-info-circle';
+    switch (type) {
+        case 'success': icon = 'fa-check-circle'; break;
+        case 'error': icon = 'fa-exclamation-circle'; break;
+        case 'warning': icon = 'fa-exclamation-triangle'; break;
+    }
+    
+    message.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${text}</span>
+    `;
+    
+    container.appendChild(message);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        if (message.parentNode) {
+            message.style.opacity = '0';
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 300);
+        }
+    }, 4000);
+    
+    console.log(`${type}: ${text}`);
 }
 
 // ============================================
@@ -3365,37 +1919,19 @@ window.updateStakeAmountFromSlider = updateStakeAmountFromSlider;
 // Referral functions
 window.claimMilestone = claimMilestone;
 
-// Modal functions
-window.selectDepositCurrency = selectDepositCurrency;
-window.copyDepositAddress = copyDepositAddress;
-window.updateDepositReceiveAmount = updateDepositReceiveAmount;
-window.processDeposit = processDeposit;
-window.selectWithdrawMethod = selectWithdrawMethod;
-window.setMaxWithdraw = setMaxWithdraw;
-window.updateWithdrawDetails = updateWithdrawDetails;
-window.processWithdrawal = processWithdrawal;
-window.updateSwap = updateSwap;
-window.confirmSwap = confirmSwap;
-
 // Admin functions
 window.checkAdminPassword = checkAdminPassword;
-window.adminAddToCurrentUser = adminAddToCurrentUser;
-window.adminResetCurrentUser = adminResetCurrentUser;
-window.adminManageUsers = adminManageUsers;
-window.adminAddBalance = adminAddBalance;
-window.adminWithdrawalRequests = adminWithdrawalRequests;
-window.adminSystemStats = adminSystemStats;
-window.adminPromoteCurrentUser = adminPromoteCurrentUser;
-window.adminExportData = adminExportData;
+window.addBalanceToUser = addBalanceToUser;
+window.resetUserData = resetUserData;
 
 // Utility functions
 window.formatNumber = formatNumber;
 
-console.log("👽 Alien Musk Quantum Platform v7.0 - Professional Edition Ready!");
+console.log("👽 Alien Musk Quantum Platform v6.0 - App.js Ready!");
 
 // Initialize app when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAlienMuskApp);
 } else {
-    setTimeout(initAlienMuskApp, 100);
+    initAlienMuskApp();
 }
