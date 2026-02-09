@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>👽 Alien Musk Quantum Mining v6.3</title>
+    <title>👽 Alien Musk Quantum Mining v6.4</title>
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -22,7 +22,7 @@
     <!-- CSS كامل مضمن - محسّن -->
     <style>
         /* =========================================== */
-        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.3 */
+        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.4 */
         /* CSS كامل مضمن - محسّن ومصحّح */
         /* =========================================== */
         
@@ -61,6 +61,7 @@
             --status-approved: #00ff88;
             --status-rejected: #ff4444;
             --status-processing: #00d4ff;
+            --status-completed: #00ff88;
             
             /* متدرجات */
             --gradient-quantum: linear-gradient(135deg, var(--quantum-green), var(--quantum-blue));
@@ -2181,7 +2182,69 @@
             transform: translateY(-1px);
         }
         
-        /* HISTORY TABLE */
+        /* HISTORY TABLE - IMPROVED */
+        .history-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+        }
+        
+        .history-tab {
+            flex: 1;
+            padding: 8px 5px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .history-tab.active {
+            background: var(--gradient-quantum);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .history-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .history-filter-btn {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .history-filter-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--quantum-blue);
+            color: var(--quantum-blue);
+        }
+        
+        .history-filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
         .history-table {
             width: 100%;
             border-collapse: collapse;
@@ -2254,6 +2317,16 @@
             color: var(--quantum-gold);
         }
         
+        .type-icon.referral {
+            background: rgba(255, 0, 128, 0.1);
+            color: var(--quantum-pink);
+        }
+        
+        .type-icon.milestone {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+        }
+        
         .status-badge {
             padding: 3px 6px;
             border-radius: 5px;
@@ -2262,26 +2335,51 @@
             text-transform: uppercase;
             display: inline-block;
             text-align: center;
+            min-width: 60px;
         }
         
         .status-pending {
             background: rgba(255, 153, 0, 0.15);
             color: var(--status-pending);
+            border: 1px solid rgba(255, 153, 0, 0.2);
         }
         
         .status-approved {
             background: rgba(0, 255, 136, 0.15);
             color: var(--status-approved);
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
         
         .status-rejected {
             background: rgba(255, 68, 68, 0.15);
             color: var(--status-rejected);
+            border: 1px solid rgba(255, 68, 68, 0.2);
         }
         
         .status-processing {
             background: rgba(0, 212, 255, 0.15);
             color: var(--status-processing);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .status-completed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--status-completed);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .transaction-details {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-top: 3px;
+            line-height: 1.3;
+        }
+        
+        .transaction-message {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            font-style: italic;
+            margin-top: 2px;
         }
         
         /* ADMIN PANEL - IMPROVED */
@@ -2631,6 +2729,15 @@
                 padding: 6px 3px;
             }
             
+            .history-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .history-tab {
+                flex: 1 0 45%;
+                margin-bottom: 2px;
+            }
+            
             .admin-stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -2698,6 +2805,20 @@
             
             .deposit-options {
                 grid-template-columns: 1fr;
+            }
+            
+            .history-tab {
+                flex: 1 0 100%;
+                margin-bottom: 2px;
+            }
+            
+            .history-filters {
+                justify-content: center;
+            }
+            
+            .history-filter-btn {
+                padding: 4px 8px;
+                font-size: 10px;
             }
             
             .admin-stats-grid {
@@ -3252,8 +3373,8 @@
 
     <!-- 👽 CONNECTOR SCRIPT -->
     <script>
-        // 👽 Alien Musk Quantum Connector v6.3
-        console.log("🔗 Loading Alien Musk Quantum Platform v6.3...");
+        // 👽 Alien Musk Quantum Connector v6.4
+        console.log("🔗 Loading Alien Musk Quantum Platform v6.4...");
         
         // Global variables
         window.tg = null;
@@ -3458,11 +3579,11 @@
         console.log("✅ Alien Musk Connector Loaded Successfully");
     </script>
 
-    <!-- 👽 MAIN APPLICATION JS v6.3 - PROFESSIONAL EDITION -->
+    <!-- 👽 MAIN APPLICATION JS v6.4 - PROFESSIONAL HISTORY SYSTEM -->
     <script>
         // ============================================
-        // 👽 ALIEN MUSK - Quantum Mining Platform v6.3
-        // PROFESSIONAL EDITION WITH ALL FIXES
+        // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
+        // PROFESSIONAL HISTORY SYSTEM EDITION
         // ============================================
 
         // Configuration - UPDATED WITH CORRECT CALCULATIONS
@@ -3586,7 +3707,7 @@
             lastSaveTime: 0
         };
 
-        // Wallet Data
+        // Wallet Data - UPDATED STRUCTURE
         let walletData = {
             balances: {
                 AMSK: 2500,
@@ -3615,7 +3736,8 @@
             },
             pendingDeposits: [],
             pendingWithdrawals: [],
-            transactions: [],
+            transactions: [], // Only completed transactions
+            transactionHistory: [], // All transactions (pending + completed)
             usedTxIds: [],
             lastUpdate: Date.now()
         };
@@ -3644,7 +3766,7 @@
         // ============================================
 
         async function initAlienMuskApp() {
-            console.log("🚀 Initializing Alien Musk Platform v6.3...");
+            console.log("🚀 Initializing Alien Musk Platform v6.4...");
             
             try {
                 // 1. Cache DOM Elements
@@ -3673,7 +3795,7 @@
                 
                 // Show welcome message
                 setTimeout(() => {
-                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.3!", "success");
+                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.4!", "success");
                 }, 1000);
                 
             } catch (error) {
@@ -3807,7 +3929,6 @@
             }
             
             if (elements.userIdMini) {
-                // عرض آخر 8 أرقام فقط للواجهة، لكن ID يبقى كاملاً في الخلفية
                 const displayId = userData.telegramId ? userData.telegramId.slice(-8) : userData.id.slice(-8);
                 elements.userIdMini.textContent = `ID: ${displayId}`;
             }
@@ -3867,10 +3988,17 @@
                         walletData.transactions = firebaseData.transactions;
                     }
                     
+                    if (firebaseData.transactionHistory) {
+                        walletData.transactionHistory = firebaseData.transactionHistory;
+                    }
+                    
                     console.log("✅ Data loaded from Firebase");
                     
                     // Load pending requests
                     await loadPendingRequests();
+                    
+                    // Fix: Ensure we don't have double entries
+                    cleanDuplicateTransactions();
                     
                 } else {
                     console.log("📝 No Firebase data found, using defaults");
@@ -3961,6 +4089,7 @@
                     staking: walletData.staking,
                     referrals: walletData.referrals,
                     transactions: walletData.transactions || [],
+                    transactionHistory: walletData.transactionHistory || [],
                     userInfo: {
                         id: userData.id,
                         telegramId: userData.telegramId,
@@ -3998,6 +4127,7 @@
                     pendingDeposits: walletData.pendingDeposits,
                     pendingWithdrawals: walletData.pendingWithdrawals,
                     transactions: walletData.transactions,
+                    transactionHistory: walletData.transactionHistory,
                     usedTxIds: walletData.usedTxIds,
                     lastUpdate: walletData.lastUpdate
                 };
@@ -4051,11 +4181,18 @@
                         walletData.transactions = parsed.transactions;
                     }
                     
+                    if (parsed.transactionHistory) {
+                        walletData.transactionHistory = parsed.transactionHistory;
+                    }
+                    
                     if (parsed.usedTxIds) {
                         walletData.usedTxIds = parsed.usedTxIds;
                     }
                     
                     console.log("✅ Data loaded from localStorage");
+                    
+                    // Fix: Ensure we don't have double entries
+                    cleanDuplicateTransactions();
                     
                 } catch (error) {
                     console.error("❌ Parse error:", error);
@@ -4091,12 +4228,411 @@
             walletData.pendingDeposits = [];
             walletData.pendingWithdrawals = [];
             walletData.transactions = [];
+            walletData.transactionHistory = [];
             walletData.usedTxIds = [];
+        }
+
+        // 🔧 NEW: Clean duplicate transactions
+        function cleanDuplicateTransactions() {
+            if (!walletData.transactionHistory) {
+                walletData.transactionHistory = [];
+            }
+            
+            // Remove duplicates based on transaction ID
+            const uniqueIds = new Set();
+            walletData.transactionHistory = walletData.transactionHistory.filter(tx => {
+                if (uniqueIds.has(tx.id)) {
+                    console.log(`Removing duplicate transaction: ${tx.id}`);
+                    return false;
+                }
+                uniqueIds.add(tx.id);
+                return true;
+            });
+            
+            console.log(`🔄 Cleaned transactions: ${uniqueIds.size} unique transactions`);
         }
 
         async function saveUserData() {
             await saveUserDataToFirebase();
             saveUserDataToLocalStorage();
+        }
+
+        // ============================================
+        // TRANSACTION SYSTEM - IMPROVED
+        // ============================================
+
+        // 🔧 NEW: Add transaction to history (no duplicates)
+        function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
+            const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const transaction = {
+                id: transactionId,
+                type: type,
+                amount: amount,
+                currency: currency,
+                description: description,
+                status: status,
+                message: message || getDefaultMessage(type, status),
+                txId: txId,
+                timestamp: Date.now(),
+                dateFormatted: new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+            
+            // Add to transaction history
+            if (!walletData.transactionHistory) {
+                walletData.transactionHistory = [];
+            }
+            
+            // Check for duplicates before adding
+            const isDuplicate = walletData.transactionHistory.some(tx => 
+                tx.type === type && 
+                tx.amount === amount && 
+                tx.currency === currency && 
+                Math.abs(tx.timestamp - transaction.timestamp) < 5000 // 5 seconds
+            );
+            
+            if (!isDuplicate) {
+                walletData.transactionHistory.unshift(transaction);
+                
+                // Keep only last 100 transactions in history
+                if (walletData.transactionHistory.length > 100) {
+                    walletData.transactionHistory = walletData.transactionHistory.slice(0, 100);
+                }
+                
+                console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
+            } else {
+                console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
+            }
+            
+            return transaction;
+        }
+
+        // 🔧 NEW: Get default message based on type and status
+        function getDefaultMessage(type, status) {
+            const messages = {
+                'deposit_request': {
+                    'pending': 'Deposit request submitted. Waiting for admin approval.',
+                    'approved': 'Deposit approved and added to your balance.',
+                    'rejected': 'Deposit rejected. Please check the transaction details.'
+                },
+                'withdrawal_request': {
+                    'pending': 'Withdrawal request submitted. Processing...',
+                    'approved': 'Withdrawal approved. Funds sent to your wallet.',
+                    'rejected': 'Withdrawal rejected. Please check your wallet address.'
+                },
+                'mining_reward': {
+                    'completed': 'Mining reward claimed successfully.'
+                },
+                'staking_start': {
+                    'completed': 'Staking started successfully.'
+                },
+                'staking_reward': {
+                    'completed': 'Staking reward claimed.'
+                },
+                'swap': {
+                    'completed': 'Swap completed successfully.'
+                },
+                'referral_welcome': {
+                    'completed': 'Welcome bonus for joining via referral.'
+                },
+                'referral_milestone': {
+                    'completed': 'Referral milestone reward claimed.'
+                }
+            };
+            
+            return messages[type]?.[status] || 'Transaction completed';
+        }
+
+        // 🔧 UPDATED: Legacy addTransaction function (for backward compatibility)
+        function addTransaction(type, amount, currency, description = '') {
+            // Only add to completed transactions if status is completed
+            if (type.includes('_request')) {
+                // For requests, add to history with pending status
+                addTransactionToHistory(type, amount, currency, description, 'pending', 'Request submitted');
+            } else {
+                // For completed transactions, add to both arrays
+                const transaction = {
+                    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    type: type,
+                    amount: amount,
+                    currency: currency,
+                    description: description,
+                    timestamp: Date.now(),
+                    status: 'completed'
+                };
+                
+                if (!walletData.transactions) {
+                    walletData.transactions = [];
+                }
+                walletData.transactions.unshift(transaction);
+                
+                if (walletData.transactions.length > 50) {
+                    walletData.transactions = walletData.transactions.slice(0, 50);
+                }
+                
+                // Also add to history
+                addTransactionToHistory(type, amount, currency, description, 'completed', getDefaultMessage(type, 'completed'));
+                
+                console.log(`📝 Transaction added: ${type} ${amount} ${currency}`);
+            }
+        }
+
+        // ============================================
+        // HISTORY SYSTEM - PROFESSIONAL VERSION
+        // ============================================
+
+        function showTransactionHistory() {
+            const modalContent = `
+                <div class="modal-overlay active" onclick="closeModal()">
+                    <div class="modal active" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-history"></i> Transaction History</h3>
+                            <button class="modal-close" onclick="closeModal()">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="history-tabs" id="historyTabs">
+                                <button class="history-tab active" data-tab="all">All</button>
+                                <button class="history-tab" data-tab="pending">Pending</button>
+                                <button class="history-tab" data-tab="completed">Completed</button>
+                                <button class="history-tab" data-tab="rejected">Rejected</button>
+                            </div>
+                            
+                            <div class="history-filters" id="historyFilters">
+                                <button class="history-filter-btn active" data-filter="all">All Types</button>
+                                <button class="history-filter-btn" data-filter="deposit">Deposits</button>
+                                <button class="history-filter-btn" data-filter="withdrawal">Withdrawals</button>
+                                <button class="history-filter-btn" data-filter="mining">Mining</button>
+                                <button class="history-filter-btn" data-filter="staking">Staking</button>
+                                <button class="history-filter-btn" data-filter="swap">Swap</button>
+                                <button class="history-filter-btn" data-filter="referral">Referral</button>
+                            </div>
+                            
+                            <div id="historyContent" style="max-height: 400px; overflow-y: auto;">
+                                <!-- History content will be loaded here -->
+                            </div>
+                            
+                            <div class="modal-actions mt-20">
+                                <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+            document.body.insertAdjacentHTML('beforeend', modalContent);
+            
+            // Load history content
+            loadHistoryContent('all', 'all');
+            
+            // Setup tab click handlers
+            setTimeout(() => {
+                const tabs = document.querySelectorAll('#historyTabs .history-tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const tabType = tab.dataset.tab;
+                        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                        loadHistoryContent(tabType, activeFilter);
+                    });
+                });
+                
+                // Setup filter click handlers
+                const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
+                filters.forEach(filter => {
+                    filter.addEventListener('click', () => {
+                        filters.forEach(f => f.classList.remove('active'));
+                        filter.classList.add('active');
+                        const filterType = filter.dataset.filter;
+                        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                        loadHistoryContent(activeTab, filterType);
+                    });
+                });
+            }, 100);
+        }
+
+        function loadHistoryContent(tabType = 'all', filterType = 'all') {
+            const historyContent = document.getElementById('historyContent');
+            if (!historyContent) return;
+            
+            // Get all transactions from history
+            let transactions = [...(walletData.transactionHistory || [])];
+            
+            // Add pending requests from separate arrays
+            const pendingRequests = [
+                ...(walletData.pendingDeposits || []).map(deposit => ({
+                    id: deposit.id,
+                    type: 'deposit_request',
+                    amount: deposit.amount,
+                    currency: deposit.currency,
+                    description: `TX: ${deposit.txId?.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Waiting for admin approval',
+                    timestamp: deposit.createdAt || Date.now(),
+                    dateFormatted: deposit.createdAt ? new Date(deposit.createdAt).toLocaleDateString() : 'Just now'
+                })),
+                ...(walletData.pendingWithdrawals || []).map(withdrawal => ({
+                    id: withdrawal.id,
+                    type: 'withdrawal_request',
+                    amount: -withdrawal.amount,
+                    currency: withdrawal.currency,
+                    description: `To: ${withdrawal.address?.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Processing withdrawal',
+                    timestamp: withdrawal.createdAt || Date.now(),
+                    dateFormatted: withdrawal.createdAt ? new Date(withdrawal.createdAt).toLocaleDateString() : 'Just now'
+                }))
+            ];
+            
+            // Merge all transactions
+            transactions = [...pendingRequests, ...transactions];
+            
+            // Sort by timestamp (newest first)
+            transactions.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Apply tab filter
+            if (tabType === 'pending') {
+                transactions = transactions.filter(tx => tx.status === 'pending');
+            } else if (tabType === 'completed') {
+                transactions = transactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
+            } else if (tabType === 'rejected') {
+                transactions = transactions.filter(tx => tx.status === 'rejected');
+            }
+            
+            // Apply type filter
+            if (filterType !== 'all') {
+                if (filterType === 'deposit') {
+                    transactions = transactions.filter(tx => tx.type.includes('deposit'));
+                } else if (filterType === 'withdrawal') {
+                    transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
+                } else if (filterType === 'mining') {
+                    transactions = transactions.filter(tx => tx.type.includes('mining'));
+                } else if (filterType === 'staking') {
+                    transactions = transactions.filter(tx => tx.type.includes('staking'));
+                } else if (filterType === 'swap') {
+                    transactions = transactions.filter(tx => tx.type.includes('swap'));
+                } else if (filterType === 'referral') {
+                    transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+                }
+            }
+            
+            if (transactions.length === 0) {
+                historyContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 48px; color: var(--quantum-text-muted); opacity: 0.5; margin-bottom: 20px;">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h4 style="color: var(--quantum-text); margin-bottom: 10px;">No Transactions Found</h4>
+                        <p style="color: var(--quantum-text-light);">No transactions match your current filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            transactions.slice(0, 50).forEach(tx => {
+                const amountColor = tx.amount > 0 ? 'var(--quantum-green)' : '#ff4444';
+                const amountSign = tx.amount > 0 ? '+' : '';
+                const absAmount = Math.abs(tx.amount);
+                
+                let typeIcon = 'fa-exchange-alt';
+                let typeClass = 'swap';
+                let typeText = 'Swap';
+                
+                if (tx.type.includes('mining')) {
+                    typeIcon = 'fa-microchip';
+                    typeClass = 'mining';
+                    typeText = 'Mining';
+                } else if (tx.type.includes('staking')) {
+                    typeIcon = 'fa-gem';
+                    typeClass = 'staking';
+                    typeText = 'Staking';
+                } else if (tx.type.includes('deposit')) {
+                    typeIcon = 'fa-download';
+                    typeClass = 'deposit';
+                    typeText = 'Deposit';
+                } else if (tx.type.includes('withdrawal')) {
+                    typeIcon = 'fa-upload';
+                    typeClass = 'withdraw';
+                    typeText = 'Withdrawal';
+                } else if (tx.type.includes('referral')) {
+                    typeIcon = 'fa-users';
+                    typeClass = 'referral';
+                    typeText = 'Referral';
+                } else if (tx.type.includes('milestone')) {
+                    typeIcon = 'fa-trophy';
+                    typeClass = 'milestone';
+                    typeText = 'Milestone';
+                }
+                
+                let statusBadge = '';
+                if (tx.status === 'pending') {
+                    statusBadge = '<span class="status-badge status-pending">Pending</span>';
+                } else if (tx.status === 'approved' || tx.status === 'completed') {
+                    statusBadge = '<span class="status-badge status-approved">Completed</span>';
+                } else if (tx.status === 'rejected') {
+                    statusBadge = '<span class="status-badge status-rejected">Rejected</span>';
+                } else if (tx.status === 'processing') {
+                    statusBadge = '<span class="status-badge status-processing">Processing</span>';
+                }
+                
+                html += `
+                    <tr>
+                        <td>
+                            <div class="history-type">
+                                <div class="type-icon ${typeClass}">
+                                    <i class="fas ${typeIcon}"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size: 13px; font-weight: 600;">${typeText}</div>
+                                    ${tx.description ? `<div class="transaction-details">${tx.description}</div>` : ''}
+                                    ${tx.message ? `<div class="transaction-message">${tx.message}</div>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: ${amountColor}; font-weight: 700;">
+                                ${amountSign}${absAmount.toLocaleString()} ${tx.currency}
+                            </div>
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div style="font-size: 12px; color: var(--quantum-text);">${tx.dateFormatted || new Date(tx.timestamp).toLocaleDateString()}</div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
+                    Showing ${Math.min(transactions.length, 50)} of ${transactions.length} transactions
+                </div>
+            `;
+            
+            historyContent.innerHTML = html;
         }
 
         // ============================================
@@ -4272,6 +4808,8 @@
                 walletData.mining.lastReward = Date.now();
                 walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
                 
+                // Use new transaction system
+                addTransactionToHistory('mining_reward', reward, 'AMSK', 'Mining reward', 'completed', 'Mining reward claimed successfully');
                 addTransaction('mining_reward', reward, 'AMSK');
                 
                 updateMiningDisplay();
@@ -4308,6 +4846,7 @@
                 walletData.balances.USDT -= levelData.cost;
                 walletData.mining.level = level;
                 
+                addTransactionToHistory('mining_upgrade', -levelData.cost, 'USDT', `Upgrade to ${levelData.name} level`, 'completed', 'Mining level upgraded');
                 addTransaction('mining_upgrade', -levelData.cost, 'USDT');
                 
                 updateMiningDisplay();
@@ -4716,6 +5255,8 @@
                 walletData.staking.activeStakes.push(stake);
                 walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
                 
+                // Use new transaction system
+                addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
                 addTransaction('staking_start', -amount, 'USDT');
                 
                 updateWalletUI();
@@ -4768,6 +5309,9 @@
                 walletData.staking.totalEarned = (walletData.staking.totalEarned || 0) + totalReward;
                 walletData.staking.totalStaked -= stake.amount;
                 
+                // Use new transaction system
+                addTransactionToHistory('staking_reward', totalReward, 'AMSK', `${plan.name} Plan reward`, 'completed', 'Staking reward claimed');
+                addTransactionToHistory('staking_return', stake.amount, 'USDT', 'Principal returned', 'completed', 'Staking principal returned');
                 addTransaction('staking_reward', totalReward, 'AMSK');
                 addTransaction('staking_return', stake.amount, 'USDT');
                 
@@ -4808,6 +5352,7 @@
             walletData.balances.USDT += returnedAmount;
             walletData.staking.totalStaked -= stake.amount;
             
+            addTransactionToHistory('staking_cancel', returnedAmount, 'USDT', 'Staking cancelled (50% penalty)', 'completed', 'Staking cancelled with penalty');
             addTransaction('staking_cancel', returnedAmount, 'USDT');
             
             activeStakes.splice(stakeIndex, 1);
@@ -4858,6 +5403,7 @@
                 userData.referredBy = referralCode;
                 walletData.balances.AMSK += CONFIG.REFERRAL.WELCOME_BONUS;
                 
+                addTransactionToHistory('referral_welcome', CONFIG.REFERRAL.WELCOME_BONUS, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
                 addTransaction('referral_welcome', CONFIG.REFERRAL.WELCOME_BONUS, 'AMSK');
                 
                 await saveUserData();
@@ -4959,12 +5505,14 @@
                 if (milestoneReward.amsk > 0) {
                     walletData.balances.AMSK += milestoneReward.amsk;
                     walletData.referrals.earned.amsk += milestoneReward.amsk;
+                    addTransactionToHistory('referral_milestone', milestoneReward.amsk, 'AMSK', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
                     addTransaction('referral_milestone', milestoneReward.amsk, 'AMSK', `Milestone ${milestoneNum}`);
                 }
                 
                 if (milestoneReward.bnb > 0) {
                     walletData.balances.BNB += milestoneReward.bnb;
                     walletData.referrals.earned.bnb += milestoneReward.bnb;
+                    addTransactionToHistory('referral_milestone', milestoneReward.bnb, 'BNB', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
                     addTransaction('referral_milestone', milestoneReward.bnb, 'BNB', `Milestone ${milestoneNum}`);
                 }
                 
@@ -5277,6 +5825,11 @@
             walletData.balances[fromCurrency] -= fromAmount;
             walletData.balances[toCurrency] += toAmount;
             
+            // Use new transaction system
+            addTransactionToHistory('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`, 'completed', 'Swap completed successfully');
+            addTransactionToHistory('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`, 'completed', 'Swap completed successfully');
+            
+            // Legacy transaction
             addTransaction('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`);
             addTransaction('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`);
             
@@ -5588,7 +6141,10 @@
                 walletData.pendingDeposits.push(depositRequest);
                 walletData.usedTxIds.push(txId);
                 
-                addTransaction('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 15)}...`);
+                // Use new transaction system
+                addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted. Waiting for admin approval.', txId);
+                
+                // Don't add to legacy transactions to avoid duplicates
                 
                 await saveUserData();
                 closeModal();
@@ -5749,7 +6305,10 @@
                 // Add to pending withdrawals
                 walletData.pendingWithdrawals.push(withdrawRequest);
                 
-                addTransaction('withdrawal_request', -amount, 'USDT', `To: ${address.slice(0, 10)}...`);
+                // Use new transaction system
+                addTransactionToHistory('withdrawal_request', -amount, 'USDT', `To: ${address.slice(0, 10)}...`, 'pending', 'Withdrawal request submitted. Processing...');
+                
+                // Don't add to legacy transactions to avoid duplicates
                 
                 await saveUserData();
                 closeModal();
@@ -5760,195 +6319,6 @@
                 console.error("❌ Error submitting withdrawal:", error);
                 showMessage("Failed to submit withdrawal request", "error");
             }
-        }
-
-        // ============================================
-        // HISTORY SYSTEM
-        // ============================================
-
-        function showTransactionHistory() {
-            const allTransactions = [
-                ...walletData.transactions || [],
-                ...(walletData.pendingDeposits || []).map(deposit => ({
-                    id: deposit.id,
-                    type: 'deposit_request',
-                    amount: deposit.amount,
-                    currency: deposit.currency,
-                    description: `TX: ${deposit.txId?.slice(0, 15)}...`,
-                    timestamp: deposit.createdAt,
-                    status: deposit.status
-                })),
-                ...(walletData.pendingWithdrawals || []).map(withdrawal => ({
-                    id: withdrawal.id,
-                    type: 'withdrawal_request',
-                    amount: -withdrawal.amount,
-                    currency: withdrawal.currency,
-                    description: `To: ${withdrawal.address?.slice(0, 10)}...`,
-                    timestamp: withdrawal.createdAt,
-                    status: withdrawal.status
-                }))
-            ].sort((a, b) => b.timestamp - a.timestamp);
-            
-            let historyHTML = '';
-            
-            if (allTransactions.length === 0) {
-                historyHTML = `
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <div style="font-size: 48px; color: var(--quantum-text-muted); opacity: 0.5; margin-bottom: 20px;">
-                            <i class="fas fa-history"></i>
-                        </div>
-                        <h4 style="color: var(--quantum-text); margin-bottom: 10px;">No Transactions Yet</h4>
-                        <p style="color: var(--quantum-text-light);">Your transaction history will appear here</p>
-                    </div>
-                `;
-            } else {
-                historyHTML = `
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-                
-                allTransactions.slice(0, 50).forEach(tx => {
-                    const date = new Date(tx.timestamp).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    const amountColor = tx.amount > 0 ? 'var(--quantum-green)' : '#ff4444';
-                    const amountSign = tx.amount > 0 ? '+' : '';
-                    const absAmount = Math.abs(tx.amount);
-                    
-                    let typeIcon = 'fa-exchange-alt';
-                    let typeClass = 'swap';
-                    let typeText = 'Swap';
-                    
-                    if (tx.type.includes('mining')) {
-                        typeIcon = 'fa-microchip';
-                        typeClass = 'mining';
-                        typeText = 'Mining';
-                    } else if (tx.type.includes('staking')) {
-                        typeIcon = 'fa-gem';
-                        typeClass = 'staking';
-                        typeText = 'Staking';
-                    } else if (tx.type.includes('deposit')) {
-                        typeIcon = 'fa-download';
-                        typeClass = 'deposit';
-                        typeText = 'Deposit';
-                    } else if (tx.type.includes('withdrawal')) {
-                        typeIcon = 'fa-upload';
-                        typeClass = 'withdraw';
-                        typeText = 'Withdrawal';
-                    } else if (tx.type.includes('referral')) {
-                        typeIcon = 'fa-users';
-                        typeClass = 'mining';
-                        typeText = 'Referral';
-                    }
-                    
-                    let statusBadge = '';
-                    if (tx.status === 'pending') {
-                        statusBadge = '<span class="status-badge status-pending">Pending</span>';
-                    } else if (tx.status === 'approved') {
-                        statusBadge = '<span class="status-badge status-approved">Approved</span>';
-                    } else if (tx.status === 'rejected') {
-                        statusBadge = '<span class="status-badge status-rejected">Rejected</span>';
-                    }
-                    
-                    historyHTML += `
-                        <tr>
-                            <td>
-                                <div class="history-type">
-                                    <div class="type-icon ${typeClass}">
-                                        <i class="fas ${typeIcon}"></i>
-                                    </div>
-                                    <div>
-                                        <div style="font-size: 13px; font-weight: 600;">${typeText}</div>
-                                        ${tx.description ? `<div style="font-size: 11px; color: var(--quantum-text-muted);">${tx.description}</div>` : ''}
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="color: ${amountColor}; font-weight: 700;">
-                                    ${amountSign}${absAmount.toLocaleString()} ${tx.currency}
-                                </div>
-                            </td>
-                            <td>${statusBadge}</td>
-                            <td>
-                                <div style="font-size: 12px; color: var(--quantum-text);">${date}</div>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                historyHTML += `
-                        </tbody>
-                    </table>
-                `;
-            }
-            
-            const modalContent = `
-                <div class="modal-overlay active" onclick="closeModal()">
-                    <div class="modal active" onclick="event.stopPropagation()">
-                        <div class="modal-header">
-                            <h3><i class="fas fa-history"></i> Transaction History</h3>
-                            <button class="modal-close" onclick="closeModal()">×</button>
-                        </div>
-                        <div class="modal-body" style="padding: 0;">
-                            <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <h4 style="color: var(--quantum-text); margin: 0;">Recent Transactions</h4>
-                                    <span style="font-size: 12px; color: var(--quantum-text-light);">Total: ${allTransactions.length}</span>
-                                </div>
-                            </div>
-                            
-                            <div style="max-height: 400px; overflow-y: auto; padding: 0 20px;">
-                                ${historyHTML}
-                            </div>
-                            
-                            <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                                <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">
-                                    Close
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-            document.body.insertAdjacentHTML('beforeend', modalContent);
-        }
-
-        function addTransaction(type, amount, currency, description = '') {
-            const transaction = {
-                id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                type: type,
-                amount: amount,
-                currency: currency,
-                description: description,
-                timestamp: Date.now(),
-                status: 'completed'
-            };
-            
-            if (!walletData.transactions) {
-                walletData.transactions = [];
-            }
-            
-            walletData.transactions.unshift(transaction);
-            
-            if (walletData.transactions.length > 100) {
-                walletData.transactions = walletData.transactions.slice(0, 100);
-            }
-            
-            console.log(`📝 Transaction added: ${type} ${amount} ${currency}`);
         }
 
         // ============================================
@@ -6276,7 +6646,20 @@
                 // Update locally if it's the current user
                 if (deposit.userId === userData.id) {
                     walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
-                    addTransaction('deposit_approved', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`);
+                    
+                    // Update transaction in history
+                    const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
+                        tx.type === 'deposit_request' && tx.txId === deposit.txId
+                    );
+                    
+                    if (transactionIndex > -1 && walletData.transactionHistory) {
+                        walletData.transactionHistory[transactionIndex].status = 'approved';
+                        walletData.transactionHistory[transactionIndex].message = 'Deposit approved and added to your balance';
+                    } else {
+                        // Add to history if not found
+                        addTransactionToHistory('deposit_approved', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved and added to your balance', deposit.txId);
+                    }
+                    
                     updateWalletUI();
                 }
                 
@@ -6325,7 +6708,15 @@
                     walletData.usedTxIds.splice(txIdIndex, 1);
                 }
                 
-                addTransaction('deposit_rejected', 0, deposit.currency, `Rejected: ${reason}`);
+                // Update transaction in history
+                const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
+                    tx.type === 'deposit_request' && tx.txId === deposit.txId
+                );
+                
+                if (transactionIndex > -1 && walletData.transactionHistory) {
+                    walletData.transactionHistory[transactionIndex].status = 'rejected';
+                    walletData.transactionHistory[transactionIndex].message = `Deposit rejected: ${reason}`;
+                }
                 
                 await saveUserData();
                 showAdminPanel();
@@ -6386,8 +6777,19 @@
                         walletData.balances[withdrawal.currency] -= withdrawal.amount;
                         walletData.balances.BNB -= withdrawal.fee;
                         
-                        addTransaction('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`);
-                        addTransaction('withdrawal_fee', -withdrawal.fee, 'BNB', `Fee for withdrawal`);
+                        // Update transaction in history
+                        const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
+                            tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
+                        );
+                        
+                        if (transactionIndex > -1 && walletData.transactionHistory) {
+                            walletData.transactionHistory[transactionIndex].status = 'approved';
+                            walletData.transactionHistory[transactionIndex].message = 'Withdrawal approved. Funds sent to your wallet.';
+                        } else {
+                            // Add to history if not found
+                            addTransactionToHistory('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'approved', 'Withdrawal approved. Funds sent to your wallet.');
+                            addTransactionToHistory('withdrawal_fee', -withdrawal.fee, 'BNB', 'Fee for withdrawal', 'completed', 'Withdrawal fee charged');
+                        }
                         
                         updateWalletUI();
                     }
@@ -6432,7 +6834,15 @@
                 withdrawal.rejectedAt = Date.now();
                 withdrawal.rejectionReason = reason;
                 
-                addTransaction('withdrawal_rejected', 0, withdrawal.currency, `Rejected: ${reason}`);
+                // Update transaction in history
+                const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
+                    tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
+                );
+                
+                if (transactionIndex > -1 && walletData.transactionHistory) {
+                    walletData.transactionHistory[transactionIndex].status = 'rejected';
+                    walletData.transactionHistory[transactionIndex].message = `Withdrawal rejected: ${reason}`;
+                }
                 
                 await saveUserData();
                 showAdminPanel();
@@ -7155,7 +7565,7 @@
         // Utility functions
         window.formatNumber = formatNumber;
 
-        console.log("👽 Alien Musk Quantum Platform v6.3 - PROFESSIONAL EDITION Ready!");
+        console.log("👽 Alien Musk Quantum Platform v6.4 - PROFESSIONAL HISTORY SYSTEM Ready!");
 
         // Initialize app when DOM is ready
         if (document.readyState === 'loading') {
