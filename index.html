@@ -3784,7 +3784,7 @@
             
             // Generate referral code
             if (!userData.referralCode) {
-                userData.referralCode = generateReferralCode(userData.id);
+                userData.referralCode = userData.telegramId || userData.id.replace('tg_', '');
                 console.log("🔗 Generated referral code:", userData.referralCode);
             }
             
@@ -3793,21 +3793,12 @@
             
             console.log("👤 User initialized:", {
                 id: userData.id,
+                telegramId: userData.telegramId,
                 refCode: userData.referralCode,
                 name: userData.username
             });
             
             updateUserUI();
-        }
-
-        function generateReferralCode(userId) {
-            const idPart = userId.slice(-6).toUpperCase().replace(/[^A-Z0-9]/g, '');
-            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-            const randomPart = Array.from({length: 4}, () => 
-                chars.charAt(Math.floor(Math.random() * chars.length))
-            ).join('');
-            
-            return `ALIEN-${idPart}${randomPart}`;
         }
 
         function updateUserUI() {
@@ -3816,7 +3807,9 @@
             }
             
             if (elements.userIdMini) {
-                elements.userIdMini.textContent = `ID: ${userData.id.slice(-8)}`;
+                // عرض آخر 8 أرقام فقط للواجهة، لكن ID يبقى كاملاً في الخلفية
+                const displayId = userData.telegramId ? userData.telegramId.slice(-8) : userData.id.slice(-8);
+                elements.userIdMini.textContent = `ID: ${displayId}`;
             }
             
             if (elements.userAvatarMini) {
@@ -3897,27 +3890,50 @@
             if (!window.db || !userData.id) return;
             
             try {
-                // Load deposit requests
-                const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                    .where('userId', '==', userData.id)
-                    .where('status', '==', 'pending')
-                    .get();
+                // تحديد إذا كان المستخدم مشرفاً
+                const isAdmin = userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
                 
-                walletData.pendingDeposits = depositSnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                
-                // Load withdrawal requests
-                const withdrawalSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                    .where('userId', '==', userData.id)
-                    .where('status', '==', 'pending')
-                    .get();
-                
-                walletData.pendingWithdrawals = withdrawalSnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+                if (isAdmin) {
+                    // المشرف: يجلب جميع الطلبات بدون شرط userId
+                    const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    walletData.pendingDeposits = depositSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    
+                    const withdrawalSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    walletData.pendingWithdrawals = withdrawalSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                } else {
+                    // المستخدم العادي: يجلب فقط طلباته
+                    const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
+                        .where('userId', '==', userData.id)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    walletData.pendingDeposits = depositSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    
+                    const withdrawalSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                        .where('userId', '==', userData.id)
+                        .where('status', '==', 'pending')
+                        .get();
+                    
+                    walletData.pendingWithdrawals = withdrawalSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                }
                 
                 console.log(`📥 Loaded ${walletData.pendingDeposits.length} pending deposits`);
                 console.log(`📤 Loaded ${walletData.pendingWithdrawals.length} pending withdrawals`);
@@ -3947,6 +3963,7 @@
                     transactions: walletData.transactions || [],
                     userInfo: {
                         id: userData.id,
+                        telegramId: userData.telegramId,
                         username: userData.username,
                         firstName: userData.firstName,
                         referralCode: userData.referralCode,
@@ -5547,6 +5564,7 @@
                 // Create deposit request for Firebase
                 const depositRequest = {
                     userId: userData.id,
+                    telegramId: userData.telegramId,
                     username: userData.username,
                     currency: activeCurrency,
                     amount: amount,
@@ -5707,6 +5725,7 @@
                 // Create withdrawal request for Firebase
                 const withdrawRequest = {
                     userId: userData.id,
+                    telegramId: userData.telegramId,
                     username: userData.username,
                     currency: 'USDT',
                     amount: amount,
@@ -6017,10 +6036,7 @@
                 return;
             }
             
-            let telegramUserId = null;
-            if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.user) {
-                telegramUserId = window.tg.initDataUnsafe.user.id.toString();
-            }
+            let telegramUserId = userData.telegramId;
             
             if (!telegramUserId || telegramUserId !== CONFIG.ADMIN.TELEGRAM_ID) {
                 if (errorDiv && errorText) {
@@ -6041,7 +6057,7 @@
                 let pendingWithdrawals = [];
                 
                 if (window.db) {
-                    // Load from Firebase
+                    // Load from Firebase - المشرف يرى جميع الطلبات
                     const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('status', '==', 'pending')
                         .get();
@@ -6079,6 +6095,15 @@
                                     <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Admin Dashboard</h3>
                                     <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
                                     
+                                    <!-- إضافة شريط البحث -->
+                                    <div class="admin-search-box mb-20">
+                                        <input type="text" 
+                                               id="adminSearchInput" 
+                                               class="admin-search-input"
+                                               placeholder="🔍 Search by Telegram ID, username, or transaction..."
+                                               onkeyup="adminSearchUsers()">
+                                    </div>
+                                    
                                     <div class="admin-stats-grid mb-20">
                                         <div class="admin-stat">
                                             <div class="admin-stat-value">${pendingDeposits.length}</div>
@@ -6092,14 +6117,14 @@
                                     
                                     <div class="admin-section mb-15">
                                         <h4><i class="fas fa-download"></i> Pending Deposit Requests</h4>
-                                        <div class="admin-requests-list">
+                                        <div class="admin-requests-list" id="admin-deposits-list">
                                             ${getPendingDepositsHTML(pendingDeposits)}
                                         </div>
                                     </div>
                                     
                                     <div class="admin-section mb-15">
                                         <h4><i class="fas fa-upload"></i> Pending Withdrawal Requests</h4>
-                                        <div class="admin-requests-list">
+                                        <div class="admin-requests-list" id="admin-withdrawals-list">
                                             ${getPendingWithdrawalsHTML(pendingWithdrawals)}
                                         </div>
                                     </div>
@@ -6107,17 +6132,17 @@
                                     <div class="admin-section">
                                         <h4><i class="fas fa-user-cog"></i> User Management</h4>
                                         <div class="admin-user-controls">
-                                            <div class="admin-user-control" onclick="addBalanceToUser()">
+                                            <div class="admin-user-control" onclick="adminSearchUser()">
+                                                <i class="fas fa-search" style="color: var(--quantum-blue);"></i>
+                                                <span>Find User</span>
+                                            </div>
+                                            <div class="admin-user-control" onclick="adminAddBalance()">
                                                 <i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i>
                                                 <span>Add Balance</span>
                                             </div>
-                                            <div class="admin-user-control" onclick="subtractBalanceFromUser()">
+                                            <div class="admin-user-control" onclick="adminSubtractBalance()">
                                                 <i class="fas fa-minus-circle" style="color: #ff4444;"></i>
                                                 <span>Subtract Balance</span>
-                                            </div>
-                                            <div class="admin-user-control" onclick="resetUserData()">
-                                                <i class="fas fa-trash" style="color: #ff9900;"></i>
-                                                <span>Reset User</span>
                                             </div>
                                             <div class="admin-user-control" onclick="closeModal()">
                                                 <i class="fas fa-times" style="color: var(--quantum-text-light);"></i>
@@ -6162,8 +6187,8 @@
                         </div>
                         <div class="request-details">
                             <div>TX ID: ${deposit.txId?.slice(0, 20)}...</div>
+                            <div>User: ${deposit.telegramId || deposit.userId?.replace('tg_', '')}</div>
                             <div>Date: ${date}</div>
-                            <div>User ID: ${deposit.userId?.slice(-8)}</div>
                         </div>
                         <div class="request-actions">
                             <button class="btn-approve" onclick="approveDeposit('${deposit.id}', ${index})">Approve</button>
@@ -6198,8 +6223,8 @@
                         </div>
                         <div class="request-details">
                             <div>Address: ${withdrawal.address?.slice(0, 20)}...</div>
+                            <div>User: ${withdrawal.telegramId || withdrawal.userId?.replace('tg_', '')}</div>
                             <div>Date: ${date}</div>
-                            <div>Fee: ${withdrawal.fee} BNB</div>
                         </div>
                         <div class="request-actions">
                             <button class="btn-approve" onclick="approveWithdrawal('${withdrawal.id}', ${index})">Approve</button>
@@ -6215,7 +6240,12 @@
         async function approveDeposit(depositId, depositIndex) {
             try {
                 const deposit = walletData.pendingDeposits[depositIndex];
-                if (!deposit) return;
+                if (!deposit) {
+                    showMessage("Deposit request not found locally", "error");
+                    return;
+                }
+                
+                console.log("✅ Approving deposit for user:", deposit.userId);
                 
                 // Update in Firebase
                 if (window.db) {
@@ -6226,27 +6256,41 @@
                             approvedAt: Date.now(),
                             approvedBy: userData.id
                         });
+                    
+                    // البحث عن المستخدم الحقيقي في Firebase وتحديث رصيده
+                    const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(deposit.userId);
+                    const userDoc = await userRef.get();
+                    
+                    if (userDoc.exists) {
+                        const userDataFB = userDoc.data();
+                        const newBalance = (userDataFB.balances?.[deposit.currency] || 0) + deposit.amount;
+                        
+                        await userRef.update({
+                            [`balances.${deposit.currency}`]: newBalance
+                        });
+                        
+                        console.log(`✅ Added ${deposit.amount} ${deposit.currency} to user ${deposit.userId}`);
+                    }
                 }
                 
-                // Update locally
-                deposit.status = 'approved';
-                deposit.approvedAt = Date.now();
-                
-                // Add balance to user
+                // Update locally if it's the current user
                 if (deposit.userId === userData.id) {
                     walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
                     addTransaction('deposit_approved', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`);
                     updateWalletUI();
                 }
                 
+                // Remove from pending deposits
+                walletData.pendingDeposits.splice(depositIndex, 1);
+                
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`✅ Deposit approved: +${deposit.amount} ${deposit.currency}`, "success");
+                showMessage(`✅ Deposit approved: +${deposit.amount} ${deposit.currency} for user ${deposit.userId}`, "success");
                 
             } catch (error) {
                 console.error("❌ Error approving deposit:", error);
-                showMessage("Failed to approve deposit", "error");
+                showMessage("Failed to approve deposit: " + error.message, "error");
             }
         }
 
@@ -6297,20 +6341,12 @@
         async function approveWithdrawal(withdrawalId, withdrawalIndex) {
             try {
                 const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
-                if (!withdrawal) return;
-                
-                // Check if user has enough balance
-                if (withdrawal.userId === userData.id) {
-                    if (walletData.balances[withdrawal.currency] < withdrawal.amount) {
-                        showMessage("User doesn't have enough balance", "error");
-                        return;
-                    }
-                    
-                    if (walletData.balances.BNB < withdrawal.fee) {
-                        showMessage("User doesn't have enough BNB for fee", "error");
-                        return;
-                    }
+                if (!withdrawal) {
+                    showMessage("Withdrawal request not found locally", "error");
+                    return;
                 }
+                
+                console.log("✅ Approving withdrawal for user:", withdrawal.userId);
                 
                 // Update in Firebase
                 if (window.db) {
@@ -6321,31 +6357,53 @@
                             approvedAt: Date.now(),
                             approvedBy: userData.id
                         });
+                    
+                    // البحث عن المستخدم الحقيقي في Firebase وتحديث رصيده
+                    const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(withdrawal.userId);
+                    const userDoc = await userRef.get();
+                    
+                    if (userDoc.exists) {
+                        const userDataFB = userDoc.data();
+                        const currentBalance = userDataFB.balances?.[withdrawal.currency] || 0;
+                        const currentBNB = userDataFB.balances?.BNB || 0;
+                        
+                        if (currentBalance >= withdrawal.amount && currentBNB >= withdrawal.fee) {
+                            await userRef.update({
+                                [`balances.${withdrawal.currency}`]: currentBalance - withdrawal.amount,
+                                'balances.BNB': currentBNB - withdrawal.fee
+                            });
+                            
+                            console.log(`✅ Deducted ${withdrawal.amount} ${withdrawal.currency} and ${withdrawal.fee} BNB from user ${withdrawal.userId}`);
+                        }
+                    }
                 }
                 
-                // Update locally
-                withdrawal.status = 'approved';
-                withdrawal.approvedAt = Date.now();
-                
-                // Deduct balance and fee from current user
+                // Update locally if it's the current user
                 if (withdrawal.userId === userData.id) {
-                    walletData.balances[withdrawal.currency] -= withdrawal.amount;
-                    walletData.balances.BNB -= withdrawal.fee;
-                    
-                    addTransaction('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`);
-                    addTransaction('withdrawal_fee', -withdrawal.fee, 'BNB', `Fee for withdrawal`);
-                    
-                    updateWalletUI();
+                    if (walletData.balances[withdrawal.currency] >= withdrawal.amount && 
+                        walletData.balances.BNB >= withdrawal.fee) {
+                        
+                        walletData.balances[withdrawal.currency] -= withdrawal.amount;
+                        walletData.balances.BNB -= withdrawal.fee;
+                        
+                        addTransaction('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`);
+                        addTransaction('withdrawal_fee', -withdrawal.fee, 'BNB', `Fee for withdrawal`);
+                        
+                        updateWalletUI();
+                    }
                 }
+                
+                // Remove from pending withdrawals
+                walletData.pendingWithdrawals.splice(withdrawalIndex, 1);
                 
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`✅ Withdrawal approved: -${withdrawal.amount} ${withdrawal.currency}`, "success");
+                showMessage(`✅ Withdrawal approved: -${withdrawal.amount} ${withdrawal.currency} for user ${withdrawal.userId}`, "success");
                 
             } catch (error) {
                 console.error("❌ Error approving withdrawal:", error);
-                showMessage("Failed to approve withdrawal", "error");
+                showMessage("Failed to approve withdrawal: " + error.message, "error");
             }
         }
 
@@ -6387,8 +6445,381 @@
             }
         }
 
-        async function addBalanceToUser() {
-            const userId = prompt("Enter User ID:", userData.id);
+        async function adminSearchUser() {
+            const searchTerm = prompt("Enter Telegram ID or username to search:");
+            if (!searchTerm) return;
+            
+            try {
+                if (!window.db) {
+                    showMessage("Firebase not connected", "error");
+                    return;
+                }
+                
+                let users = [];
+                
+                // Search by Telegram ID
+                const usersSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
+                    .where('userInfo.telegramId', '==', searchTerm)
+                    .get();
+                
+                if (!usersSnapshot.empty) {
+                    users = usersSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                } else {
+                    // Search by username
+                    const usernameSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
+                        .where('userInfo.username', '>=', searchTerm)
+                        .where('userInfo.username', '<=', searchTerm + '\uf8ff')
+                        .get();
+                    
+                    users = usernameSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                }
+                
+                if (users.length === 0) {
+                    showMessage("No users found", "info");
+                    return;
+                }
+                
+                let userInfoHTML = '';
+                users.forEach((user, index) => {
+                    const userDataFB = user.userInfo || {};
+                    const balances = user.balances || {};
+                    
+                    userInfoHTML += `
+                        <div class="request-item" style="margin-bottom: 10px;">
+                            <div class="request-header">
+                                <div class="request-user">${userDataFB.username || 'Unknown'}</div>
+                                <div class="request-amount">ID: ${userDataFB.telegramId || user.id.replace('tg_', '')}</div>
+                            </div>
+                            <div class="request-details">
+                                <div>AMSK: ${formatNumber(balances.AMSK || 0)} ($${(balances.AMSK || 0) * CONFIG.PRICES.AMSK})</div>
+                                <div>USDT: ${(balances.USDT || 0).toFixed(2)}</div>
+                                <div>BNB: ${(balances.BNB || 0).toFixed(4)}</div>
+                                <div>TON: ${(balances.TON || 0).toFixed(2)}</div>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-approve" onclick="adminEditUser('${user.id}')">Edit</button>
+                                <button class="btn-reject" onclick="adminViewTransactions('${user.id}')">History</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                const modalContent = `
+                    <div class="modal-overlay active" onclick="closeModal()">
+                        <div class="modal active" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-search"></i> Search Results</h3>
+                                <button class="modal-close" onclick="closeModal()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    ${userInfoHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+                document.body.insertAdjacentHTML('beforeend', modalContent);
+                
+            } catch (error) {
+                console.error("❌ Error searching users:", error);
+                showMessage("Failed to search users", "error");
+            }
+        }
+
+        async function adminEditUser(userId) {
+            try {
+                const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
+                const userDoc = await userRef.get();
+                
+                if (!userDoc.exists) {
+                    showMessage("User not found", "error");
+                    return;
+                }
+                
+                const userDataFB = userDoc.data();
+                const balances = userDataFB.balances || {};
+                
+                const modalContent = `
+                    <div class="modal-overlay active" onclick="closeModal()">
+                        <div class="modal active" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-user-edit"></i> Edit User: ${userDataFB.userInfo?.username || 'Unknown'}</h3>
+                                <button class="modal-close" onclick="closeModal()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: var(--quantum-text); margin-bottom: 15px;">Current Balances</h4>
+                                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+                                        <div class="admin-stat">
+                                            <div class="admin-stat-value">${formatNumber(balances.AMSK || 0)}</div>
+                                            <div class="admin-stat-label">AMSK</div>
+                                        </div>
+                                        <div class="admin-stat">
+                                            <div class="admin-stat-value">${(balances.USDT || 0).toFixed(2)}</div>
+                                            <div class="admin-stat-label">USDT</div>
+                                        </div>
+                                        <div class="admin-stat">
+                                            <div class="admin-stat-value">${(balances.BNB || 0).toFixed(4)}</div>
+                                            <div class="admin-stat-label">BNB</div>
+                                        </div>
+                                        <div class="admin-stat">
+                                            <div class="admin-stat-value">${(balances.TON || 0).toFixed(2)}</div>
+                                            <div class="admin-stat-label">TON</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <h4 style="color: var(--quantum-text); margin-bottom: 15px;">Edit Balance</h4>
+                                    <div style="margin-bottom: 15px;">
+                                        <label style="display: block; color: var(--quantum-text-light); margin-bottom: 5px;">Currency</label>
+                                        <select id="adminEditCurrency" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white;">
+                                            <option value="AMSK">AMSK</option>
+                                            <option value="USDT">USDT</option>
+                                            <option value="BNB">BNB</option>
+                                            <option value="TON">TON</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <label style="display: block; color: var(--quantum-text-light); margin-bottom: 5px;">Operation</label>
+                                        <select id="adminEditOperation" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white;">
+                                            <option value="add">Add</option>
+                                            <option value="subtract">Subtract</option>
+                                            <option value="set">Set to</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <label style="display: block; color: var(--quantum-text-light); margin-bottom: 5px;">Amount</label>
+                                        <input type="number" id="adminEditAmount" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white;" placeholder="Enter amount">
+                                    </div>
+                                    <div style="margin-bottom: 15px;">
+                                        <label style="display: block; color: var(--quantum-text-light); margin-bottom: 5px;">Reason (optional)</label>
+                                        <input type="text" id="adminEditReason" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white;" placeholder="Reason for modification">
+                                    </div>
+                                </div>
+                                
+                                <div class="modal-actions">
+                                    <button class="btn-secondary" onclick="closeModal()">
+                                        Cancel
+                                    </button>
+                                    <button class="btn-primary" onclick="adminSaveUserEdit('${userId}')">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+                document.body.insertAdjacentHTML('beforeend', modalContent);
+                
+            } catch (error) {
+                console.error("❌ Error editing user:", error);
+                showMessage("Failed to edit user", "error");
+            }
+        }
+
+        async function adminSaveUserEdit(userId) {
+            try {
+                const currency = document.getElementById('adminEditCurrency')?.value;
+                const operation = document.getElementById('adminEditOperation')?.value;
+                const amount = parseFloat(document.getElementById('adminEditAmount')?.value);
+                const reason = document.getElementById('adminEditReason')?.value || "Admin adjustment";
+                
+                if (!currency || !operation || isNaN(amount) || amount <= 0) {
+                    showMessage("Invalid input", "error");
+                    return;
+                }
+                
+                const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
+                const userDoc = await userRef.get();
+                
+                if (!userDoc.exists) {
+                    showMessage("User not found", "error");
+                    return;
+                }
+                
+                const userDataFB = userDoc.data();
+                const currentBalance = userDataFB.balances?.[currency] || 0;
+                let newBalance = currentBalance;
+                
+                switch(operation) {
+                    case 'add':
+                        newBalance = currentBalance + amount;
+                        break;
+                    case 'subtract':
+                        if (amount > currentBalance) {
+                            showMessage(`Cannot subtract more than current balance (${currentBalance})`, "error");
+                            return;
+                        }
+                        newBalance = currentBalance - amount;
+                        break;
+                    case 'set':
+                        newBalance = amount;
+                        break;
+                }
+                
+                await userRef.update({
+                    [`balances.${currency}`]: newBalance,
+                    lastUpdate: Date.now()
+                });
+                
+                // Add transaction log
+                await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
+                    adminId: userData.id,
+                    adminName: userData.username,
+                    userId: userId,
+                    userName: userDataFB.userInfo?.username,
+                    action: 'balance_adjustment',
+                    currency: currency,
+                    operation: operation,
+                    amount: amount,
+                    oldBalance: currentBalance,
+                    newBalance: newBalance,
+                    reason: reason,
+                    timestamp: Date.now()
+                });
+                
+                closeModal();
+                showMessage(`✅ User balance updated: ${operation} ${amount} ${currency}`, "success");
+                
+            } catch (error) {
+                console.error("❌ Error saving user edit:", error);
+                showMessage("Failed to save changes", "error");
+            }
+        }
+
+        async function adminViewTransactions(userId) {
+            try {
+                let transactions = [];
+                
+                // Get deposit transactions
+                const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
+                    .where('userId', '==', userId)
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+                
+                depositsSnapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    transactions.push({
+                        type: 'deposit',
+                        amount: data.amount,
+                        currency: data.currency,
+                        status: data.status,
+                        timestamp: data.createdAt,
+                        details: `TX: ${data.txId?.slice(0, 10)}...`
+                    });
+                });
+                
+                // Get withdrawal transactions
+                const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                    .where('userId', '==', userId)
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+                
+                withdrawalsSnapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    transactions.push({
+                        type: 'withdrawal',
+                        amount: -data.amount,
+                        currency: data.currency,
+                        status: data.status,
+                        timestamp: data.createdAt,
+                        details: `To: ${data.address?.slice(0, 10)}...`
+                    });
+                });
+                
+                // Sort by timestamp
+                transactions.sort((a, b) => b.timestamp - a.timestamp);
+                
+                let transactionsHTML = '';
+                if (transactions.length === 0) {
+                    transactionsHTML = `
+                        <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                            <i class="fas fa-history" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                            <p>No transactions found</p>
+                        </div>
+                    `;
+                } else {
+                    transactions.forEach(tx => {
+                        const date = new Date(tx.timestamp).toLocaleDateString();
+                        const amountColor = tx.amount > 0 ? 'var(--quantum-green)' : '#ff4444';
+                        const amountSign = tx.amount > 0 ? '+' : '';
+                        
+                        transactionsHTML += `
+                            <div class="request-item" style="margin-bottom: 10px;">
+                                <div class="request-header">
+                                    <div class="request-user">${tx.type.toUpperCase()}</div>
+                                    <div class="request-amount" style="color: ${amountColor};">${amountSign}${Math.abs(tx.amount)} ${tx.currency}</div>
+                                </div>
+                                <div class="request-details">
+                                    <div>${tx.details}</div>
+                                    <div>Date: ${date}</div>
+                                    <div>Status: ${tx.status}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                const modalContent = `
+                    <div class="modal-overlay active" onclick="closeModal()">
+                        <div class="modal active" onclick="event.stopPropagation()">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-history"></i> User Transactions</h3>
+                                <button class="modal-close" onclick="closeModal()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    ${transactionsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+                document.body.insertAdjacentHTML('beforeend', modalContent);
+                
+            } catch (error) {
+                console.error("❌ Error viewing transactions:", error);
+                showMessage("Failed to load transactions", "error");
+            }
+        }
+
+        function adminSearchUsers() {
+            const searchTerm = document.getElementById('adminSearchInput')?.value.toLowerCase();
+            if (!searchTerm) return;
+            
+            // Filter deposits
+            const depositItems = document.querySelectorAll('#admin-deposits-list .request-item');
+            depositItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+            
+            // Filter withdrawals
+            const withdrawalItems = document.querySelectorAll('#admin-withdrawals-list .request-item');
+            withdrawalItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        }
+
+        async function adminAddBalance() {
+            const userId = prompt("Enter User ID (tg_...):");
             if (!userId) return;
             
             const currency = prompt("Enter currency (USDT, BNB, TON, AMSK):", "USDT");
@@ -6405,38 +6836,40 @@
                 return;
             }
             
+            const reason = prompt("Reason for adding balance:", "Admin adjustment");
+            
             try {
-                if (userId === userData.id) {
-                    walletData.balances[currency] = (walletData.balances[currency] || 0) + amount;
-                    
-                    if (currency === 'AMSK') {
-                        walletData.mining.totalMined += amount;
-                    }
-                    
-                    addTransaction('admin_add', amount, currency, 'Admin addition');
-                    
-                    updateWalletUI();
-                    updateMiningDisplay();
-                }
-                
-                // Update in Firebase if different user
-                if (window.db && userId !== userData.id) {
+                if (window.db) {
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                     const userDoc = await userRef.get();
                     
                     if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        const newBalance = (userData.balances?.[currency] || 0) + amount;
+                        const userDataFB = userDoc.data();
+                        const newBalance = (userDataFB.balances?.[currency] || 0) + amount;
                         
                         await userRef.update({
-                            [`balances.${currency}`]: newBalance
+                            [`balances.${currency}`]: newBalance,
+                            lastUpdate: Date.now()
                         });
+                        
+                        // Add transaction log
+                        await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
+                            adminId: userData.id,
+                            adminName: userData.username,
+                            userId: userId,
+                            userName: userDataFB.userInfo?.username,
+                            action: 'add_balance',
+                            currency: currency,
+                            amount: amount,
+                            reason: reason || "Admin adjustment",
+                            timestamp: Date.now()
+                        });
+                        
+                        showMessage(`✅ Added ${amount} ${currency} to user ${userId}`, "success");
+                    } else {
+                        showMessage("User not found", "error");
                     }
                 }
-                
-                await saveUserData();
-                
-                showMessage(`✅ Added ${amount} ${currency} to user ${userId}`, "success");
                 
             } catch (error) {
                 console.error("❌ Error adding balance:", error);
@@ -6444,8 +6877,8 @@
             }
         }
 
-        async function subtractBalanceFromUser() {
-            const userId = prompt("Enter User ID:", userData.id);
+        async function adminSubtractBalance() {
+            const userId = prompt("Enter User ID (tg_...):");
             if (!userId) return;
             
             const currency = prompt("Enter currency (USDT, BNB, TON, AMSK):", "USDT");
@@ -6462,58 +6895,52 @@
                 return;
             }
             
+            const reason = prompt("Reason for subtracting balance:", "Admin adjustment");
+            
             try {
-                if (userId === userData.id) {
-                    const currentBalance = walletData.balances[currency] || 0;
-                    if (amount > currentBalance) {
-                        showMessage("Cannot subtract more than current balance", "error");
-                        return;
-                    }
-                    
-                    walletData.balances[currency] -= amount;
-                    addTransaction('admin_subtract', -amount, currency, 'Admin subtraction');
-                    updateWalletUI();
-                }
-                
-                // Update in Firebase if different user
-                if (window.db && userId !== userData.id) {
+                if (window.db) {
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                     const userDoc = await userRef.get();
                     
                     if (userDoc.exists) {
-                        const userData = userDoc.data();
-                        const currentBalance = userData.balances?.[currency] || 0;
+                        const userDataFB = userDoc.data();
+                        const currentBalance = userDataFB.balances?.[currency] || 0;
                         
                         if (amount > currentBalance) {
                             showMessage("Cannot subtract more than current balance", "error");
                             return;
                         }
                         
+                        const newBalance = currentBalance - amount;
+                        
                         await userRef.update({
-                            [`balances.${currency}`]: currentBalance - amount
+                            [`balances.${currency}`]: newBalance,
+                            lastUpdate: Date.now()
                         });
+                        
+                        // Add transaction log
+                        await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
+                            adminId: userData.id,
+                            adminName: userData.username,
+                            userId: userId,
+                            userName: userDataFB.userInfo?.username,
+                            action: 'subtract_balance',
+                            currency: currency,
+                            amount: amount,
+                            reason: reason || "Admin adjustment",
+                            timestamp: Date.now()
+                        });
+                        
+                        showMessage(`✅ Subtracted ${amount} ${currency} from user ${userId}`, "success");
+                    } else {
+                        showMessage("User not found", "error");
                     }
                 }
-                
-                await saveUserData();
-                
-                showMessage(`✅ Subtracted ${amount} ${currency} from user ${userId}`, "success");
                 
             } catch (error) {
                 console.error("❌ Error subtracting balance:", error);
                 showMessage("Failed to subtract balance", "error");
             }
-        }
-
-        async function resetUserData() {
-            if (!confirm("⚠️ Are you sure you want to reset ALL user data?\n\nThis will delete:\n• All balances\n• Mining progress\n• Staking data\n• Transaction history\n\nThis action cannot be undone!")) return;
-            
-            initializeDefaultData();
-            updateUI();
-            await saveUserData();
-            
-            showMessage("✅ User data reset successfully", "success");
-            closeModal();
         }
 
         // ============================================
@@ -6713,9 +7140,13 @@
 
         // Admin functions
         window.checkAdminPassword = checkAdminPassword;
-        window.addBalanceToUser = addBalanceToUser;
-        window.subtractBalanceFromUser = subtractBalanceFromUser;
-        window.resetUserData = resetUserData;
+        window.adminAddBalance = adminAddBalance;
+        window.adminSubtractBalance = adminSubtractBalance;
+        window.adminSearchUser = adminSearchUser;
+        window.adminEditUser = adminEditUser;
+        window.adminSaveUserEdit = adminSaveUserEdit;
+        window.adminViewTransactions = adminViewTransactions;
+        window.adminSearchUsers = adminSearchUsers;
         window.approveDeposit = approveDeposit;
         window.rejectDeposit = rejectDeposit;
         window.approveWithdrawal = approveWithdrawal;
