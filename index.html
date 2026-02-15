@@ -3618,11 +3618,11 @@
     
     console.log("✅ Alien Musk Connector Loaded Successfully");
 </script>
-    <!-- 👽 MAIN APPLICATION JS v6.4 - MODIFIED REFERRAL SYSTEM WITH CLAIMED AMSK DISPLAY -->
+        <!-- 👽 MAIN APPLICATION JS v6.4 - FINAL VERSION WITH FIXED REFERRAL SYSTEM -->
     <script>
         // ============================================
         // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
-        // MODIFIED REFERRAL SYSTEM WITH CLAIMED AMSK DISPLAY
+        // FINAL VERSION - FIXED REFERRAL SYSTEM
         // ============================================
 
         // Configuration - UPDATED WITH CORRECT CALCULATIONS
@@ -3770,7 +3770,7 @@
             referrals: {
                 count: 0,
                 earned: 0,
-                claimed: 0,  // MODIFIED: Added claimed amount
+                claimed: 0,
                 referrals: [],
                 claimedMilestones: []
             },
@@ -3914,11 +3914,14 @@
             elements.refCount = document.getElementById('ref-count');
             elements.refEarned = document.getElementById('ref-earned');
             elements.refBnbEarned = document.getElementById('ref-bnb-earned');
-            elements.refTotalEarned = document.getElementById('ref-total-earned');
             elements.milestonesList = document.getElementById('milestones-list');
             
             console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
         }
+
+        // ============================================
+        // SETUP USER WITH FIXED REFERRAL CODE
+        // ============================================
 
         async function setupUser() {
             console.log("👤 Setting up user...");
@@ -3950,10 +3953,30 @@
                 userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`;
             }
             
-            // Generate referral code - MODIFIED: random 7-character code
+            // FIXED: التحقق من Firebase أولاً للحصول على كود الإحالة الثابت
+            if (window.db && userData.id) {
+                try {
+                    const userDoc = await window.db.collection(DB_COLLECTIONS.USERS)
+                        .doc(userData.id)
+                        .get();
+                    
+                    if (userDoc.exists) {
+                        const existingData = userDoc.data();
+                        if (existingData.userInfo?.referralCode) {
+                            // استخدم الكود القديم ولا تولد جديد
+                            userData.referralCode = existingData.userInfo.referralCode;
+                            console.log("🔗 Using existing referral code:", userData.referralCode);
+                        }
+                    }
+                } catch (error) {
+                    console.error("❌ Error checking existing referral code:", error);
+                }
+            }
+            
+            // إذا لم يكن لديه كود، قم بتوليد كود جديد وثابت
             if (!userData.referralCode) {
                 userData.referralCode = Math.random().toString(36).substring(2, 9).toUpperCase();
-                console.log("🔗 Generated referral code:", userData.referralCode);
+                console.log("🔗 Generated new referral code:", userData.referralCode);
             }
             
             userData.joinedAt = new Date().toISOString();
@@ -4086,6 +4109,11 @@
                         walletData.transactionHistory = firebaseData.transactionHistory;
                     }
                     
+                    // FIXED: استعادة referredBy من Firebase
+                    if (firebaseData.userInfo?.referredBy) {
+                        userData.referredBy = firebaseData.userInfo.referredBy;
+                    }
+                    
                     console.log("✅ Data loaded from Firebase");
                     
                     await loadPendingRequests();
@@ -4175,7 +4203,7 @@
                     referrals: {
                         count: walletData.referrals.count || 0,
                         earned: walletData.referrals.earned || 0,
-                        claimed: walletData.referrals.claimed || 0,  // MODIFIED: Added claimed
+                        claimed: walletData.referrals.claimed || 0,
                         referrals: walletData.referrals.referrals || [],
                         claimedMilestones: walletData.referrals.claimedMilestones || []
                     },
@@ -5406,7 +5434,7 @@
         }
 
         // ============================================
-        // REFERRAL SYSTEM - MODIFIED WITH CLAIMED DISPLAY
+        // REFERRAL SYSTEM - FIXED WITH DUPLICATE CHECK
         // ============================================
 
         async function checkForReferral() {
@@ -5458,6 +5486,14 @@
                 const referrerId = referrerDoc.id;
                 const referrerData = referrerDoc.data();
 
+                // FIXED: التحقق من أن المستخدم الحالي لم يسبق له الإحالة لهذا المُحيل
+                const existingReferrals = referrerData.referrals?.referrals || [];
+                if (existingReferrals.includes(userData.id)) {
+                    console.log("⚠️ This user has already been referred by this referrer");
+                    showMessage("You have already used this referral link before", "warning");
+                    return;
+                }
+
                 // تحديث بيانات المُحيل
                 const newCount = (referrerData.referrals?.count || 0) + 1;
                 const newEarned = (referrerData.referrals?.earned || 0) + CONFIG.REFERRAL.DIRECT_REWARD; // 10000 AMSK
@@ -5505,16 +5541,10 @@
                 elements.refEarned.textContent = formatNumber(referrals.earned);
             }
             
-            // MODIFIED: Calculate total value including BNB and claimed
-            const bnbValue = (walletData.balances?.BNB || 0) * CONFIG.PRICES.BNB;
-            const totalUsdValue = (referrals.earned * CONFIG.PRICES.AMSK) + bnbValue;
-            
+            // تحديث BNB Earned من الرصيد الفعلي
+            const bnbBalance = walletData.balances?.BNB || 0;
             if (elements.refBnbEarned) {
-                elements.refBnbEarned.textContent = (walletData.balances?.BNB || 0).toFixed(4);
-            }
-            
-            if (elements.refTotalEarned) {
-                elements.refTotalEarned.textContent = `$${totalUsdValue.toFixed(2)}`;
+                elements.refBnbEarned.textContent = bnbBalance.toFixed(4);
             }
             
             updateMilestonesDisplay();
@@ -5579,7 +5609,7 @@
                 walletData.balances.AMSK += reward;
                 walletData.mining.totalMined += reward;
                 walletData.referrals.earned += reward;
-                walletData.referrals.claimed += reward;  // MODIFIED: Add to claimed amount
+                walletData.referrals.claimed += reward;
                 walletData.referrals.claimedMilestones.push(milestoneNum);
                 
                 updateWalletUI();
@@ -6823,7 +6853,7 @@
         window.adminSubtractBalance = adminSubtractBalance;
         window.formatNumber = formatNumber;
 
-        console.log("👽 Alien Musk Quantum Platform v6.4 - MODIFIED REFERRAL SYSTEM WITH CLAIMED DISPLAY Ready!");
+        console.log("👽 Alien Musk Quantum Platform v6.4 - FINAL VERSION WITH FIXED REFERRAL SYSTEM Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
