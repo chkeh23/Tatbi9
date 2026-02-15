@@ -19,7 +19,6 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- CSS كامل مضمن - محسّن -->
     <style>
         /* =========================================== */
         /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.4 */
@@ -762,6 +761,126 @@
             font-family: monospace;
         }
         
+        /* ===== NEW TASKS SECTION ===== */
+        .tasks-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tasks-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--quantum-gold), var(--quantum-orange));
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .tasks-header h4 {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .tasks-header h4 i {
+            color: var(--quantum-gold);
+        }
+        
+        .tasks-progress {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            background: rgba(255, 215, 0, 0.1);
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .task-item {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .task-item.completed {
+            opacity: 0.6;
+            border-color: var(--quantum-green);
+        }
+        
+        .task-item .task-icon {
+            font-size: 22px;
+            color: var(--quantum-gold);
+            margin-bottom: 5px;
+        }
+        
+        .task-item .task-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .task-item .task-reward {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--quantum-green);
+        }
+        
+        .task-item .task-btn {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .task-btn.start {
+            background: var(--gradient-quantum);
+            color: white;
+        }
+        
+        .task-btn.done {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--quantum-green);
+            cursor: default;
+            border: 1px solid var(--quantum-green);
+        }
+        
+        .task-btn.start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
+        }
+        
         /* UPGRADE SECTION - UPDATED */
         .upgrade-section {
             background: var(--gradient-space);
@@ -869,6 +988,20 @@
             background-clip: text;
         }
         
+        /* إضافة عناصر جديدة للترقية */
+        .upgrade-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid var(--quantum-blue);
+            border-radius: 20px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--quantum-blue);
+        }
+        
         .upgrade-stats {
             margin-bottom: 12px;
         }
@@ -890,8 +1023,8 @@
             color: var(--quantum-green);
         }
         
-        .upgrade-stat:last-child i {
-            color: var(--quantum-blue);
+        .upgrade-stat.roi i {
+            color: var(--quantum-gold);
         }
         
         .upgrade-btn {
@@ -1562,7 +1695,7 @@
         
         .referral-stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);  /* تغيير إلى 3 أعمدة فقط */
+            grid-template-columns: repeat(2, 1fr);  /* تم التعديل إلى عمودين بعد إزالة BNB */
             gap: 12px;
             margin-top: 12px;
         }
@@ -3060,28 +3193,40 @@
                 </div>
             </section>
 
+            <!-- ===== NEW TASKS SECTION ===== -->
+            <section class="tasks-section">
+                <div class="tasks-header">
+                    <h4><i class="fas fa-tasks"></i> One-Time Tasks</h4>
+                    <div class="tasks-progress" id="tasks-progress">0/4 Completed</div>
+                </div>
+                <div class="tasks-grid" id="tasks-grid">
+                    <!-- سيتم تعبئتها عبر JavaScript -->
+                </div>
+            </section>
+
             <section class="upgrade-section">
                 <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
                 
-                <div class="upgrade-cards">
+                <div class="upgrade-cards" id="upgrade-cards">
                     <!-- Level 1 -->
                     <div class="upgrade-card" data-level="1">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 1</span>
-                            <span class="upgrade-name">Beginner</span>
+                            <span class="upgrade-name">⚡ Beginner</span>
                         </div>
+                        <div class="upgrade-badge">Free</div>
                         <div class="upgrade-stats">
                             <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 2,500</span>
+                                <i class="fas fa-microchip"></i>
+                                <span>2,500 Hash/s</span>
                             </div>
                             <div class="upgrade-stat">
                                 <i class="fas fa-gift"></i>
-                                <span>Reward: 2,500 AMSK/hour</span>
+                                <span>2,500 AMSK/hour</span>
                             </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 0 USDT</span>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: ∞</span>
                             </div>
                         </div>
                         <button class="upgrade-btn active-btn" data-level="1">Active</button>
@@ -3091,20 +3236,21 @@
                     <div class="upgrade-card" data-level="2">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 2</span>
-                            <span class="upgrade-name">Advanced</span>
+                            <span class="upgrade-name">🚀 Advanced</span>
                         </div>
+                        <div class="upgrade-badge">5 USDT</div>
                         <div class="upgrade-stats">
                             <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 5,000</span>
+                                <i class="fas fa-microchip"></i>
+                                <span>5,000 Hash/s</span>
                             </div>
                             <div class="upgrade-stat">
                                 <i class="fas fa-gift"></i>
-                                <span>Reward: 5,000 AMSK/hour</span>
+                                <span>5,000 AMSK/hour</span>
                             </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 5 USDT</span>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: 200%</span>
                             </div>
                         </div>
                         <button class="upgrade-btn" data-level="2">Upgrade</button>
@@ -3114,23 +3260,72 @@
                     <div class="upgrade-card" data-level="3">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 3</span>
-                            <span class="upgrade-name">Pro</span>
+                            <span class="upgrade-name">💎 Pro</span>
                         </div>
+                        <div class="upgrade-badge">20 USDT</div>
                         <div class="upgrade-stats">
                             <div class="upgrade-stat">
-                                <i class="fas fa-bolt"></i>
-                                <span>Hashrate: 10,000</span>
+                                <i class="fas fa-microchip"></i>
+                                <span>10,000 Hash/s</span>
                             </div>
                             <div class="upgrade-stat">
                                 <i class="fas fa-gift"></i>
-                                <span>Reward: 10,000 AMSK/hour</span>
+                                <span>10,000 AMSK/hour</span>
                             </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-coins"></i>
-                                <span>Cost: 20 USDT</span>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: 250%</span>
                             </div>
                         </div>
                         <button class="upgrade-btn" data-level="3">Upgrade</button>
+                    </div>
+
+                    <!-- Level 4 (جديد) -->
+                    <div class="upgrade-card" data-level="4">
+                        <div class="upgrade-header">
+                            <span class="upgrade-level">Level 4</span>
+                            <span class="upgrade-name">👑 Legend</span>
+                        </div>
+                        <div class="upgrade-badge">50 USDT</div>
+                        <div class="upgrade-stats">
+                            <div class="upgrade-stat">
+                                <i class="fas fa-microchip"></i>
+                                <span>50,000 Hash/s</span>
+                            </div>
+                            <div class="upgrade-stat">
+                                <i class="fas fa-gift"></i>
+                                <span>50,000 AMSK/hour</span>
+                            </div>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: 300%</span>
+                            </div>
+                        </div>
+                        <button class="upgrade-btn" data-level="4">Upgrade</button>
+                    </div>
+
+                    <!-- Level 5 (جديد) -->
+                    <div class="upgrade-card" data-level="5">
+                        <div class="upgrade-header">
+                            <span class="upgrade-level">Level 5</span>
+                            <span class="upgrade-name">🌌 Mythic</span>
+                        </div>
+                        <div class="upgrade-badge">100 USDT</div>
+                        <div class="upgrade-stats">
+                            <div class="upgrade-stat">
+                                <i class="fas fa-microchip"></i>
+                                <span>100,000 Hash/s</span>
+                            </div>
+                            <div class="upgrade-stat">
+                                <i class="fas fa-gift"></i>
+                                <span>100,000 AMSK/hour</span>
+                            </div>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: 400%</span>
+                            </div>
+                        </div>
+                        <button class="upgrade-btn" data-level="5">Upgrade</button>
                     </div>
                 </div>
             </section>
@@ -3203,90 +3398,216 @@
                 </div>
             </div>
         </div>
-            <!-- 👽 WALLET PAGE - UPDATED -->
-    <div id="wallet-page" class="page">
-        <div class="wallet-content">
-            <div class="wallet-balance-card">
-                <h4><i class="fas fa-wallet"></i> Total Balance</h4>
-                <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
-                <div class="wallet-balance-subtitle">Total Value in USD</div>
-                <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
-            </div>
+        
+        <!-- 👽 WALLET PAGE - UPDATED -->
+        <div id="wallet-page" class="page">
+            <div class="wallet-content">
+                <div class="wallet-balance-card">
+                    <h4><i class="fas fa-wallet"></i> Total Balance</h4>
+                    <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
+                    <div class="wallet-balance-subtitle">Total Value in USD</div>
+                    <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
+                </div>
 
-            <div class="wallet-actions-card">
-                <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
-                
-                <div class="wallet-actions-compact">
-                    <button class="wallet-action-btn" id="deposit-btn">
-                        <i class="fas fa-download"></i>
-                        <span>Deposit</span>
-                    </button>
-                    <button class="wallet-action-btn" id="withdraw-btn">
-                        <i class="fas fa-upload"></i>
-                        <span>Withdraw</span>
-                    </button>
-                    <button class="wallet-action-btn" id="swap-btn">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span>Swap</span>
-                    </button>
-                    <button class="wallet-action-btn" id="history-btn">
-                        <i class="fas fa-history"></i>
-                        <span>History</span>
-                    </button>
+                <div class="wallet-actions-card">
+                    <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+                    
+                    <div class="wallet-actions-compact">
+                        <button class="wallet-action-btn" id="deposit-btn">
+                            <i class="fas fa-download"></i>
+                            <span>Deposit</span>
+                        </button>
+                        <button class="wallet-action-btn" id="withdraw-btn">
+                            <i class="fas fa-upload"></i>
+                            <span>Withdraw</span>
+                        </button>
+                        <button class="wallet-action-btn" id="swap-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Swap</span>
+                        </button>
+                        <button class="wallet-action-btn" id="history-btn">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="wallet-assets-card">
+                    <h4><i class="fas fa-coins"></i> Assets</h4>
+                    
+                    <div class="assets-section">
+                        <div class="asset-list-compact">
+                            <!-- AMSK -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact ams-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">AMSK Token</div>
+                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                            </div>
+
+                            <!-- USDT -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact usdt-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">USDT</div>
+                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            </div>
+
+                            <!-- BNB -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact bnb-icon">
+                                    <i class="fab fa-btc"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">BNB</div>
+                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            </div>
+
+                            <!-- TON -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact ton-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">TON</div>
+                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="wallet-assets-card">
-                <h4><i class="fas fa-coins"></i> Assets</h4>
-                
-                <div class="assets-section">
-                    <div class="asset-list-compact">
-                        <!-- AMSK -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact ams-icon">
-                                <i class="fas fa-robot"></i>
+        <!-- 👽 REFERRAL PAGE - COMPACT DESIGN (معدل) -->
+        <div id="referral-page" class="page">
+            <div class="referral-content">
+                <div class="referral-stats-card">
+                    <h4><i class="fas fa-chart-line"></i> Referral Stats</h4>
+                    
+                    <div class="referral-stats-grid">
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-count">0</div>
+                            <div class="ref-stat-label">Referrals</div>
+                        </div>
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-earned">0</div>
+                            <div class="ref-stat-label">AMSK Earned</div>
+                        </div>
+                        <!-- تم إزالة بطاقة BNB Earned -->
+                    </div>
+                </div>
+
+                <div class="referral-link-card">
+                    <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                    <div class="link-input-group">
+                        <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
+                        <button class="copy-link-btn" id="copy-link-btn">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="share-buttons">
+                        <button class="share-btn telegram" id="telegram-share-btn">
+                            <i class="fab fa-telegram"></i>
+                            <span>Telegram</span>
+                        </button>
+                        <button class="share-btn whatsapp" id="whatsapp-share-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="milestones-card">
+                    <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
+                    <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
+                    
+                    <div class="milestones-list" id="milestones-list">
+                        <!-- Milestone 10 -->
+                        <div class="milestone-item locked" data-milestone="10">
+                            <div class="milestone-icon">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">AMSK Token</div>
-                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">10 Referrals</div>
+                                <div class="milestone-progress">0/10</div>
+                                <div class="milestone-reward">+50,000 AMSK</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/10</span>
+                            </div>
                         </div>
 
-                        <!-- USDT -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact usdt-icon">
-                                <i class="fas fa-coins"></i>
+                        <!-- Milestone 25 -->
+                        <div class="milestone-item locked" data-milestone="25">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-friends"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">USDT</div>
-                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">25 Referrals</div>
+                                <div class="milestone-progress">0/25</div>
+                                <div class="milestone-reward">+150,000 AMSK</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/25</span>
+                            </div>
                         </div>
 
-                        <!-- BNB -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact bnb-icon">
-                                <i class="fab fa-btc"></i>
+                        <!-- Milestone 50 -->
+                        <div class="milestone-item locked" data-milestone="50">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-plus"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">BNB</div>
-                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">50 Referrals</div>
+                                <div class="milestone-progress">0/50</div>
+                                <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/50</span>
+                            </div>
                         </div>
 
-                        <!-- TON -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact ton-icon">
-                                <i class="fas fa-bolt"></i>
+                        <!-- Milestone 100 -->
+                        <div class="milestone-item locked" data-milestone="100">
+                            <div class="milestone-icon">
+                                <i class="fas fa-crown"></i>
                             </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">TON</div>
-                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">100 Referrals</div>
+                                <div class="milestone-progress">0/100</div>
+                                <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
                             </div>
-                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/100</span>
+                            </div>
+                        </div>
+
+                        <!-- Milestone 250 (جديد) -->
+                        <div class="milestone-item locked" data-milestone="250">
+                            <div class="milestone-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement">250 Referrals</div>
+                                <div class="milestone-progress">0/250</div>
+                                <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/250</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3294,328 +3615,179 @@
         </div>
     </div>
 
-    <!-- 👽 REFERRAL PAGE - COMPACT DESIGN (معدل) -->
-    <div id="referral-page" class="page">
-        <div class="referral-content">
-            <div class="referral-stats-card">
-                <h4><i class="fas fa-chart-line"></i> Referral Stats</h4>
-                
-                <div class="referral-stats-grid">
-                    <div class="ref-stat-item">
-                        <div class="ref-stat-value" id="ref-count">0</div>
-                        <div class="ref-stat-label">Referrals</div>
-                    </div>
-                    <div class="ref-stat-item">
-                        <div class="ref-stat-value" id="ref-earned">0</div>
-                        <div class="ref-stat-label">AMSK Earned</div>
-                    </div>
-                    <div class="ref-stat-item">
-                        <div class="ref-stat-value" id="ref-bnb-earned">0</div>
-                        <div class="ref-stat-label">BNB Earned</div>
-                    </div>
-                    <!-- تم إزالة بطاقة Total Value -->
-                </div>
-            </div>
-
-            <div class="referral-link-card">
-                <h4><i class="fas fa-link"></i> Your Referral Link</h4>
-                <div class="link-input-group">
-                    <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
-                    <button class="copy-link-btn" id="copy-link-btn">
-                        <i class="far fa-copy"></i>
-                    </button>
-                </div>
-                
-                <div class="share-buttons">
-                    <button class="share-btn telegram" id="telegram-share-btn">
-                        <i class="fab fa-telegram"></i>
-                        <span>Telegram</span>
-                    </button>
-                    <button class="share-btn whatsapp" id="whatsapp-share-btn">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>WhatsApp</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="milestones-card">
-                <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
-                <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
-                
-                <div class="milestones-list" id="milestones-list">
-                    <!-- Milestone 1 -->
-                    <div class="milestone-item locked" data-milestone="10">
-                        <div class="milestone-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement">10 Referrals</div>
-                            <div class="milestone-progress">0/10</div>
-                            <div class="milestone-reward">+50,000 AMSK</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/10</span>
-                        </div>
-                    </div>
-
-                    <!-- Milestone 2 -->
-                    <div class="milestone-item locked" data-milestone="25">
-                        <div class="milestone-icon">
-                            <i class="fas fa-user-friends"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement">25 Referrals</div>
-                            <div class="milestone-progress">0/25</div>
-                            <div class="milestone-reward">+150,000 AMSK</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/25</span>
-                        </div>
-                    </div>
-
-                    <!-- Milestone 3 -->
-                    <div class="milestone-item locked" data-milestone="50">
-                        <div class="milestone-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement">50 Referrals</div>
-                            <div class="milestone-progress">0/50</div>
-                            <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/50</span>
-                        </div>
-                    </div>
-
-                    <!-- Milestone 4 -->
-                    <div class="milestone-item locked" data-milestone="100">
-                        <div class="milestone-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement">100 Referrals</div>
-                            <div class="milestone-progress">0/100</div>
-                            <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/100</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 👽 CONNECTOR SCRIPT -->
-<script>
-    // 👽 Alien Musk Quantum Connector v6.4
-    console.log("🔗 Loading Alien Musk Quantum Platform v6.4...");
-    
-    // Global variables
-    window.tg = null;
-    window.firebaseApp = null;
-    window.db = null;
-    window.auth = null;
-    
-    // Firebase Configuration
-    const FIREBASE_CONFIG = {
-        apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
-        authDomain: "tatbi9-681bf.firebaseapp.com",
-        projectId: "tatbi9-681bf",
-        storageBucket: "tatbi9-681bf.firebasestorage.app",
-        messagingSenderId: "863237064748",
-        appId: "1:863237064748:web:134de1e01d2639ef5fa989"
-    };
-    
-    // Initialize Telegram WebApp
-    function initTelegram() {
-        try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.tg = Telegram.WebApp;
-                window.tg.ready();
-                window.tg.expand();
-                window.tg.setHeaderColor('#0a0a0f');
-                window.tg.setBackgroundColor('#0a0a0f');
-                console.log("✅ Telegram WebApp initialized");
-                return true;
-            }
-        } catch (e) {
-            console.log("⚠️ Not in Telegram environment");
-        }
-        return false;
-    }
-    
-    // Initialize Firebase
-    function initFirebase() {
-        if (typeof firebase !== 'undefined') {
+    <!-- 👽 CONNECTOR SCRIPT -->
+    <script>
+        // 👽 Alien Musk Quantum Connector v6.4
+        console.log("🔗 Loading Alien Musk Quantum Platform v6.4...");
+        
+        // Global variables
+        window.tg = null;
+        window.firebaseApp = null;
+        window.db = null;
+        window.auth = null;
+        let appInitialized = false; // منع التهيئة المزدوجة
+        
+        // Firebase Configuration
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+        
+        // Initialize Telegram WebApp
+        function initTelegram() {
             try {
-                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
-                window.db = firebase.firestore();
-                window.auth = firebase.auth();
-                console.log("✅ Firebase initialized");
-                return true;
-            } catch (error) {
-                console.error("❌ Firebase error:", error);
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.tg = Telegram.WebApp;
+                    window.tg.ready();
+                    window.tg.expand();
+                    window.tg.setHeaderColor('#0a0a0f');
+                    window.tg.setBackgroundColor('#0a0a0f');
+                    console.log("✅ Telegram WebApp initialized");
+                    return true;
+                }
+            } catch (e) {
+                console.log("⚠️ Not in Telegram environment");
             }
+            return false;
         }
-        return false;
-    }
-    
-    // Basic HTML Functions
-    window.switchPage = function(pageName) {
-        console.log(`🔀 Switching to page: ${pageName}`);
         
-        try {
-            // Close any open modals when switching pages
-            closeModal();
-            
-            // Update pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-                if (page.id === `${pageName}-page`) {
-                    page.classList.add('active');
+        // Initialize Firebase
+        function initFirebase() {
+            if (typeof firebase !== 'undefined') {
+                try {
+                    window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                    window.db = firebase.firestore();
+                    window.auth = firebase.auth();
+                    console.log("✅ Firebase initialized");
+                    return true;
+                } catch (error) {
+                    console.error("❌ Firebase error:", error);
                 }
-            });
-            
-            // Update navigation buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.page === pageName) {
-                    btn.classList.add('active');
-                }
-            });
-            
-        } catch (error) {
-            console.error("❌ Page switch error:", error);
-        }
-    };
-    
-    window.showMessage = function(text, type = 'info') {
-        const container = document.getElementById('notification-container');
-        if (!container) {
-            console.log("No notification container found");
-            return;
+            }
+            return false;
         }
         
-        const message = document.createElement('div');
-        message.className = `message ${type}`;
-        
-        let icon = 'fa-info-circle';
-        if (type === 'success') icon = 'fa-check-circle';
-        if (type === 'error') icon = 'fa-exclamation-circle';
-        if (type === 'warning') icon = 'fa-exclamation-triangle';
-        
-        message.innerHTML = `
-            <i class="fas ${icon}"></i>
-            <span>${text}</span>
-        `;
-        
-        container.appendChild(message);
-        
-        // Auto remove after 4 seconds
-        setTimeout(() => {
-            if (message.parentNode) {
-                message.style.opacity = '0';
-                setTimeout(() => {
-                    if (message.parentNode) {
-                        message.parentNode.removeChild(message);
+        // Basic HTML Functions
+        window.switchPage = function(pageName) {
+            console.log(`🔀 Switching to page: ${pageName}`);
+            
+            try {
+                // Close any open modals when switching pages
+                closeModal();
+                
+                // Update pages
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                    if (page.id === `${pageName}-page`) {
+                        page.classList.add('active');
                     }
-                }, 300);
+                });
+                
+                // Update navigation buttons
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.page === pageName) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+            } catch (error) {
+                console.error("❌ Page switch error:", error);
             }
-        }, 4000);
+        };
         
-        console.log(`${type}: ${text}`);
-    };
-    
-    window.closeModal = function() {
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.remove();
-        });
-    };
-    
-    window.copyToClipboard = function(text) {
-        navigator.clipboard.writeText(text)
-            .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-            .catch(() => showMessage('❌ Failed to copy', 'error'));
-    };
-    
-    // Initialize everything
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("📱 DOM Content Loaded - Starting initialization...");
+        window.closeModal = function() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.remove();
+            });
+        };
         
-        // Initialize services
-        initTelegram();
-        initFirebase();
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => showMessage('✅ Copied to clipboard!', 'success'))
+                .catch(() => showMessage('❌ Failed to copy', 'error'));
+        };
         
-        // Update loading progress
-        let progress = 25;
-        const progressInterval = setInterval(() => {
-            progress += 15;
-            if (progress >= 100) {
-                progress = 100;
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📱 DOM Content Loaded - Starting initialization...");
+            
+            // Initialize services
+            initTelegram();
+            initFirebase();
+            
+            // Update loading progress
+            let progress = 25;
+            const progressInterval = setInterval(() => {
+                progress += 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                }
+                
+                const progressBar = document.getElementById('loading-progress-bar');
+                const progressText = document.getElementById('loading-progress-text');
+                
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressText) progressText.textContent = `Loading... ${progress}%`;
+            }, 300);
+            
+            // Hide loading screen and show app
+            setTimeout(() => {
                 clearInterval(progressInterval);
-            }
-            
-            const progressBar = document.getElementById('loading-progress-bar');
-            const progressText = document.getElementById('loading-progress-text');
-            
-            if (progressBar) progressBar.style.width = `${progress}%`;
-            if (progressText) progressText.textContent = `Loading... ${progress}%`;
-        }, 300);
+                
+                const loadingScreen = document.getElementById('loading-screen');
+                const appContainer = document.getElementById('app-container');
+                
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
+                
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                }
+                
+                // Start main application
+                if (typeof initAlienMuskApp === 'function') {
+                    console.log("🚀 Starting main application...");
+                    initAlienMuskApp();
+                } else {
+                    console.error("❌ Main app function not found!");
+                    // رسالة ترحيب افتراضية
+                    showMessage("Welcome to Alien Musk Quantum!", "success");
+                }
+            }, 2500);
+        });
         
-        // Hide loading screen and show app
+        // Fallback initialization
         setTimeout(() => {
-            clearInterval(progressInterval);
-            
-            const loadingScreen = document.getElementById('loading-screen');
-            const appContainer = document.getElementById('app-container');
-            
-            if (loadingScreen) {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
+            if (!window.tg && !window.firebaseApp) {
+                console.log("⚠️ Using fallback initialization...");
+                const loadingScreen = document.getElementById('loading-screen');
+                const appContainer = document.getElementById('app-container');
+                
+                if (loadingScreen) {
                     loadingScreen.style.display = 'none';
-                }, 500);
+                }
+                
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                }
+                
+                showMessage("Running in standalone mode", "info");
             }
-            
-            if (appContainer) {
-                appContainer.classList.remove('hidden');
-            }
-            
-            // Start main application
-            if (typeof initAlienMuskApp === 'function') {
-                console.log("🚀 Starting main application...");
-                initAlienMuskApp();
-            } else {
-                console.error("❌ Main app function not found!");
-                showMessage("Welcome to Alien Musk Quantum!", "success");
-            }
-        }, 2500);
-    });
-    
-    // Fallback initialization
-    setTimeout(() => {
-        if (!window.tg && !window.firebaseApp) {
-            console.log("⚠️ Using fallback initialization...");
-            const loadingScreen = document.getElementById('loading-screen');
-            const appContainer = document.getElementById('app-container');
-            
-            if (loadingScreen) {
-                loadingScreen.style.display = 'none';
-            }
-            
-            if (appContainer) {
-                appContainer.classList.remove('hidden');
-            }
-            
-            showMessage("Running in standalone mode", "info");
-        }
-    }, 10000);
-    
-    console.log("✅ Alien Musk Connector Loaded Successfully");
-</script>
-    <!-- 👽 MAIN APPLICATION JS v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX -->
+        }, 10000);
+        
+        console.log("✅ Alien Musk Connector Loaded Successfully");
+    </script>
+        <!-- 👽 MAIN APPLICATION JS v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX -->
     <script>
         // ============================================
         // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
@@ -3637,9 +3809,11 @@
                 DURATION: 3600000, // 1 hour in ms
                 
                 LEVELS: {
-                    1: { name: "Beginner", cost: 0, reward: 2500, hashrate: 2500 },
-                    2: { name: "Advanced", cost: 5, reward: 5000, hashrate: 5000 },
-                    3: { name: "Pro", cost: 20, reward: 10000, hashrate: 10000 }
+                    1: { name: "⚡ Beginner", cost: 0, reward: 2500, hashrate: 2500, apy: "∞" },
+                    2: { name: "🚀 Advanced", cost: 5, reward: 5000, hashrate: 5000, apy: "200%" },
+                    3: { name: "💎 Pro", cost: 20, reward: 10000, hashrate: 10000, apy: "250%" },
+                    4: { name: "👑 Legend", cost: 50, reward: 50000, hashrate: 50000, apy: "300%" },    // جديد
+                    5: { name: "🌌 Mythic", cost: 100, reward: 100000, hashrate: 100000, apy: "400%" }   // جديد
                 }
             },
             
@@ -3673,6 +3847,14 @@
                 }
             },
             
+            // TASKS - أربع مهام لمرة واحدة (جديد)
+            TASKS: {
+                1: { name: "Join Telegram Channel", url: "https://t.me/your_channel", icon: "fab fa-telegram", reward: 5000 },
+                2: { name: "Subscribe on YouTube", url: "https://youtube.com/your_channel", icon: "fab fa-youtube", reward: 5000 },
+                3: { name: "Follow on TikTok", url: "https://tiktok.com/@your_account", icon: "fab fa-tiktok", reward: 5000 },
+                4: { name: "Like & Share Latest Post", url: "https://t.me/your_channel/123", icon: "fas fa-heart", reward: 5000 }
+            },
+            
             // Referral Configuration - معدل بالكامل
             REFERRAL: {
                 // مكافآت التسجيل
@@ -3681,12 +3863,13 @@
                     REFERRED: 5000     // المحال يحصل 5000 AMSK
                 },
                 
-                // المكافآت التراكمية
+                // المكافآت التراكمية (مع إضافة milestone 250)
                 MILESTONES: {
                     10: { amsk: 50000, bnb: 0 },
                     25: { amsk: 150000, bnb: 0 },
                     50: { amsk: 350000, bnb: 0.01 },
-                    100: { amsk: 1000000, bnb: 0.025 }
+                    100: { amsk: 1000000, bnb: 0.025 },
+                    250: { amsk: 3000000, bnb: 0.075 }   // جديد
                 }
             },
             
@@ -3732,7 +3915,7 @@
             }
         };
 
-        // User Data Management
+        // User Data Management (مع إضافة referralBonusClaimed)
         let userData = {
             id: null,
             telegramId: null,
@@ -3744,10 +3927,11 @@
             joinedAt: null,
             lastActive: null,
             isInitialized: false,
-            lastSaveTime: 0
+            lastSaveTime: 0,
+            referralBonusClaimed: false   // جديد: منع تكرار مكافأة الإحالة
         };
 
-        // Wallet Data - UPDATED STRUCTURE
+        // Wallet Data - UPDATED STRUCTURE (مع إضافة tasks)
         let walletData = {
             balances: {
                 AMSK: 2500,
@@ -3773,6 +3957,9 @@
                 earned: { amsk: 0, bnb: 0 },
                 referrals: [], // قائمة بأسماء أو ids المحالين
                 claimedMilestones: []
+            },
+            tasks: {                // جديد: المهام المنجزة
+                completed: []        // array of task ids (1,2,3,4)
             },
             pendingDeposits: [],
             pendingWithdrawals: [],
@@ -3822,6 +4009,11 @@
         // ============================================
 
         async function initAlienMuskApp() {
+            if (appInitialized) {
+                console.log("⚠️ Already initialized, skipping...");
+                return;
+            }
+            appInitialized = true;
             console.log("🚀 Initializing Alien Musk Platform v6.4...");
             
             try {
@@ -3852,10 +4044,10 @@
                 userData.isInitialized = true;
                 console.log("✅ Platform initialized successfully");
                 
-                // Show welcome message
+                // Show welcome message (مرة واحدة وبعد 0.8 ثانية)
                 setTimeout(() => {
                     showMessage("👽 Welcome to Alien Musk Quantum Platform v6.4!", "success");
-                }, 1000);
+                }, 800);
                 
             } catch (error) {
                 console.error("❌ Initialization failed:", error);
@@ -3895,6 +4087,7 @@
             // Upgrade elements
             elements.upgradeCards = document.querySelectorAll('.upgrade-card');
             elements.upgradeButtons = document.querySelectorAll('.upgrade-btn');
+            elements.upgradeCardsContainer = document.getElementById('upgrade-cards'); // نستخدم هذا بدلاً من querySelectorAll
             
             // Staking elements
             elements.stakeButtons = document.querySelectorAll('.stake-plan-btn');
@@ -3926,15 +4119,18 @@
             elements.whatsappShareBtn = document.getElementById('whatsapp-share-btn');
             elements.refCount = document.getElementById('ref-count');
             elements.refEarned = document.getElementById('ref-earned');
-            elements.refBnbEarned = document.getElementById('ref-bnb-earned');
-            // تم إزالة refTotalEarned
+            // تم إزالة refBnbEarned
             elements.milestonesList = document.getElementById('milestones-list');
+            
+            // Tasks elements (جديد)
+            elements.tasksGrid = document.getElementById('tasks-grid');
+            elements.tasksProgress = document.getElementById('tasks-progress');
             
             console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
         }
 
         // ============================================
-        // دالة setupUser - معدلة لإنشاء كود فريد
+        // دالة setupUser - معدلة لإنشاء كود فريد وإضافة referralBonusClaimed
         // ============================================
         async function setupUser() {
             console.log("👤 Setting up user...");
@@ -3980,6 +4176,11 @@
                 console.log("🔗 Generated unique referral code:", userData.referralCode);
             }
             
+            // التأكد من وجود referralBonusClaimed
+            if (typeof userData.referralBonusClaimed === 'undefined') {
+                userData.referralBonusClaimed = false;
+            }
+            
             userData.joinedAt = new Date().toISOString();
             userData.lastActive = new Date().toISOString();
             
@@ -3991,6 +4192,11 @@
                     referrals: [], // قائمة المحالين
                     claimedMilestones: []
                 };
+            }
+            
+            // التأكد من وجود tasks في walletData
+            if (!walletData.tasks) {
+                walletData.tasks = { completed: [] };
             }
             
             updateUserUI();
@@ -4055,6 +4261,9 @@
                         if (firebaseData.referrals) {
                             walletData.referrals = firebaseData.referrals;
                         }
+                        if (firebaseData.tasks) {
+                            walletData.tasks = firebaseData.tasks;
+                        }
                         if (firebaseData.transactions) {
                             walletData.transactions = firebaseData.transactions;
                         }
@@ -4066,9 +4275,6 @@
 
                         // تحديث واجهة المستخدم
                         updateUI();
-
-                        // إظهار إشعار للمستخدم إذا تغيرت حالة طلب (اختياري)
-                        // يمكن إضافة منطق لمقارنة الحالات القديمة والجديدة وإظهار إشعار
                     }
                 }, (error) => {
                     console.error("❌ Realtime listener error:", error);
@@ -4114,12 +4320,21 @@
                         walletData.referrals = firebaseData.referrals;
                     }
                     
+                    if (firebaseData.tasks) {
+                        walletData.tasks = firebaseData.tasks;
+                    }
+                    
                     if (firebaseData.transactions) {
                         walletData.transactions = firebaseData.transactions;
                     }
                     
                     if (firebaseData.transactionHistory) {
                         walletData.transactionHistory = firebaseData.transactionHistory;
+                    }
+                    
+                    // تحميل حالة referralBonusClaimed من userInfo
+                    if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
+                        userData.referralBonusClaimed = firebaseData.userInfo.referralBonusClaimed;
                     }
                     
                     console.log("✅ Data loaded from Firebase");
@@ -4139,7 +4354,8 @@
                 saveUserDataToLocalStorage();
                 
             } catch (error) {
-                console.error("❌ Error loading from Firebase:", error);
+                console.error("❌ Error loading from Firebase, falling back to localStorage:", error);
+                showMessage("Using offline mode", "info");
                 await loadUserFromLocalStorage();
             }
         }
@@ -4218,6 +4434,7 @@
                     mining: walletData.mining,
                     staking: walletData.staking,
                     referrals: walletData.referrals,
+                    tasks: walletData.tasks,  // جديد: حفظ المهام
                     transactions: walletData.transactions || [],
                     transactionHistory: walletData.transactionHistory || [],
                     userInfo: {
@@ -4228,7 +4445,8 @@
                         referralCode: userData.referralCode,
                         referredBy: userData.referredBy,
                         joinedAt: userData.joinedAt,
-                        lastActive: userData.lastActive
+                        lastActive: userData.lastActive,
+                        referralBonusClaimed: userData.referralBonusClaimed  // جديد
                     },
                     lastUpdate: walletData.lastUpdate
                 };
@@ -4254,6 +4472,7 @@
                     mining: walletData.mining,
                     staking: walletData.staking,
                     referrals: walletData.referrals,
+                    tasks: walletData.tasks,  // جديد
                     pendingDeposits: walletData.pendingDeposits,
                     pendingWithdrawals: walletData.pendingWithdrawals,
                     transactions: walletData.transactions,
@@ -4297,6 +4516,12 @@
                     
                     if (parsed.referrals) {
                         walletData.referrals = parsed.referrals;
+                    }
+                    
+                    if (parsed.tasks) {  // جديد
+                        walletData.tasks = parsed.tasks;
+                    } else {
+                        walletData.tasks = { completed: [] };
                     }
                     
                     if (parsed.pendingDeposits) {
@@ -4354,6 +4579,9 @@
                 earned: { amsk: 0, bnb: 0 },
                 referrals: [],
                 claimedMilestones: []
+            };
+            walletData.tasks = {  // جديد
+                completed: []
             };
             walletData.pendingDeposits = [];
             walletData.pendingWithdrawals = [];
@@ -4476,6 +4704,9 @@
                 },
                 'referral_milestone': {
                     'completed': 'Referral milestone reward claimed.'
+                },
+                'task_reward': {  // جديد
+                    'completed': 'Task completed successfully.'
                 }
             };
             
@@ -4544,6 +4775,7 @@
                                 <button class="history-filter-btn" data-filter="staking">Staking</button>
                                 <button class="history-filter-btn" data-filter="swap">Swap</button>
                                 <button class="history-filter-btn" data-filter="referral">Referral</button>
+                                <button class="history-filter-btn" data-filter="task">Tasks</button> <!-- جديد -->
                             </div>
                             
                             <div id="historyContent" style="max-height: 400px; overflow-y: auto;">
@@ -4655,6 +4887,8 @@
                     transactions = transactions.filter(tx => tx.type.includes('swap'));
                 } else if (filterType === 'referral') {
                     transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+                } else if (filterType === 'task') {
+                    transactions = transactions.filter(tx => tx.type.includes('task'));
                 }
             }
             
@@ -4704,6 +4938,10 @@
                     iconClass = 'milestone';
                     icon = 'fa-trophy';
                     typeText = 'Milestone';
+                } else if (tx.type.includes('task')) {
+                    iconClass = 'task';
+                    icon = 'fa-tasks';
+                    typeText = 'Task';
                 }
                 
                 let statusClass = '';
@@ -4789,7 +5027,7 @@
                 elements.minedToday.textContent = formatNumber(mining.minedToday);
             }
             
-            updateUpgradeCards();
+            updateUpgradeCards(); // تحديث بطاقات الترقية
             updateMiningButton();
         }
 
@@ -4852,36 +5090,80 @@
         }
 
         function updateUpgradeCards() {
-            if (!elements.upgradeCards || !walletData) return;
+            if (!elements.upgradeCardsContainer) return;
             
             const currentLevel = walletData.mining.level;
             const usdtBalance = walletData.balances.USDT || 0;
+
+            let html = '';
             
-            elements.upgradeCards.forEach(card => {
-                const level = parseInt(card.dataset.level);
+            for (let level = 1; level <= 5; level++) {
                 const levelData = CONFIG.MINING.LEVELS[level];
-                const button = card.querySelector('.upgrade-btn');
+                if (!levelData) continue;
                 
-                if (!button || !levelData) return;
+                const isActive = level === currentLevel;
+                const isLocked = level > currentLevel;
+                const canAfford = usdtBalance >= levelData.cost;
                 
-                if (level === currentLevel) {
-                    button.textContent = 'Active';
-                    button.classList.add('active-btn');
-                    button.disabled = true;
-                    card.classList.add('active');
-                } else if (level < currentLevel) {
-                    button.textContent = 'Upgraded';
-                    button.classList.add('active-btn');
-                    button.disabled = true;
-                    card.classList.remove('active');
+                let buttonText = '';
+                let buttonClass = '';
+                let disabled = false;
+                let title = '';
+
+                if (isActive) {
+                    buttonText = 'Active';
+                    buttonClass = 'active-btn';
+                    disabled = true;
+                } else if (!isLocked) {
+                    buttonText = 'Upgraded';
+                    buttonClass = 'active-btn';
+                    disabled = true;
                 } else {
-                    const canAfford = usdtBalance >= levelData.cost;
-                    button.textContent = canAfford ? 'Upgrade' : `${levelData.cost} USDT`;
-                    button.disabled = !canAfford;
-                    button.classList.remove('active-btn');
-                    card.classList.remove('active');
+                    if (canAfford) {
+                        buttonText = 'Upgrade';
+                        buttonClass = '';
+                        disabled = false;
+                    } else {
+                        buttonText = `${levelData.cost} USDT`;
+                        buttonClass = '';
+                        disabled = true;
+                        title = `Need ${levelData.cost} USDT`;
+                    }
                 }
-            });
+
+                html += `
+                    <div class="upgrade-card ${isActive ? 'active' : ''}" data-level="${level}">
+                        <div class="upgrade-header">
+                            <span class="upgrade-level">Level ${level}</span>
+                            <span class="upgrade-name">${levelData.name}</span>
+                        </div>
+                        <div class="upgrade-badge">${levelData.cost > 0 ? levelData.cost + ' USDT' : 'Free'}</div>
+                        <div class="upgrade-stats">
+                            <div class="upgrade-stat">
+                                <i class="fas fa-microchip"></i>
+                                <span>${levelData.hashrate.toLocaleString()} Hash/s</span>
+                            </div>
+                            <div class="upgrade-stat">
+                                <i class="fas fa-gift"></i>
+                                <span>${levelData.reward.toLocaleString()} AMSK/hour</span>
+                            </div>
+                            <div class="upgrade-stat roi">
+                                <i class="fas fa-chart-line"></i>
+                                <span>ROI: ${levelData.apy}</span>
+                            </div>
+                        </div>
+                        <button class="upgrade-btn ${buttonClass}" 
+                                data-level="${level}" 
+                                ${disabled ? 'disabled' : ''} 
+                                title="${title}"
+                                onclick="upgradeMiningLevel(${level})">
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+            }
+            
+            elements.upgradeCardsContainer.innerHTML = html;
         }
 
         function handleMiningAction() {
@@ -4932,7 +5214,6 @@
                 
                 // Use new transaction system
                 addTransactionToHistory('mining_reward', reward, 'AMSK', 'Mining reward', 'completed', 'Mining reward claimed successfully');
-                addTransaction('mining_reward', reward, 'AMSK');
                 
                 updateMiningDisplay();
                 updateWalletUI();
@@ -4969,7 +5250,6 @@
                 walletData.mining.level = level;
                 
                 addTransactionToHistory('mining_upgrade', -levelData.cost, 'USDT', `Upgrade to ${levelData.name} level`, 'completed', 'Mining level upgraded');
-                addTransaction('mining_upgrade', -levelData.cost, 'USDT');
                 
                 updateMiningDisplay();
                 updateWalletUI();
@@ -5379,7 +5659,6 @@
                 
                 // Use new transaction system
                 addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
-                addTransaction('staking_start', -amount, 'USDT');
                 
                 updateWalletUI();
                 updateStakingDisplay();
@@ -5434,8 +5713,6 @@
                 // Use new transaction system
                 addTransactionToHistory('staking_reward', totalReward, 'AMSK', `${plan.name} Plan reward`, 'completed', 'Staking reward claimed');
                 addTransactionToHistory('staking_return', stake.amount, 'USDT', 'Principal returned', 'completed', 'Staking principal returned');
-                addTransaction('staking_reward', totalReward, 'AMSK');
-                addTransaction('staking_return', stake.amount, 'USDT');
                 
                 activeStakes.splice(stakeIndex, 1);
                 
@@ -5475,7 +5752,6 @@
             walletData.staking.totalStaked -= stake.amount;
             
             addTransactionToHistory('staking_cancel', returnedAmount, 'USDT', 'Staking cancelled (50% penalty)', 'completed', 'Staking cancelled with penalty');
-            addTransaction('staking_cancel', returnedAmount, 'USDT');
             
             activeStakes.splice(stakeIndex, 1);
             
@@ -5493,9 +5769,9 @@
         async function checkForReferral() {
             console.log("🔍 Checking for referral...");
             
-            // 1. إذا كان المستخدم لديه محيل بالفعل، لا تفعل شيئاً
-            if (userData.referredBy) {
-                console.log("✅ User already referred by:", userData.referredBy);
+            // 1. إذا كان المستخدم لديه محيل بالفعل أو استلم المكافأة، لا تفعل شيئاً
+            if (userData.referredBy || userData.referralBonusClaimed) {
+                console.log("✅ User already referred or bonus claimed");
                 return;
             }
             
@@ -5535,7 +5811,6 @@
             try {
                 // البحث عن المحيل باستخدام كود الإحالة
                 let referrerId = null;
-                let referrerData = null;
                 
                 if (window.db) {
                     // البحث في Firebase
@@ -5545,24 +5820,22 @@
                     if (!querySnapshot.empty) {
                         const doc = querySnapshot.docs[0];
                         referrerId = doc.id;
-                        referrerData = doc.data();
                     }
                 } else {
-                    // محاكاة البحث في localStorage (للاختبار)
-                    // في الوضع الحقيقي، يجب استخدام Firebase دائماً
                     console.log("⚠️ Firebase not available, referral may not be saved permanently");
                 }
                 
-                if (!referrerId) {
-                    console.log("❌ Referrer not found for code:", referralCode);
+                if (!referrerId || referrerId === userData.id) {
+                    console.log("❌ Referrer not found or self-referral");
                     return;
                 }
                 
                 // تسجيل المحيل لهذا المستخدم
                 userData.referredBy = referrerId;
+                userData.referralBonusClaimed = true; // منع المكافأة مرة أخرى
                 
                 // إضافة المستخدم إلى قائمة referrals للمحيل
-                if (referrerId !== userData.id) { // تأكد أنه ليس نفس المستخدم
+                if (referrerId !== userData.id) {
                     // تحديث بيانات المحيل في Firebase
                     if (window.db) {
                         const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
@@ -5598,21 +5871,14 @@
                     // إضافة مكافأة المحال (5000 AMSK)
                     walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
                     
-                    // إضافة إلى إحصائياته (لكن المحال ليس له إحصائيات إحالة)
-                    // فقط نضيف أن لديه محيل
-                    
                     // تسجيل المعاملات
                     addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
-                    addTransaction('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK');
                     
                     // رسالة نجاح
                     showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
                     
                     // حفظ البيانات
                     await saveUserData();
-                    
-                    // تحديث واجهة المحيل إذا كان متصلاً (سيتم عن طريق realtime listener)
-                    
                 }
                 
             } catch (error) {
@@ -5633,11 +5899,7 @@
                 elements.refEarned.textContent = formatNumber(referrals.earned.amsk);
             }
             
-            if (elements.refBnbEarned) {
-                elements.refBnbEarned.textContent = referrals.earned.bnb.toFixed(3);
-            }
-            
-            // تم إزالة refTotalEarned
+            // تم إزالة refBnbEarned
             
             updateMilestonesDisplay();
         }
@@ -5702,14 +5964,12 @@
                     walletData.balances.AMSK += milestoneReward.amsk;
                     walletData.referrals.earned.amsk += milestoneReward.amsk;
                     addTransactionToHistory('referral_milestone', milestoneReward.amsk, 'AMSK', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
-                    addTransaction('referral_milestone', milestoneReward.amsk, 'AMSK', `Milestone ${milestoneNum}`);
                 }
                 
                 if (milestoneReward.bnb > 0) {
                     walletData.balances.BNB += milestoneReward.bnb;
                     walletData.referrals.earned.bnb += milestoneReward.bnb;
                     addTransactionToHistory('referral_milestone', milestoneReward.bnb, 'BNB', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
-                    addTransaction('referral_milestone', milestoneReward.bnb, 'BNB', `Milestone ${milestoneNum}`);
                 }
                 
                 walletData.referrals.claimedMilestones.push(milestoneNum);
@@ -5728,6 +5988,77 @@
                 console.error("❌ Error claiming milestone:", error);
                 showMessage("Failed to claim milestone", "error");
             }
+        }
+
+        // ============================================
+        // TASKS SYSTEM (جديد)
+        // ============================================
+
+        function updateTasksDisplay() {
+            if (!elements.tasksGrid || !elements.tasksProgress) return;
+            
+            const completed = walletData.tasks?.completed || [];
+            const totalTasks = Object.keys(CONFIG.TASKS).length;
+            const completedCount = completed.length;
+            
+            elements.tasksProgress.textContent = `${completedCount}/${totalTasks} Completed`;
+
+            let html = '';
+            for (let i = 1; i <= totalTasks; i++) {
+                const task = CONFIG.TASKS[i];
+                const isCompleted = completed.includes(i);
+                
+                html += `
+                    <div class="task-item ${isCompleted ? 'completed' : ''}" data-task-id="${i}">
+                        <div class="task-icon"><i class="${task.icon}"></i></div>
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-reward">+${task.reward.toLocaleString()} AMSK</div>
+                        <button class="task-btn ${isCompleted ? 'done' : 'start'}" 
+                                ${isCompleted ? 'disabled' : ''} 
+                                onclick="handleTaskClick(${i})">
+                            ${isCompleted ? 'Done ✓' : 'Start'}
+                        </button>
+                    </div>
+                `;
+            }
+            elements.tasksGrid.innerHTML = html;
+        }
+
+        window.handleTaskClick = async function(taskId) {
+            const task = CONFIG.TASKS[taskId];
+            if (!task) return;
+            
+            const completed = walletData.tasks?.completed || [];
+            if (completed.includes(taskId)) {
+                showMessage("Task already completed", "info");
+                return;
+            }
+            
+            // فتح الرابط
+            window.open(task.url, '_blank');
+            
+            // طلب تأكيد بعد ثانية
+            setTimeout(() => {
+                if (confirm(`Did you complete "${task.name}"?`)) {
+                    markTaskCompleted(taskId);
+                }
+            }, 1000);
+        };
+
+        async function markTaskCompleted(taskId) {
+            if (!walletData.tasks) walletData.tasks = { completed: [] };
+            if (walletData.tasks.completed.includes(taskId)) return;
+            
+            walletData.tasks.completed.push(taskId);
+            walletData.balances.AMSK += CONFIG.TASKS[taskId].reward;
+            
+            addTransactionToHistory('task_reward', CONFIG.TASKS[taskId].reward, 'AMSK', `Task: ${CONFIG.TASKS[taskId].name}`, 'completed', 'Task completed');
+            
+            updateTasksDisplay();
+            updateWalletUI();
+            await saveUserData();
+            
+            showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned!`, "success");
         }
 
         // ============================================
@@ -6020,10 +6351,6 @@
             // Use new transaction system
             addTransactionToHistory('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`, 'completed', 'Swap completed successfully');
             addTransactionToHistory('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`, 'completed', 'Swap completed successfully');
-            
-            // Legacy transaction
-            addTransaction('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`);
-            addTransaction('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`);
             
             updateWalletUI();
             closeModal();
@@ -7763,6 +8090,7 @@
             updateWalletUI();
             updateStakingDisplay();
             updateReferralDisplay();
+            updateTasksDisplay(); // جديد
         }
 
         // ============================================
@@ -7861,6 +8189,9 @@
 
         // Referral functions (معدلة)
         window.claimMilestone = claimMilestone;
+
+        // Task functions (جديد)
+        window.handleTaskClick = handleTaskClick;
 
         // Admin functions
         window.checkAdminPassword = checkAdminPassword;
