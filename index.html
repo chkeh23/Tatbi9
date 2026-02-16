@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>👽 Alien Musk Quantum Mining v6.4</title>
+    <title>👽 Alien Musk Quantum Mining v6.5</title>
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -21,8 +21,8 @@
     
     <style>
         /* =========================================== */
-        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.4 */
-        /* CSS كامل مضمن - محسّن ومصحّح */
+        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.5 */
+        /* كامل مع جميع التعديلات - الجزء الأول */
         /* =========================================== */
         
         /* RESET & BASE */
@@ -760,7 +760,52 @@
             font-family: monospace;
         }
         
-        /* ===== UPGRADE SECTION (في الأعلى الآن) ===== */
+        /* الأزرار الجديدة تحت معلومات التعدين */
+        .mining-quick-actions {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0 5px;
+        }
+        
+        .quick-action-btn {
+            flex: 1;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--quantum-text);
+        }
+        
+        .quick-action-btn:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+        }
+        
+        .quick-action-btn i {
+            font-size: 20px;
+            color: var(--quantum-blue);
+        }
+        
+        .quick-action-btn .quick-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .quick-action-btn .quick-sub {
+            font-size: 10px;
+            color: var(--quantum-text-light);
+        }
+        
+        /* ===== UPGRADE SECTION ===== */
         .upgrade-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -869,11 +914,6 @@
             background-clip: text;
         }
         
-        /* ✅ إخفاء الـ badge القديم واستخدام price-tag الجديد */
-        .upgrade-badge {
-            display: none;
-        }
-        
         .upgrade-price-tag {
             font-size: 18px;
             font-weight: 700;
@@ -970,7 +1010,7 @@
             box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
         }
         
-        /* ===== TASKS SECTION (في الأسفل الآن) ===== */
+        /* ===== TASKS SECTION (القديمة) ===== */
         .tasks-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1090,101 +1130,176 @@
             box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
         }
         
-        /* NOTIFICATIONS */
-        #notification-container {
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 90%;
-            max-width: 360px;
-            pointer-events: none;
-        }
-        
-        .message {
-            padding: 14px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            animation: quantumNotificationSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* ===== ACHIEVEMENTS SECTION (جديد) ===== */
+        .achievements-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid;
-            pointer-events: auto;
             position: relative;
             overflow: hidden;
         }
         
-        @keyframes quantumNotificationSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        .message::before {
+        .achievements-section::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.2s;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
         }
         
-        .message:hover::before {
-            opacity: 1;
+        .achievements-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
-        .message i {
+        .achievements-header h4 {
             font-size: 16px;
-            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
         }
         
-        .message span {
-            flex: 1;
-            line-height: 1.4;
+        .achievements-header h4 i {
+            color: var(--quantum-purple);
+            font-size: 17px;
         }
         
-        .message.success {
-            background: rgba(0, 255, 136, 0.15);
-            border-color: rgba(0, 255, 136, 0.2);
-            color: var(--quantum-green);
+        .achievements-sub {
+            font-size: 12px;
+            color: var(--quantum-text-light);
         }
         
-        .message.error {
-            background: rgba(255, 68, 68, 0.15);
+        .achievement-category {
+            margin-bottom: 20px;
+        }
+        
+        .achievement-category h5 {
+            font-size: 14px;
+            color: var(--quantum-text-light);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 5px;
+        }
+        
+        .achievement-category h5 i {
+            color: var(--quantum-purple);
+        }
+        
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+        
+        .achievement-item {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .achievement-item.locked {
+            opacity: 0.7;
             border-color: rgba(255, 68, 68, 0.2);
+        }
+        
+        .achievement-item.can-claim {
+            border-color: var(--quantum-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            animation: quantumPulseAchievement 2s infinite;
+        }
+        
+        @keyframes quantumPulseAchievement {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.5); }
+            70% { box-shadow: 0 0 0 8px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        
+        .achievement-item.claimed {
+            border-color: var(--quantum-purple);
+            opacity: 0.8;
+        }
+        
+        .achievement-icon {
+            font-size: 22px;
+            color: var(--quantum-gold);
+            text-align: center;
+        }
+        
+        .achievement-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            text-align: center;
+        }
+        
+        .achievement-reward {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--quantum-green);
+            text-align: center;
+        }
+        
+        .achievement-btn {
+            width: 100%;
+            padding: 6px;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .achievement-btn.claim {
+            background: var(--gradient-quantum);
+            color: white;
+        }
+        
+        .achievement-btn.claim:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 255, 136, 0.3);
+        }
+        
+        .achievement-btn.claim:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text-light);
+            cursor: not-allowed;
+        }
+        
+        .achievement-btn.claimed {
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--quantum-purple);
+            cursor: default;
+            border: 1px solid var(--quantum-purple);
+        }
+        
+        .achievement-btn.locked {
+            background: rgba(255, 68, 68, 0.1);
             color: #ff4444;
+            cursor: default;
+            border: 1px solid #ff4444;
         }
         
-        .message.warning {
-            background: rgba(255, 193, 7, 0.15);
-            border-color: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-        }
-        
-        .message.info {
-            background: rgba(0, 212, 255, 0.15);
-            border-color: rgba(0, 212, 255, 0.2);
-            color: var(--quantum-blue);
-        }
-        
-        /* STAKING PAGE STYLES */
+        /* ===== STAKING PAGE STYLES ===== */
         .staking-content {
             padding: 0 5px;
         }
@@ -1410,7 +1525,7 @@
             color: var(--quantum-text-light);
         }
         
-        /* WALLET PAGE STYLES */
+        /* ===== WALLET PAGE STYLES ===== */
         .wallet-content {
             padding: 0 5px;
         }
@@ -1659,7 +1774,7 @@
             flex-shrink: 0;
         }
         
-        /* REFERRAL PAGE STYLES */
+        /* ===== REFERRAL PAGE STYLES ===== */
         .referral-content {
             padding: 0 5px;
         }
@@ -2079,7 +2194,7 @@
             text-transform: uppercase;
         }
         
-        /* MODAL STYLES */
+        /* ===== MODAL STYLES ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -2164,7 +2279,7 @@
             padding: 18px;
         }
         
-        /* STAKE MODAL */
+        /* ===== STAKE MODAL ===== */
         .stake-plan-info {
             display: flex;
             align-items: center;
@@ -2202,7 +2317,172 @@
             color: var(--quantum-text-light);
         }
         
-        /* DEPOSIT MODAL */
+        .stake-amount-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .amount-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--quantum-text-light);
+        }
+        
+        .amount-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .amount-input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text);
+            font-size: 14px;
+        }
+        
+        .max-btn {
+            padding: 0 15px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-blue);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .max-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+        }
+        
+        .amount-range {
+            margin: 15px 0;
+        }
+        
+        .amount-range input[type=range] {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 212, 255, 0.2);
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .amount-range input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--quantum-blue);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 10px;
+            color: var(--quantum-text-light);
+        }
+        
+        .stake-reward-calculation {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 18px;
+        }
+        
+        .reward-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+        }
+        
+        .reward-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--quantum-text-light);
+        }
+        
+        .reward-item.total {
+            margin-top: 5px;
+            padding-top: 5px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            flex: 1;
+            padding: 12px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text-light);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--quantum-text);
+        }
+        
+        /* ===== DEPOSIT MODAL ===== */
         .deposit-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -2242,7 +2522,7 @@
             display: block;
         }
         
-        /* SWAP MODAL */
+        /* ===== SWAP MODAL ===== */
         .swap-direction {
             display: flex;
             align-items: center;
@@ -2323,7 +2603,7 @@
             transform: translateY(-1px);
         }
         
-        /* HISTORY */
+        /* ===== HISTORY TABS & FILTERS ===== */
         .history-tabs {
             display: flex;
             gap: 5px;
@@ -2469,6 +2749,18 @@
             border: 1px solid rgba(157, 78, 221, 0.2);
         }
         
+        .history-card-icon.task {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--quantum-gold);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .history-card-icon.achievement {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+        
         .history-card-details {
             flex: 1;
         }
@@ -2571,7 +2863,7 @@
             font-size: 12px;
         }
         
-        /* ADMIN PANEL */
+        /* ===== ADMIN PANEL ===== */
         .admin-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -2744,7 +3036,7 @@
             display: block;
         }
         
-        /* TX ID VALIDATION */
+        /* ===== TX ID VALIDATION ===== */
         .tx-id-input {
             width: 100%;
             padding: 10px;
@@ -2782,7 +3074,7 @@
             border: 1px solid rgba(255, 193, 7, 0.15);
         }
         
-        /* RESPONSIVE DESIGN */
+        /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
             .app-header {
                 padding: 8px 10px;
@@ -2829,6 +3121,7 @@
             .mining-section,
             .upgrade-section,
             .tasks-section,
+            .achievements-section,
             .staking-card,
             .wallet-balance-card,
             .referral-stats-card,
@@ -2862,6 +3155,10 @@
             }
             
             .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .achievement-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -3011,7 +3308,7 @@
             }
         }
         
-        /* SCROLLBAR */
+        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -3032,7 +3329,7 @@
             background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
         }
         
-        /* SELECTION */
+        /* ===== SELECTION ===== */
         ::selection {
             background: var(--quantum-green);
             color: var(--space-dark);
@@ -3043,7 +3340,7 @@
             color: var(--space-dark);
         }
         
-        /* UTILITY CLASSES */
+        /* ===== UTILITY CLASSES ===== */
         .hidden {
             display: none !important;
         }
@@ -3137,7 +3434,7 @@
             </div>
         </header>
 
-        <!-- NAVIGATION - MOVED TO BOTTOM -->
+        <!-- NAVIGATION - BOTTOM -->
         <nav class="main-nav">
             <button class="nav-btn active" data-page="home">
                 <i class="fas fa-home"></i>
@@ -3160,9 +3457,9 @@
         <!-- NOTIFICATION CONTAINER -->
         <div id="notification-container" class="notification-container"></div>
 
-        <!-- 👽 HOME PAGE - MINING (مع التعديلات الجديدة) -->
+        <!-- 👽 HOME PAGE -->
         <div id="home-page" class="page active">
-            <!-- Mining Section (كما هو) -->
+            <!-- Mining Section -->
             <section class="mining-section">
                 <div class="mining-header">
                     <h3><i class="fas fa-microchip"></i> Quantum Mining Station</h3>
@@ -3173,7 +3470,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Hashrate</div>
-                            <div class="stat-value" id="current-hashrate-display">2,500</div>
+                            <div class="stat-value" id="current-hashrate-display">1,000</div>
                         </div>
                     </div>
                 </div>
@@ -3184,7 +3481,7 @@
                         <span id="mining-timer-display">01:00:00</span>
                     </div>
                     <div class="next-reward">
-                        Next Reward: <span id="next-reward-amount">2,500</span> AMSK
+                        Next Reward: <span id="next-reward-amount">1,000</span> AMSK
                     </div>
                 </div>
 
@@ -3196,42 +3493,71 @@
                 <div class="mining-info">
                     <div class="info-item">
                         <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
+                        <span>Total Mined: <span id="total-mined">1,000</span> AMSK</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
+                        <span>Today: <span id="mined-today">1,000</span> AMSK</span>
+                    </div>
+                </div>
+
+                <!-- الأزرار الجديدة -->
+                <div class="mining-quick-actions">
+                    <div class="quick-action-btn" id="quick-tasks-btn">
+                        <i class="fas fa-tasks"></i>
+                        <span class="quick-title">Tasks</span>
+                        <span class="quick-sub">Earn up to 50k AMSK</span>
+                    </div>
+                    <div class="quick-action-btn" id="quick-boost-btn">
+                        <i class="fas fa-rocket"></i>
+                        <span class="quick-title">Boost</span>
+                        <span class="quick-sub">Earn up to 100k/h</span>
                     </div>
                 </div>
             </section>
 
-            <!-- ✅ Upgrade Mining Level (في الأعلى الآن) -->
+            <!-- Upgrade Section -->
             <section class="upgrade-section">
                 <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
-                <div class="upgrade-cards" id="upgrade-cards">
-                    <!-- بطاقات الترقية سيتم تعبئتها عبر JavaScript -->
+                <div class="upgrade-cards" id="upgrade-cards"></div>
+            </section>
+
+            <!-- Achievements Section (جديد) -->
+            <section class="achievements-section" id="achievements-section">
+                <div class="achievements-header">
+                    <h4><i class="fas fa-trophy"></i> Bonus Achievements</h4>
+                    <div class="achievements-sub">Complete to earn extra AMSK</div>
+                </div>
+                
+                <!-- Upgrade Achievements -->
+                <div class="achievement-category">
+                    <h5><i class="fas fa-arrow-up"></i> Upgrade Milestones</h5>
+                    <div class="achievement-grid" id="upgrade-achievements-grid"></div>
+                </div>
+                
+                <!-- Staking Achievements -->
+                <div class="achievement-category">
+                    <h5><i class="fas fa-gem"></i> First Staking Bonuses</h5>
+                    <div class="achievement-grid" id="staking-achievements-grid"></div>
                 </div>
             </section>
 
-            <!-- ✅ One-Time Tasks (في الأسفل الآن) -->
+            <!-- Tasks Section -->
             <section class="tasks-section">
                 <div class="tasks-header">
                     <h4><i class="fas fa-tasks"></i> One-Time Tasks</h4>
                     <div class="tasks-progress" id="tasks-progress">0/4 Completed</div>
                 </div>
-                <div class="tasks-grid" id="tasks-grid">
-                    <!-- سيتم تعبئتها عبر JavaScript -->
-                </div>
+                <div class="tasks-grid" id="tasks-grid"></div>
             </section>
         </div>
 
-        <!-- 👽 STAKING PAGE -->
+        <!-- STAKING PAGE -->
         <div id="staking-page" class="page">
             <div class="staking-content">
                 <div class="staking-card">
                     <h4><i class="fas fa-gem"></i> Quantum Staking</h4>
                     <p class="staking-description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
-                    
                     <div class="total-staked-card">
                         <div class="staked-info">
                             <div class="staked-label">Total Staked</div>
@@ -3246,9 +3572,7 @@
 
                 <div class="staking-card">
                     <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
-                    
                     <div class="staking-plans-grid">
-                        <!-- Silver Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Silver Plan</div>
                             <div class="plan-amount">10+ USDT</div>
@@ -3257,8 +3581,6 @@
                             <div class="plan-reward">Daily: 2,857 AMSK per $10</div>
                             <button class="stake-plan-btn" data-plan="1">Stake Now</button>
                         </div>
-
-                        <!-- Gold Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Gold Plan</div>
                             <div class="plan-amount">50+ USDT</div>
@@ -3267,8 +3589,6 @@
                             <div class="plan-reward">Daily: 8,333 AMSK per $50</div>
                             <button class="stake-plan-btn" data-plan="2">Stake Now</button>
                         </div>
-
-                        <!-- Diamond Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Diamond Plan</div>
                             <div class="plan-amount">100+ USDT</div>
@@ -3293,7 +3613,7 @@
             </div>
         </div>
         
-        <!-- 👽 WALLET PAGE -->
+        <!-- WALLET PAGE -->
         <div id="wallet-page" class="page">
             <div class="wallet-content">
                 <div class="wallet-balance-card">
@@ -3305,7 +3625,6 @@
 
                 <div class="wallet-actions-card">
                     <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
-                    
                     <div class="wallet-actions-compact">
                         <button class="wallet-action-btn" id="deposit-btn">
                             <i class="fas fa-download"></i>
@@ -3328,68 +3647,49 @@
 
                 <div class="wallet-assets-card">
                     <h4><i class="fas fa-coins"></i> Assets</h4>
-                    
-                    <div class="assets-section">
-                        <div class="asset-list-compact">
-                            <!-- AMSK -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ams-icon">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">AMSK Token</div>
-                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                    <div class="asset-list-compact">
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ams-icon"><i class="fas fa-robot"></i></div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">AMSK Token</div>
+                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
                             </div>
-
-                            <!-- USDT -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact usdt-icon">
-                                    <i class="fas fa-coins"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">USDT</div>
-                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                        </div>
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact usdt-icon"><i class="fas fa-coins"></i></div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">USDT</div>
+                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
                             </div>
-
-                            <!-- BNB -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact bnb-icon">
-                                    <i class="fab fa-btc"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">BNB</div>
-                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                        </div>
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact bnb-icon"><i class="fab fa-btc"></i></div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">BNB</div>
+                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
                             </div>
-
-                            <!-- TON -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ton-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">TON</div>
-                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                        </div>
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ton-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">TON</div>
+                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
                             </div>
+                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 👽 REFERRAL PAGE -->
+        <!-- REFERRAL PAGE -->
         <div id="referral-page" class="page">
             <div class="referral-content">
                 <div class="referral-stats-card">
                     <h4><i class="fas fa-chart-line"></i> Referral Stats</h4>
-                    
                     <div class="referral-stats-grid">
                         <div class="ref-stat-item">
                             <div class="ref-stat-value" id="ref-count">0</div>
@@ -3404,114 +3704,37 @@
 
                 <div class="referral-link-card">
                     <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                    <!-- النص التوضيحي الجديد -->
+                    <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+                        <p style="color: var(--quantum-green); font-size: 12px; margin: 0; text-align: center;">
+                            🚀 <strong>Referral Program</strong><br>
+                            Share your link and earn:<br>
+                            ✓ 10,000 AMSK ($2) bonus per friend<br>
+                            ✓ 10% of their deposits
+                        </p>
+                    </div>
                     <div class="link-input-group">
                         <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
-                        <button class="copy-link-btn" id="copy-link-btn">
-                            <i class="far fa-copy"></i>
-                        </button>
+                        <button class="copy-link-btn" id="copy-link-btn"><i class="far fa-copy"></i></button>
                     </div>
-                    
                     <div class="share-buttons">
-                        <button class="share-btn telegram" id="telegram-share-btn">
-                            <i class="fab fa-telegram"></i>
-                            <span>Telegram</span>
-                        </button>
-                        <button class="share-btn whatsapp" id="whatsapp-share-btn">
-                            <i class="fab fa-whatsapp"></i>
-                            <span>WhatsApp</span>
-                        </button>
+                        <button class="share-btn telegram" id="telegram-share-btn"><i class="fab fa-telegram"></i><span>Telegram</span></button>
+                        <button class="share-btn whatsapp" id="whatsapp-share-btn"><i class="fab fa-whatsapp"></i><span>WhatsApp</span></button>
                     </div>
                 </div>
 
                 <div class="milestones-card">
                     <h4><i class="fas fa-trophy"></i> Referral Milestones</h4>
                     <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
-                    
-                    <div class="milestones-list" id="milestones-list">
-                        <!-- Milestone 10 -->
-                        <div class="milestone-item locked" data-milestone="10">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">10 Referrals</div>
-                                <div class="milestone-progress">0/10</div>
-                                <div class="milestone-reward">+50,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/10</span>
-                            </div>
-                        </div>
-
-                        <!-- Milestone 25 -->
-                        <div class="milestone-item locked" data-milestone="25">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">25 Referrals</div>
-                                <div class="milestone-progress">0/25</div>
-                                <div class="milestone-reward">+150,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/25</span>
-                            </div>
-                        </div>
-
-                        <!-- Milestone 50 -->
-                        <div class="milestone-item locked" data-milestone="50">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">50 Referrals</div>
-                                <div class="milestone-progress">0/50</div>
-                                <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/50</span>
-                            </div>
-                        </div>
-
-                        <!-- Milestone 100 -->
-                        <div class="milestone-item locked" data-milestone="100">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">100 Referrals</div>
-                                <div class="milestone-progress">0/100</div>
-                                <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/100</span>
-                            </div>
-                        </div>
-
-                        <!-- Milestone 250 -->
-                        <div class="milestone-item locked" data-milestone="250">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement">250 Referrals</div>
-                                <div class="milestone-progress">0/250</div>
-                                <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/250</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="milestones-list" id="milestones-list"></div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- 👽 CONNECTOR SCRIPT -->
+        <!-- CONNECTOR SCRIPT -->
     <script>
-        // 👽 Alien Musk Quantum Connector v6.4
-        console.log("🔗 Loading Alien Musk Quantum Platform v6.4...");
+        // 👽 Alien Musk Quantum Connector v6.5
+        console.log("🔗 Loading Alien Musk Quantum Platform v6.5...");
         
         // Global variables
         window.tg = null;
@@ -3671,14 +3894,15 @@
         
         console.log("✅ Alien Musk Connector Loaded Successfully");
     </script>
-        <!-- 👽 MAIN APPLICATION JS v6.4 - كامل غير مختصر -->
+
+    <!-- MAIN APPLICATION JS v6.5 - كامل مع جميع التعديلات -->
     <script>
         // ============================================
-        // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
-        // PROFESSIONAL HISTORY SYSTEM EDITION + REFERRAL FIX + ENHANCED USER MESSAGES
+        // 👽 ALIEN MUSK - Quantum Mining Platform v6.5
+        // النسخة الكاملة مع جميع التعديلات المطلوبة
         // ============================================
 
-        // Configuration - UPDATED WITH CORRECT CALCULATIONS
+        // Configuration - مع تخفيض المكافأة إلى 1000
         const CONFIG = {
             // Token Prices (USD)
             PRICES: {
@@ -3688,12 +3912,12 @@
                 TON: 1.4
             },
             
-            // Mining Configuration
+            // Mining Configuration - تم تعديل المستوى الأول
             MINING: {
                 DURATION: 3600000, // 1 hour in ms
                 
                 LEVELS: {
-                    1: { name: "⚡ Beginner", cost: 0, reward: 2500, hashrate: 2500, apy: "∞" },
+                    1: { name: "⚡ Beginner", cost: 0, reward: 1000, hashrate: 1000, apy: "∞" },
                     2: { name: "🚀 Advanced", cost: 5, reward: 5000, hashrate: 5000, apy: "200%" },
                     3: { name: "💎 Pro", cost: 20, reward: 10000, hashrate: 10000, apy: "250%" },
                     4: { name: "👑 Legend", cost: 50, reward: 50000, hashrate: 50000, apy: "300%" },
@@ -3731,7 +3955,7 @@
                 }
             },
             
-            // TASKS - أربع مهام لمرة واحدة
+            // TASKS
             TASKS: {
                 1: { name: "Join Telegram Channel", url: "https://t.me/your_channel", icon: "fab fa-telegram", reward: 5000 },
                 2: { name: "Subscribe on YouTube", url: "https://youtube.com/your_channel", icon: "fab fa-youtube", reward: 5000 },
@@ -3794,6 +4018,22 @@
             ADMIN: {
                 TELEGRAM_ID: "1653918641",
                 PASSWORD: "Ali97$"
+            },
+            
+            // Achievement Rewards
+            ACHIEVEMENTS: {
+                UPGRADE: {
+                    1: 5000,
+                    2: 10000,
+                    3: 15000,
+                    4: 20000,
+                    5: 25000
+                },
+                STAKING: {
+                    silver: 10000,
+                    gold: 50000,
+                    diamond: 100000
+                }
             }
         };
 
@@ -3813,10 +4053,10 @@
             referralBonusClaimed: false
         };
 
-        // Wallet Data
+        // Wallet Data - مع إضافة achievements
         let walletData = {
             balances: {
-                AMSK: 2500,
+                AMSK: 1000,
                 USDT: 0,
                 BNB: 0,
                 TON: 0
@@ -3826,8 +4066,8 @@
                 active: false,
                 lastReward: null,
                 nextReward: null,
-                totalMined: 2500,
-                minedToday: 2500
+                totalMined: 1000,
+                minedToday: 1000
             },
             staking: {
                 activeStakes: [],
@@ -3842,6 +4082,21 @@
             },
             tasks: {
                 completed: []
+            },
+            // نظام الإنجازات الجديد
+            achievements: {
+                upgradeTasks: {
+                    1: { completed: false, claimed: false },
+                    2: { completed: false, claimed: false },
+                    3: { completed: false, claimed: false },
+                    4: { completed: false, claimed: false },
+                    5: { completed: false, claimed: false }
+                },
+                stakingTasks: {
+                    silver: { completed: false, claimed: false },
+                    gold: { completed: false, claimed: false },
+                    diamond: { completed: false, claimed: false }
+                }
             },
             pendingDeposits: [],
             pendingWithdrawals: [],
@@ -3874,7 +4129,7 @@
         let unsubscribeUserListener = null;
 
         // ============================================
-        // دالة إنشاء كود إحالة فريد
+        // دوال مساعدة
         // ============================================
         function generateReferralCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -3885,9 +4140,6 @@
             return code;
         }
 
-        // ============================================
-        // دالة عرض الرسائل مع مدة محددة (محسنة)
-        // ============================================
         function showMessage(text, type = 'info', duration = 3000) {
             const container = document.getElementById('notification-container');
             if (!container) return;
@@ -3932,16 +4184,265 @@
         }
 
         // ============================================
+        // دوال التمرير الجديدة
+        // ============================================
+        function scrollToTasks() {
+            const tasksSection = document.querySelector('.tasks-section');
+            if (tasksSection) {
+                tasksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function scrollToMythic() {
+            const upgradeCards = document.querySelectorAll('.upgrade-card');
+            let mythicCard = null;
+            upgradeCards.forEach(card => {
+                if (card.dataset.level === '5') {
+                    mythicCard = card;
+                }
+            });
+            if (mythicCard) {
+                mythicCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                mythicCard.style.border = '2px solid var(--quantum-gold)';
+                setTimeout(() => {
+                    mythicCard.style.border = '1px solid rgba(0, 212, 255, 0.2)';
+                }, 2000);
+            } else {
+                const upgradeSection = document.querySelector('.upgrade-section');
+                if (upgradeSection) {
+                    upgradeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
+        // ============================================
+        // نظام الإنجازات الجديد
+        // ============================================
+        function updateAchievementsDisplay() {
+            if (!walletData.achievements) {
+                walletData.achievements = {
+                    upgradeTasks: {
+                        1: { completed: false, claimed: false },
+                        2: { completed: false, claimed: false },
+                        3: { completed: false, claimed: false },
+                        4: { completed: false, claimed: false },
+                        5: { completed: false, claimed: false }
+                    },
+                    stakingTasks: {
+                        silver: { completed: false, claimed: false },
+                        gold: { completed: false, claimed: false },
+                        diamond: { completed: false, claimed: false }
+                    }
+                };
+            }
+            
+            const upgradeGrid = document.getElementById('upgrade-achievements-grid');
+            const stakingGrid = document.getElementById('staking-achievements-grid');
+            
+            if (upgradeGrid) {
+                let upgradeHtml = '';
+                for (let level = 1; level <= 5; level++) {
+                    const achievement = walletData.achievements.upgradeTasks[level];
+                    const reward = CONFIG.ACHIEVEMENTS.UPGRADE[level];
+                    const isCompleted = achievement?.completed || false;
+                    const isClaimed = achievement?.claimed || false;
+                    
+                    let statusClass = 'locked';
+                    let buttonHtml = `<button class="achievement-btn locked" disabled>Locked</button>`;
+                    
+                    if (isClaimed) {
+                        statusClass = 'claimed';
+                        buttonHtml = `<button class="achievement-btn claimed" disabled>Claimed ✓</button>`;
+                    } else if (isCompleted) {
+                        statusClass = 'can-claim';
+                        buttonHtml = `<button class="achievement-btn claim" onclick="claimUpgradeAchievement(${level})">Claim ${reward.toLocaleString()} AMSK</button>`;
+                    } else {
+                        statusClass = 'locked';
+                        buttonHtml = `<button class="achievement-btn locked" disabled>Reach Level ${level}</button>`;
+                    }
+                    
+                    upgradeHtml += `
+                        <div class="achievement-item ${statusClass}" data-upgrade-level="${level}">
+                            <div class="achievement-icon"><i class="fas fa-arrow-up"></i></div>
+                            <div class="achievement-title">Upgrade to Level ${level}</div>
+                            <div class="achievement-reward">+${reward.toLocaleString()} AMSK</div>
+                            ${buttonHtml}
+                        </div>
+                    `;
+                }
+                upgradeGrid.innerHTML = upgradeHtml;
+            }
+            
+            if (stakingGrid) {
+                const stakingPlans = [
+                    { id: 'silver', name: 'Silver Plan', min: 10, reward: CONFIG.ACHIEVEMENTS.STAKING.silver },
+                    { id: 'gold', name: 'Gold Plan', min: 50, reward: CONFIG.ACHIEVEMENTS.STAKING.gold },
+                    { id: 'diamond', name: 'Diamond Plan', min: 100, reward: CONFIG.ACHIEVEMENTS.STAKING.diamond }
+                ];
+                
+                let stakingHtml = '';
+                stakingPlans.forEach(plan => {
+                    const achievement = walletData.achievements.stakingTasks[plan.id];
+                    const isCompleted = achievement?.completed || false;
+                    const isClaimed = achievement?.claimed || false;
+                    
+                    let statusClass = 'locked';
+                    let buttonHtml = `<button class="achievement-btn locked" disabled>Locked</button>`;
+                    
+                    if (isClaimed) {
+                        statusClass = 'claimed';
+                        buttonHtml = `<button class="achievement-btn claimed" disabled>Claimed ✓</button>`;
+                    } else if (isCompleted) {
+                        statusClass = 'can-claim';
+                        buttonHtml = `<button class="achievement-btn claim" onclick="claimStakingAchievement('${plan.id}')">Claim ${plan.reward.toLocaleString()} AMSK</button>`;
+                    } else {
+                        statusClass = 'locked';
+                        buttonHtml = `<button class="achievement-btn locked" disabled>Stake ${plan.min}+ USDT</button>`;
+                    }
+                    
+                    stakingHtml += `
+                        <div class="achievement-item ${statusClass}" data-staking-plan="${plan.id}">
+                            <div class="achievement-icon"><i class="fas fa-gem"></i></div>
+                            <div class="achievement-title">${plan.name}</div>
+                            <div class="achievement-reward">+${plan.reward.toLocaleString()} AMSK</div>
+                            ${buttonHtml}
+                        </div>
+                    `;
+                });
+                stakingGrid.innerHTML = stakingHtml;
+            }
+        }
+
+        function checkUpgradeAchievements(level) {
+            if (!walletData.achievements) return;
+            
+            for (let lvl = 1; lvl <= level; lvl++) {
+                if (lvl <= 5 && walletData.achievements.upgradeTasks[lvl] && 
+                    !walletData.achievements.upgradeTasks[lvl].completed) {
+                    walletData.achievements.upgradeTasks[lvl].completed = true;
+                    showMessage(`🏆 Achievement unlocked: Reach Level ${lvl}! Check Bonus Achievements to claim.`, 'success');
+                }
+            }
+            
+            updateAchievementsDisplay();
+            saveUserData();
+        }
+
+        function checkStakingAchievement(planId, amount) {
+            if (!walletData.achievements) return;
+            
+            let planKey = '';
+            if (planId === 1) planKey = 'silver';
+            else if (planId === 2) planKey = 'gold';
+            else if (planId === 3) planKey = 'diamond';
+            
+            if (planKey && walletData.achievements.stakingTasks[planKey] && 
+                !walletData.achievements.stakingTasks[planKey].completed) {
+                walletData.achievements.stakingTasks[planKey].completed = true;
+                showMessage(`🏆 Achievement unlocked: First ${planKey} stake! Check Bonus Achievements to claim.`, 'success');
+            }
+            
+            updateAchievementsDisplay();
+            saveUserData();
+        }
+
+        async function claimUpgradeAchievement(level) {
+            try {
+                if (!walletData.achievements || !walletData.achievements.upgradeTasks[level]) {
+                    showMessage('Achievement not found', 'error');
+                    return;
+                }
+                
+                const achievement = walletData.achievements.upgradeTasks[level];
+                
+                if (achievement.claimed) {
+                    showMessage('Achievement already claimed', 'warning');
+                    return;
+                }
+                
+                if (!achievement.completed) {
+                    showMessage('Achievement not completed yet', 'warning');
+                    return;
+                }
+                
+                const reward = CONFIG.ACHIEVEMENTS.UPGRADE[level];
+                walletData.balances.AMSK += reward;
+                walletData.achievements.upgradeTasks[level].claimed = true;
+                
+                addTransactionToHistory('achievement_reward', reward, 'AMSK', `Upgrade to Level ${level}`, 'completed', 'Achievement reward claimed');
+                
+                updateAchievementsDisplay();
+                updateWalletUI();
+                await saveUserData();
+                
+                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for reaching Level ${level}!`, 'success');
+                
+            } catch (error) {
+                console.error('Error claiming upgrade achievement:', error);
+                showMessage('Failed to claim achievement', 'error');
+            }
+        }
+
+        async function claimStakingAchievement(planId) {
+            try {
+                if (!walletData.achievements || !walletData.achievements.stakingTasks[planId]) {
+                    showMessage('Achievement not found', 'error');
+                    return;
+                }
+                
+                const achievement = walletData.achievements.stakingTasks[planId];
+                
+                if (achievement.claimed) {
+                    showMessage('Achievement already claimed', 'warning');
+                    return;
+                }
+                
+                if (!achievement.completed) {
+                    showMessage('Achievement not completed yet', 'warning');
+                    return;
+                }
+                
+                let reward = 0;
+                let planName = '';
+                
+                if (planId === 'silver') {
+                    reward = CONFIG.ACHIEVEMENTS.STAKING.silver;
+                    planName = 'Silver';
+                } else if (planId === 'gold') {
+                    reward = CONFIG.ACHIEVEMENTS.STAKING.gold;
+                    planName = 'Gold';
+                } else if (planId === 'diamond') {
+                    reward = CONFIG.ACHIEVEMENTS.STAKING.diamond;
+                    planName = 'Diamond';
+                }
+                
+                walletData.balances.AMSK += reward;
+                walletData.achievements.stakingTasks[planId].claimed = true;
+                
+                addTransactionToHistory('achievement_reward', reward, 'AMSK', `${planName} Plan first stake`, 'completed', 'Achievement reward claimed');
+                
+                updateAchievementsDisplay();
+                updateWalletUI();
+                await saveUserData();
+                
+                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for your first ${planName} stake!`, 'success');
+                
+            } catch (error) {
+                console.error('Error claiming staking achievement:', error);
+                showMessage('Failed to claim achievement', 'error');
+            }
+        }
+
+        // ============================================
         // INITIALIZATION
         // ============================================
-
         async function initAlienMuskApp() {
             if (appInitialized) {
                 console.log("⚠️ Already initialized, skipping...");
                 return;
             }
             appInitialized = true;
-            console.log("🚀 Initializing Alien Musk Platform v6.4...");
+            console.log("🚀 Initializing Alien Musk Platform v6.5...");
             
             try {
                 cacheElements();
@@ -3957,7 +4458,7 @@
                 console.log("✅ Platform initialized successfully");
                 
                 setTimeout(() => {
-                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.4!", "success");
+                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.5!", "success");
                 }, 800);
                 
             } catch (error) {
@@ -3987,8 +4488,6 @@
             elements.nextRewardAmount = document.getElementById('next-reward-amount');
             elements.totalMined = document.getElementById('total-mined');
             elements.minedToday = document.getElementById('mined-today');
-            elements.upgradeCards = document.querySelectorAll('.upgrade-card');
-            elements.upgradeButtons = document.querySelectorAll('.upgrade-btn');
             elements.upgradeCardsContainer = document.getElementById('upgrade-cards');
             elements.stakeButtons = document.querySelectorAll('.stake-plan-btn');
             elements.totalStaked = document.getElementById('total-staked');
@@ -4016,12 +4515,14 @@
             elements.milestonesList = document.getElementById('milestones-list');
             elements.tasksGrid = document.getElementById('tasks-grid');
             elements.tasksProgress = document.getElementById('tasks-progress');
+            elements.quickTasksBtn = document.getElementById('quick-tasks-btn');
+            elements.quickBoostBtn = document.getElementById('quick-boost-btn');
             
             console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
         }
 
         // ============================================
-        // دالة setupUser
+        // SETUP USER
         // ============================================
         async function setupUser() {
             console.log("👤 Setting up user...");
@@ -4084,6 +4585,23 @@
                 walletData.tasks = { completed: [] };
             }
             
+            if (!walletData.achievements) {
+                walletData.achievements = {
+                    upgradeTasks: {
+                        1: { completed: false, claimed: false },
+                        2: { completed: false, claimed: false },
+                        3: { completed: false, claimed: false },
+                        4: { completed: false, claimed: false },
+                        5: { completed: false, claimed: false }
+                    },
+                    stakingTasks: {
+                        silver: { completed: false, claimed: false },
+                        gold: { completed: false, claimed: false },
+                        diamond: { completed: false, claimed: false }
+                    }
+                };
+            }
+            
             updateUserUI();
         }
 
@@ -4112,7 +4630,6 @@
         // ============================================
         // REALTIME LISTENER
         // ============================================
-
         function setupUserRealtimeListener() {
             if (!window.db || !userData.id) {
                 console.log("⚠️ Cannot setup realtime listener: Firebase not available or user ID missing");
@@ -4132,27 +4649,14 @@
                         console.log("🔄 Realtime update received from Firestore");
                         const firebaseData = doc.data();
 
-                        if (firebaseData.balances) {
-                            walletData.balances = firebaseData.balances;
-                        }
-                        if (firebaseData.mining) {
-                            walletData.mining = firebaseData.mining;
-                        }
-                        if (firebaseData.staking) {
-                            walletData.staking = firebaseData.staking;
-                        }
-                        if (firebaseData.referrals) {
-                            walletData.referrals = firebaseData.referrals;
-                        }
-                        if (firebaseData.tasks) {
-                            walletData.tasks = firebaseData.tasks;
-                        }
-                        if (firebaseData.transactions) {
-                            walletData.transactions = firebaseData.transactions;
-                        }
-                        if (firebaseData.transactionHistory) {
-                            walletData.transactionHistory = firebaseData.transactionHistory;
-                        }
+                        if (firebaseData.balances) walletData.balances = firebaseData.balances;
+                        if (firebaseData.mining) walletData.mining = firebaseData.mining;
+                        if (firebaseData.staking) walletData.staking = firebaseData.staking;
+                        if (firebaseData.referrals) walletData.referrals = firebaseData.referrals;
+                        if (firebaseData.tasks) walletData.tasks = firebaseData.tasks;
+                        if (firebaseData.achievements) walletData.achievements = firebaseData.achievements;
+                        if (firebaseData.transactions) walletData.transactions = firebaseData.transactions;
+                        if (firebaseData.transactionHistory) walletData.transactionHistory = firebaseData.transactionHistory;
 
                         walletData.lastUpdate = Date.now();
                         updateUI();
@@ -4163,9 +4667,8 @@
         }
 
         // ============================================
-        // FIREBASE DATABASE FUNCTIONS
+        // FIREBASE FUNCTIONS
         // ============================================
-
         async function loadUserDataFromFirebase() {
             console.log("🔥 Loading user data from Firebase...");
             
@@ -4183,27 +4686,14 @@
                 if (userDoc.exists) {
                     const firebaseData = userDoc.data();
                     
-                    if (firebaseData.balances) {
-                        walletData.balances = firebaseData.balances;
-                    }
-                    if (firebaseData.mining) {
-                        walletData.mining = firebaseData.mining;
-                    }
-                    if (firebaseData.staking) {
-                        walletData.staking = firebaseData.staking;
-                    }
-                    if (firebaseData.referrals) {
-                        walletData.referrals = firebaseData.referrals;
-                    }
-                    if (firebaseData.tasks) {
-                        walletData.tasks = firebaseData.tasks;
-                    }
-                    if (firebaseData.transactions) {
-                        walletData.transactions = firebaseData.transactions;
-                    }
-                    if (firebaseData.transactionHistory) {
-                        walletData.transactionHistory = firebaseData.transactionHistory;
-                    }
+                    if (firebaseData.balances) walletData.balances = firebaseData.balances;
+                    if (firebaseData.mining) walletData.mining = firebaseData.mining;
+                    if (firebaseData.staking) walletData.staking = firebaseData.staking;
+                    if (firebaseData.referrals) walletData.referrals = firebaseData.referrals;
+                    if (firebaseData.tasks) walletData.tasks = firebaseData.tasks;
+                    if (firebaseData.achievements) walletData.achievements = firebaseData.achievements;
+                    if (firebaseData.transactions) walletData.transactions = firebaseData.transactions;
+                    if (firebaseData.transactionHistory) walletData.transactionHistory = firebaseData.transactionHistory;
                     
                     if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
                         userData.referralBonusClaimed = firebaseData.userInfo.referralBonusClaimed;
@@ -4298,6 +4788,7 @@
                     staking: walletData.staking,
                     referrals: walletData.referrals,
                     tasks: walletData.tasks,
+                    achievements: walletData.achievements,
                     transactions: walletData.transactions || [],
                     transactionHistory: walletData.transactionHistory || [],
                     userInfo: {
@@ -4335,6 +4826,7 @@
                     staking: walletData.staking,
                     referrals: walletData.referrals,
                     tasks: walletData.tasks,
+                    achievements: walletData.achievements,
                     pendingDeposits: walletData.pendingDeposits,
                     pendingWithdrawals: walletData.pendingWithdrawals,
                     transactions: walletData.transactions,
@@ -4361,7 +4853,7 @@
                     
                     if (parsed.balances) {
                         walletData.balances = {
-                            AMSK: parsed.balances.AMSK || 2500,
+                            AMSK: parsed.balances.AMSK || 1000,
                             USDT: parsed.balances.USDT || 0,
                             BNB: parsed.balances.BNB || 0,
                             TON: parsed.balances.TON || 0
@@ -4370,41 +4862,26 @@
                     
                     if (parsed.mining) {
                         walletData.mining = parsed.mining;
-                    }
-                    
-                    if (parsed.staking) {
-                        walletData.staking = parsed.staking;
-                    }
-                    
-                    if (parsed.referrals) {
-                        walletData.referrals = parsed.referrals;
-                    }
-                    
-                    if (parsed.tasks) {
-                        walletData.tasks = parsed.tasks;
                     } else {
-                        walletData.tasks = { completed: [] };
+                        walletData.mining = {
+                            level: 1,
+                            active: false,
+                            lastReward: null,
+                            nextReward: null,
+                            totalMined: 1000,
+                            minedToday: 1000
+                        };
                     }
                     
-                    if (parsed.pendingDeposits) {
-                        walletData.pendingDeposits = parsed.pendingDeposits;
-                    }
-                    
-                    if (parsed.pendingWithdrawals) {
-                        walletData.pendingWithdrawals = parsed.pendingWithdrawals;
-                    }
-                    
-                    if (parsed.transactions) {
-                        walletData.transactions = parsed.transactions;
-                    }
-                    
-                    if (parsed.transactionHistory) {
-                        walletData.transactionHistory = parsed.transactionHistory;
-                    }
-                    
-                    if (parsed.usedTxIds) {
-                        walletData.usedTxIds = parsed.usedTxIds;
-                    }
+                    if (parsed.staking) walletData.staking = parsed.staking;
+                    if (parsed.referrals) walletData.referrals = parsed.referrals;
+                    if (parsed.tasks) walletData.tasks = parsed.tasks;
+                    if (parsed.achievements) walletData.achievements = parsed.achievements;
+                    if (parsed.pendingDeposits) walletData.pendingDeposits = parsed.pendingDeposits;
+                    if (parsed.pendingWithdrawals) walletData.pendingWithdrawals = parsed.pendingWithdrawals;
+                    if (parsed.transactions) walletData.transactions = parsed.transactions;
+                    if (parsed.transactionHistory) walletData.transactionHistory = parsed.transactionHistory;
+                    if (parsed.usedTxIds) walletData.usedTxIds = parsed.usedTxIds;
                     
                     console.log("✅ Data loaded from localStorage");
                     cleanDuplicateTransactions();
@@ -4420,28 +4897,31 @@
         }
 
         function initializeDefaultData() {
-            walletData.balances = { AMSK: 2500, USDT: 0, BNB: 0, TON: 0 };
+            walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
             walletData.mining = {
                 level: 1,
                 active: false,
                 lastReward: null,
                 nextReward: null,
-                totalMined: 2500,
-                minedToday: 2500
+                totalMined: 1000,
+                minedToday: 1000
             };
-            walletData.staking = {
-                activeStakes: [],
-                totalEarned: 0,
-                totalStaked: 0
-            };
-            walletData.referrals = {
-                count: 0,
-                earned: { amsk: 0, bnb: 0 },
-                referrals: [],
-                claimedMilestones: []
-            };
-            walletData.tasks = {
-                completed: []
+            walletData.staking = { activeStakes: [], totalEarned: 0, totalStaked: 0 };
+            walletData.referrals = { count: 0, earned: { amsk: 0, bnb: 0 }, referrals: [], claimedMilestones: [] };
+            walletData.tasks = { completed: [] };
+            walletData.achievements = {
+                upgradeTasks: {
+                    1: { completed: false, claimed: false },
+                    2: { completed: false, claimed: false },
+                    3: { completed: false, claimed: false },
+                    4: { completed: false, claimed: false },
+                    5: { completed: false, claimed: false }
+                },
+                stakingTasks: {
+                    silver: { completed: false, claimed: false },
+                    gold: { completed: false, claimed: false },
+                    diamond: { completed: false, claimed: false }
+                }
             };
             walletData.pendingDeposits = [];
             walletData.pendingWithdrawals = [];
@@ -4451,16 +4931,11 @@
         }
 
         function cleanDuplicateTransactions() {
-            if (!walletData.transactionHistory) {
-                walletData.transactionHistory = [];
-            }
+            if (!walletData.transactionHistory) walletData.transactionHistory = [];
             
             const uniqueIds = new Set();
             walletData.transactionHistory = walletData.transactionHistory.filter(tx => {
-                if (uniqueIds.has(tx.id)) {
-                    console.log(`Removing duplicate transaction: ${tx.id}`);
-                    return false;
-                }
+                if (uniqueIds.has(tx.id)) return false;
                 uniqueIds.add(tx.id);
                 return true;
             });
@@ -4476,7 +4951,6 @@
         // ============================================
         // TRANSACTION SYSTEM
         // ============================================
-
         function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
             const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             
@@ -4491,35 +4965,23 @@
                 txId: txId,
                 timestamp: Date.now(),
                 dateFormatted: new Date().toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
                 })
             };
             
-            if (!walletData.transactionHistory) {
-                walletData.transactionHistory = [];
-            }
+            if (!walletData.transactionHistory) walletData.transactionHistory = [];
             
             const isDuplicate = walletData.transactionHistory.some(tx => 
-                tx.type === type && 
-                tx.amount === amount && 
-                tx.currency === currency && 
+                tx.type === type && tx.amount === amount && tx.currency === currency && 
                 Math.abs(tx.timestamp - transaction.timestamp) < 5000
             );
             
             if (!isDuplicate) {
                 walletData.transactionHistory.unshift(transaction);
-                
                 if (walletData.transactionHistory.length > 100) {
                     walletData.transactionHistory = walletData.transactionHistory.slice(0, 100);
                 }
-                
                 console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
-            } else {
-                console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
             }
             
             return transaction;
@@ -4537,30 +4999,15 @@
                     'approved': 'Withdrawal approved. Funds sent to your wallet.',
                     'rejected': 'Withdrawal rejected. Please check your wallet address.'
                 },
-                'mining_reward': {
-                    'completed': 'Mining reward claimed successfully.'
-                },
-                'staking_start': {
-                    'completed': 'Staking started successfully.'
-                },
-                'staking_reward': {
-                    'completed': 'Staking reward claimed.'
-                },
-                'swap': {
-                    'completed': 'Swap completed successfully.'
-                },
-                'referral_welcome': {
-                    'completed': 'Welcome bonus for joining via referral.'
-                },
-                'referral_bonus': {
-                    'completed': 'Referral bonus earned.'
-                },
-                'referral_milestone': {
-                    'completed': 'Referral milestone reward claimed.'
-                },
-                'task_reward': {
-                    'completed': 'Task completed successfully.'
-                }
+                'mining_reward': { 'completed': 'Mining reward claimed successfully.' },
+                'staking_start': { 'completed': 'Staking started successfully.' },
+                'staking_reward': { 'completed': 'Staking reward claimed.' },
+                'swap': { 'completed': 'Swap completed successfully.' },
+                'referral_welcome': { 'completed': 'Welcome bonus for joining via referral.' },
+                'referral_bonus': { 'completed': 'Referral bonus earned.' },
+                'referral_milestone': { 'completed': 'Referral milestone reward claimed.' },
+                'task_reward': { 'completed': 'Task completed successfully.' },
+                'achievement_reward': { 'completed': 'Achievement reward claimed.' }
             };
             
             return messages[type]?.[status] || 'Transaction completed';
@@ -4580,17 +5027,13 @@
                     status: 'completed'
                 };
                 
-                if (!walletData.transactions) {
-                    walletData.transactions = [];
-                }
+                if (!walletData.transactions) walletData.transactions = [];
                 walletData.transactions.unshift(transaction);
-                
                 if (walletData.transactions.length > 50) {
                     walletData.transactions = walletData.transactions.slice(0, 50);
                 }
                 
                 addTransactionToHistory(type, amount, currency, description, 'completed', getDefaultMessage(type, 'completed'));
-                
                 console.log(`📝 Transaction added: ${type} ${amount} ${currency}`);
             }
         }
@@ -4598,7 +5041,6 @@
         // ============================================
         // HISTORY SYSTEM
         // ============================================
-
         function showTransactionHistory() {
             const modalContent = `
                 <div class="modal-overlay active" onclick="closeModal()">
@@ -4624,6 +5066,7 @@
                                 <button class="history-filter-btn" data-filter="swap">Swap</button>
                                 <button class="history-filter-btn" data-filter="referral">Referral</button>
                                 <button class="history-filter-btn" data-filter="task">Tasks</button>
+                                <button class="history-filter-btn" data-filter="achievement">Achievements</button>
                             </div>
                             
                             <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
@@ -4709,21 +5152,14 @@
             }
             
             if (filterType !== 'all') {
-                if (filterType === 'deposit') {
-                    transactions = transactions.filter(tx => tx.type.includes('deposit'));
-                } else if (filterType === 'withdrawal') {
-                    transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
-                } else if (filterType === 'mining') {
-                    transactions = transactions.filter(tx => tx.type.includes('mining'));
-                } else if (filterType === 'staking') {
-                    transactions = transactions.filter(tx => tx.type.includes('staking'));
-                } else if (filterType === 'swap') {
-                    transactions = transactions.filter(tx => tx.type.includes('swap'));
-                } else if (filterType === 'referral') {
-                    transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
-                } else if (filterType === 'task') {
-                    transactions = transactions.filter(tx => tx.type.includes('task'));
-                }
+                if (filterType === 'deposit') transactions = transactions.filter(tx => tx.type.includes('deposit'));
+                else if (filterType === 'withdrawal') transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
+                else if (filterType === 'mining') transactions = transactions.filter(tx => tx.type.includes('mining'));
+                else if (filterType === 'staking') transactions = transactions.filter(tx => tx.type.includes('staking'));
+                else if (filterType === 'swap') transactions = transactions.filter(tx => tx.type.includes('swap'));
+                else if (filterType === 'referral') transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+                else if (filterType === 'task') transactions = transactions.filter(tx => tx.type.includes('task'));
+                else if (filterType === 'achievement') transactions = transactions.filter(tx => tx.type.includes('achievement'));
             }
             
             if (transactions.length === 0) {
@@ -4748,46 +5184,20 @@
                 let icon = 'fa-exchange-alt';
                 let typeText = 'Swap';
                 
-                if (tx.type.includes('mining')) {
-                    iconClass = 'mining';
-                    icon = 'fa-microchip';
-                    typeText = 'Mining';
-                } else if (tx.type.includes('staking')) {
-                    iconClass = 'staking';
-                    icon = 'fa-gem';
-                    typeText = 'Staking';
-                } else if (tx.type.includes('deposit')) {
-                    iconClass = 'deposit';
-                    icon = 'fa-download';
-                    typeText = 'Deposit';
-                } else if (tx.type.includes('withdrawal')) {
-                    iconClass = 'withdraw';
-                    icon = 'fa-upload';
-                    typeText = 'Withdrawal';
-                } else if (tx.type.includes('referral')) {
-                    iconClass = 'referral';
-                    icon = 'fa-users';
-                    typeText = 'Referral';
-                } else if (tx.type.includes('milestone')) {
-                    iconClass = 'milestone';
-                    icon = 'fa-trophy';
-                    typeText = 'Milestone';
-                } else if (tx.type.includes('task')) {
-                    iconClass = 'task';
-                    icon = 'fa-tasks';
-                    typeText = 'Task';
-                }
+                if (tx.type.includes('mining')) { iconClass = 'mining'; icon = 'fa-microchip'; typeText = 'Mining'; }
+                else if (tx.type.includes('staking')) { iconClass = 'staking'; icon = 'fa-gem'; typeText = 'Staking'; }
+                else if (tx.type.includes('deposit')) { iconClass = 'deposit'; icon = 'fa-download'; typeText = 'Deposit'; }
+                else if (tx.type.includes('withdrawal')) { iconClass = 'withdraw'; icon = 'fa-upload'; typeText = 'Withdrawal'; }
+                else if (tx.type.includes('referral')) { iconClass = 'referral'; icon = 'fa-users'; typeText = 'Referral'; }
+                else if (tx.type.includes('milestone')) { iconClass = 'milestone'; icon = 'fa-trophy'; typeText = 'Milestone'; }
+                else if (tx.type.includes('task')) { iconClass = 'task'; icon = 'fa-tasks'; typeText = 'Task'; }
+                else if (tx.type.includes('achievement')) { iconClass = 'milestone'; icon = 'fa-trophy'; typeText = 'Achievement'; }
                 
                 let statusClass = '';
-                if (tx.status === 'pending') {
-                    statusClass = 'pending';
-                } else if (tx.status === 'completed' || tx.status === 'approved') {
-                    statusClass = 'completed';
-                } else if (tx.status === 'rejected') {
-                    statusClass = 'rejected';
-                } else if (tx.status === 'processing') {
-                    statusClass = 'processing';
-                }
+                if (tx.status === 'pending') statusClass = 'pending';
+                else if (tx.status === 'completed' || tx.status === 'approved') statusClass = 'completed';
+                else if (tx.status === 'rejected') statusClass = 'rejected';
+                else if (tx.status === 'processing') statusClass = 'processing';
                 
                 let displayAmount = `${amountSign}${absAmount.toLocaleString()} ${tx.currency}`;
                 if (tx.currency === 'AMSK' && absAmount >= 1000) {
@@ -4832,34 +5242,20 @@
         // ============================================
         // MINING SYSTEM
         // ============================================
-
         function updateMiningDisplay() {
             if (!walletData.mining) return;
             
             const mining = walletData.mining;
             const level = CONFIG.MINING.LEVELS[mining.level] || CONFIG.MINING.LEVELS[1];
             
-            if (elements.currentMiningLevel) {
-                elements.currentMiningLevel.textContent = mining.level;
-            }
-            
-            if (elements.currentHashrateDisplay) {
-                elements.currentHashrateDisplay.textContent = formatNumber(level.hashrate);
-            }
+            if (elements.currentMiningLevel) elements.currentMiningLevel.textContent = mining.level;
+            if (elements.currentHashrateDisplay) elements.currentHashrateDisplay.textContent = formatNumber(level.hashrate);
             
             updateMiningTimer();
             
-            if (elements.nextRewardAmount) {
-                elements.nextRewardAmount.textContent = formatNumber(level.reward);
-            }
-            
-            if (elements.totalMined) {
-                elements.totalMined.textContent = formatNumber(mining.totalMined);
-            }
-            
-            if (elements.minedToday) {
-                elements.minedToday.textContent = formatNumber(mining.minedToday);
-            }
+            if (elements.nextRewardAmount) elements.nextRewardAmount.textContent = formatNumber(level.reward);
+            if (elements.totalMined) elements.totalMined.textContent = formatNumber(mining.totalMined);
+            if (elements.minedToday) elements.minedToday.textContent = formatNumber(mining.minedToday);
             
             updateUpgradeCards();
             updateMiningButton();
@@ -4971,18 +5367,9 @@
                         </div>
                         <div class="upgrade-price-tag">💰 ${levelData.cost > 0 ? levelData.cost + ' USDT' : 'Free'}</div>
                         <div class="upgrade-stats">
-                            <div class="upgrade-stat">
-                                <i class="fas fa-microchip"></i>
-                                <span>${levelData.hashrate.toLocaleString()} Hash/s</span>
-                            </div>
-                            <div class="upgrade-stat">
-                                <i class="fas fa-gift"></i>
-                                <span>${levelData.reward.toLocaleString()} AMSK/hour</span>
-                            </div>
-                            <div class="upgrade-stat roi">
-                                <i class="fas fa-chart-line"></i>
-                                <span>ROI: ${levelData.apy}</span>
-                            </div>
+                            <div class="upgrade-stat"><i class="fas fa-microchip"></i><span>${levelData.hashrate.toLocaleString()} Hash/s</span></div>
+                            <div class="upgrade-stat"><i class="fas fa-gift"></i><span>${levelData.reward.toLocaleString()} AMSK/hour</span></div>
+                            <div class="upgrade-stat roi"><i class="fas fa-chart-line"></i><span>ROI: ${levelData.apy}</span></div>
                         </div>
                         <button class="upgrade-btn ${buttonClass}" 
                                 data-level="${level}" 
@@ -5062,10 +5449,7 @@
                 level = parseInt(level);
                 const levelData = CONFIG.MINING.LEVELS[level];
                 
-                if (!levelData) {
-                    throw new Error("Invalid mining level");
-                }
-                
+                if (!levelData) throw new Error("Invalid mining level");
                 if (level <= walletData.mining.level) {
                     showMessage("Already at or above this level!", "warning");
                     return;
@@ -5080,6 +5464,8 @@
                 walletData.mining.level = level;
                 
                 addTransactionToHistory('mining_upgrade', -levelData.cost, 'USDT', `Upgrade to ${levelData.name} level`, 'completed', 'Mining level upgraded');
+                
+                checkUpgradeAchievements(level);
                 
                 updateMiningDisplay();
                 updateWalletUI();
@@ -5096,7 +5482,6 @@
         // ============================================
         // WALLET SYSTEM
         // ============================================
-
         function updateWalletUI() {
             if (!walletData.balances) return;
             
@@ -5105,55 +5490,24 @@
             
             const totalUSD = (AMSK * PRICES.AMSK) + (USDT * PRICES.USDT) + (BNB * PRICES.BNB) + (TON * PRICES.TON);
             
-            if (elements.walletBalanceUsd) {
-                elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
-            }
+            if (elements.walletBalanceUsd) elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
+            if (elements.walletBalanceAmsk) elements.walletBalanceAmsk.textContent = `${formatNumber(AMSK)} AMSK`;
+            if (elements.totalBalanceUsd) elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
+            if (elements.totalBalanceAmsk) elements.totalBalanceAmsk.textContent = formatNumber(AMSK);
             
-            if (elements.walletBalanceAmsk) {
-                elements.walletBalanceAmsk.textContent = `${formatNumber(AMSK)} AMSK`;
-            }
-            
-            if (elements.totalBalanceUsd) {
-                elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
-            }
-            
-            if (elements.totalBalanceAmsk) {
-                elements.totalBalanceAmsk.textContent = formatNumber(AMSK);
-            }
-            
-            if (elements.walletAmskBalance) {
-                elements.walletAmskBalance.textContent = `${formatNumber(AMSK)} AMSK`;
-            }
-            if (elements.walletAmskValue) {
-                elements.walletAmskValue.textContent = `$${(AMSK * PRICES.AMSK).toFixed(2)}`;
-            }
-            
-            if (elements.walletUsdtBalance) {
-                elements.walletUsdtBalance.textContent = `${USDT.toFixed(2)} USDT`;
-            }
-            if (elements.walletUsdtValue) {
-                elements.walletUsdtValue.textContent = `$${USDT.toFixed(2)}`;
-            }
-            
-            if (elements.walletBnbBalance) {
-                elements.walletBnbBalance.textContent = `${BNB.toFixed(4)} BNB`;
-            }
-            if (elements.walletBnbValue) {
-                elements.walletBnbValue.textContent = `$${(BNB * PRICES.BNB).toFixed(2)}`;
-            }
-            
-            if (elements.walletTonBalance) {
-                elements.walletTonBalance.textContent = `${formatNumber(TON)} TON`;
-            }
-            if (elements.walletTonValue) {
-                elements.walletTonValue.textContent = `$${(TON * PRICES.TON).toFixed(2)}`;
-            }
+            if (elements.walletAmskBalance) elements.walletAmskBalance.textContent = `${formatNumber(AMSK)} AMSK`;
+            if (elements.walletAmskValue) elements.walletAmskValue.textContent = `$${(AMSK * PRICES.AMSK).toFixed(2)}`;
+            if (elements.walletUsdtBalance) elements.walletUsdtBalance.textContent = `${USDT.toFixed(2)} USDT`;
+            if (elements.walletUsdtValue) elements.walletUsdtValue.textContent = `$${USDT.toFixed(2)}`;
+            if (elements.walletBnbBalance) elements.walletBnbBalance.textContent = `${BNB.toFixed(4)} BNB`;
+            if (elements.walletBnbValue) elements.walletBnbValue.textContent = `$${(BNB * PRICES.BNB).toFixed(2)}`;
+            if (elements.walletTonBalance) elements.walletTonBalance.textContent = `${formatNumber(TON)} TON`;
+            if (elements.walletTonValue) elements.walletTonValue.textContent = `$${(TON * PRICES.TON).toFixed(2)}`;
         }
 
         // ============================================
         // STAKING SYSTEM
         // ============================================
-
         function updateStakingDisplay() {
             updateStakingStats();
             updateActiveStakes();
@@ -5193,8 +5547,7 @@
                 const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
                 const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
                 
-                let dailyReward = 0;
-                let totalReward = 0;
+                let dailyReward = 0, totalReward = 0;
                 
                 if (plan.name === "Silver") {
                     dailyReward = (stake.amount / 10) * plan.dailyPer10;
@@ -5206,8 +5559,6 @@
                     dailyReward = (stake.amount / 100) * plan.dailyPer100;
                     totalReward = (stake.amount / 100) * plan.totalPer100;
                 }
-                
-                const earnedSoFar = (progress / 100) * totalReward;
                 
                 html += `
                     <div class="stake-item">
@@ -5230,18 +5581,9 @@
                         </div>
                         
                         <div class="stake-details">
-                            <div class="detail">
-                                <i class="fas fa-percentage"></i>
-                                <span>${plan.apr}% APR</span>
-                            </div>
-                            <div class="detail">
-                                <i class="fas fa-gift"></i>
-                                <span>${dailyReward.toLocaleString()} AMSK/Day</span>
-                            </div>
-                            <div class="detail">
-                                <i class="fas fa-coins"></i>
-                                <span>Total: ${totalReward.toLocaleString()} AMSK</span>
-                            </div>
+                            <div class="detail"><i class="fas fa-percentage"></i><span>${plan.apr}% APR</span></div>
+                            <div class="detail"><i class="fas fa-gift"></i><span>${dailyReward.toLocaleString()} AMSK/Day</span></div>
+                            <div class="detail"><i class="fas fa-coins"></i><span>Total: ${totalReward.toLocaleString()} AMSK</span></div>
                         </div>
                         
                         <div class="stake-actions">
@@ -5276,9 +5618,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="stake-plan-info">
-                                <div class="plan-icon">
-                                    <i class="fas fa-gem"></i>
-                                </div>
+                                <div class="plan-icon"><i class="fas fa-gem"></i></div>
                                 <div class="plan-details">
                                     <h4>${plan.name} Plan</h4>
                                     <div class="plan-apr">${plan.apr}% APR</div>
@@ -5292,23 +5632,14 @@
                                     <span class="balance">Balance: ${usdtBalance.toFixed(2)} USDT</span>
                                 </div>
                                 <div class="amount-input-group">
-                                    <input type="number" 
-                                           id="stakeAmount" 
-                                           class="amount-input"
-                                           value="${initialAmount.toFixed(2)}"
-                                           min="${plan.minAmount}"
-                                           max="${maxAmount}"
-                                           step="0.01"
-                                           oninput="calculateStakeReward(${planId})">
+                                    <input type="number" id="stakeAmount" class="amount-input"
+                                           value="${initialAmount.toFixed(2)}" min="${plan.minAmount}"
+                                           max="${maxAmount}" step="0.01" oninput="calculateStakeReward(${planId})">
                                     <button class="max-btn" onclick="setMaxStakeAmount(${planId})">MAX</button>
                                 </div>
                                 <div class="amount-range">
-                                    <input type="range" 
-                                           id="stakeSlider" 
-                                           min="${plan.minAmount}" 
-                                           max="${maxAmount}" 
-                                           value="${initialAmount}"
-                                           step="1"
+                                    <input type="range" id="stakeSlider" min="${plan.minAmount}" 
+                                           max="${maxAmount}" value="${initialAmount}" step="1"
                                            oninput="updateStakeAmountFromSlider(${planId})">
                                     <div class="range-labels">
                                         <span>${plan.minAmount} USDT</span>
@@ -5318,37 +5649,19 @@
                             </div>
                             
                             <div class="stake-reward-calculation">
-                                <div class="reward-header">
-                                    <i class="fas fa-calculator"></i>
-                                    <span>Reward Calculation</span>
-                                </div>
+                                <div class="reward-header"><i class="fas fa-calculator"></i><span>Reward Calculation</span></div>
                                 <div class="reward-details">
-                                    <div class="reward-item">
-                                        <span>Daily Reward:</span>
-                                        <span id="dailyReward">0 AMSK</span>
-                                    </div>
-                                    <div class="reward-item">
-                                        <span>Total Reward (${plan.duration} days):</span>
-                                        <span id="totalReward">0 AMSK</span>
-                                    </div>
-                                    <div class="reward-item">
-                                        <span>APR:</span>
-                                        <span>${plan.apr}%</span>
-                                    </div>
-                                    <div class="reward-item total">
-                                        <span>Total Return:</span>
-                                        <span id="totalReturn">0 AMSK</span>
-                                    </div>
+                                    <div class="reward-item"><span>Daily Reward:</span><span id="dailyReward">0 AMSK</span></div>
+                                    <div class="reward-item"><span>Total Reward (${plan.duration} days):</span><span id="totalReward">0 AMSK</span></div>
+                                    <div class="reward-item"><span>APR:</span><span>${plan.apr}%</span></div>
+                                    <div class="reward-item total"><span>Total Return:</span><span id="totalReturn">0 AMSK</span></div>
                                 </div>
                             </div>
                             
                             <div class="modal-actions">
-                                <button class="btn-secondary" onclick="closeModal()">
-                                    Cancel
-                                </button>
-                                <button class="btn-primary" id="confirmStakeBtn" onclick="confirmStaking(${planId})" ${usdtBalance >= plan.minAmount ? '' : 'disabled'}>
-                                    Confirm Stake
-                                </button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button class="btn-primary" id="confirmStakeBtn" onclick="confirmStaking(${planId})" 
+                                        ${usdtBalance >= plan.minAmount ? '' : 'disabled'}>Confirm Stake</button>
                             </div>
                         </div>
                     </div>
@@ -5358,9 +5671,7 @@
             document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
             document.body.insertAdjacentHTML('beforeend', modalContent);
             
-            setTimeout(() => {
-                calculateStakeReward(planId);
-            }, 100);
+            setTimeout(() => calculateStakeReward(planId), 100);
         }
 
         function calculateStakeReward(planId) {
@@ -5374,12 +5685,9 @@
             const amount = parseFloat(amountInput.value) || 0;
             const usdtBalance = walletData.balances.USDT || 0;
             
-            if (slider) {
-                slider.value = amount;
-            }
+            if (slider) slider.value = amount;
             
-            let dailyReward = 0;
-            let totalReward = 0;
+            let dailyReward = 0, totalReward = 0;
             
             if (plan.name === "Silver") {
                 dailyReward = (amount / 10) * plan.dailyPer10;
@@ -5395,22 +5703,15 @@
             if (document.getElementById('dailyReward')) {
                 document.getElementById('dailyReward').textContent = `${dailyReward.toLocaleString()} AMSK`;
             }
-            
             if (document.getElementById('totalReward')) {
                 document.getElementById('totalReward').textContent = `${totalReward.toLocaleString()} AMSK`;
             }
-            
             if (document.getElementById('totalReturn')) {
                 const usdValue = (totalReward * CONFIG.PRICES.AMSK).toFixed(2);
                 document.getElementById('totalReturn').textContent = `${totalReward.toLocaleString()} AMSK (≈ $${usdValue})`;
             }
             
-            if (amount < plan.minAmount || amount > usdtBalance) {
-                if (confirmBtn) confirmBtn.disabled = true;
-                return;
-            }
-            
-            if (confirmBtn) confirmBtn.disabled = false;
+            if (confirmBtn) confirmBtn.disabled = (amount < plan.minAmount || amount > usdtBalance);
         }
 
         function setMaxStakeAmount(planId) {
@@ -5424,10 +5725,7 @@
             const maxAmount = Math.max(plan.minAmount, Math.min(usdtBalance, plan.minAmount * 10));
             
             amountInput.value = maxAmount.toFixed(2);
-            
-            if (slider) {
-                slider.value = maxAmount;
-            }
+            if (slider) slider.value = maxAmount;
             
             calculateStakeReward(planId);
         }
@@ -5445,9 +5743,7 @@
         async function confirmStaking(planId) {
             try {
                 const plan = CONFIG.STAKING.PLANS[planId];
-                if (!plan) {
-                    throw new Error("Plan not found");
-                }
+                if (!plan) throw new Error("Plan not found");
                 
                 const amountInput = document.getElementById('stakeAmount');
                 if (!amountInput) return;
@@ -5474,13 +5770,13 @@
                     claimed: false
                 };
                 
-                if (!walletData.staking.activeStakes) {
-                    walletData.staking.activeStakes = [];
-                }
+                if (!walletData.staking.activeStakes) walletData.staking.activeStakes = [];
                 walletData.staking.activeStakes.push(stake);
                 walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
                 
                 addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
+                
+                checkStakingAchievement(planId, amount);
                 
                 updateWalletUI();
                 updateStakingDisplay();
@@ -5499,14 +5795,10 @@
             try {
                 const activeStakes = walletData.staking.activeStakes || [];
                 const stake = activeStakes[stakeIndex];
-                if (!stake) {
-                    throw new Error("Stake not found");
-                }
+                if (!stake) throw new Error("Stake not found");
                 
                 const plan = CONFIG.STAKING.PLANS[stake.planId];
-                if (!plan) {
-                    throw new Error("Plan not found");
-                }
+                if (!plan) throw new Error("Plan not found");
                 
                 const now = Date.now();
                 const endTime = stake.startTime + (plan.duration * 24 * 60 * 60 * 1000);
@@ -5518,13 +5810,9 @@
                 
                 let totalReward = 0;
                 
-                if (plan.name === "Silver") {
-                    totalReward = (stake.amount / 10) * plan.totalPer10;
-                } else if (plan.name === "Gold") {
-                    totalReward = (stake.amount / 50) * plan.totalPer50;
-                } else if (plan.name === "Diamond") {
-                    totalReward = (stake.amount / 100) * plan.totalPer100;
-                }
+                if (plan.name === "Silver") totalReward = (stake.amount / 10) * plan.totalPer10;
+                else if (plan.name === "Gold") totalReward = (stake.amount / 50) * plan.totalPer50;
+                else if (plan.name === "Diamond") totalReward = (stake.amount / 100) * plan.totalPer100;
                 
                 walletData.balances.AMSK += totalReward;
                 walletData.balances.USDT += stake.amount;
@@ -5586,7 +5874,6 @@
         // ============================================
         // REFERRAL SYSTEM
         // ============================================
-
         async function checkForReferral() {
             console.log("🔍 Checking for referral...");
             
@@ -5634,8 +5921,6 @@
                         const doc = querySnapshot.docs[0];
                         referrerId = doc.id;
                     }
-                } else {
-                    console.log("⚠️ Firebase not available, referral may not be saved permanently");
                 }
                 
                 if (!referrerId || referrerId === userData.id) {
@@ -5694,13 +5979,8 @@
             
             const referrals = walletData.referrals;
             
-            if (elements.refCount) {
-                elements.refCount.textContent = referrals.count;
-            }
-            
-            if (elements.refEarned) {
-                elements.refEarned.textContent = formatNumber(referrals.earned.amsk);
-            }
+            if (elements.refCount) elements.refCount.textContent = referrals.count;
+            if (elements.refEarned) elements.refEarned.textContent = formatNumber(referrals.earned.amsk);
             
             updateMilestonesDisplay();
         }
@@ -5721,25 +6001,17 @@
                 
                 item.classList.remove('locked', 'can-claim', 'claimed');
                 
-                if (progressElement) {
-                    progressElement.textContent = `${referralCount}/${milestoneNum}`;
-                }
+                if (progressElement) progressElement.textContent = `${referralCount}/${milestoneNum}`;
                 
                 if (claimedMilestones.includes(milestoneNum)) {
                     item.classList.add('claimed');
-                    if (actionElement) {
-                        actionElement.innerHTML = '<span class="claimed-badge">Claimed</span>';
-                    }
+                    if (actionElement) actionElement.innerHTML = '<span class="claimed-badge">Claimed</span>';
                 } else if (referralCount >= milestoneNum) {
                     item.classList.add('can-claim');
-                    if (actionElement) {
-                        actionElement.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
-                    }
+                    if (actionElement) actionElement.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
                 } else {
                     item.classList.add('locked');
-                    if (actionElement) {
-                        actionElement.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
-                    }
+                    if (actionElement) actionElement.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
                 }
             });
         }
@@ -5747,9 +6019,7 @@
         async function claimMilestone(milestoneNum) {
             try {
                 const milestoneReward = CONFIG.REFERRAL.MILESTONES[milestoneNum];
-                if (!milestoneReward) {
-                    throw new Error("Invalid milestone");
-                }
+                if (!milestoneReward) throw new Error("Invalid milestone");
                 
                 if (walletData.referrals.claimedMilestones.includes(milestoneNum)) {
                     showMessage("Milestone already claimed", "warning");
@@ -5780,9 +6050,7 @@
                 await saveUserData();
                 
                 let rewardText = `+${formatNumber(milestoneReward.amsk)} AMSK`;
-                if (milestoneReward.bnb > 0) {
-                    rewardText += ` + ${milestoneReward.bnb} BNB`;
-                }
+                if (milestoneReward.bnb > 0) rewardText += ` + ${milestoneReward.bnb} BNB`;
                 showMessage(`🏆 Milestone claimed! ${rewardText}`, "success");
                 
             } catch (error) {
@@ -5794,7 +6062,6 @@
         // ============================================
         // TASKS SYSTEM
         // ============================================
-
         function updateTasksDisplay() {
             if (!elements.tasksGrid || !elements.tasksProgress) return;
             
@@ -5863,7 +6130,6 @@
         // ============================================
         // SWAP SYSTEM
         // ============================================
-
         function openSwapModal() {
             const modalContent = `
                 <div class="modal-overlay active" onclick="closeModal()">
@@ -5886,32 +6152,21 @@
                                         <option value="TON">TON</option>
                                         <option value="AMSK">AMSK</option>
                                     </select>
-                                    <input type="number" 
-                                           id="swapFromAmount" 
-                                           class="swap-amount-input"
-                                           placeholder="0.00"
-                                           min="0.01"
-                                           step="0.01"
-                                           oninput="updateSwapCalculation('from')">
+                                    <input type="number" id="swapFromAmount" class="swap-amount-input"
+                                           placeholder="0.00" min="0.01" step="0.01" oninput="updateSwapCalculation('from')">
                                     <div style="font-size: 12px; color: var(--quantum-text-light); margin-top: 5px;">
                                         Balance: <span id="swapFromBalance">0.00</span>
                                     </div>
                                 </div>
                                 
-                                <div class="swap-arrow" onclick="swapCurrencies()">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </div>
+                                <div class="swap-arrow" onclick="swapCurrencies()"><i class="fas fa-exchange-alt"></i></div>
                                 
                                 <div class="swap-to">
                                     <select id="swapTo" class="swap-currency-select" onchange="updateSwapRates()">
                                         <option value="AMSK">AMSK</option>
                                         <option value="USDT">USDT</option>
                                     </select>
-                                    <input type="number" 
-                                           id="swapToAmount" 
-                                           class="swap-amount-input"
-                                           placeholder="0.00"
-                                           readonly>
+                                    <input type="number" id="swapToAmount" class="swap-amount-input" placeholder="0.00" readonly>
                                     <div style="font-size: 12px; color: var(--quantum-text-light); margin-top: 5px;">
                                         Balance: <span id="swapToBalance">0.00</span>
                                     </div>
@@ -5937,12 +6192,8 @@
                             </div>
                             
                             <div class="modal-actions">
-                                <button class="btn-secondary" onclick="closeModal()">
-                                    Cancel
-                                </button>
-                                <button class="btn-primary" id="confirmSwapBtn" onclick="confirmSwap()" disabled>
-                                    Confirm Swap
-                                </button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button class="btn-primary" id="confirmSwapBtn" onclick="confirmSwap()" disabled>Confirm Swap</button>
                             </div>
                         </div>
                     </div>
@@ -5952,9 +6203,7 @@
             document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
             document.body.insertAdjacentHTML('beforeend', modalContent);
             
-            setTimeout(() => {
-                updateSwapRates();
-            }, 100);
+            setTimeout(() => updateSwapRates(), 100);
         }
 
         function updateSwapRates() {
@@ -5964,7 +6213,6 @@
             if (document.getElementById('swapFromBalance')) {
                 document.getElementById('swapFromBalance').textContent = getBalanceText(fromCurrency);
             }
-            
             if (document.getElementById('swapToBalance')) {
                 document.getElementById('swapToBalance').textContent = getBalanceText(toCurrency);
             }
@@ -5995,16 +6243,10 @@
             const isAllowed = CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair);
             
             const confirmBtn = document.getElementById('confirmSwapBtn');
-            if (confirmBtn) {
-                confirmBtn.disabled = !isAllowed;
-            }
+            if (confirmBtn) confirmBtn.disabled = !isAllowed;
             
-            if (document.getElementById('swapFromAmount')) {
-                document.getElementById('swapFromAmount').value = '';
-            }
-            if (document.getElementById('swapToAmount')) {
-                document.getElementById('swapToAmount').value = '';
-            }
+            if (document.getElementById('swapFromAmount')) document.getElementById('swapFromAmount').value = '';
+            if (document.getElementById('swapToAmount')) document.getElementById('swapToAmount').value = '';
         }
 
         function getBalanceText(currency) {
@@ -6134,14 +6376,13 @@
             updateWalletUI();
             closeModal();
             
-            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}! New balance: ${walletData.balances[toCurrency].toLocaleString()} ${toCurrency}`, "success");
+            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}!`, "success");
             await saveUserData();
         }
 
         // ============================================
         // DEPOSIT SYSTEM
         // ============================================
-
         async function openDepositModal() {
             const modalContent = `
                 <div class="modal-overlay active" onclick="closeModal()">
@@ -6158,16 +6399,13 @@
                             
                             <div class="deposit-options">
                                 <div class="deposit-option active" data-currency="USDT">
-                                    <i class="fas fa-coins" style="color: var(--quantum-blue);"></i>
-                                    <span>USDT</span>
+                                    <i class="fas fa-coins" style="color: var(--quantum-blue);"></i><span>USDT</span>
                                 </div>
                                 <div class="deposit-option" data-currency="BNB">
-                                    <i class="fab fa-btc" style="color: var(--quantum-gold);"></i>
-                                    <span>BNB</span>
+                                    <i class="fab fa-btc" style="color: var(--quantum-gold);"></i><span>BNB</span>
                                 </div>
                                 <div class="deposit-option" data-currency="TON">
-                                    <i class="fas fa-bolt" style="color: var(--quantum-purple);"></i>
-                                    <span>TON</span>
+                                    <i class="fas fa-bolt" style="color: var(--quantum-purple);"></i><span>TON</span>
                                 </div>
                             </div>
                             
@@ -6180,32 +6418,22 @@
                                     
                                     <div class="mb-15">
                                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Amount (USDT)</label>
-                                        <input type="number" 
-                                               id="depositAmount" 
-                                               class="amount-input"
-                                               placeholder="Enter amount"
-                                               min="5"
-                                               step="0.01"
+                                        <input type="number" id="depositAmount" class="amount-input"
+                                               placeholder="Enter amount" min="5" step="0.01"
                                                style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white;">
                                     </div>
                                     
                                     <div class="mb-15">
                                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Transaction ID (TX ID)</label>
-                                        <input type="text" 
-                                               id="depositTxId" 
-                                               class="tx-id-input"
-                                               placeholder="Enter transaction hash (0x...)"
-                                               style="width: 100%;">
+                                        <input type="text" id="depositTxId" class="tx-id-input"
+                                               placeholder="Enter transaction hash (0x...)" style="width: 100%;">
                                         <div id="txIdValidation" class="validation-message" style="display: none;"></div>
                                     </div>
                                     
                                     <div class="mb-15">
                                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Wallet Address</label>
                                         <div style="display: flex; gap: 10px;">
-                                            <input type="text" 
-                                                   id="depositAddress" 
-                                                   value="${CONFIG.DEPOSIT.ADDRESSES.BNB_USDT}"
-                                                   readonly
+                                            <input type="text" id="depositAddress" value="${CONFIG.DEPOSIT.ADDRESSES.BNB_USDT}" readonly
                                                    style="flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text); font-family: monospace; font-size: 12px;">
                                             <button onclick="copyToClipboard('${CONFIG.DEPOSIT.ADDRESSES.BNB_USDT}')" 
                                                     style="padding: 0 15px; background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-blue);">
@@ -6223,12 +6451,8 @@
                             </div>
                             
                             <div class="modal-actions mt-20">
-                                <button class="btn-secondary" onclick="closeModal()">
-                                    Cancel
-                                </button>
-                                <button class="btn-primary" onclick="submitDepositRequest()">
-                                    Submit Deposit Request
-                                </button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button class="btn-primary" onclick="submitDepositRequest()">Submit Deposit Request</button>
                             </div>
                         </div>
                     </div>
@@ -6244,16 +6468,12 @@
                     option.addEventListener('click', () => {
                         options.forEach(opt => opt.classList.remove('active'));
                         option.classList.add('active');
-                        
-                        const currency = option.dataset.currency;
-                        updateDepositDetails(currency);
+                        updateDepositDetails(option.dataset.currency);
                     });
                 });
                 
                 const txIdInput = document.getElementById('depositTxId');
-                if (txIdInput) {
-                    txIdInput.addEventListener('input', validateTxId);
-                }
+                if (txIdInput) txIdInput.addEventListener('input', validateTxId);
             }, 100);
         }
 
@@ -6261,10 +6481,7 @@
             const details = document.getElementById('deposit-details');
             if (!details) return;
             
-            let address = '';
-            let minDeposit = '';
-            let color = '';
-            let icon = '';
+            let address = '', minDeposit = '', color = '', icon = '';
             
             switch(currency) {
                 case 'USDT':
@@ -6296,32 +6513,23 @@
                     
                     <div class="mb-15">
                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Amount (${currency})</label>
-                        <input type="number" 
-                               id="depositAmount" 
-                               class="amount-input"
-                               placeholder="Enter amount"
-                               min="${currency === 'USDT' ? CONFIG.DEPOSIT.MIN_AMOUNTS.USDT : currency === 'BNB' ? CONFIG.DEPOSIT.MIN_AMOUNTS.BNB : CONFIG.DEPOSIT.MIN_AMOUNTS.TON}"
+                        <input type="number" id="depositAmount" class="amount-input"
+                               placeholder="Enter amount" min="${currency === 'USDT' ? CONFIG.DEPOSIT.MIN_AMOUNTS.USDT : currency === 'BNB' ? CONFIG.DEPOSIT.MIN_AMOUNTS.BNB : CONFIG.DEPOSIT.MIN_AMOUNTS.TON}"
                                step="${currency === 'USDT' ? '0.01' : '0.0001'}"
                                style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid ${color}; border-radius: 8px; color: white;">
                     </div>
                     
                     <div class="mb-15">
                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Transaction ID (TX ID)</label>
-                        <input type="text" 
-                               id="depositTxId" 
-                               class="tx-id-input"
-                               placeholder="${currency === 'TON' ? 'Enter TON transaction hash' : 'Enter transaction hash (0x...)'}"
-                               style="width: 100%;">
+                        <input type="text" id="depositTxId" class="tx-id-input"
+                               placeholder="${currency === 'TON' ? 'Enter TON transaction hash' : 'Enter transaction hash (0x...)'}" style="width: 100%;">
                         <div id="txIdValidation" class="validation-message" style="display: none;"></div>
                     </div>
                     
                     <div class="mb-15">
                         <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Wallet Address</label>
                         <div style="display: flex; gap: 10px;">
-                            <input type="text" 
-                                   id="depositAddress" 
-                                   value="${address}"
-                                   readonly
+                            <input type="text" id="depositAddress" value="${address}" readonly
                                    style="flex: 1; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid ${color}; border-radius: 8px; color: var(--quantum-text); font-family: monospace; font-size: 12px;">
                             <button onclick="copyToClipboard('${address}')" 
                                     style="padding: 0 15px; background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; color: ${color};">
@@ -6339,9 +6547,7 @@
             `;
             
             const txIdInput = document.getElementById('depositTxId');
-            if (txIdInput) {
-                txIdInput.addEventListener('input', validateTxId);
-            }
+            if (txIdInput) txIdInput.addEventListener('input', validateTxId);
         }
 
         function validateTxId() {
@@ -6365,8 +6571,7 @@
                 return;
             }
             
-            let isValid = false;
-            let message = '';
+            let isValid = false, message = '';
             
             if (currency === 'USDT' || currency === 'BNB') {
                 isValid = txId.startsWith('0x') && txId.length === 66;
@@ -6437,9 +6642,7 @@
                 };
                 
                 if (window.db) {
-                    const depositRef = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                        .add(depositRequest);
-                    
+                    const depositRef = await window.db.collection(DB_COLLECTIONS.DEPOSITS).add(depositRequest);
                     depositRequest.id = depositRef.id;
                 } else {
                     depositRequest.id = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -6464,29 +6667,19 @@
         // ============================================
         // WITHDRAW SYSTEM
         // ============================================
-
         async function openWithdrawModal() {
             if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
                 const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
 
-📈 **Your Path to 100 USDT:**
+📈 Your Path to 100 USDT:
 
-⛏️ **Mining:** 
-   • 2,500 AMSK/hour = 0.5 USDT/day
+⛏️ Mining: 1,000 AMSK/hour = 0.2 USDT/day
 
-👥 **Referrals:** 
-   • You get 10,000 AMSK per friend
-   • Your friend gets 5,000 AMSK bonus
+👥 Referrals: You get 10,000 AMSK per friend
 
-💱 **Swap Rate:** 
-   • 5,000 AMSK = 1 USDT
+💱 Swap Rate: 5,000 AMSK = 1 USDT
 
-✨ **Quick Math:**
-   • 1 referral = 10,000 AMSK = 2 USDT
-   • 50 referrals = 100 USDT 🎯
-   • Or combine mining + referrals!
-
-💎 **Pro Tip:** Get 10 USDT → Start Staking (40-60% APR)
+✨ Quick Math: 1 referral = 10,000 AMSK = 2 USDT, 50 referrals = 100 USDT 🎯
 
 🚀 Keep going! Every referral brings you closer!`;
                 
@@ -6528,21 +6721,15 @@
                                 
                                 <div class="mb-15">
                                     <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Amount (USDT)</label>
-                                    <input type="number" 
-                                           id="withdrawAmount" 
-                                           placeholder="Enter amount"
-                                           min="${CONFIG.WITHDRAW.MIN_USDT}"
-                                           max="${walletData.balances.USDT}"
-                                           step="0.01"
+                                    <input type="number" id="withdrawAmount" placeholder="Enter amount"
+                                           min="${CONFIG.WITHDRAW.MIN_USDT}" max="${walletData.balances.USDT}" step="0.01"
                                            value="${CONFIG.WITHDRAW.MIN_USDT}"
                                            style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text);">
                                 </div>
                                 
                                 <div class="mb-15">
                                     <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Wallet Address</label>
-                                    <input type="text" 
-                                           id="withdrawAddress" 
-                                           placeholder="Enter your USDT wallet address (BEP20/ERC20)"
+                                    <input type="text" id="withdrawAddress" placeholder="Enter your USDT wallet address (BEP20/ERC20)"
                                            style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text); font-family: monospace; font-size: 12px;">
                                 </div>
                                 
@@ -6559,12 +6746,8 @@
                             </div>
                             
                             <div class="modal-actions mt-20">
-                                <button class="btn-secondary" onclick="closeModal()">
-                                    Cancel
-                                </button>
-                                <button class="btn-primary" onclick="submitWithdrawRequest()">
-                                    Submit Withdrawal Request
-                                </button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                                <button class="btn-primary" onclick="submitWithdrawRequest()">Submit Withdrawal Request</button>
                             </div>
                         </div>
                     </div>
@@ -6590,7 +6773,7 @@
             }
             
             if (amount > walletData.balances.USDT) {
-                showMessage(`Insufficient USDT balance`, "error");
+                showMessage("Insufficient USDT balance", "error");
                 return;
             }
             
@@ -6600,7 +6783,7 @@
             }
             
             if (!address || address.length < 20) {
-                showMessage(`Please enter a valid wallet address`, "error");
+                showMessage("Please enter a valid wallet address", "error");
                 return;
             }
             
@@ -6619,9 +6802,7 @@
                 };
                 
                 if (window.db) {
-                    const withdrawalRef = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                        .add(withdrawRequest);
-                    
+                    const withdrawalRef = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).add(withdrawRequest);
                     withdrawRequest.id = withdrawalRef.id;
                 } else {
                     withdrawRequest.id = 'with_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -6645,7 +6826,6 @@
         // ============================================
         // ADMIN SYSTEM
         // ============================================
-
         function initAdminSystem() {
             if (elements.adminLogo) {
                 let gemClickCount = 0;
@@ -6654,9 +6834,7 @@
                 elements.adminLogo.addEventListener('click', () => {
                     const now = Date.now();
                     
-                    if (now - lastGemClickTime > 2000) {
-                        gemClickCount = 0;
-                    }
+                    if (now - lastGemClickTime > 2000) gemClickCount = 0;
                     
                     gemClickCount++;
                     lastGemClickTime = now;
@@ -6688,8 +6866,7 @@
                                 <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
                                 
                                 <div style="margin-bottom: 20px;">
-                                    <input type="password" 
-                                           id="adminPasswordInput" 
+                                    <input type="password" id="adminPasswordInput" 
                                            style="width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; font-size: 16px;"
                                            placeholder="Enter password">
                                 </div>
@@ -6744,27 +6921,16 @@
 
         async function showAdminPanel() {
             try {
-                let pendingDeposits = [];
-                let pendingWithdrawals = [];
+                let pendingDeposits = [], pendingWithdrawals = [];
                 
                 if (window.db) {
                     const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                        .where('status', '==', 'pending')
-                        .get();
-                    
-                    pendingDeposits = depositsSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                        .where('status', '==', 'pending').get();
+                    pendingDeposits = depositsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     
                     const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                        .where('status', '==', 'pending')
-                        .get();
-                    
-                    pendingWithdrawals = withdrawalsSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                        .where('status', '==', 'pending').get();
+                    pendingWithdrawals = withdrawalsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 } else {
                     pendingDeposits = walletData.pendingDeposits?.filter(d => d.status === 'pending') || [];
                     pendingWithdrawals = walletData.pendingWithdrawals?.filter(w => w.status === 'pending') || [];
@@ -6785,22 +6951,14 @@
                                     <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
                                     
                                     <div class="admin-search-box mb-20">
-                                        <input type="text" 
-                                               id="adminSearchInput" 
-                                               class="admin-search-input"
+                                        <input type="text" id="adminSearchInput" class="admin-search-input"
                                                placeholder="🔍 Search by Telegram ID, username, or transaction..."
                                                onkeyup="adminSearchUsers()">
                                     </div>
                                     
                                     <div class="admin-stats-grid mb-20">
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${pendingDeposits.length}</div>
-                                            <div class="admin-stat-label">Pending Deposits</div>
-                                        </div>
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${pendingWithdrawals.length}</div>
-                                            <div class="admin-stat-label">Pending Withdrawals</div>
-                                        </div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${pendingDeposits.length}</div><div class="admin-stat-label">Pending Deposits</div></div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${pendingWithdrawals.length}</div><div class="admin-stat-label">Pending Withdrawals</div></div>
                                     </div>
                                     
                                     <div class="admin-section mb-15">
@@ -6820,22 +6978,10 @@
                                     <div class="admin-section">
                                         <h4><i class="fas fa-user-cog"></i> User Management</h4>
                                         <div class="admin-user-controls">
-                                            <div class="admin-user-control" onclick="adminSearchUser()">
-                                                <i class="fas fa-search" style="color: var(--quantum-blue);"></i>
-                                                <span>Find User</span>
-                                            </div>
-                                            <div class="admin-user-control" onclick="adminAddBalance()">
-                                                <i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i>
-                                                <span>Add Balance</span>
-                                            </div>
-                                            <div class="admin-user-control" onclick="adminSubtractBalance()">
-                                                <i class="fas fa-minus-circle" style="color: #ff4444;"></i>
-                                                <span>Subtract Balance</span>
-                                            </div>
-                                            <div class="admin-user-control" onclick="closeModal()">
-                                                <i class="fas fa-times" style="color: var(--quantum-text-light);"></i>
-                                                <span>Close</span>
-                                            </div>
+                                            <div class="admin-user-control" onclick="adminSearchUser()"><i class="fas fa-search" style="color: var(--quantum-blue);"></i><span>Find User</span></div>
+                                            <div class="admin-user-control" onclick="adminAddBalance()"><i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i><span>Add Balance</span></div>
+                                            <div class="admin-user-control" onclick="adminSubtractBalance()"><i class="fas fa-minus-circle" style="color: #ff4444;"></i><span>Subtract Balance</span></div>
+                                            <div class="admin-user-control" onclick="closeModal()"><i class="fas fa-times" style="color: var(--quantum-text-light);"></i><span>Close</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -6855,18 +7001,15 @@
 
         function getPendingDepositsHTML(pendingDeposits) {
             if (pendingDeposits.length === 0) {
-                return `
-                    <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
-                        <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
-                        <p>No pending deposits</p>
-                    </div>
-                `;
+                return `<div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                    <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                    <p>No pending deposits</p>
+                </div>`;
             }
             
             let html = '';
             pendingDeposits.forEach((deposit, index) => {
                 const date = new Date(deposit.createdAt).toLocaleDateString();
-                
                 html += `
                     <div class="request-item">
                         <div class="request-header">
@@ -6885,24 +7028,20 @@
                     </div>
                 `;
             });
-            
             return html;
         }
 
         function getPendingWithdrawalsHTML(pendingWithdrawals) {
             if (pendingWithdrawals.length === 0) {
-                return `
-                    <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
-                        <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
-                        <p>No pending withdrawals</p>
-                    </div>
-                `;
+                return `<div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                    <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                    <p>No pending withdrawals</p>
+                </div>`;
             }
             
             let html = '';
             pendingWithdrawals.forEach((withdrawal, index) => {
                 const date = new Date(withdrawal.createdAt).toLocaleDateString();
-                
                 html += `
                     <div class="request-item">
                         <div class="request-header">
@@ -6921,32 +7060,23 @@
                     </div>
                 `;
             });
-            
             return html;
         }
 
         // ============================================
-        // ADMIN APPROVAL/REJECTION FUNCTIONS
+        // ADMIN APPROVAL FUNCTIONS
         // ============================================
-
         async function approveDeposit(depositId, depositIndex) {
             try {
                 const deposit = walletData.pendingDeposits[depositIndex];
-                if (!deposit) {
-                    showMessage("Deposit request not found locally", "error");
-                    return;
-                }
+                if (!deposit) { showMessage("Deposit request not found locally", "error"); return; }
                 
                 console.log("✅ Approving deposit for user:", deposit.userId);
                 
                 if (window.db) {
-                    await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                        .doc(depositId)
-                        .update({
-                            status: 'approved',
-                            approvedAt: Date.now(),
-                            approvedBy: userData.id
-                        });
+                    await window.db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).update({
+                        status: 'approved', approvedAt: Date.now(), approvedBy: userData.id
+                    });
                     
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(deposit.userId);
                     const userDoc = await userRef.get();
@@ -6955,29 +7085,19 @@
                         const userDataFB = userDoc.data();
                         const newBalance = (userDataFB.balances?.[deposit.currency] || 0) + deposit.amount;
                         
-                        await userRef.update({
-                            [`balances.${deposit.currency}`]: newBalance
-                        });
+                        await userRef.update({ [`balances.${deposit.currency}`]: newBalance });
                         
                         const transactionEntry = {
                             id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                            type: 'deposit_approved',
-                            amount: deposit.amount,
-                            currency: deposit.currency,
-                            description: `TX: ${deposit.txId?.slice(0, 10)}...`,
-                            status: 'completed',
-                            message: 'Deposit approved and added to your balance',
-                            txId: deposit.txId,
-                            timestamp: Date.now(),
-                            dateFormatted: new Date().toLocaleDateString()
+                            type: 'deposit_approved', amount: deposit.amount, currency: deposit.currency,
+                            description: `TX: ${deposit.txId?.slice(0, 10)}...`, status: 'completed',
+                            message: 'Deposit approved and added to your balance', txId: deposit.txId,
+                            timestamp: Date.now(), dateFormatted: new Date().toLocaleDateString()
                         };
                         
                         const userHistory = userDataFB.transactionHistory || [];
                         userHistory.unshift(transactionEntry);
-                        
-                        await userRef.update({
-                            transactionHistory: userHistory
-                        });
+                        await userRef.update({ transactionHistory: userHistory });
                         
                         console.log(`✅ Added ${deposit.amount} ${deposit.currency} to user ${deposit.userId}`);
                     }
@@ -6987,8 +7107,7 @@
                     walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
                     
                     const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
-                        tx.type === 'deposit_request' && tx.txId === deposit.txId
-                    );
+                        tx.type === 'deposit_request' && tx.txId === deposit.txId);
                     
                     if (transactionIndex > -1 && walletData.transactionHistory) {
                         walletData.transactionHistory[transactionIndex].status = 'approved';
@@ -7022,14 +7141,9 @@
                 if (reason === null) return;
                 
                 if (window.db) {
-                    await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                        .doc(depositId)
-                        .update({
-                            status: 'rejected',
-                            rejectedAt: Date.now(),
-                            rejectedBy: userData.id,
-                            rejectionReason: reason
-                        });
+                    await window.db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).update({
+                        status: 'rejected', rejectedAt: Date.now(), rejectedBy: userData.id, rejectionReason: reason
+                    });
                     
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(deposit.userId);
                     const userDoc = await userRef.get();
@@ -7038,23 +7152,15 @@
                         const userDataFB = userDoc.data();
                         const transactionEntry = {
                             id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                            type: 'deposit_rejected',
-                            amount: deposit.amount,
-                            currency: deposit.currency,
-                            description: `TX: ${deposit.txId?.slice(0, 10)}...`,
-                            status: 'rejected',
-                            message: `Deposit rejected: ${reason}`,
-                            txId: deposit.txId,
-                            timestamp: Date.now(),
-                            dateFormatted: new Date().toLocaleDateString()
+                            type: 'deposit_rejected', amount: deposit.amount, currency: deposit.currency,
+                            description: `TX: ${deposit.txId?.slice(0, 10)}...`, status: 'rejected',
+                            message: `Deposit rejected: ${reason}`, txId: deposit.txId,
+                            timestamp: Date.now(), dateFormatted: new Date().toLocaleDateString()
                         };
                         
                         const userHistory = userDataFB.transactionHistory || [];
                         userHistory.unshift(transactionEntry);
-                        
-                        await userRef.update({
-                            transactionHistory: userHistory
-                        });
+                        await userRef.update({ transactionHistory: userHistory });
                     }
                 }
                 
@@ -7063,13 +7169,10 @@
                 deposit.rejectionReason = reason;
                 
                 const txIdIndex = walletData.usedTxIds.indexOf(deposit.txId);
-                if (txIdIndex > -1) {
-                    walletData.usedTxIds.splice(txIdIndex, 1);
-                }
+                if (txIdIndex > -1) walletData.usedTxIds.splice(txIdIndex, 1);
                 
                 const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
-                    tx.type === 'deposit_request' && tx.txId === deposit.txId
-                );
+                    tx.type === 'deposit_request' && tx.txId === deposit.txId);
                 
                 if (transactionIndex > -1 && walletData.transactionHistory) {
                     walletData.transactionHistory[transactionIndex].status = 'rejected';
@@ -7092,21 +7195,14 @@
         async function approveWithdrawal(withdrawalId, withdrawalIndex) {
             try {
                 const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
-                if (!withdrawal) {
-                    showMessage("Withdrawal request not found locally", "error");
-                    return;
-                }
+                if (!withdrawal) { showMessage("Withdrawal request not found locally", "error"); return; }
                 
                 console.log("✅ Approving withdrawal for user:", withdrawal.userId);
                 
                 if (window.db) {
-                    await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                        .doc(withdrawalId)
-                        .update({
-                            status: 'approved',
-                            approvedAt: Date.now(),
-                            approvedBy: userData.id
-                        });
+                    await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).update({
+                        status: 'approved', approvedAt: Date.now(), approvedBy: userData.id
+                    });
                     
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(withdrawal.userId);
                     const userDoc = await userRef.get();
@@ -7124,34 +7220,23 @@
                             
                             const withdrawalTx = {
                                 id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                                type: 'withdrawal_approved',
-                                amount: -withdrawal.amount,
-                                currency: withdrawal.currency,
-                                description: `To: ${withdrawal.address?.slice(0, 10)}...`,
-                                status: 'completed',
+                                type: 'withdrawal_approved', amount: -withdrawal.amount, currency: withdrawal.currency,
+                                description: `To: ${withdrawal.address?.slice(0, 10)}...`, status: 'completed',
                                 message: 'Withdrawal approved. Funds sent to your wallet.',
-                                timestamp: Date.now(),
-                                dateFormatted: new Date().toLocaleDateString()
+                                timestamp: Date.now(), dateFormatted: new Date().toLocaleDateString()
                             };
                             
                             const feeTx = {
                                 id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                                type: 'withdrawal_fee',
-                                amount: -withdrawal.fee,
-                                currency: 'BNB',
-                                description: 'Fee for withdrawal',
-                                status: 'completed',
+                                type: 'withdrawal_fee', amount: -withdrawal.fee, currency: 'BNB',
+                                description: 'Fee for withdrawal', status: 'completed',
                                 message: 'Withdrawal fee charged',
-                                timestamp: Date.now(),
-                                dateFormatted: new Date().toLocaleDateString()
+                                timestamp: Date.now(), dateFormatted: new Date().toLocaleDateString()
                             };
                             
                             const userHistory = userDataFB.transactionHistory || [];
                             userHistory.unshift(withdrawalTx, feeTx);
-                            
-                            await userRef.update({
-                                transactionHistory: userHistory
-                            });
+                            await userRef.update({ transactionHistory: userHistory });
                             
                             console.log(`✅ Deducted ${withdrawal.amount} ${withdrawal.currency} and ${withdrawal.fee} BNB from user ${withdrawal.userId}`);
                         }
@@ -7159,15 +7244,13 @@
                 }
                 
                 if (withdrawal.userId === userData.id) {
-                    if (walletData.balances[withdrawal.currency] >= withdrawal.amount && 
-                        walletData.balances.BNB >= withdrawal.fee) {
+                    if (walletData.balances[withdrawal.currency] >= withdrawal.amount && walletData.balances.BNB >= withdrawal.fee) {
                         
                         walletData.balances[withdrawal.currency] -= withdrawal.amount;
                         walletData.balances.BNB -= withdrawal.fee;
                         
                         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
-                            tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
-                        );
+                            tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10)));
                         
                         if (transactionIndex > -1 && walletData.transactionHistory) {
                             walletData.transactionHistory[transactionIndex].status = 'approved';
@@ -7203,14 +7286,9 @@
                 if (reason === null) return;
                 
                 if (window.db) {
-                    await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                        .doc(withdrawalId)
-                        .update({
-                            status: 'rejected',
-                            rejectedAt: Date.now(),
-                            rejectedBy: userData.id,
-                            rejectionReason: reason
-                        });
+                    await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).update({
+                        status: 'rejected', rejectedAt: Date.now(), rejectedBy: userData.id, rejectionReason: reason
+                    });
                     
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(withdrawal.userId);
                     const userDoc = await userRef.get();
@@ -7219,22 +7297,15 @@
                         const userDataFB = userDoc.data();
                         const transactionEntry = {
                             id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                            type: 'withdrawal_rejected',
-                            amount: -withdrawal.amount,
-                            currency: withdrawal.currency,
-                            description: `To: ${withdrawal.address?.slice(0, 10)}...`,
-                            status: 'rejected',
+                            type: 'withdrawal_rejected', amount: -withdrawal.amount, currency: withdrawal.currency,
+                            description: `To: ${withdrawal.address?.slice(0, 10)}...`, status: 'rejected',
                             message: `Withdrawal rejected: ${reason}`,
-                            timestamp: Date.now(),
-                            dateFormatted: new Date().toLocaleDateString()
+                            timestamp: Date.now(), dateFormatted: new Date().toLocaleDateString()
                         };
                         
                         const userHistory = userDataFB.transactionHistory || [];
                         userHistory.unshift(transactionEntry);
-                        
-                        await userRef.update({
-                            transactionHistory: userHistory
-                        });
+                        await userRef.update({ transactionHistory: userHistory });
                     }
                 }
                 
@@ -7243,8 +7314,7 @@
                 withdrawal.rejectionReason = reason;
                 
                 const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
-                    tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
-                );
+                    tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10)));
                 
                 if (transactionIndex > -1 && walletData.transactionHistory) {
                     walletData.transactionHistory[transactionIndex].status = 'rejected';
@@ -7267,47 +7337,32 @@
         // ============================================
         // OTHER ADMIN FUNCTIONS
         // ============================================
-
         async function adminSearchUser() {
             const searchTerm = prompt("Enter Telegram ID or username to search:");
             if (!searchTerm) return;
             
             try {
-                if (!window.db) {
-                    showMessage("Firebase not connected", "error");
-                    return;
-                }
+                if (!window.db) { showMessage("Firebase not connected", "error"); return; }
                 
                 let users = [];
                 
                 const usersSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
-                    .where('userInfo.telegramId', '==', searchTerm)
-                    .get();
+                    .where('userInfo.telegramId', '==', searchTerm).get();
                 
                 if (!usersSnapshot.empty) {
-                    users = usersSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 } else {
                     const usernameSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
                         .where('userInfo.username', '>=', searchTerm)
-                        .where('userInfo.username', '<=', searchTerm + '\uf8ff')
-                        .get();
+                        .where('userInfo.username', '<=', searchTerm + '\uf8ff').get();
                     
-                    users = usernameSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    users = usernameSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 }
                 
-                if (users.length === 0) {
-                    showMessage("No users found", "info");
-                    return;
-                }
+                if (users.length === 0) { showMessage("No users found", "info"); return; }
                 
                 let userInfoHTML = '';
-                users.forEach((user, index) => {
+                users.forEach(user => {
                     const userDataFB = user.userInfo || {};
                     const balances = user.balances || {};
                     
@@ -7339,9 +7394,7 @@
                                 <button class="modal-close" onclick="closeModal()">×</button>
                             </div>
                             <div class="modal-body">
-                                <div style="max-height: 400px; overflow-y: auto;">
-                                    ${userInfoHTML}
-                                </div>
+                                <div style="max-height: 400px; overflow-y: auto;">${userInfoHTML}</div>
                             </div>
                         </div>
                     </div>
@@ -7361,10 +7414,7 @@
                 const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                 const userDoc = await userRef.get();
                 
-                if (!userDoc.exists) {
-                    showMessage("User not found", "error");
-                    return;
-                }
+                if (!userDoc.exists) { showMessage("User not found", "error"); return; }
                 
                 const userDataFB = userDoc.data();
                 const balances = userDataFB.balances || {};
@@ -7380,22 +7430,10 @@
                                 <div style="margin-bottom: 20px;">
                                     <h4 style="color: var(--quantum-text); margin-bottom: 15px;">Current Balances</h4>
                                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${formatNumber(balances.AMSK || 0)}</div>
-                                            <div class="admin-stat-label">AMSK</div>
-                                        </div>
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${(balances.USDT || 0).toFixed(2)}</div>
-                                            <div class="admin-stat-label">USDT</div>
-                                        </div>
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${(balances.BNB || 0).toFixed(4)}</div>
-                                            <div class="admin-stat-label">BNB</div>
-                                        </div>
-                                        <div class="admin-stat">
-                                            <div class="admin-stat-value">${(balances.TON || 0).toFixed(2)}</div>
-                                            <div class="admin-stat-label">TON</div>
-                                        </div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${formatNumber(balances.AMSK || 0)}</div><div class="admin-stat-label">AMSK</div></div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${(balances.USDT || 0).toFixed(2)}</div><div class="admin-stat-label">USDT</div></div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${(balances.BNB || 0).toFixed(4)}</div><div class="admin-stat-label">BNB</div></div>
+                                        <div class="admin-stat"><div class="admin-stat-value">${(balances.TON || 0).toFixed(2)}</div><div class="admin-stat-label">TON</div></div>
                                     </div>
                                 </div>
                                 
@@ -7429,12 +7467,8 @@
                                 </div>
                                 
                                 <div class="modal-actions">
-                                    <button class="btn-secondary" onclick="closeModal()">
-                                        Cancel
-                                    </button>
-                                    <button class="btn-primary" onclick="adminSaveUserEdit('${userId}')">
-                                        Save Changes
-                                    </button>
+                                    <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                                    <button class="btn-primary" onclick="adminSaveUserEdit('${userId}')">Save Changes</button>
                                 </div>
                             </div>
                         </div>
@@ -7458,26 +7492,20 @@
                 const reason = document.getElementById('adminEditReason')?.value || "Admin adjustment";
                 
                 if (!currency || !operation || isNaN(amount) || amount <= 0) {
-                    showMessage("Invalid input", "error");
-                    return;
+                    showMessage("Invalid input", "error"); return;
                 }
                 
                 const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                 const userDoc = await userRef.get();
                 
-                if (!userDoc.exists) {
-                    showMessage("User not found", "error");
-                    return;
-                }
+                if (!userDoc.exists) { showMessage("User not found", "error"); return; }
                 
                 const userDataFB = userDoc.data();
                 const currentBalance = userDataFB.balances?.[currency] || 0;
                 let newBalance = currentBalance;
                 
                 switch(operation) {
-                    case 'add':
-                        newBalance = currentBalance + amount;
-                        break;
+                    case 'add': newBalance = currentBalance + amount; break;
                     case 'subtract':
                         if (amount > currentBalance) {
                             showMessage(`Cannot subtract more than current balance (${currentBalance})`, "error");
@@ -7485,28 +7513,16 @@
                         }
                         newBalance = currentBalance - amount;
                         break;
-                    case 'set':
-                        newBalance = amount;
-                        break;
+                    case 'set': newBalance = amount; break;
                 }
                 
-                await userRef.update({
-                    [`balances.${currency}`]: newBalance,
-                    lastUpdate: Date.now()
-                });
+                await userRef.update({ [`balances.${currency}`]: newBalance, lastUpdate: Date.now() });
                 
                 await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
-                    adminId: userData.id,
-                    adminName: userData.username,
-                    userId: userId,
-                    userName: userDataFB.userInfo?.username,
-                    action: 'balance_adjustment',
-                    currency: currency,
-                    operation: operation,
-                    amount: amount,
-                    oldBalance: currentBalance,
-                    newBalance: newBalance,
-                    reason: reason,
+                    adminId: userData.id, adminName: userData.username, userId: userId,
+                    userName: userDataFB.userInfo?.username, action: 'balance_adjustment',
+                    currency: currency, operation: operation, amount: amount,
+                    oldBalance: currentBalance, newBalance: newBalance, reason: reason,
                     timestamp: Date.now()
                 });
                 
@@ -7524,37 +7540,25 @@
                 let transactions = [];
                 
                 const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                    .where('userId', '==', userId)
-                    .orderBy('createdAt', 'desc')
-                    .limit(20)
-                    .get();
+                    .where('userId', '==', userId).orderBy('createdAt', 'desc').limit(20).get();
                 
                 depositsSnapshot.docs.forEach(doc => {
                     const data = doc.data();
                     transactions.push({
-                        type: 'deposit',
-                        amount: data.amount,
-                        currency: data.currency,
-                        status: data.status,
-                        timestamp: data.createdAt,
+                        type: 'deposit', amount: data.amount, currency: data.currency,
+                        status: data.status, timestamp: data.createdAt,
                         details: `TX: ${data.txId?.slice(0, 10)}...`
                     });
                 });
                 
                 const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                    .where('userId', '==', userId)
-                    .orderBy('createdAt', 'desc')
-                    .limit(20)
-                    .get();
+                    .where('userId', '==', userId).orderBy('createdAt', 'desc').limit(20).get();
                 
                 withdrawalsSnapshot.docs.forEach(doc => {
                     const data = doc.data();
                     transactions.push({
-                        type: 'withdrawal',
-                        amount: -data.amount,
-                        currency: data.currency,
-                        status: data.status,
-                        timestamp: data.createdAt,
+                        type: 'withdrawal', amount: -data.amount, currency: data.currency,
+                        status: data.status, timestamp: data.createdAt,
                         details: `To: ${data.address?.slice(0, 10)}...`
                     });
                 });
@@ -7563,12 +7567,10 @@
                 
                 let transactionsHTML = '';
                 if (transactions.length === 0) {
-                    transactionsHTML = `
-                        <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
-                            <i class="fas fa-history" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
-                            <p>No transactions found</p>
-                        </div>
-                    `;
+                    transactionsHTML = `<div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                        <i class="fas fa-history" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                        <p>No transactions found</p>
+                    </div>`;
                 } else {
                     transactions.forEach(tx => {
                         const date = new Date(tx.timestamp).toLocaleDateString();
@@ -7599,9 +7601,7 @@
                                 <button class="modal-close" onclick="closeModal()">×</button>
                             </div>
                             <div class="modal-body">
-                                <div style="max-height: 400px; overflow-y: auto;">
-                                    ${transactionsHTML}
-                                </div>
+                                <div style="max-height: 400px; overflow-y: auto;">${transactionsHTML}</div>
                             </div>
                         </div>
                     </div>
@@ -7641,15 +7641,11 @@
             if (!currency) return;
             
             if (!['USDT', 'BNB', 'TON', 'AMSK'].includes(currency.toUpperCase())) {
-                showMessage("Invalid currency", "error");
-                return;
+                showMessage("Invalid currency", "error"); return;
             }
             
             const amount = parseFloat(prompt(`Enter amount to add (${currency}):`, "10"));
-            if (!amount || amount <= 0) {
-                showMessage("Invalid amount", "error");
-                return;
-            }
+            if (!amount || amount <= 0) { showMessage("Invalid amount", "error"); return; }
             
             const reason = prompt("Reason for adding balance:", "Admin adjustment");
             
@@ -7662,20 +7658,12 @@
                         const userDataFB = userDoc.data();
                         const newBalance = (userDataFB.balances?.[currency] || 0) + amount;
                         
-                        await userRef.update({
-                            [`balances.${currency}`]: newBalance,
-                            lastUpdate: Date.now()
-                        });
+                        await userRef.update({ [`balances.${currency}`]: newBalance, lastUpdate: Date.now() });
                         
                         await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
-                            adminId: userData.id,
-                            adminName: userData.username,
-                            userId: userId,
-                            userName: userDataFB.userInfo?.username,
-                            action: 'add_balance',
-                            currency: currency,
-                            amount: amount,
-                            reason: reason || "Admin adjustment",
+                            adminId: userData.id, adminName: userData.username, userId: userId,
+                            userName: userDataFB.userInfo?.username, action: 'add_balance',
+                            currency: currency, amount: amount, reason: reason || "Admin adjustment",
                             timestamp: Date.now()
                         });
                         
@@ -7699,15 +7687,11 @@
             if (!currency) return;
             
             if (!['USDT', 'BNB', 'TON', 'AMSK'].includes(currency.toUpperCase())) {
-                showMessage("Invalid currency", "error");
-                return;
+                showMessage("Invalid currency", "error"); return;
             }
             
             const amount = parseFloat(prompt(`Enter amount to subtract (${currency}):`, "10"));
-            if (!amount || amount <= 0) {
-                showMessage("Invalid amount", "error");
-                return;
-            }
+            if (!amount || amount <= 0) { showMessage("Invalid amount", "error"); return; }
             
             const reason = prompt("Reason for subtracting balance:", "Admin adjustment");
             
@@ -7727,20 +7711,12 @@
                         
                         const newBalance = currentBalance - amount;
                         
-                        await userRef.update({
-                            [`balances.${currency}`]: newBalance,
-                            lastUpdate: Date.now()
-                        });
+                        await userRef.update({ [`balances.${currency}`]: newBalance, lastUpdate: Date.now() });
                         
                         await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
-                            adminId: userData.id,
-                            adminName: userData.username,
-                            userId: userId,
-                            userName: userDataFB.userInfo?.username,
-                            action: 'subtract_balance',
-                            currency: currency,
-                            amount: amount,
-                            reason: reason || "Admin adjustment",
+                            adminId: userData.id, adminName: userData.username, userId: userId,
+                            userName: userDataFB.userInfo?.username, action: 'subtract_balance',
+                            currency: currency, amount: amount, reason: reason || "Admin adjustment",
                             timestamp: Date.now()
                         });
                         
@@ -7759,15 +7735,13 @@
         // ============================================
         // EVENT LISTENERS
         // ============================================
-
         function setupEventListeners() {
             console.log("🎯 Setting up event listeners...");
             
             elements.navBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const page = btn.dataset.page;
-                    switchPage(page);
+                    switchPage(btn.dataset.page);
                 });
             });
             
@@ -7775,14 +7749,13 @@
                 elements.startMiningBtn.addEventListener('click', handleMiningAction);
             }
             
-            elements.upgradeButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const card = e.target.closest('.upgrade-card');
-                    if (card) {
-                        upgradeMiningLevel(card.dataset.level);
-                    }
-                });
-            });
+            if (elements.quickTasksBtn) {
+                elements.quickTasksBtn.addEventListener('click', scrollToTasks);
+            }
+            
+            if (elements.quickBoostBtn) {
+                elements.quickBoostBtn.addEventListener('click', scrollToMythic);
+            }
             
             elements.stakeButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -7791,27 +7764,14 @@
                 });
             });
             
-            if (elements.depositBtn) {
-                elements.depositBtn.addEventListener('click', openDepositModal);
-            }
-            
-            if (elements.withdrawBtn) {
-                elements.withdrawBtn.addEventListener('click', openWithdrawModal);
-            }
-            
-            if (elements.swapBtn) {
-                elements.swapBtn.addEventListener('click', openSwapModal);
-            }
-            
-            if (elements.historyBtn) {
-                elements.historyBtn.addEventListener('click', showTransactionHistory);
-            }
+            if (elements.depositBtn) elements.depositBtn.addEventListener('click', openDepositModal);
+            if (elements.withdrawBtn) elements.withdrawBtn.addEventListener('click', openWithdrawModal);
+            if (elements.swapBtn) elements.swapBtn.addEventListener('click', openSwapModal);
+            if (elements.historyBtn) elements.historyBtn.addEventListener('click', showTransactionHistory);
             
             if (elements.copyLinkBtn) {
                 elements.copyLinkBtn.addEventListener('click', () => {
-                    if (elements.referralLinkInput) {
-                        copyToClipboard(elements.referralLinkInput.value);
-                    }
+                    if (elements.referralLinkInput) copyToClipboard(elements.referralLinkInput.value);
                 });
             }
             
@@ -7843,7 +7803,6 @@
         // ============================================
         // UI MANAGEMENT
         // ============================================
-
         function updateUI() {
             updateUserUI();
             updateMiningDisplay();
@@ -7851,30 +7810,23 @@
             updateStakingDisplay();
             updateReferralDisplay();
             updateTasksDisplay();
+            updateAchievementsDisplay();
         }
 
         // ============================================
         // BACKGROUND SERVICES
         // ============================================
-
         function startBackgroundServices() {
-            intervals.miningTimer = setInterval(() => {
-                updateMiningTimer();
-            }, 1000);
+            intervals.miningTimer = setInterval(updateMiningTimer, 1000);
             
             intervals.autoSave = setInterval(() => {
-                if (userData.id && userData.isInitialized) {
-                    saveUserData();
-                }
+                if (userData.id && userData.isInitialized) saveUserData();
             }, 30000);
             
             intervals.realtimeSync = setInterval(async () => {
                 if (window.db && userData.id) {
-                    try {
-                        await loadPendingRequests();
-                    } catch (error) {
-                        console.error("❌ Error syncing with Firebase:", error);
-                    }
+                    try { await loadPendingRequests(); } 
+                    catch (error) { console.error("❌ Error syncing with Firebase:", error); }
                 }
             }, 60000);
             
@@ -7891,23 +7843,17 @@
                 });
             }
             
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-            }
+            if (unsubscribeUserListener) unsubscribeUserListener();
         });
 
         // ============================================
         // UTILITY FUNCTIONS
         // ============================================
-
         function formatNumber(num, decimals = 0) {
             if (typeof num !== 'number' || isNaN(num)) return '0';
             
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(decimals) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(decimals) + 'K';
-            }
+            if (num >= 1000000) return (num / 1000000).toFixed(decimals) + 'M';
+            else if (num >= 1000) return (num / 1000).toFixed(decimals) + 'K';
             
             return num.toLocaleString('en-US', {
                 minimumFractionDigits: decimals,
@@ -7918,7 +7864,6 @@
         // ============================================
         // GLOBAL EXPORTS
         // ============================================
-
         window.initAlienMuskApp = initAlienMuskApp;
         window.switchPage = switchPage;
         window.closeModal = closeModal;
@@ -7950,8 +7895,12 @@
         window.approveWithdrawal = approveWithdrawal;
         window.rejectWithdrawal = rejectWithdrawal;
         window.formatNumber = formatNumber;
+        window.scrollToTasks = scrollToTasks;
+        window.scrollToMythic = scrollToMythic;
+        window.claimUpgradeAchievement = claimUpgradeAchievement;
+        window.claimStakingAchievement = claimStakingAchievement;
 
-        console.log("👽 Alien Musk Quantum Platform v6.4 - مع جميع التعديلات Ready!");
+        console.log("👽 Alien Musk Quantum Platform v6.5 - النسخة الكاملة جاهزة!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
