@@ -606,7 +606,6 @@
             overflow: hidden;
         }
         
-        /* تعديل شعاع المؤقت ليكون أكثر سطوعاً */
         .mining-timer-card::before {
             content: '';
             position: absolute;
@@ -988,7 +987,6 @@
             background-clip: text;
         }
         
-        /* إضافة عناصر جديدة للترقية */
         .upgrade-badge {
             position: absolute;
             top: 10px;
@@ -1695,7 +1693,7 @@
         
         .referral-stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);  /* تم التعديل إلى عمودين بعد إزالة BNB */
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 12px;
         }
@@ -2379,7 +2377,6 @@
             background: rgba(255, 255, 255, 0.08);
         }
         
-        /* قائمة التاريخ العمودية الجديدة */
         .history-list {
             display: flex;
             flex-direction: column;
@@ -2873,7 +2870,7 @@
             }
             
             .referral-stats-grid {
-                grid-template-columns: repeat(2, 1fr); /* على التابلت يصبح عمودين */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
             
@@ -3280,7 +3277,7 @@
                         <button class="upgrade-btn" data-level="3">Upgrade</button>
                     </div>
 
-                    <!-- Level 4 (جديد) -->
+                    <!-- Level 4 -->
                     <div class="upgrade-card" data-level="4">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 4</span>
@@ -3304,7 +3301,7 @@
                         <button class="upgrade-btn" data-level="4">Upgrade</button>
                     </div>
 
-                    <!-- Level 5 (جديد) -->
+                    <!-- Level 5 -->
                     <div class="upgrade-card" data-level="5">
                         <div class="upgrade-header">
                             <span class="upgrade-level">Level 5</span>
@@ -3490,7 +3487,7 @@
             </div>
         </div>
 
-        <!-- 👽 REFERRAL PAGE - COMPACT DESIGN (معدل) -->
+        <!-- 👽 REFERRAL PAGE - COMPACT DESIGN -->
         <div id="referral-page" class="page">
             <div class="referral-content">
                 <div class="referral-stats-card">
@@ -3505,7 +3502,6 @@
                             <div class="ref-stat-value" id="ref-earned">0</div>
                             <div class="ref-stat-label">AMSK Earned</div>
                         </div>
-                        <!-- تم إزالة بطاقة BNB Earned -->
                     </div>
                 </div>
 
@@ -3595,7 +3591,7 @@
                             </div>
                         </div>
 
-                        <!-- Milestone 250 (جديد) -->
+                        <!-- Milestone 250 -->
                         <div class="milestone-item locked" data-milestone="250">
                             <div class="milestone-icon">
                                 <i class="fas fa-crown"></i>
@@ -3625,7 +3621,7 @@
         window.firebaseApp = null;
         window.db = null;
         window.auth = null;
-        let appInitialized = false; // منع التهيئة المزدوجة
+        let appInitialized = false;
         
         // Firebase Configuration
         const FIREBASE_CONFIG = {
@@ -3676,10 +3672,8 @@
             console.log(`🔀 Switching to page: ${pageName}`);
             
             try {
-                // Close any open modals when switching pages
                 closeModal();
                 
-                // Update pages
                 document.querySelectorAll('.page').forEach(page => {
                     page.classList.remove('active');
                     if (page.id === `${pageName}-page`) {
@@ -3687,7 +3681,6 @@
                     }
                 });
                 
-                // Update navigation buttons
                 document.querySelectorAll('.nav-btn').forEach(btn => {
                     btn.classList.remove('active');
                     if (btn.dataset.page === pageName) {
@@ -3716,11 +3709,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("📱 DOM Content Loaded - Starting initialization...");
             
-            // Initialize services
             initTelegram();
             initFirebase();
             
-            // Update loading progress
             let progress = 25;
             const progressInterval = setInterval(() => {
                 progress += 15;
@@ -3736,7 +3727,6 @@
                 if (progressText) progressText.textContent = `Loading... ${progress}%`;
             }, 300);
             
-            // Hide loading screen and show app
             setTimeout(() => {
                 clearInterval(progressInterval);
                 
@@ -3754,19 +3744,16 @@
                     appContainer.classList.remove('hidden');
                 }
                 
-                // Start main application
                 if (typeof initAlienMuskApp === 'function') {
                     console.log("🚀 Starting main application...");
                     initAlienMuskApp();
                 } else {
                     console.error("❌ Main app function not found!");
-                    // رسالة ترحيب افتراضية
                     showMessage("Welcome to Alien Musk Quantum!", "success");
                 }
             }, 2500);
         });
         
-        // Fallback initialization
         setTimeout(() => {
             if (!window.tg && !window.firebaseApp) {
                 console.log("⚠️ Using fallback initialization...");
@@ -3787,11 +3774,11 @@
         
         console.log("✅ Alien Musk Connector Loaded Successfully");
     </script>
-        <!-- 👽 MAIN APPLICATION JS v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX -->
+        <!-- 👽 MAIN APPLICATION JS v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX + IMPROVED MESSAGES -->
     <script>
         // ============================================
         // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
-        // PROFESSIONAL HISTORY SYSTEM EDITION + REFERRAL FIX
+        // PROFESSIONAL HISTORY SYSTEM EDITION + REFERRAL FIX + ENHANCED USER MESSAGES
         // ============================================
 
         // Configuration - UPDATED WITH CORRECT CALCULATIONS
@@ -3806,14 +3793,14 @@
             
             // Mining Configuration
             MINING: {
-                DURATION: 3600000, // 1 hour in ms
+                DURATION: 3600000,
                 
                 LEVELS: {
                     1: { name: "⚡ Beginner", cost: 0, reward: 2500, hashrate: 2500, apy: "∞" },
                     2: { name: "🚀 Advanced", cost: 5, reward: 5000, hashrate: 5000, apy: "200%" },
                     3: { name: "💎 Pro", cost: 20, reward: 10000, hashrate: 10000, apy: "250%" },
-                    4: { name: "👑 Legend", cost: 50, reward: 50000, hashrate: 50000, apy: "300%" },    // جديد
-                    5: { name: "🌌 Mythic", cost: 100, reward: 100000, hashrate: 100000, apy: "400%" }   // جديد
+                    4: { name: "👑 Legend", cost: 50, reward: 50000, hashrate: 50000, apy: "300%" },
+                    5: { name: "🌌 Mythic", cost: 100, reward: 100000, hashrate: 100000, apy: "400%" }
                 }
             },
             
@@ -3847,7 +3834,7 @@
                 }
             },
             
-            // TASKS - أربع مهام لمرة واحدة (جديد)
+            // TASKS - أربع مهام لمرة واحدة
             TASKS: {
                 1: { name: "Join Telegram Channel", url: "https://t.me/your_channel", icon: "fab fa-telegram", reward: 5000 },
                 2: { name: "Subscribe on YouTube", url: "https://youtube.com/your_channel", icon: "fab fa-youtube", reward: 5000 },
@@ -3855,21 +3842,19 @@
                 4: { name: "Like & Share Latest Post", url: "https://t.me/your_channel/123", icon: "fas fa-heart", reward: 5000 }
             },
             
-            // Referral Configuration - معدل بالكامل
+            // Referral Configuration
             REFERRAL: {
-                // مكافآت التسجيل
                 BONUS: {
-                    REFERRER: 10000,  // المحيل يحصل 10000 AMSK
-                    REFERRED: 5000     // المحال يحصل 5000 AMSK
+                    REFERRER: 10000,
+                    REFERRED: 5000
                 },
                 
-                // المكافآت التراكمية (مع إضافة milestone 250)
                 MILESTONES: {
                     10: { amsk: 50000, bnb: 0 },
                     25: { amsk: 150000, bnb: 0 },
                     50: { amsk: 350000, bnb: 0.01 },
                     100: { amsk: 1000000, bnb: 0.025 },
-                    250: { amsk: 3000000, bnb: 0.075 }   // جديد
+                    250: { amsk: 3000000, bnb: 0.075 }
                 }
             },
             
@@ -3892,13 +3877,13 @@
                 FEE_BNB: 0.00025
             },
             
-            // Swap Configuration - UPDATED WITH ALL PAIRS
+            // Swap Configuration
             SWAP: {
                 RATES: {
-                    USDT_TO_AMSK: 5000,      // 1 USDT = 5,000 AMSK
-                    AMSK_TO_USDT: 0.0002,    // 1 AMSK = 0.0002 USDT
-                    BNB_TO_AMSK: 3200000,    // 1 BNB = 3,200,000 AMSK
-                    TON_TO_AMSK: 7000        // 1 TON = 7,000 AMSK
+                    USDT_TO_AMSK: 5000,
+                    AMSK_TO_USDT: 0.0002,
+                    BNB_TO_AMSK: 3200000,
+                    TON_TO_AMSK: 7000
                 },
                 ALLOWED_PAIRS: [
                     'USDT_to_AMSK',
@@ -3915,7 +3900,7 @@
             }
         };
 
-        // User Data Management (مع إضافة referralBonusClaimed)
+        // User Data Management
         let userData = {
             id: null,
             telegramId: null,
@@ -3928,10 +3913,10 @@
             lastActive: null,
             isInitialized: false,
             lastSaveTime: 0,
-            referralBonusClaimed: false   // جديد: منع تكرار مكافأة الإحالة
+            referralBonusClaimed: false
         };
 
-        // Wallet Data - UPDATED STRUCTURE (مع إضافة tasks)
+        // Wallet Data
         let walletData = {
             balances: {
                 AMSK: 2500,
@@ -3955,16 +3940,16 @@
             referrals: {
                 count: 0,
                 earned: { amsk: 0, bnb: 0 },
-                referrals: [], // قائمة بأسماء أو ids المحالين
+                referrals: [],
                 claimedMilestones: []
             },
-            tasks: {                // جديد: المهام المنجزة
-                completed: []        // array of task ids (1,2,3,4)
+            tasks: {
+                completed: []
             },
             pendingDeposits: [],
             pendingWithdrawals: [],
-            transactions: [], // Only completed transactions
-            transactionHistory: [], // All transactions (pending + completed)
+            transactions: [],
+            transactionHistory: [],
             usedTxIds: [],
             lastUpdate: Date.now()
         };
@@ -3988,20 +3973,65 @@
             realtimeSync: null
         };
 
-        // Realtime Listener (للتحديث الفوري)
+        // Realtime Listener
         let unsubscribeUserListener = null;
 
         // ============================================
-        // دالة إنشاء كود إحالة فريد (جديدة)
+        // دالة إنشاء كود إحالة فريد
         // ============================================
         function generateReferralCode() {
-            // كود من 8 خانات: أحرف كبيرة + أرقام (بدون أحرف متشابهة)
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = '';
             for (let i = 0; i < 8; i++) {
                 code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return code;
+        }
+
+        // ============================================
+        // دالة عرض الرسائل مع مدة محددة
+        // ============================================
+        function showMessage(text, type = 'info', duration = 3000) {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
+            
+            if (duration === 3000) {
+                if (type === 'warning' || type === 'error') {
+                    duration = 4500;
+                } else if (type === 'success') {
+                    duration = 3000;
+                } else {
+                    duration = 3500;
+                }
+            }
+            
+            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const messageDiv = document.createElement('div');
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            else if (type === 'error') icon = 'fa-times-circle';
+            else if (type === 'warning') icon = 'fa-exclamation-triangle';
+            
+            messageDiv.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${text}</span>
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                const msgElement = document.getElementById(messageId);
+                if (msgElement) {
+                    msgElement.style.opacity = '0';
+                    msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
+                    setTimeout(() => {
+                        if (msgElement.parentNode) msgElement.remove();
+                    }, 300);
+                }
+            }, duration);
         }
 
         // ============================================
@@ -4017,34 +4047,18 @@
             console.log("🚀 Initializing Alien Musk Platform v6.4...");
             
             try {
-                // 1. Cache DOM Elements
                 cacheElements();
-                
-                // 2. Setup User
                 await setupUser();
-                
-                // 3. Load Data from Firebase
                 await loadUserDataFromFirebase();
-                
-                // 4. Setup Realtime Listener
                 setupUserRealtimeListener();
-                
-                // 5. Setup Event Listeners
                 setupEventListeners();
-                
-                // 6. Check for Referral
                 await checkForReferral();
-                
-                // 7. Update UI
                 updateUI();
-                
-                // 8. Start Background Services
                 startBackgroundServices();
                 
                 userData.isInitialized = true;
                 console.log("✅ Platform initialized successfully");
                 
-                // Show welcome message (مرة واحدة وبعد 0.8 ثانية)
                 setTimeout(() => {
                     showMessage("👽 Welcome to Alien Musk Quantum Platform v6.4!", "success");
                 }, 800);
@@ -4058,24 +4072,17 @@
         function cacheElements() {
             console.log("🔍 Caching DOM elements...");
             
-            // Loading screen
             elements.loadingScreen = document.getElementById('loading-screen');
             elements.loadingProgress = document.getElementById('loading-progress-bar');
             elements.loadingText = document.getElementById('loading-progress-text');
-            
-            // Header elements
             elements.usernameMini = document.getElementById('username-mini');
             elements.userIdMini = document.getElementById('user-id-mini');
             elements.userAvatarMini = document.getElementById('user-avatar-mini');
             elements.totalBalanceAmsk = document.getElementById('total-balance-amsk');
             elements.totalBalanceUsd = document.getElementById('total-balance-usd');
             elements.adminLogo = document.getElementById('admin-logo');
-            
-            // Navigation
             elements.navBtns = document.querySelectorAll('.nav-btn');
             elements.pages = document.querySelectorAll('.page');
-            
-            // Mining elements
             elements.startMiningBtn = document.getElementById('start-mining-btn');
             elements.miningTimerDisplay = document.getElementById('mining-timer-display');
             elements.currentMiningLevel = document.getElementById('current-mining-level');
@@ -4083,18 +4090,12 @@
             elements.nextRewardAmount = document.getElementById('next-reward-amount');
             elements.totalMined = document.getElementById('total-mined');
             elements.minedToday = document.getElementById('mined-today');
-            
-            // Upgrade elements
             elements.upgradeCards = document.querySelectorAll('.upgrade-card');
             elements.upgradeButtons = document.querySelectorAll('.upgrade-btn');
-            elements.upgradeCardsContainer = document.getElementById('upgrade-cards'); // نستخدم هذا بدلاً من querySelectorAll
-            
-            // Staking elements
+            elements.upgradeCardsContainer = document.getElementById('upgrade-cards');
             elements.stakeButtons = document.querySelectorAll('.stake-plan-btn');
             elements.totalStaked = document.getElementById('total-staked');
             elements.activeStakesList = document.getElementById('active-stakes-list');
-            
-            // Wallet elements
             elements.walletBalanceAmsk = document.getElementById('wallet-balance-amsk');
             elements.walletBalanceUsd = document.getElementById('wallet-balance-usd');
             elements.walletAmskBalance = document.getElementById('wallet-amsk-balance');
@@ -4105,24 +4106,17 @@
             elements.walletBnbValue = document.getElementById('wallet-bnb-value');
             elements.walletTonBalance = document.getElementById('wallet-ton-balance');
             elements.walletTonValue = document.getElementById('wallet-ton-value');
-            
-            // Wallet action buttons
             elements.depositBtn = document.getElementById('deposit-btn');
             elements.withdrawBtn = document.getElementById('withdraw-btn');
             elements.swapBtn = document.getElementById('swap-btn');
             elements.historyBtn = document.getElementById('history-btn');
-            
-            // Referral elements
             elements.referralLinkInput = document.getElementById('referral-link-input');
             elements.copyLinkBtn = document.getElementById('copy-link-btn');
             elements.telegramShareBtn = document.getElementById('telegram-share-btn');
             elements.whatsappShareBtn = document.getElementById('whatsapp-share-btn');
             elements.refCount = document.getElementById('ref-count');
             elements.refEarned = document.getElementById('ref-earned');
-            // تم إزالة refBnbEarned
             elements.milestonesList = document.getElementById('milestones-list');
-            
-            // Tasks elements (جديد)
             elements.tasksGrid = document.getElementById('tasks-grid');
             elements.tasksProgress = document.getElementById('tasks-progress');
             
@@ -4130,7 +4124,7 @@
         }
 
         // ============================================
-        // دالة setupUser - معدلة لإنشاء كود فريد وإضافة referralBonusClaimed
+        // دالة setupUser
         // ============================================
         async function setupUser() {
             console.log("👤 Setting up user...");
@@ -4162,21 +4156,17 @@
                 userData.photoUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${userId}`;
             }
             
-            // ✅ إنشاء كود إحالة فريد (إذا لم يكن موجوداً)
             if (!userData.referralCode) {
-                // التحقق من وجود كود في localStorage أولاً
                 let savedCode = localStorage.getItem(`refcode_${userData.id}`);
                 if (savedCode) {
                     userData.referralCode = savedCode;
                 } else {
-                    // إنشاء كود جديد
                     userData.referralCode = generateReferralCode();
                     localStorage.setItem(`refcode_${userData.id}`, userData.referralCode);
                 }
                 console.log("🔗 Generated unique referral code:", userData.referralCode);
             }
             
-            // التأكد من وجود referralBonusClaimed
             if (typeof userData.referralBonusClaimed === 'undefined') {
                 userData.referralBonusClaimed = false;
             }
@@ -4184,17 +4174,15 @@
             userData.joinedAt = new Date().toISOString();
             userData.lastActive = new Date().toISOString();
             
-            // التأكد من وجود مصفوفة referrals في walletData
             if (!walletData.referrals) {
                 walletData.referrals = {
                     count: 0,
                     earned: { amsk: 0, bnb: 0 },
-                    referrals: [], // قائمة المحالين
+                    referrals: [],
                     claimedMilestones: []
                 };
             }
             
-            // التأكد من وجود tasks في walletData
             if (!walletData.tasks) {
                 walletData.tasks = { completed: [] };
             }
@@ -4225,7 +4213,7 @@
         }
 
         // ============================================
-        // REALTIME LISTENER (جديد)
+        // REALTIME LISTENER
         // ============================================
 
         function setupUserRealtimeListener() {
@@ -4234,7 +4222,6 @@
                 return;
             }
 
-            // إلغاء المستمع السابق إن وجد
             if (unsubscribeUserListener) {
                 unsubscribeUserListener();
             }
@@ -4248,7 +4235,6 @@
                         console.log("🔄 Realtime update received from Firestore");
                         const firebaseData = doc.data();
 
-                        // تحديث البيانات المحلية (مع الحفاظ على الهيكل)
                         if (firebaseData.balances) {
                             walletData.balances = firebaseData.balances;
                         }
@@ -4272,8 +4258,6 @@
                         }
 
                         walletData.lastUpdate = Date.now();
-
-                        // تحديث واجهة المستخدم
                         updateUI();
                     }
                 }, (error) => {
@@ -4300,49 +4284,37 @@
                     .get();
                 
                 if (userDoc.exists) {
-                    // Load data from Firebase
                     const firebaseData = userDoc.data();
                     
-                    // Merge with existing data carefully
                     if (firebaseData.balances) {
                         walletData.balances = firebaseData.balances;
                     }
-                    
                     if (firebaseData.mining) {
                         walletData.mining = firebaseData.mining;
                     }
-                    
                     if (firebaseData.staking) {
                         walletData.staking = firebaseData.staking;
                     }
-                    
                     if (firebaseData.referrals) {
                         walletData.referrals = firebaseData.referrals;
                     }
-                    
                     if (firebaseData.tasks) {
                         walletData.tasks = firebaseData.tasks;
                     }
-                    
                     if (firebaseData.transactions) {
                         walletData.transactions = firebaseData.transactions;
                     }
-                    
                     if (firebaseData.transactionHistory) {
                         walletData.transactionHistory = firebaseData.transactionHistory;
                     }
                     
-                    // تحميل حالة referralBonusClaimed من userInfo
                     if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
                         userData.referralBonusClaimed = firebaseData.userInfo.referralBonusClaimed;
                     }
                     
                     console.log("✅ Data loaded from Firebase");
                     
-                    // Load pending requests
                     await loadPendingRequests();
-                    
-                    // Fix: Ensure we don't have double entries
                     cleanDuplicateTransactions();
                     
                 } else {
@@ -4350,7 +4322,6 @@
                     await saveUserDataToFirebase();
                 }
                 
-                // Always backup to localStorage
                 saveUserDataToLocalStorage();
                 
             } catch (error) {
@@ -4364,11 +4335,9 @@
             if (!window.db || !userData.id) return;
             
             try {
-                // تحديد إذا كان المستخدم مشرفاً
                 const isAdmin = userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
                 
                 if (isAdmin) {
-                    // المشرف: يجلب جميع الطلبات بدون شرط userId
                     const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('status', '==', 'pending')
                         .get();
@@ -4387,7 +4356,6 @@
                         ...doc.data()
                     }));
                 } else {
-                    // المستخدم العادي: يجلب فقط طلباته
                     const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('userId', '==', userData.id)
                         .where('status', '==', 'pending')
@@ -4424,17 +4392,15 @@
             }
             
             try {
-                // Update timestamps
                 userData.lastActive = new Date().toISOString();
                 walletData.lastUpdate = Date.now();
                 
-                // Prepare data for Firebase
                 const firebaseData = {
                     balances: walletData.balances,
                     mining: walletData.mining,
                     staking: walletData.staking,
                     referrals: walletData.referrals,
-                    tasks: walletData.tasks,  // جديد: حفظ المهام
+                    tasks: walletData.tasks,
                     transactions: walletData.transactions || [],
                     transactionHistory: walletData.transactionHistory || [],
                     userInfo: {
@@ -4446,12 +4412,11 @@
                         referredBy: userData.referredBy,
                         joinedAt: userData.joinedAt,
                         lastActive: userData.lastActive,
-                        referralBonusClaimed: userData.referralBonusClaimed  // جديد
+                        referralBonusClaimed: userData.referralBonusClaimed
                     },
                     lastUpdate: walletData.lastUpdate
                 };
                 
-                // Save to Firebase
                 await window.db.collection(DB_COLLECTIONS.USERS)
                     .doc(userData.id)
                     .set(firebaseData, { merge: true });
@@ -4472,7 +4437,7 @@
                     mining: walletData.mining,
                     staking: walletData.staking,
                     referrals: walletData.referrals,
-                    tasks: walletData.tasks,  // جديد
+                    tasks: walletData.tasks,
                     pendingDeposits: walletData.pendingDeposits,
                     pendingWithdrawals: walletData.pendingWithdrawals,
                     transactions: walletData.transactions,
@@ -4518,7 +4483,7 @@
                         walletData.referrals = parsed.referrals;
                     }
                     
-                    if (parsed.tasks) {  // جديد
+                    if (parsed.tasks) {
                         walletData.tasks = parsed.tasks;
                     } else {
                         walletData.tasks = { completed: [] };
@@ -4545,8 +4510,6 @@
                     }
                     
                     console.log("✅ Data loaded from localStorage");
-                    
-                    // Fix: Ensure we don't have double entries
                     cleanDuplicateTransactions();
                     
                 } catch (error) {
@@ -4580,7 +4543,7 @@
                 referrals: [],
                 claimedMilestones: []
             };
-            walletData.tasks = {  // جديد
+            walletData.tasks = {
                 completed: []
             };
             walletData.pendingDeposits = [];
@@ -4590,13 +4553,11 @@
             walletData.usedTxIds = [];
         }
 
-        // 🔧 NEW: Clean duplicate transactions
         function cleanDuplicateTransactions() {
             if (!walletData.transactionHistory) {
                 walletData.transactionHistory = [];
             }
             
-            // Remove duplicates based on transaction ID
             const uniqueIds = new Set();
             walletData.transactionHistory = walletData.transactionHistory.filter(tx => {
                 if (uniqueIds.has(tx.id)) {
@@ -4616,10 +4577,9 @@
         }
 
         // ============================================
-        // TRANSACTION SYSTEM - IMPROVED
+        // TRANSACTION SYSTEM
         // ============================================
 
-        // 🔧 NEW: Add transaction to history (no duplicates)
         function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
             const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             
@@ -4642,23 +4602,20 @@
                 })
             };
             
-            // Add to transaction history
             if (!walletData.transactionHistory) {
                 walletData.transactionHistory = [];
             }
             
-            // Check for duplicates before adding
             const isDuplicate = walletData.transactionHistory.some(tx => 
                 tx.type === type && 
                 tx.amount === amount && 
                 tx.currency === currency && 
-                Math.abs(tx.timestamp - transaction.timestamp) < 5000 // 5 seconds
+                Math.abs(tx.timestamp - transaction.timestamp) < 5000
             );
             
             if (!isDuplicate) {
                 walletData.transactionHistory.unshift(transaction);
                 
-                // Keep only last 100 transactions in history
                 if (walletData.transactionHistory.length > 100) {
                     walletData.transactionHistory = walletData.transactionHistory.slice(0, 100);
                 }
@@ -4671,7 +4628,6 @@
             return transaction;
         }
 
-        // 🔧 NEW: Get default message based on type and status
         function getDefaultMessage(type, status) {
             const messages = {
                 'deposit_request': {
@@ -4705,7 +4661,7 @@
                 'referral_milestone': {
                     'completed': 'Referral milestone reward claimed.'
                 },
-                'task_reward': {  // جديد
+                'task_reward': {
                     'completed': 'Task completed successfully.'
                 }
             };
@@ -4713,14 +4669,10 @@
             return messages[type]?.[status] || 'Transaction completed';
         }
 
-        // 🔧 UPDATED: Legacy addTransaction function (for backward compatibility)
         function addTransaction(type, amount, currency, description = '') {
-            // Only add to completed transactions if status is completed
             if (type.includes('_request')) {
-                // For requests, add to history with pending status
                 addTransactionToHistory(type, amount, currency, description, 'pending', 'Request submitted');
             } else {
-                // For completed transactions, add to both arrays
                 const transaction = {
                     id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     type: type,
@@ -4740,7 +4692,6 @@
                     walletData.transactions = walletData.transactions.slice(0, 50);
                 }
                 
-                // Also add to history
                 addTransactionToHistory(type, amount, currency, description, 'completed', getDefaultMessage(type, 'completed'));
                 
                 console.log(`📝 Transaction added: ${type} ${amount} ${currency}`);
@@ -4748,7 +4699,7 @@
         }
 
         // ============================================
-        // HISTORY SYSTEM - PROFESSIONAL VERSION (بطاقات)
+        // HISTORY SYSTEM
         // ============================================
 
         function showTransactionHistory() {
@@ -4775,17 +4726,13 @@
                                 <button class="history-filter-btn" data-filter="staking">Staking</button>
                                 <button class="history-filter-btn" data-filter="swap">Swap</button>
                                 <button class="history-filter-btn" data-filter="referral">Referral</button>
-                                <button class="history-filter-btn" data-filter="task">Tasks</button> <!-- جديد -->
+                                <button class="history-filter-btn" data-filter="task">Tasks</button>
                             </div>
                             
-                            <div id="historyContent" style="max-height: 400px; overflow-y: auto;">
-                                <!-- History content will be loaded here -->
-                            </div>
+                            <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
                             
                             <div class="modal-actions mt-20">
-                                <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">
-                                    Close
-                                </button>
+                                <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">Close</button>
                             </div>
                         </div>
                     </div>
@@ -4795,10 +4742,8 @@
             document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
             document.body.insertAdjacentHTML('beforeend', modalContent);
             
-            // Load history content
             loadHistoryContent('all', 'all');
             
-            // Setup tab click handlers
             setTimeout(() => {
                 const tabs = document.querySelectorAll('#historyTabs .history-tab');
                 tabs.forEach(tab => {
@@ -4811,7 +4756,6 @@
                     });
                 });
                 
-                // Setup filter click handlers
                 const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
                 filters.forEach(filter => {
                     filter.addEventListener('click', () => {
@@ -4829,10 +4773,8 @@
             const historyContent = document.getElementById('historyContent');
             if (!historyContent) return;
             
-            // Get all transactions from history
             let transactions = [...(walletData.transactionHistory || [])];
             
-            // Add pending requests from separate arrays
             const pendingRequests = [
                 ...(walletData.pendingDeposits || []).map(deposit => ({
                     id: deposit.id,
@@ -4858,13 +4800,9 @@
                 }))
             ];
             
-            // Merge all transactions
             transactions = [...pendingRequests, ...transactions];
-            
-            // Sort by timestamp (newest first)
             transactions.sort((a, b) => b.timestamp - a.timestamp);
             
-            // Apply tab filter
             if (tabType === 'pending') {
                 transactions = transactions.filter(tx => tx.status === 'pending');
             } else if (tabType === 'completed') {
@@ -4873,7 +4811,6 @@
                 transactions = transactions.filter(tx => tx.status === 'rejected');
             }
             
-            // Apply type filter
             if (filterType !== 'all') {
                 if (filterType === 'deposit') {
                     transactions = transactions.filter(tx => tx.type.includes('deposit'));
@@ -5027,7 +4964,7 @@
                 elements.minedToday.textContent = formatNumber(mining.minedToday);
             }
             
-            updateUpgradeCards(); // تحديث بطاقات الترقية
+            updateUpgradeCards();
             updateMiningButton();
         }
 
@@ -5137,7 +5074,7 @@
                             <span class="upgrade-level">Level ${level}</span>
                             <span class="upgrade-name">${levelData.name}</span>
                         </div>
-                        <div class="upgrade-badge">${levelData.cost > 0 ? levelData.cost + ' USDT' : 'Free'}</div>
+                        <div class="upgrade-badge">💰 ${levelData.cost > 0 ? levelData.cost + ' USDT' : 'Free'}</div>
                         <div class="upgrade-stats">
                             <div class="upgrade-stat">
                                 <i class="fas fa-microchip"></i>
@@ -5212,7 +5149,6 @@
                 walletData.mining.lastReward = Date.now();
                 walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
                 
-                // Use new transaction system
                 addTransactionToHistory('mining_reward', reward, 'AMSK', 'Mining reward', 'completed', 'Mining reward claimed successfully');
                 
                 updateMiningDisplay();
@@ -5242,7 +5178,7 @@
                 }
                 
                 if (walletData.balances.USDT < levelData.cost) {
-                    showMessage(`Insufficient USDT. Need ${levelData.cost} USDT.`, "error");
+                    showMessage(`⚠️ Insufficient USDT balance. Need ${levelData.cost} USDT.`, "warning", 4500);
                     return;
                 }
                 
@@ -5255,7 +5191,7 @@
                 updateWalletUI();
                 await saveUserData();
                 
-                showMessage(`⚡ Upgraded to ${levelData.name} level!`, "success");
+                showMessage(`⚡ Upgraded to ${levelData.name} level! Hashrate: ${levelData.hashrate.toLocaleString()}/s`, "success");
                 
             } catch (error) {
                 console.error("❌ Error upgrading mining level:", error);
@@ -5273,10 +5209,7 @@
             const { AMSK, USDT, BNB, TON } = walletData.balances;
             const { PRICES } = CONFIG;
             
-            const totalUSD = (AMSK * PRICES.AMSK) + 
-                            (USDT * PRICES.USDT) + 
-                            (BNB * PRICES.BNB) + 
-                            (TON * PRICES.TON);
+            const totalUSD = (AMSK * PRICES.AMSK) + (USDT * PRICES.USDT) + (BNB * PRICES.BNB) + (TON * PRICES.TON);
             
             if (elements.walletBalanceUsd) {
                 elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
@@ -5294,7 +5227,6 @@
                 elements.totalBalanceAmsk.textContent = formatNumber(AMSK);
             }
             
-            // Update AMSK
             if (elements.walletAmskBalance) {
                 elements.walletAmskBalance.textContent = `${formatNumber(AMSK)} AMSK`;
             }
@@ -5302,7 +5234,6 @@
                 elements.walletAmskValue.textContent = `$${(AMSK * PRICES.AMSK).toFixed(2)}`;
             }
             
-            // Update USDT
             if (elements.walletUsdtBalance) {
                 elements.walletUsdtBalance.textContent = `${USDT.toFixed(2)} USDT`;
             }
@@ -5310,7 +5241,6 @@
                 elements.walletUsdtValue.textContent = `$${USDT.toFixed(2)}`;
             }
             
-            // Update BNB
             if (elements.walletBnbBalance) {
                 elements.walletBnbBalance.textContent = `${BNB.toFixed(4)} BNB`;
             }
@@ -5318,7 +5248,6 @@
                 elements.walletBnbValue.textContent = `$${(BNB * PRICES.BNB).toFixed(2)}`;
             }
             
-            // Update TON
             if (elements.walletTonBalance) {
                 elements.walletTonBalance.textContent = `${formatNumber(TON)} TON`;
             }
@@ -5637,7 +5566,7 @@
                 }
                 
                 if (walletData.balances.USDT < amount) {
-                    showMessage("Insufficient USDT balance", "error");
+                    showMessage(`⚠️ Insufficient USDT balance. Need ${(amount - walletData.balances.USDT).toFixed(2)} to stake.`, "warning", 4500);
                     return;
                 }
                 
@@ -5657,7 +5586,6 @@
                 walletData.staking.activeStakes.push(stake);
                 walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
                 
-                // Use new transaction system
                 addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
                 
                 updateWalletUI();
@@ -5710,7 +5638,6 @@
                 walletData.staking.totalEarned = (walletData.staking.totalEarned || 0) + totalReward;
                 walletData.staking.totalStaked -= stake.amount;
                 
-                // Use new transaction system
                 addTransactionToHistory('staking_reward', totalReward, 'AMSK', `${plan.name} Plan reward`, 'completed', 'Staking reward claimed');
                 addTransactionToHistory('staking_return', stake.amount, 'USDT', 'Principal returned', 'completed', 'Staking principal returned');
                 
@@ -5719,7 +5646,7 @@
                 updateWalletUI();
                 updateStakingDisplay();
                 
-                showMessage(`💰 Claimed ${totalReward.toLocaleString()} AMSK from staking!`, "success");
+                showMessage(`💰 Claimed ${totalReward.toLocaleString()} AMSK from ${plan.name} Plan staking!`, "success");
                 await saveUserData();
                 
             } catch (error) {
@@ -5758,33 +5685,29 @@
             updateWalletUI();
             updateStakingDisplay();
             
-            showMessage(`⚠️ Stake canceled. ${returnedAmount.toFixed(2)} USDT returned (50% penalty)`, "warning");
+            showMessage(`⚠️ Stake canceled. ${returnedAmount.toFixed(2)} USDT returned (50% penalty)`, "warning", 4500);
             await saveUserData();
         }
 
         // ============================================
-        // REFERRAL SYSTEM - معدل بالكامل
+        // REFERRAL SYSTEM
         // ============================================
 
         async function checkForReferral() {
             console.log("🔍 Checking for referral...");
             
-            // 1. إذا كان المستخدم لديه محيل بالفعل أو استلم المكافأة، لا تفعل شيئاً
             if (userData.referredBy || userData.referralBonusClaimed) {
                 console.log("✅ User already referred or bonus claimed");
                 return;
             }
             
-            // 2. الحصول على كود الإحالة من الرابط
             let referralCode = null;
             
-            // من Telegram
             if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.start_param) {
                 referralCode = window.tg.initDataUnsafe.start_param;
                 console.log("📱 Telegram referral detected:", referralCode);
             }
             
-            // من URL parameters
             if (!referralCode) {
                 const urlParams = new URLSearchParams(window.location.search);
                 referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
@@ -5795,13 +5718,11 @@
                 return;
             }
             
-            // 3. منع الإحالة الذاتية
             if (referralCode === userData.referralCode) {
                 console.log("⚠️ Cannot refer yourself");
                 return;
             }
             
-            // 4. معالجة الإحالة
             await processReferral(referralCode);
         }
 
@@ -5809,11 +5730,9 @@
             console.log("🎯 Processing referral with code:", referralCode);
             
             try {
-                // البحث عن المحيل باستخدام كود الإحالة
                 let referrerId = null;
                 
                 if (window.db) {
-                    // البحث في Firebase
                     const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
                     const querySnapshot = await usersRef.where('userInfo.referralCode', '==', referralCode).get();
                     
@@ -5830,22 +5749,17 @@
                     return;
                 }
                 
-                // تسجيل المحيل لهذا المستخدم
                 userData.referredBy = referrerId;
-                userData.referralBonusClaimed = true; // منع المكافأة مرة أخرى
+                userData.referralBonusClaimed = true;
                 
-                // إضافة المستخدم إلى قائمة referrals للمحيل
                 if (referrerId !== userData.id) {
-                    // تحديث بيانات المحيل في Firebase
                     if (window.db) {
                         const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
                         
-                        // جلب بيانات المحيل الحالية
                         const referrerDoc = await referrerRef.get();
                         if (referrerDoc.exists) {
                             const referrerWallet = referrerDoc.data();
                             
-                            // تحديث عدد الإحالات وإضافة المستخدم الجديد
                             const newCount = (referrerWallet.referrals?.count || 0) + 1;
                             const newReferrals = referrerWallet.referrals?.referrals || [];
                             newReferrals.push({
@@ -5854,7 +5768,6 @@
                                 joinedAt: Date.now()
                             });
                             
-                            // إضافة مكافأة المحيل (10000 AMSK)
                             const newBalance = (referrerWallet.balances?.AMSK || 0) + CONFIG.REFERRAL.BONUS.REFERRER;
                             
                             await referrerRef.update({
@@ -5868,16 +5781,12 @@
                         }
                     }
                     
-                    // إضافة مكافأة المحال (5000 AMSK)
                     walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
                     
-                    // تسجيل المعاملات
                     addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
                     
-                    // رسالة نجاح
                     showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
                     
-                    // حفظ البيانات
                     await saveUserData();
                 }
                 
@@ -5898,8 +5807,6 @@
             if (elements.refEarned) {
                 elements.refEarned.textContent = formatNumber(referrals.earned.amsk);
             }
-            
-            // تم إزالة refBnbEarned
             
             updateMilestonesDisplay();
         }
@@ -5991,7 +5898,7 @@
         }
 
         // ============================================
-        // TASKS SYSTEM (جديد)
+        // TASKS SYSTEM
         // ============================================
 
         function updateTasksDisplay() {
@@ -6030,14 +5937,12 @@
             
             const completed = walletData.tasks?.completed || [];
             if (completed.includes(taskId)) {
-                showMessage("Task already completed", "info");
+                showMessage("⏳ Task already completed", "info", 3000);
                 return;
             }
             
-            // فتح الرابط
             window.open(task.url, '_blank');
             
-            // طلب تأكيد بعد ثانية
             setTimeout(() => {
                 if (confirm(`Did you complete "${task.name}"?`)) {
                     markTaskCompleted(taskId);
@@ -6058,11 +5963,11 @@
             updateWalletUI();
             await saveUserData();
             
-            showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned!`, "success");
+            showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned from ${CONFIG.TASKS[taskId].name}!`, "success");
         }
 
         // ============================================
-        // SWAP SYSTEM - IMPROVED WITH ALL PAIRS
+        // SWAP SYSTEM
         // ============================================
 
         function openSwapModal() {
@@ -6119,7 +6024,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Quick Actions -->
                             <div class="swap-quick-actions">
                                 <button class="swap-quick-btn" onclick="setSwapPercentage(25)">25%</button>
                                 <button class="swap-quick-btn" onclick="setSwapPercentage(50)">50%</button>
@@ -6163,18 +6067,14 @@
             const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
             const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
             
-            // Update balances
             if (document.getElementById('swapFromBalance')) {
-                document.getElementById('swapFromBalance').textContent = 
-                    getBalanceText(fromCurrency);
+                document.getElementById('swapFromBalance').textContent = getBalanceText(fromCurrency);
             }
             
             if (document.getElementById('swapToBalance')) {
-                document.getElementById('swapToBalance').textContent = 
-                    getBalanceText(toCurrency);
+                document.getElementById('swapToBalance').textContent = getBalanceText(toCurrency);
             }
             
-            // Update rate text
             const rateText = document.getElementById('swapRateText');
             const rulesText = document.getElementById('swapRulesText');
             
@@ -6197,7 +6097,6 @@
                 }
             }
             
-            // Validate if swap is allowed
             const swapPair = `${fromCurrency}_to_${toCurrency}`;
             const isAllowed = CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair);
             
@@ -6206,7 +6105,6 @@
                 confirmBtn.disabled = !isAllowed;
             }
             
-            // Reset amounts
             if (document.getElementById('swapFromAmount')) {
                 document.getElementById('swapFromAmount').value = '';
             }
@@ -6235,14 +6133,13 @@
             const fromValue = fromSelect.value;
             const toValue = toSelect.value;
             
-            // Only allow swapping if the reverse pair is allowed
             const reversePair = `${toValue}_to_${fromValue}`;
             if (CONFIG.SWAP.ALLOWED_PAIRS.includes(reversePair)) {
                 fromSelect.value = toValue;
                 toSelect.value = fromValue;
                 updateSwapRates();
             } else {
-                showMessage("This swap pair is not allowed", "warning");
+                showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
             }
         }
 
@@ -6276,30 +6173,23 @@
                 return;
             }
             
-            // Check balance
             const fromBalance = walletData.balances[fromCurrency] || 0;
             if (fromAmount > fromBalance) {
-                showMessage(`Insufficient ${fromCurrency} balance`, "error");
+                showMessage(`⚠️ Insufficient ${fromCurrency} balance. Need ${(fromAmount - fromBalance).toFixed(2)}.`, "warning", 4500);
                 fromAmountInput.value = fromBalance;
                 fromAmount = fromBalance;
             }
             
-            // Calculate conversion
             let toAmount = 0;
-            let rate = 0;
             
             if (fromCurrency === 'USDT' && toCurrency === 'AMSK') {
-                rate = CONFIG.SWAP.RATES.USDT_TO_AMSK;
-                toAmount = fromAmount * rate;
+                toAmount = fromAmount * CONFIG.SWAP.RATES.USDT_TO_AMSK;
             } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-                rate = CONFIG.SWAP.RATES.BNB_TO_AMSK;
-                toAmount = fromAmount * rate;
+                toAmount = fromAmount * CONFIG.SWAP.RATES.BNB_TO_AMSK;
             } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-                rate = CONFIG.SWAP.RATES.TON_TO_AMSK;
-                toAmount = fromAmount * rate;
+                toAmount = fromAmount * CONFIG.SWAP.RATES.TON_TO_AMSK;
             } else if (fromCurrency === 'AMSK' && toCurrency === 'USDT') {
-                rate = CONFIG.SWAP.RATES.AMSK_TO_USDT;
-                toAmount = fromAmount * rate;
+                toAmount = fromAmount * CONFIG.SWAP.RATES.AMSK_TO_USDT;
             }
             
             toAmountInput.value = toAmount.toFixed(
@@ -6308,7 +6198,6 @@
                 (fromCurrency === 'BNB') ? 0 : 2
             );
             
-            // Validate if swap is allowed
             const swapPair = `${fromCurrency}_to_${toCurrency}`;
             const isAllowed = CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair);
             
@@ -6331,36 +6220,32 @@
                 return;
             }
             
-            // Validate swap pair
             const swapPair = `${fromCurrency}_to_${toCurrency}`;
             if (!CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair)) {
-                showMessage("This swap pair is not allowed", "error");
+                showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
                 return;
             }
             
-            // Check balances
             if (fromAmount > (walletData.balances[fromCurrency] || 0)) {
-                showMessage(`Insufficient ${fromCurrency} balance`, "error");
+                showMessage(`⚠️ Insufficient ${fromCurrency} balance. Need ${(fromAmount - (walletData.balances[fromCurrency] || 0)).toFixed(2)}.`, "warning", 4500);
                 return;
             }
             
-            // Perform swap
             walletData.balances[fromCurrency] -= fromAmount;
             walletData.balances[toCurrency] += toAmount;
             
-            // Use new transaction system
             addTransactionToHistory('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`, 'completed', 'Swap completed successfully');
             addTransactionToHistory('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`, 'completed', 'Swap completed successfully');
             
             updateWalletUI();
             closeModal();
             
-            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}`, "success");
+            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}! New balance: ${walletData.balances[toCurrency].toLocaleString()} ${toCurrency}`, "success");
             await saveUserData();
         }
 
         // ============================================
-        // DEPOSIT SYSTEM WITH FIREBASE
+        // DEPOSIT SYSTEM
         // ============================================
 
         async function openDepositModal() {
@@ -6580,7 +6465,7 @@
             }
             
             if (walletData.usedTxIds.includes(txId)) {
-                validationDiv.innerHTML = `<i class="fas fa-times-circle"></i> This TX ID has already been used`;
+                validationDiv.innerHTML = `<i class="fas fa-times-circle"></i> ⚠️ This TX ID has already been used`;
                 validationDiv.className = 'validation-message validation-error';
                 validationDiv.style.display = 'block';
                 return;
@@ -6592,13 +6477,13 @@
             if (currency === 'USDT' || currency === 'BNB') {
                 isValid = txId.startsWith('0x') && txId.length === 66;
                 message = isValid ? 
-                    '<i class="fas fa-check-circle"></i> Valid BSC/ERC20 transaction hash' :
-                    '<i class="fas fa-times-circle"></i> Invalid format. Should start with 0x and be 66 characters';
+                    '<i class="fas fa-check-circle"></i> ✅ Valid BSC/ERC20 transaction hash' :
+                    '<i class="fas fa-times-circle"></i> ⚠️ Invalid TX ID format. Should start with 0x and be 66 characters.';
             } else if (currency === 'TON') {
                 isValid = txId.length >= 40 && txId.length <= 70;
                 message = isValid ? 
-                    '<i class="fas fa-check-circle"></i> Valid TON transaction hash' :
-                    '<i class="fas fa-times-circle"></i> Invalid TON transaction hash';
+                    '<i class="fas fa-check-circle"></i> ✅ Valid TON transaction hash' :
+                    '<i class="fas fa-times-circle"></i> ⚠️ Invalid TON transaction hash. Should be 40-70 characters.';
             }
             
             validationDiv.innerHTML = message;
@@ -6628,12 +6513,23 @@
             }
             
             if (walletData.usedTxIds.includes(txId)) {
-                showMessage("This TX ID has already been used", "error");
+                showMessage("⚠️ This TX ID has already been used", "warning", 4500);
                 return;
             }
             
+            if (activeCurrency === 'USDT' || activeCurrency === 'BNB') {
+                if (!txId.startsWith('0x') || txId.length !== 66) {
+                    showMessage("⚠️ Invalid TX ID format. Should start with 0x and be 66 characters.", "warning", 4500);
+                    return;
+                }
+            } else if (activeCurrency === 'TON') {
+                if (txId.length < 40 || txId.length > 70) {
+                    showMessage("⚠️ Invalid TX ID format. Should be 40-70 characters.", "warning", 4500);
+                    return;
+                }
+            }
+            
             try {
-                // Create deposit request for Firebase
                 const depositRequest = {
                     userId: userData.id,
                     telegramId: userData.telegramId,
@@ -6647,7 +6543,6 @@
                 };
                 
                 if (window.db) {
-                    // Save to Firebase
                     const depositRef = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .add(depositRequest);
                     
@@ -6656,11 +6551,9 @@
                     depositRequest.id = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 }
                 
-                // Add to pending deposits
                 walletData.pendingDeposits.push(depositRequest);
                 walletData.usedTxIds.push(txId);
                 
-                // Use new transaction system
                 addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted. Waiting for admin approval.', txId);
                 
                 await saveUserData();
@@ -6675,12 +6568,35 @@
         }
 
         // ============================================
-        // WITHDRAW SYSTEM WITH FIREBASE
+        // WITHDRAW SYSTEM
         // ============================================
 
         async function openWithdrawModal() {
             if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
-                showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
+                const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
+
+📈 **Your Path to 100 USDT:**
+
+⛏️ **Mining:** 
+   • 2,500 AMSK/hour = 0.5 USDT/day
+
+👥 **Referrals:** 
+   • You get 10,000 AMSK per friend
+   • Your friend gets 5,000 AMSK bonus
+
+💱 **Swap Rate:** 
+   • 5,000 AMSK = 1 USDT
+
+✨ **Quick Math:**
+   • 1 referral = 10,000 AMSK = 2 USDT
+   • 50 referrals = 100 USDT 🎯
+   • Or combine mining + referrals!
+
+💎 **Pro Tip:** Get 10 USDT → Start Staking (40-60% APR)
+
+🚀 Keep going! Every referral brings you closer!`;
+                
+                showMessage(motivationalMessage, "warning", 5000);
                 return;
             }
             
@@ -6795,7 +6711,6 @@
             }
             
             try {
-                // Create withdrawal request for Firebase
                 const withdrawRequest = {
                     userId: userData.id,
                     telegramId: userData.telegramId,
@@ -6810,7 +6725,6 @@
                 };
                 
                 if (window.db) {
-                    // Save to Firebase
                     const withdrawalRef = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
                         .add(withdrawRequest);
                     
@@ -6819,10 +6733,8 @@
                     withdrawRequest.id = 'with_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 }
                 
-                // Add to pending withdrawals
                 walletData.pendingWithdrawals.push(withdrawRequest);
                 
-                // Use new transaction system
                 addTransactionToHistory('withdrawal_request', -amount, 'USDT', `To: ${address.slice(0, 10)}...`, 'pending', 'Withdrawal request submitted. Processing...');
                 
                 await saveUserData();
@@ -6837,7 +6749,7 @@
         }
 
         // ============================================
-        // ADMIN SYSTEM - IMPROVED WITH FIREBASE
+        // ADMIN SYSTEM
         // ============================================
 
         function initAdminSystem() {
@@ -6942,7 +6854,6 @@
                 let pendingWithdrawals = [];
                 
                 if (window.db) {
-                    // Load from Firebase - المشرف يرى جميع الطلبات
                     const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('status', '==', 'pending')
                         .get();
@@ -6961,7 +6872,6 @@
                         ...doc.data()
                     }));
                 } else {
-                    // Load from local data
                     pendingDeposits = walletData.pendingDeposits?.filter(d => d.status === 'pending') || [];
                     pendingWithdrawals = walletData.pendingWithdrawals?.filter(w => w.status === 'pending') || [];
                 }
@@ -6980,7 +6890,6 @@
                                     <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Admin Dashboard</h3>
                                     <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
                                     
-                                    <!-- إضافة شريط البحث -->
                                     <div class="admin-search-box mb-20">
                                         <input type="text" 
                                                id="adminSearchInput" 
@@ -7123,7 +7032,7 @@
         }
 
         // ============================================
-        // ADMIN APPROVAL/REJECTION FUNCTIONS (مع تحديث التاريخ)
+        // ADMIN APPROVAL/REJECTION FUNCTIONS
         // ============================================
 
         async function approveDeposit(depositId, depositIndex) {
@@ -7136,7 +7045,6 @@
                 
                 console.log("✅ Approving deposit for user:", deposit.userId);
                 
-                // Update in Firebase
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .doc(depositId)
@@ -7146,7 +7054,6 @@
                             approvedBy: userData.id
                         });
                     
-                    // البحث عن المستخدم الحقيقي في Firebase وتحديث رصيده
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(deposit.userId);
                     const userDoc = await userRef.get();
                     
@@ -7158,7 +7065,6 @@
                             [`balances.${deposit.currency}`]: newBalance
                         });
                         
-                        // إضافة معاملة مكتملة إلى history المستخدم
                         const transactionEntry = {
                             id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                             type: 'deposit_approved',
@@ -7172,7 +7078,6 @@
                             dateFormatted: new Date().toLocaleDateString()
                         };
                         
-                        // تحديث مصفوفة transactionHistory للمستخدم
                         const userHistory = userDataFB.transactionHistory || [];
                         userHistory.unshift(transactionEntry);
                         
@@ -7184,11 +7089,9 @@
                     }
                 }
                 
-                // Update locally if it's the current user
                 if (deposit.userId === userData.id) {
                     walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
                     
-                    // Update transaction in history
                     const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
                         tx.type === 'deposit_request' && tx.txId === deposit.txId
                     );
@@ -7197,14 +7100,12 @@
                         walletData.transactionHistory[transactionIndex].status = 'approved';
                         walletData.transactionHistory[transactionIndex].message = 'Deposit approved and added to your balance';
                     } else {
-                        // Add to history if not found
                         addTransactionToHistory('deposit_approved', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved and added to your balance', deposit.txId);
                     }
                     
                     updateWalletUI();
                 }
                 
-                // Remove from pending deposits
                 walletData.pendingDeposits.splice(depositIndex, 1);
                 
                 await saveUserData();
@@ -7226,7 +7127,6 @@
                 const reason = prompt("Enter reason for rejection:", "Invalid transaction");
                 if (reason === null) return;
                 
-                // Update in Firebase
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .doc(depositId)
@@ -7237,7 +7137,6 @@
                             rejectionReason: reason
                         });
                     
-                    // إضافة معاملة مرفوضة إلى history المستخدم
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(deposit.userId);
                     const userDoc = await userRef.get();
                     
@@ -7265,18 +7164,15 @@
                     }
                 }
                 
-                // Update locally
                 deposit.status = 'rejected';
                 deposit.rejectedAt = Date.now();
                 deposit.rejectionReason = reason;
                 
-                // Remove TX ID from used list
                 const txIdIndex = walletData.usedTxIds.indexOf(deposit.txId);
                 if (txIdIndex > -1) {
                     walletData.usedTxIds.splice(txIdIndex, 1);
                 }
                 
-                // Update transaction in history
                 const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
                     tx.type === 'deposit_request' && tx.txId === deposit.txId
                 );
@@ -7285,7 +7181,6 @@
                     walletData.transactionHistory[transactionIndex].status = 'rejected';
                     walletData.transactionHistory[transactionIndex].message = `Deposit rejected: ${reason}`;
                 } else {
-                    // Add rejected transaction to history
                     addTransactionToHistory('deposit_rejected', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
                 }
                 
@@ -7310,7 +7205,6 @@
                 
                 console.log("✅ Approving withdrawal for user:", withdrawal.userId);
                 
-                // Update in Firebase
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
                         .doc(withdrawalId)
@@ -7320,7 +7214,6 @@
                             approvedBy: userData.id
                         });
                     
-                    // البحث عن المستخدم الحقيقي في Firebase وتحديث رصيده
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(withdrawal.userId);
                     const userDoc = await userRef.get();
                     
@@ -7335,7 +7228,6 @@
                                 'balances.BNB': currentBNB - withdrawal.fee
                             });
                             
-                            // إضافة معاملات مكتملة إلى history المستخدم
                             const withdrawalTx = {
                                 id: 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                                 type: 'withdrawal_approved',
@@ -7372,7 +7264,6 @@
                     }
                 }
                 
-                // Update locally if it's the current user
                 if (withdrawal.userId === userData.id) {
                     if (walletData.balances[withdrawal.currency] >= withdrawal.amount && 
                         walletData.balances.BNB >= withdrawal.fee) {
@@ -7380,7 +7271,6 @@
                         walletData.balances[withdrawal.currency] -= withdrawal.amount;
                         walletData.balances.BNB -= withdrawal.fee;
                         
-                        // Update transaction in history
                         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
                             tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
                         );
@@ -7389,7 +7279,6 @@
                             walletData.transactionHistory[transactionIndex].status = 'approved';
                             walletData.transactionHistory[transactionIndex].message = 'Withdrawal approved. Funds sent to your wallet.';
                         } else {
-                            // Add to history if not found
                             addTransactionToHistory('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'approved', 'Withdrawal approved. Funds sent to your wallet.');
                             addTransactionToHistory('withdrawal_fee', -withdrawal.fee, 'BNB', 'Fee for withdrawal', 'completed', 'Withdrawal fee charged');
                         }
@@ -7398,7 +7287,6 @@
                     }
                 }
                 
-                // Remove from pending withdrawals
                 walletData.pendingWithdrawals.splice(withdrawalIndex, 1);
                 
                 await saveUserData();
@@ -7420,7 +7308,6 @@
                 const reason = prompt("Enter reason for rejection:", "Invalid address");
                 if (reason === null) return;
                 
-                // Update in Firebase
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
                         .doc(withdrawalId)
@@ -7431,7 +7318,6 @@
                             rejectionReason: reason
                         });
                     
-                    // إضافة معاملة مرفوضة إلى history المستخدم
                     const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(withdrawal.userId);
                     const userDoc = await userRef.get();
                     
@@ -7458,12 +7344,10 @@
                     }
                 }
                 
-                // Update locally
                 withdrawal.status = 'rejected';
                 withdrawal.rejectedAt = Date.now();
                 withdrawal.rejectionReason = reason;
                 
-                // Update transaction in history
                 const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
                     tx.type === 'withdrawal_request' && tx.description?.includes(withdrawal.address?.slice(0, 10))
                 );
@@ -7472,7 +7356,6 @@
                     walletData.transactionHistory[transactionIndex].status = 'rejected';
                     walletData.transactionHistory[transactionIndex].message = `Withdrawal rejected: ${reason}`;
                 } else {
-                    // Add rejected transaction to history
                     addTransactionToHistory('withdrawal_rejected', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
                 }
                 
@@ -7488,7 +7371,7 @@
         }
 
         // ============================================
-        // OTHER ADMIN FUNCTIONS (كما هي)
+        // OTHER ADMIN FUNCTIONS
         // ============================================
 
         async function adminSearchUser() {
@@ -7503,7 +7386,6 @@
                 
                 let users = [];
                 
-                // Search by Telegram ID
                 const usersSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
                     .where('userInfo.telegramId', '==', searchTerm)
                     .get();
@@ -7514,7 +7396,6 @@
                         ...doc.data()
                     }));
                 } else {
-                    // Search by username
                     const usernameSnapshot = await window.db.collection(DB_COLLECTIONS.USERS)
                         .where('userInfo.username', '>=', searchTerm)
                         .where('userInfo.username', '<=', searchTerm + '\uf8ff')
@@ -7720,7 +7601,6 @@
                     lastUpdate: Date.now()
                 });
                 
-                // Add transaction log
                 await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
                     adminId: userData.id,
                     adminName: userData.username,
@@ -7749,7 +7629,6 @@
             try {
                 let transactions = [];
                 
-                // Get deposit transactions
                 const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                     .where('userId', '==', userId)
                     .orderBy('createdAt', 'desc')
@@ -7768,7 +7647,6 @@
                     });
                 });
                 
-                // Get withdrawal transactions
                 const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
                     .where('userId', '==', userId)
                     .orderBy('createdAt', 'desc')
@@ -7787,7 +7665,6 @@
                     });
                 });
                 
-                // Sort by timestamp
                 transactions.sort((a, b) => b.timestamp - a.timestamp);
                 
                 let transactionsHTML = '';
@@ -7849,14 +7726,12 @@
             const searchTerm = document.getElementById('adminSearchInput')?.value.toLowerCase();
             if (!searchTerm) return;
             
-            // Filter deposits
             const depositItems = document.querySelectorAll('#admin-deposits-list .request-item');
             depositItems.forEach(item => {
                 const text = item.textContent.toLowerCase();
                 item.style.display = text.includes(searchTerm) ? 'block' : 'none';
             });
             
-            // Filter withdrawals
             const withdrawalItems = document.querySelectorAll('#admin-withdrawals-list .request-item');
             withdrawalItems.forEach(item => {
                 const text = item.textContent.toLowerCase();
@@ -7898,7 +7773,6 @@
                             lastUpdate: Date.now()
                         });
                         
-                        // Add transaction log
                         await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
                             adminId: userData.id,
                             adminName: userData.username,
@@ -7964,7 +7838,6 @@
                             lastUpdate: Date.now()
                         });
                         
-                        // Add transaction log
                         await window.db.collection(DB_COLLECTIONS.ADMIN_LOGS).add({
                             adminId: userData.id,
                             adminName: userData.username,
@@ -7996,7 +7869,6 @@
         function setupEventListeners() {
             console.log("🎯 Setting up event listeners...");
             
-            // Navigation buttons
             elements.navBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -8005,12 +7877,10 @@
                 });
             });
             
-            // Mining button
             if (elements.startMiningBtn) {
                 elements.startMiningBtn.addEventListener('click', handleMiningAction);
             }
             
-            // Upgrade buttons
             elements.upgradeButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const card = e.target.closest('.upgrade-card');
@@ -8020,7 +7890,6 @@
                 });
             });
             
-            // Staking buttons
             elements.stakeButtons.forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const planId = parseInt(btn.dataset.plan);
@@ -8028,7 +7897,6 @@
                 });
             });
             
-            // Wallet action buttons
             if (elements.depositBtn) {
                 elements.depositBtn.addEventListener('click', openDepositModal);
             }
@@ -8045,7 +7913,6 @@
                 elements.historyBtn.addEventListener('click', showTransactionHistory);
             }
             
-            // Referral actions
             if (elements.copyLinkBtn) {
                 elements.copyLinkBtn.addEventListener('click', () => {
                     if (elements.referralLinkInput) {
@@ -8074,7 +7941,6 @@
                 });
             }
             
-            // Initialize admin system
             initAdminSystem();
             
             console.log("✅ Event listeners setup complete");
@@ -8090,7 +7956,7 @@
             updateWalletUI();
             updateStakingDisplay();
             updateReferralDisplay();
-            updateTasksDisplay(); // جديد
+            updateTasksDisplay();
         }
 
         // ============================================
@@ -8098,19 +7964,16 @@
         // ============================================
 
         function startBackgroundServices() {
-            // Start mining timer
             intervals.miningTimer = setInterval(() => {
                 updateMiningTimer();
             }, 1000);
             
-            // Auto-save every 30 seconds
             intervals.autoSave = setInterval(() => {
                 if (userData.id && userData.isInitialized) {
                     saveUserData();
                 }
             }, 30000);
             
-            // Realtime sync with Firebase (الآن يتم عبر listener مباشر، لكن نحتفظ بهذا كاحتياطي)
             intervals.realtimeSync = setInterval(async () => {
                 if (window.db && userData.id) {
                     try {
@@ -8124,7 +7987,6 @@
             console.log("⏱️ Background services started");
         }
 
-        // Cleanup intervals
         window.addEventListener('beforeunload', function() {
             if (userData.id && userData.isInitialized) {
                 console.log("💾 Saving data before page unload...");
@@ -8135,7 +7997,6 @@
                 });
             }
             
-            // إلغاء listener عند إغلاق الصفحة
             if (unsubscribeUserListener) {
                 unsubscribeUserListener();
             }
@@ -8169,12 +8030,8 @@
         window.closeModal = closeModal;
         window.showMessage = showMessage;
         window.copyToClipboard = copyToClipboard;
-
-        // Mining functions
         window.handleMiningAction = handleMiningAction;
         window.upgradeMiningLevel = upgradeMiningLevel;
-
-        // Staking functions
         window.openStakeModal = openStakeModal;
         window.confirmStaking = confirmStaking;
         window.claimStakeReward = claimStakeReward;
@@ -8182,18 +8039,10 @@
         window.calculateStakeReward = calculateStakeReward;
         window.setMaxStakeAmount = setMaxStakeAmount;
         window.updateStakeAmountFromSlider = updateStakeAmountFromSlider;
-
-        // Swap functions
         window.swapCurrencies = swapCurrencies;
         window.setSwapPercentage = setSwapPercentage;
-
-        // Referral functions (معدلة)
         window.claimMilestone = claimMilestone;
-
-        // Task functions (جديد)
         window.handleTaskClick = handleTaskClick;
-
-        // Admin functions
         window.checkAdminPassword = checkAdminPassword;
         window.adminAddBalance = adminAddBalance;
         window.adminSubtractBalance = adminSubtractBalance;
@@ -8206,13 +8055,10 @@
         window.rejectDeposit = rejectDeposit;
         window.approveWithdrawal = approveWithdrawal;
         window.rejectWithdrawal = rejectWithdrawal;
-
-        // Utility functions
         window.formatNumber = formatNumber;
 
-        console.log("👽 Alien Musk Quantum Platform v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX Ready!");
+        console.log("👽 Alien Musk Quantum Platform v6.4 - PROFESSIONAL HISTORY SYSTEM + REFERRAL FIX + ENHANCED MESSAGES Ready!");
 
-        // Initialize app when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
         } else {
