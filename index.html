@@ -3731,9 +3731,9 @@
             </div>
         </div>
     </div>
-        <!-- CONNECTOR SCRIPT -->
+    <!-- CONNECTOR SCRIPT -->
     <script>
-        // 👽 Alien Musk Quantum Connector v6.5
+        // 👽 Alien Musk Quantum Connector v6.5 - نسخة كاملة مع جميع الرسائل التحفيزية
         console.log("🔗 Loading Alien Musk Quantum Platform v6.5...");
         
         // Global variables
@@ -3895,11 +3895,11 @@
         console.log("✅ Alien Musk Connector Loaded Successfully");
     </script>
 
-    <!-- MAIN APPLICATION JS v6.5 - كامل مع جميع التعديلات -->
+    <!-- MAIN APPLICATION JS v6.5 - كامل مع جميع التعديلات والرسائل التحفيزية -->
     <script>
         // ============================================
         // 👽 ALIEN MUSK - Quantum Mining Platform v6.5
-        // النسخة الكاملة مع جميع التعديلات المطلوبة
+        // النسخة الكاملة مع جميع الرسائل التحفيزية والإشعارات
         // ============================================
 
         // Configuration - مع تخفيض المكافأة إلى 1000
@@ -4140,17 +4140,19 @@
             return code;
         }
 
+        // دالة عرض الرسائل مع مدة محددة - محسنة مع ألوان ومدة مناسبة
         function showMessage(text, type = 'info', duration = 3000) {
             const container = document.getElementById('notification-container');
             if (!container) return;
             
+            // تحديد المدة حسب نوع الرسالة
             if (duration === 3000) {
                 if (type === 'warning' || type === 'error') {
-                    duration = 4500;
+                    duration = 4500; // رسائل التحذير والأخطاء أطول
                 } else if (type === 'success') {
-                    duration = 3000;
+                    duration = 3000; // رسائل النجاح 3 ثوانٍ
                 } else {
-                    duration = 3500;
+                    duration = 3500; // رسائل المعلومات 3.5 ثوانٍ
                 }
             }
             
@@ -4190,6 +4192,7 @@
             const tasksSection = document.querySelector('.tasks-section');
             if (tasksSection) {
                 tasksSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                showMessage('📋 Scroll to Tasks section', 'info', 2000);
             }
         }
 
@@ -4207,6 +4210,7 @@
                 setTimeout(() => {
                     mythicCard.style.border = '1px solid rgba(0, 212, 255, 0.2)';
                 }, 2000);
+                showMessage('🚀 Mythic Level - 100,000 AMSK/hour!', 'success', 3000);
             } else {
                 const upgradeSection = document.querySelector('.upgrade-section');
                 if (upgradeSection) {
@@ -4320,7 +4324,7 @@
                 if (lvl <= 5 && walletData.achievements.upgradeTasks[lvl] && 
                     !walletData.achievements.upgradeTasks[lvl].completed) {
                     walletData.achievements.upgradeTasks[lvl].completed = true;
-                    showMessage(`🏆 Achievement unlocked: Reach Level ${lvl}! Check Bonus Achievements to claim.`, 'success');
+                    showMessage(`🏆 Achievement unlocked: Reach Level ${lvl}! Check Bonus Achievements to claim.`, 'success', 4000);
                 }
             }
             
@@ -4339,7 +4343,7 @@
             if (planKey && walletData.achievements.stakingTasks[planKey] && 
                 !walletData.achievements.stakingTasks[planKey].completed) {
                 walletData.achievements.stakingTasks[planKey].completed = true;
-                showMessage(`🏆 Achievement unlocked: First ${planKey} stake! Check Bonus Achievements to claim.`, 'success');
+                showMessage(`🏆 Achievement unlocked: First ${planKey} stake! Check Bonus Achievements to claim.`, 'success', 4000);
             }
             
             updateAchievementsDisplay();
@@ -4375,7 +4379,7 @@
                 updateWalletUI();
                 await saveUserData();
                 
-                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for reaching Level ${level}!`, 'success');
+                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for reaching Level ${level}!`, 'success', 4000);
                 
             } catch (error) {
                 console.error('Error claiming upgrade achievement:', error);
@@ -4425,7 +4429,7 @@
                 updateWalletUI();
                 await saveUserData();
                 
-                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for your first ${planName} stake!`, 'success');
+                showMessage(`🎉 Claimed ${reward.toLocaleString()} AMSK for your first ${planName} stake!`, 'success', 4000);
                 
             } catch (error) {
                 console.error('Error claiming staking achievement:', error);
@@ -4458,12 +4462,12 @@
                 console.log("✅ Platform initialized successfully");
                 
                 setTimeout(() => {
-                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.5!", "success");
+                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.5!", "success", 3000);
                 }, 800);
                 
             } catch (error) {
                 console.error("❌ Initialization failed:", error);
-                showMessage("Failed to initialize platform", "error");
+                showMessage("Failed to initialize platform", "error", 4000);
             }
         }
 
@@ -4713,7 +4717,7 @@
                 
             } catch (error) {
                 console.error("❌ Error loading from Firebase, falling back to localStorage:", error);
-                showMessage("Using offline mode", "info");
+                showMessage("Using offline mode", "info", 3000);
                 await loadUserFromLocalStorage();
             }
         }
@@ -5391,7 +5395,7 @@
             const now = Date.now();
             
             if (mining.active && mining.nextReward && now < mining.nextReward) {
-                showMessage("⏳ Mining in progress. Please wait.", "info");
+                showMessage("⏳ Mining in progress. Please wait.", "info", 3000);
                 return;
             }
             
@@ -5411,11 +5415,11 @@
                 updateMiningDisplay();
                 await saveUserData();
                 
-                showMessage("⚡ Quantum mining started!", "success");
+                showMessage("⚡ Quantum mining started!", "success", 3000);
                 
             } catch (error) {
                 console.error("❌ Error starting mining:", error);
-                showMessage("Failed to start mining", "error");
+                showMessage("Failed to start mining", "error", 4000);
             }
         }
 
@@ -5436,11 +5440,11 @@
                 updateWalletUI();
                 await saveUserData();
                 
-                showMessage(`💰 +${formatNumber(reward)} AMSK mined!`, "success");
+                showMessage(`💰 +${formatNumber(reward)} AMSK mined!`, "success", 3000);
                 
             } catch (error) {
                 console.error("❌ Error claiming mining reward:", error);
-                showMessage("Failed to claim reward", "error");
+                showMessage("Failed to claim reward", "error", 4000);
             }
         }
 
@@ -5451,7 +5455,7 @@
                 
                 if (!levelData) throw new Error("Invalid mining level");
                 if (level <= walletData.mining.level) {
-                    showMessage("Already at or above this level!", "warning");
+                    showMessage("Already at or above this level!", "warning", 3500);
                     return;
                 }
                 
@@ -5471,11 +5475,11 @@
                 updateWalletUI();
                 await saveUserData();
                 
-                showMessage(`⚡ Upgraded to ${levelData.name} level! Hashrate: ${levelData.hashrate.toLocaleString()}/s`, "success");
+                showMessage(`⚡ Upgraded to ${levelData.name} level! Hashrate: ${levelData.hashrate.toLocaleString()}/s`, "success", 4000);
                 
             } catch (error) {
                 console.error("❌ Error upgrading mining level:", error);
-                showMessage("Failed to upgrade mining level", "error");
+                showMessage("Failed to upgrade mining level", "error", 4000);
             }
         }
 
@@ -5751,7 +5755,7 @@
                 const amount = parseFloat(amountInput.value);
                 
                 if (isNaN(amount) || amount < plan.minAmount) {
-                    showMessage(`Minimum stake is ${plan.minAmount} USDT`, "error");
+                    showMessage(`Minimum stake is ${plan.minAmount} USDT`, "error", 4000);
                     return;
                 }
                 
@@ -5782,12 +5786,12 @@
                 updateStakingDisplay();
                 
                 closeModal();
-                showMessage(`✅ Staked ${amount} USDT for ${plan.duration} days!`, "success");
+                showMessage(`✅ Staked ${amount} USDT for ${plan.duration} days!`, "success", 3500);
                 await saveUserData();
                 
             } catch (error) {
                 console.error("❌ Error confirming stake:", error);
-                showMessage("Failed to process stake", "error");
+                showMessage("Failed to process stake", "error", 4000);
             }
         }
 
@@ -5804,7 +5808,7 @@
                 const endTime = stake.startTime + (plan.duration * 24 * 60 * 60 * 1000);
                 
                 if (now < endTime) {
-                    showMessage("Stake period not completed yet", "warning");
+                    showMessage("Stake period not completed yet", "warning", 3500);
                     return;
                 }
                 
@@ -5828,12 +5832,12 @@
                 updateWalletUI();
                 updateStakingDisplay();
                 
-                showMessage(`💰 Claimed ${totalReward.toLocaleString()} AMSK from ${plan.name} Plan staking!`, "success");
+                showMessage(`💰 Claimed ${totalReward.toLocaleString()} AMSK from ${plan.name} Plan staking!`, "success", 4000);
                 await saveUserData();
                 
             } catch (error) {
                 console.error("❌ Error claiming stake reward:", error);
-                showMessage("Failed to claim stake reward", "error");
+                showMessage("Failed to claim stake reward", "error", 4000);
             }
         }
 
@@ -5852,7 +5856,7 @@
             const progress = ((now - startTime) / durationMs) * 100;
             
             if (progress >= 50) {
-                showMessage("Cannot cancel stake after 50% completion", "warning");
+                showMessage("Cannot cancel stake after 50% completion", "warning", 3500);
                 return;
             }
             
@@ -5964,7 +5968,7 @@
                     
                     addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
                     
-                    showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
+                    showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success", 4000);
                     
                     await saveUserData();
                 }
@@ -6022,12 +6026,12 @@
                 if (!milestoneReward) throw new Error("Invalid milestone");
                 
                 if (walletData.referrals.claimedMilestones.includes(milestoneNum)) {
-                    showMessage("Milestone already claimed", "warning");
+                    showMessage("Milestone already claimed", "warning", 3500);
                     return;
                 }
                 
                 if (walletData.referrals.count < milestoneNum) {
-                    showMessage(`Need ${milestoneNum} referrals to claim this milestone`, "error");
+                    showMessage(`Need ${milestoneNum} referrals to claim this milestone`, "error", 4000);
                     return;
                 }
                 
@@ -6051,11 +6055,11 @@
                 
                 let rewardText = `+${formatNumber(milestoneReward.amsk)} AMSK`;
                 if (milestoneReward.bnb > 0) rewardText += ` + ${milestoneReward.bnb} BNB`;
-                showMessage(`🏆 Milestone claimed! ${rewardText}`, "success");
+                showMessage(`🏆 Milestone claimed! ${rewardText}`, "success", 4000);
                 
             } catch (error) {
                 console.error("❌ Error claiming milestone:", error);
-                showMessage("Failed to claim milestone", "error");
+                showMessage("Failed to claim milestone", "error", 4000);
             }
         }
 
@@ -6124,7 +6128,7 @@
             updateWalletUI();
             await saveUserData();
             
-            showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned from ${CONFIG.TASKS[taskId].name}!`, "success");
+            showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned from ${CONFIG.TASKS[taskId].name}!`, "success", 3500);
         }
 
         // ============================================
@@ -6352,7 +6356,7 @@
             const toAmount = parseFloat(toAmountInput.value) || 0;
             
             if (fromAmount <= 0 || toAmount <= 0) {
-                showMessage("Invalid swap amount", "error");
+                showMessage("Invalid swap amount", "error", 4000);
                 return;
             }
             
@@ -6376,7 +6380,7 @@
             updateWalletUI();
             closeModal();
             
-            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}!`, "success");
+            showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}!`, "success", 3500);
             await saveUserData();
         }
 
@@ -6602,12 +6606,12 @@
             const minAmount = CONFIG.DEPOSIT.MIN_AMOUNTS[activeCurrency];
             
             if (!amount || amount < minAmount) {
-                showMessage(`Minimum deposit is ${minAmount} ${activeCurrency}`, "error");
+                showMessage(`Minimum deposit is ${minAmount} ${activeCurrency}`, "error", 4000);
                 return;
             }
             
             if (!txId) {
-                showMessage("Please enter Transaction ID", "error");
+                showMessage("Please enter Transaction ID", "error", 3500);
                 return;
             }
             
@@ -6656,30 +6660,40 @@
                 await saveUserData();
                 closeModal();
                 
-                showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Waiting for admin approval.`, "success");
+                showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Waiting for admin approval.`, "success", 3500);
                 
             } catch (error) {
                 console.error("❌ Error submitting deposit:", error);
-                showMessage("Failed to submit deposit request", "error");
+                showMessage("Failed to submit deposit request", "error", 4000);
             }
         }
 
         // ============================================
-        // WITHDRAW SYSTEM
+        // WITHDRAW SYSTEM - مع الرسالة التحفيزية الكاملة
         // ============================================
         async function openWithdrawModal() {
             if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
+                // الرسالة التحفيزية الكاملة كما كانت
                 const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
 
-📈 Your Path to 100 USDT:
+📈 **Your Path to 100 USDT:**
 
-⛏️ Mining: 1,000 AMSK/hour = 0.2 USDT/day
+⛏️ **Mining:** 
+   • 1,000 AMSK/hour = 0.2 USDT/day
 
-👥 Referrals: You get 10,000 AMSK per friend
+👥 **Referrals:** 
+   • You get 10,000 AMSK per friend
+   • Your friend gets 5,000 AMSK bonus
 
-💱 Swap Rate: 5,000 AMSK = 1 USDT
+💱 **Swap Rate:** 
+   • 5,000 AMSK = 1 USDT
 
-✨ Quick Math: 1 referral = 10,000 AMSK = 2 USDT, 50 referrals = 100 USDT 🎯
+✨ **Quick Math:**
+   • 1 referral = 10,000 AMSK = 2 USDT
+   • 50 referrals = 100 USDT 🎯
+   • Or combine mining + referrals!
+
+💎 **Pro Tip:** Get 10 USDT → Start Staking (40-60% APR)
 
 🚀 Keep going! Every referral brings you closer!`;
                 
@@ -6688,7 +6702,7 @@
             }
             
             if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
-                showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
+                showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error", 4000);
                 return;
             }
             
@@ -6768,22 +6782,22 @@
             const address = addressInput.value.trim();
             
             if (!amount || amount < CONFIG.WITHDRAW.MIN_USDT) {
-                showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
+                showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error", 4000);
                 return;
             }
             
             if (amount > walletData.balances.USDT) {
-                showMessage("Insufficient USDT balance", "error");
+                showMessage("Insufficient USDT balance", "error", 4000);
                 return;
             }
             
             if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
-                showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
+                showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error", 4000);
                 return;
             }
             
             if (!address || address.length < 20) {
-                showMessage("Please enter a valid wallet address", "error");
+                showMessage("Please enter a valid wallet address", "error", 3500);
                 return;
             }
             
@@ -6815,11 +6829,11 @@
                 await saveUserData();
                 closeModal();
                 
-                showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Waiting for admin approval.`, "success");
+                showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Waiting for admin approval.`, "success", 3500);
                 
             } catch (error) {
                 console.error("❌ Error submitting withdrawal:", error);
-                showMessage("Failed to submit withdrawal request", "error");
+                showMessage("Failed to submit withdrawal request", "error", 4000);
             }
         }
 
@@ -6916,7 +6930,7 @@
             
             closeModal();
             showAdminPanel();
-            showMessage("✅ Admin access granted", "success");
+            showMessage("✅ Admin access granted", "success", 3000);
         }
 
         async function showAdminPanel() {
@@ -6995,7 +7009,7 @@
                 
             } catch (error) {
                 console.error("❌ Error loading admin panel:", error);
-                showMessage("Failed to load admin panel", "error");
+                showMessage("Failed to load admin panel", "error", 4000);
             }
         }
 
@@ -7069,7 +7083,7 @@
         async function approveDeposit(depositId, depositIndex) {
             try {
                 const deposit = walletData.pendingDeposits[depositIndex];
-                if (!deposit) { showMessage("Deposit request not found locally", "error"); return; }
+                if (!deposit) { showMessage("Deposit request not found locally", "error", 4000); return; }
                 
                 console.log("✅ Approving deposit for user:", deposit.userId);
                 
@@ -7124,11 +7138,11 @@
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`✅ Deposit approved: +${deposit.amount} ${deposit.currency} for user ${deposit.userId}`, "success");
+                showMessage(`✅ Deposit approved: +${deposit.amount} ${deposit.currency} for user ${deposit.userId}`, "success", 3500);
                 
             } catch (error) {
                 console.error("❌ Error approving deposit:", error);
-                showMessage("Failed to approve deposit: " + error.message, "error");
+                showMessage("Failed to approve deposit: " + error.message, "error", 4000);
             }
         }
 
@@ -7184,18 +7198,18 @@
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`❌ Deposit rejected: ${reason}`, "warning");
+                showMessage(`❌ Deposit rejected: ${reason}`, "warning", 4500);
                 
             } catch (error) {
                 console.error("❌ Error rejecting deposit:", error);
-                showMessage("Failed to reject deposit", "error");
+                showMessage("Failed to reject deposit", "error", 4000);
             }
         }
 
         async function approveWithdrawal(withdrawalId, withdrawalIndex) {
             try {
                 const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
-                if (!withdrawal) { showMessage("Withdrawal request not found locally", "error"); return; }
+                if (!withdrawal) { showMessage("Withdrawal request not found locally", "error", 4000); return; }
                 
                 console.log("✅ Approving withdrawal for user:", withdrawal.userId);
                 
@@ -7269,11 +7283,11 @@
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`✅ Withdrawal approved: -${withdrawal.amount} ${withdrawal.currency} for user ${withdrawal.userId}`, "success");
+                showMessage(`✅ Withdrawal approved: -${withdrawal.amount} ${withdrawal.currency} for user ${withdrawal.userId}`, "success", 3500);
                 
             } catch (error) {
                 console.error("❌ Error approving withdrawal:", error);
-                showMessage("Failed to approve withdrawal: " + error.message, "error");
+                showMessage("Failed to approve withdrawal: " + error.message, "error", 4000);
             }
         }
 
@@ -7326,11 +7340,11 @@
                 await saveUserData();
                 showAdminPanel();
                 
-                showMessage(`❌ Withdrawal rejected: ${reason}`, "warning");
+                showMessage(`❌ Withdrawal rejected: ${reason}`, "warning", 4500);
                 
             } catch (error) {
                 console.error("❌ Error rejecting withdrawal:", error);
-                showMessage("Failed to reject withdrawal", "error");
+                showMessage("Failed to reject withdrawal", "error", 4000);
             }
         }
 
@@ -7342,7 +7356,7 @@
             if (!searchTerm) return;
             
             try {
-                if (!window.db) { showMessage("Firebase not connected", "error"); return; }
+                if (!window.db) { showMessage("Firebase not connected", "error", 3500); return; }
                 
                 let users = [];
                 
@@ -7359,7 +7373,7 @@
                     users = usernameSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 }
                 
-                if (users.length === 0) { showMessage("No users found", "info"); return; }
+                if (users.length === 0) { showMessage("No users found", "info", 3000); return; }
                 
                 let userInfoHTML = '';
                 users.forEach(user => {
@@ -7405,7 +7419,7 @@
                 
             } catch (error) {
                 console.error("❌ Error searching users:", error);
-                showMessage("Failed to search users", "error");
+                showMessage("Failed to search users", "error", 4000);
             }
         }
 
@@ -7414,7 +7428,7 @@
                 const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                 const userDoc = await userRef.get();
                 
-                if (!userDoc.exists) { showMessage("User not found", "error"); return; }
+                if (!userDoc.exists) { showMessage("User not found", "error", 3500); return; }
                 
                 const userDataFB = userDoc.data();
                 const balances = userDataFB.balances || {};
@@ -7480,7 +7494,7 @@
                 
             } catch (error) {
                 console.error("❌ Error editing user:", error);
-                showMessage("Failed to edit user", "error");
+                showMessage("Failed to edit user", "error", 4000);
             }
         }
 
@@ -7492,13 +7506,13 @@
                 const reason = document.getElementById('adminEditReason')?.value || "Admin adjustment";
                 
                 if (!currency || !operation || isNaN(amount) || amount <= 0) {
-                    showMessage("Invalid input", "error"); return;
+                    showMessage("Invalid input", "error", 3500); return;
                 }
                 
                 const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
                 const userDoc = await userRef.get();
                 
-                if (!userDoc.exists) { showMessage("User not found", "error"); return; }
+                if (!userDoc.exists) { showMessage("User not found", "error", 3500); return; }
                 
                 const userDataFB = userDoc.data();
                 const currentBalance = userDataFB.balances?.[currency] || 0;
@@ -7508,7 +7522,7 @@
                     case 'add': newBalance = currentBalance + amount; break;
                     case 'subtract':
                         if (amount > currentBalance) {
-                            showMessage(`Cannot subtract more than current balance (${currentBalance})`, "error");
+                            showMessage(`Cannot subtract more than current balance (${currentBalance})`, "error", 4000);
                             return;
                         }
                         newBalance = currentBalance - amount;
@@ -7527,11 +7541,11 @@
                 });
                 
                 closeModal();
-                showMessage(`✅ User balance updated: ${operation} ${amount} ${currency}`, "success");
+                showMessage(`✅ User balance updated: ${operation} ${amount} ${currency}`, "success", 3500);
                 
             } catch (error) {
                 console.error("❌ Error saving user edit:", error);
-                showMessage("Failed to save changes", "error");
+                showMessage("Failed to save changes", "error", 4000);
             }
         }
 
@@ -7612,7 +7626,7 @@
                 
             } catch (error) {
                 console.error("❌ Error viewing transactions:", error);
-                showMessage("Failed to load transactions", "error");
+                showMessage("Failed to load transactions", "error", 4000);
             }
         }
 
@@ -7641,11 +7655,11 @@
             if (!currency) return;
             
             if (!['USDT', 'BNB', 'TON', 'AMSK'].includes(currency.toUpperCase())) {
-                showMessage("Invalid currency", "error"); return;
+                showMessage("Invalid currency", "error", 3500); return;
             }
             
             const amount = parseFloat(prompt(`Enter amount to add (${currency}):`, "10"));
-            if (!amount || amount <= 0) { showMessage("Invalid amount", "error"); return; }
+            if (!amount || amount <= 0) { showMessage("Invalid amount", "error", 3500); return; }
             
             const reason = prompt("Reason for adding balance:", "Admin adjustment");
             
@@ -7667,15 +7681,15 @@
                             timestamp: Date.now()
                         });
                         
-                        showMessage(`✅ Added ${amount} ${currency} to user ${userId}`, "success");
+                        showMessage(`✅ Added ${amount} ${currency} to user ${userId}`, "success", 3500);
                     } else {
-                        showMessage("User not found", "error");
+                        showMessage("User not found", "error", 3500);
                     }
                 }
                 
             } catch (error) {
                 console.error("❌ Error adding balance:", error);
-                showMessage("Failed to add balance", "error");
+                showMessage("Failed to add balance", "error", 4000);
             }
         }
 
@@ -7687,11 +7701,11 @@
             if (!currency) return;
             
             if (!['USDT', 'BNB', 'TON', 'AMSK'].includes(currency.toUpperCase())) {
-                showMessage("Invalid currency", "error"); return;
+                showMessage("Invalid currency", "error", 3500); return;
             }
             
             const amount = parseFloat(prompt(`Enter amount to subtract (${currency}):`, "10"));
-            if (!amount || amount <= 0) { showMessage("Invalid amount", "error"); return; }
+            if (!amount || amount <= 0) { showMessage("Invalid amount", "error", 3500); return; }
             
             const reason = prompt("Reason for subtracting balance:", "Admin adjustment");
             
@@ -7705,7 +7719,7 @@
                         const currentBalance = userDataFB.balances?.[currency] || 0;
                         
                         if (amount > currentBalance) {
-                            showMessage("Cannot subtract more than current balance", "error");
+                            showMessage("Cannot subtract more than current balance", "error", 4000);
                             return;
                         }
                         
@@ -7720,15 +7734,15 @@
                             timestamp: Date.now()
                         });
                         
-                        showMessage(`✅ Subtracted ${amount} ${currency} from user ${userId}`, "success");
+                        showMessage(`✅ Subtracted ${amount} ${currency} from user ${userId}`, "success", 3500);
                     } else {
-                        showMessage("User not found", "error");
+                        showMessage("User not found", "error", 3500);
                     }
                 }
                 
             } catch (error) {
                 console.error("❌ Error subtracting balance:", error);
-                showMessage("Failed to subtract balance", "error");
+                showMessage("Failed to subtract balance", "error", 4000);
             }
         }
 
@@ -7900,7 +7914,7 @@
         window.claimUpgradeAchievement = claimUpgradeAchievement;
         window.claimStakingAchievement = claimStakingAchievement;
 
-        console.log("👽 Alien Musk Quantum Platform v6.5 - النسخة الكاملة جاهزة!");
+        console.log("👽 Alien Musk Quantum Platform v6.5 - النسخة الكاملة مع جميع الرسائل التحفيزية جاهزة!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
