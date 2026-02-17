@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>👽 Alien Musk Quantum Mining v6.4</title>
+    <title>👽 Alien Musk Quantum Mining v6.5</title>
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -21,7 +21,7 @@
     
     <style>
         /* =========================================== */
-        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.4 */
+        /* 👽 ALIEN MUSK QUANTUM PLATFORM v6.5 */
         /* CSS كامل مضمن - محسّن ومصحّح */
         /* =========================================== */
         
@@ -34,7 +34,6 @@
         }
         
         :root {
-            /* ألوان Alien Quantum */
             --quantum-green: #00ff88;
             --quantum-blue: #00d4ff;
             --quantum-purple: #9d4edd;
@@ -43,26 +42,18 @@
             --quantum-cyan: #00ffff;
             --quantum-orange: #ff9900;
             --quantum-red: #ff4444;
-            
-            /* ألوان الخلفية */
             --space-dark: #0a0a0f;
             --space-darker: #050510;
             --space-card: #1a1a2e;
             --space-card-light: #2a2a4a;
-            
-            /* ألوان النص */
             --quantum-text: #ffffff;
             --quantum-text-light: #b0b0d0;
             --quantum-text-muted: #8080a0;
-            
-            /* ألوان الحالات */
             --status-pending: #ff9900;
             --status-approved: #00ff88;
             --status-rejected: #ff4444;
             --status-processing: #00d4ff;
             --status-completed: #00ff88;
-            
-            /* متدرجات */
             --gradient-quantum: linear-gradient(135deg, var(--quantum-green), var(--quantum-blue));
             --gradient-stellar: linear-gradient(135deg, var(--quantum-purple), var(--quantum-pink));
             --gradient-supernova: linear-gradient(135deg, var(--quantum-gold), #ff9900);
@@ -70,7 +61,6 @@
             --gradient-orange: linear-gradient(135deg, var(--quantum-orange), #ff5500);
         }
         
-        /* BASE STYLES */
         html, body {
             width: 100%;
             height: 100%;
@@ -100,7 +90,6 @@
             z-index: -1;
         }
         
-        /* LOADING SCREEN */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -212,7 +201,6 @@
             text-align: center;
         }
         
-        /* APP CONTAINER */
         #app-container {
             min-height: 100vh;
             position: relative;
@@ -222,7 +210,6 @@
             display: none;
         }
         
-        /* HEADER - COMPACT DESIGN */
         .app-header {
             background: rgba(26, 26, 46, 0.98);
             backdrop-filter: blur(20px);
@@ -399,7 +386,6 @@
             text-align: left;
         }
         
-        /* NAVIGATION - MOVED TO BOTTOM */
         .main-nav {
             display: flex;
             background: rgba(26, 26, 46, 0.95);
@@ -500,7 +486,6 @@
             color: var(--quantum-green);
         }
         
-        /* PAGES */
         .page {
             display: none;
             padding: 12px;
@@ -516,7 +501,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* MINING SECTION */
         .mining-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -725,6 +709,7 @@
             justify-content: space-around;
             gap: 8px;
             flex-wrap: wrap;
+            margin-bottom: 15px;
         }
         
         .info-item {
@@ -760,7 +745,48 @@
             font-family: monospace;
         }
         
-        /* ===== UPGRADE SECTION (في الأعلى الآن) ===== */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .quick-action-btn {
+            flex: 1;
+            padding: 12px 8px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .quick-action-btn i {
+            font-size: 16px;
+        }
+        
+        .quick-action-btn.tasks-btn i {
+            color: var(--quantum-gold);
+        }
+        
+        .quick-action-btn.booster-btn i {
+            color: var(--quantum-orange);
+        }
+        
+        .quick-action-btn:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+        }
+        
         .upgrade-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -869,7 +895,6 @@
             background-clip: text;
         }
         
-        /* ✅ إخفاء الـ badge القديم واستخدام price-tag الجديد */
         .upgrade-badge {
             display: none;
         }
@@ -970,7 +995,6 @@
             box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
         }
         
-        /* ===== TASKS SECTION (في الأسفل الآن) ===== */
         .tasks-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1020,10 +1044,158 @@
             border-radius: 20px;
         }
         
-        .tasks-grid {
+        .tasks-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        
+        .tasks-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tasks-tab i {
+            margin-right: 6px;
+        }
+        
+        .tasks-tab.active {
+            background: var(--gradient-quantum);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .tasks-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .tasks-grid, .vip-tasks-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
+        }
+        
+        .vip-tasks-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .vip-task-category {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .vip-task-category h5 {
+            font-size: 14px;
+            color: var(--quantum-text);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .vip-task-category h5 i {
+            margin-right: 8px;
+            color: var(--quantum-gold);
+        }
+        
+        .vip-task-item {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .vip-task-item.completed {
+            opacity: 0.6;
+            border-color: var(--quantum-green);
+        }
+        
+        .vip-task-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            flex-shrink: 0;
+        }
+        
+        .vip-task-icon i {
+            font-size: 18px;
+            color: var(--quantum-gold);
+        }
+        
+        .vip-task-details {
+            flex: 1;
+        }
+        
+        .vip-task-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 2px;
+        }
+        
+        .vip-task-reward {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--quantum-green);
+        }
+        
+        .vip-task-status {
+            flex-shrink: 0;
+        }
+        
+        .vip-task-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+        
+        .vip-task-btn.claim {
+            background: var(--gradient-quantum);
+            color: white;
+        }
+        
+        .vip-task-btn.claim:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 255, 136, 0.3);
+        }
+        
+        .vip-task-btn.claimed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--quantum-green);
+            border: 1px solid var(--quantum-green);
+            cursor: default;
+        }
+        
+        .vip-task-btn.locked {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            cursor: not-allowed;
         }
         
         .task-item {
@@ -1090,7 +1262,6 @@
             box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
         }
         
-        /* NOTIFICATIONS */
         #notification-container {
             position: fixed;
             top: 15px;
@@ -1184,7 +1355,6 @@
             color: var(--quantum-blue);
         }
         
-        /* STAKING PAGE STYLES */
         .staking-content {
             padding: 0 5px;
         }
@@ -1410,7 +1580,6 @@
             color: var(--quantum-text-light);
         }
         
-        /* WALLET PAGE STYLES */
         .wallet-content {
             padding: 0 5px;
         }
@@ -1659,7 +1828,6 @@
             flex-shrink: 0;
         }
         
-        /* REFERRAL PAGE STYLES */
         .referral-content {
             padding: 0 5px;
         }
@@ -1759,6 +1927,41 @@
         .referral-code-card h4 i {
             color: var(--quantum-blue);
             font-size: 17px;
+        }
+        
+        .referral-description {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .referral-description p {
+            color: var(--quantum-text);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .referral-description ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .referral-description li {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-description li i {
+            color: var(--quantum-green);
+            font-size: 12px;
         }
         
         .referral-code-display {
@@ -2079,7 +2282,6 @@
             text-transform: uppercase;
         }
         
-        /* MODAL STYLES */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -2164,7 +2366,6 @@
             padding: 18px;
         }
         
-        /* STAKE MODAL */
         .stake-plan-info {
             display: flex;
             align-items: center;
@@ -2202,7 +2403,6 @@
             color: var(--quantum-text-light);
         }
         
-        /* DEPOSIT MODAL */
         .deposit-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -2242,7 +2442,6 @@
             display: block;
         }
         
-        /* SWAP MODAL */
         .swap-direction {
             display: flex;
             align-items: center;
@@ -2323,7 +2522,6 @@
             transform: translateY(-1px);
         }
         
-        /* HISTORY */
         .history-tabs {
             display: flex;
             gap: 5px;
@@ -2571,7 +2769,6 @@
             font-size: 12px;
         }
         
-        /* ADMIN PANEL */
         .admin-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -2744,7 +2941,6 @@
             display: block;
         }
         
-        /* TX ID VALIDATION */
         .tx-id-input {
             width: 100%;
             padding: 10px;
@@ -2782,7 +2978,6 @@
             border: 1px solid rgba(255, 193, 7, 0.15);
         }
         
-        /* RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .app-header {
                 padding: 8px 10px;
@@ -2862,6 +3057,10 @@
             }
             
             .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vip-tasks-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -3011,7 +3210,6 @@
             }
         }
         
-        /* SCROLLBAR */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -3032,7 +3230,6 @@
             background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
         }
         
-        /* SELECTION */
         ::selection {
             background: var(--quantum-green);
             color: var(--space-dark);
@@ -3043,7 +3240,6 @@
             color: var(--space-dark);
         }
         
-        /* UTILITY CLASSES */
         .hidden {
             display: none !important;
         }
@@ -3089,7 +3285,6 @@
     </style>
 </head>
 <body>
-    <!-- 👽 LOADING SCREEN -->
     <div id="loading-screen" class="loading-screen active">
         <div class="loading-container">
             <div class="alien-logo">👽</div>
@@ -3104,9 +3299,7 @@
         </div>
     </div>
 
-    <!-- 👽 APP CONTAINER -->
     <div id="app-container" class="hidden">
-        <!-- HEADER - COMPACT -->
         <header class="app-header">
             <div class="header-left">
                 <div class="logo" id="admin-logo">
@@ -3137,7 +3330,6 @@
             </div>
         </header>
 
-        <!-- NAVIGATION - MOVED TO BOTTOM -->
         <nav class="main-nav">
             <button class="nav-btn active" data-page="home">
                 <i class="fas fa-home"></i>
@@ -3157,12 +3349,9 @@
             </button>
         </nav>
 
-        <!-- NOTIFICATION CONTAINER -->
         <div id="notification-container" class="notification-container"></div>
 
-        <!-- 👽 HOME PAGE - MINING (مع التعديلات الجديدة) -->
         <div id="home-page" class="page active">
-            <!-- Mining Section (كما هو) -->
             <section class="mining-section">
                 <div class="mining-header">
                     <h3><i class="fas fa-microchip"></i> Quantum Mining Station</h3>
@@ -3173,7 +3362,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Hashrate</div>
-                            <div class="stat-value" id="current-hashrate-display">2,500</div>
+                            <div class="stat-value" id="current-hashrate-display">1,000</div>
                         </div>
                     </div>
                 </div>
@@ -3184,7 +3373,7 @@
                         <span id="mining-timer-display">01:00:00</span>
                     </div>
                     <div class="next-reward">
-                        Next Reward: <span id="next-reward-amount">2,500</span> AMSK
+                        Next Reward: <span id="next-reward-amount">1,000</span> AMSK
                     </div>
                 </div>
 
@@ -3196,36 +3385,55 @@
                 <div class="mining-info">
                     <div class="info-item">
                         <i class="fas fa-chart-line"></i>
-                        <span>Total Mined: <span id="total-mined">2,500</span> AMSK</span>
+                        <span>Total Mined: <span id="total-mined">1,000</span> AMSK</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-calendar-day"></i>
-                        <span>Today: <span id="mined-today">2,500</span> AMSK</span>
+                        <span>Today: <span id="mined-today">1,000</span> AMSK</span>
                     </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <button class="quick-action-btn tasks-btn" id="scroll-to-tasks-btn">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tasks</span>
+                    </button>
+                    <button class="quick-action-btn booster-btn" id="booster-btn">
+                        <i class="fas fa-rocket"></i>
+                        <span>Booster 🚀</span>
+                    </button>
                 </div>
             </section>
 
-            <!-- ✅ Upgrade Mining Level (في الأعلى الآن) -->
             <section class="upgrade-section">
                 <h4><i class="fas fa-level-up-alt"></i> Upgrade Mining Level</h4>
                 <div class="upgrade-cards" id="upgrade-cards">
-                    <!-- بطاقات الترقية سيتم تعبئتها عبر JavaScript -->
                 </div>
             </section>
 
-            <!-- ✅ One-Time Tasks (في الأسفل الآن) -->
-            <section class="tasks-section">
+            <section class="tasks-section" id="tasks-section">
                 <div class="tasks-header">
-                    <h4><i class="fas fa-tasks"></i> One-Time Tasks</h4>
+                    <h4><i class="fas fa-tasks"></i> Tasks & Rewards</h4>
                     <div class="tasks-progress" id="tasks-progress">0/4 Completed</div>
                 </div>
-                <div class="tasks-grid" id="tasks-grid">
-                    <!-- سيتم تعبئتها عبر JavaScript -->
+                
+                <div class="tasks-tabs">
+                    <button class="tasks-tab active" data-tab="basic">
+                        <i class="fas fa-tasks"></i> Basic
+                    </button>
+                    <button class="tasks-tab" data-tab="vip">
+                        <i class="fas fa-crown"></i> VIP 🏆
+                    </button>
+                </div>
+                
+                <div class="tasks-grid active" id="tasks-grid" data-tab-content="basic">
+                </div>
+                
+                <div class="vip-tasks-grid" id="vip-tasks-grid" data-tab-content="vip" style="display: none;">
                 </div>
             </section>
         </div>
 
-        <!-- 👽 STAKING PAGE -->
         <div id="staking-page" class="page">
             <div class="staking-content">
                 <div class="staking-card">
@@ -3248,7 +3456,6 @@
                     <h4><i class="fas fa-cubes"></i> Staking Plans</h4>
                     
                     <div class="staking-plans-grid">
-                        <!-- Silver Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Silver Plan</div>
                             <div class="plan-amount">10+ USDT</div>
@@ -3258,7 +3465,6 @@
                             <button class="stake-plan-btn" data-plan="1">Stake Now</button>
                         </div>
 
-                        <!-- Gold Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Gold Plan</div>
                             <div class="plan-amount">50+ USDT</div>
@@ -3268,7 +3474,6 @@
                             <button class="stake-plan-btn" data-plan="2">Stake Now</button>
                         </div>
 
-                        <!-- Diamond Plan -->
                         <div class="plan-item">
                             <div class="plan-name">Diamond Plan</div>
                             <div class="plan-amount">100+ USDT</div>
@@ -3293,7 +3498,6 @@
             </div>
         </div>
         
-        <!-- 👽 WALLET PAGE -->
         <div id="wallet-page" class="page">
             <div class="wallet-content">
                 <div class="wallet-balance-card">
@@ -3331,7 +3535,6 @@
                     
                     <div class="assets-section">
                         <div class="asset-list-compact">
-                            <!-- AMSK -->
                             <div class="asset-item-compact">
                                 <div class="asset-icon-compact ams-icon">
                                     <i class="fas fa-robot"></i>
@@ -3343,7 +3546,6 @@
                                 <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
                             </div>
 
-                            <!-- USDT -->
                             <div class="asset-item-compact">
                                 <div class="asset-icon-compact usdt-icon">
                                     <i class="fas fa-coins"></i>
@@ -3355,7 +3557,6 @@
                                 <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
                             </div>
 
-                            <!-- BNB -->
                             <div class="asset-item-compact">
                                 <div class="asset-icon-compact bnb-icon">
                                     <i class="fab fa-btc"></i>
@@ -3367,7 +3568,6 @@
                                 <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
                             </div>
 
-                            <!-- TON -->
                             <div class="asset-item-compact">
                                 <div class="asset-icon-compact ton-icon">
                                     <i class="fas fa-bolt"></i>
@@ -3384,7 +3584,6 @@
             </div>
         </div>
 
-        <!-- 👽 REFERRAL PAGE -->
         <div id="referral-page" class="page">
             <div class="referral-content">
                 <div class="referral-stats-card">
@@ -3404,6 +3603,16 @@
 
                 <div class="referral-link-card">
                     <h4><i class="fas fa-link"></i> Your Referral Link</h4>
+                    
+                    <div class="referral-description">
+                        <p>🚀 Invite friends and earn big!</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</li>
+                            <li><i class="fas fa-check-circle"></i> Earn <strong>16% commission</strong> on their deposits forever</li>
+                            <li><i class="fas fa-check-circle"></i> Unlimited referrals, instant rewards!</li>
+                        </ul>
+                    </div>
+                    
                     <div class="link-input-group">
                         <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
                         <button class="copy-link-btn" id="copy-link-btn">
@@ -3428,7 +3637,6 @@
                     <p class="milestones-description">Earn bonus rewards for reaching referral milestones!</p>
                     
                     <div class="milestones-list" id="milestones-list">
-                        <!-- Milestone 10 -->
                         <div class="milestone-item locked" data-milestone="10">
                             <div class="milestone-icon">
                                 <i class="fas fa-users"></i>
@@ -3443,7 +3651,6 @@
                             </div>
                         </div>
 
-                        <!-- Milestone 25 -->
                         <div class="milestone-item locked" data-milestone="25">
                             <div class="milestone-icon">
                                 <i class="fas fa-user-friends"></i>
@@ -3458,7 +3665,6 @@
                             </div>
                         </div>
 
-                        <!-- Milestone 50 -->
                         <div class="milestone-item locked" data-milestone="50">
                             <div class="milestone-icon">
                                 <i class="fas fa-user-plus"></i>
@@ -3473,7 +3679,6 @@
                             </div>
                         </div>
 
-                        <!-- Milestone 100 -->
                         <div class="milestone-item locked" data-milestone="100">
                             <div class="milestone-icon">
                                 <i class="fas fa-crown"></i>
@@ -3488,7 +3693,6 @@
                             </div>
                         </div>
 
-                        <!-- Milestone 250 -->
                         <div class="milestone-item locked" data-milestone="250">
                             <div class="milestone-icon">
                                 <i class="fas fa-crown"></i>
@@ -3508,19 +3712,15 @@
         </div>
     </div>
 
-    <!-- 👽 CONNECTOR SCRIPT -->
     <script>
-        // 👽 Alien Musk Quantum Connector v6.4
-        console.log("🔗 Loading Alien Musk Quantum Platform v6.4...");
+        console.log("🔗 Loading Alien Musk Quantum Platform v6.5...");
         
-        // Global variables
         window.tg = null;
         window.firebaseApp = null;
         window.db = null;
         window.auth = null;
         let appInitialized = false;
         
-        // Firebase Configuration
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
             authDomain: "tatbi9-681bf.firebaseapp.com",
@@ -3530,7 +3730,6 @@
             appId: "1:863237064748:web:134de1e01d2639ef5fa989"
         };
         
-        // Initialize Telegram WebApp
         function initTelegram() {
             try {
                 if (window.Telegram && window.Telegram.WebApp) {
@@ -3548,7 +3747,6 @@
             return false;
         }
         
-        // Initialize Firebase
         function initFirebase() {
             if (typeof firebase !== 'undefined') {
                 try {
@@ -3564,7 +3762,6 @@
             return false;
         }
         
-        // Basic HTML Functions
         window.switchPage = function(pageName) {
             console.log(`🔀 Switching to page: ${pageName}`);
             
@@ -3602,7 +3799,6 @@
                 .catch(() => showMessage('❌ Failed to copy', 'error'));
         };
         
-        // Initialize everything
         document.addEventListener('DOMContentLoaded', function() {
             console.log("📱 DOM Content Loaded - Starting initialization...");
             
@@ -3670,17 +3866,8 @@
         }, 10000);
         
         console.log("✅ Alien Musk Connector Loaded Successfully");
-    </script>
-        <!-- 👽 MAIN APPLICATION JS v6.4 - كامل غير مختصر -->
-    <script>
-        // ============================================
-        // 👽 ALIEN MUSK - Quantum Mining Platform v6.4
-        // PROFESSIONAL HISTORY SYSTEM EDITION + REFERRAL FIX + ENHANCED USER MESSAGES
-        // ============================================
-
-        // Configuration - UPDATED WITH CORRECT CALCULATIONS
+        
         const CONFIG = {
-            // Token Prices (USD)
             PRICES: {
                 AMSK: 0.0002,
                 USDT: 1.00,
@@ -3688,12 +3875,11 @@
                 TON: 1.4
             },
             
-            // Mining Configuration
             MINING: {
-                DURATION: 3600000, // 1 hour in ms
+                DURATION: 3600000,
                 
                 LEVELS: {
-                    1: { name: "⚡ Beginner", cost: 0, reward: 2500, hashrate: 2500, apy: "∞" },
+                    1: { name: "⚡ Beginner", cost: 0, reward: 1000, hashrate: 1000, apy: "∞" },
                     2: { name: "🚀 Advanced", cost: 5, reward: 5000, hashrate: 5000, apy: "200%" },
                     3: { name: "💎 Pro", cost: 20, reward: 10000, hashrate: 10000, apy: "250%" },
                     4: { name: "👑 Legend", cost: 50, reward: 50000, hashrate: 50000, apy: "300%" },
@@ -3701,7 +3887,6 @@
                 }
             },
             
-            // Staking Configuration
             STAKING: {
                 PLANS: {
                     1: { 
@@ -3731,7 +3916,6 @@
                 }
             },
             
-            // TASKS - أربع مهام لمرة واحدة
             TASKS: {
                 1: { name: "Join Telegram Channel", url: "https://t.me/your_channel", icon: "fab fa-telegram", reward: 5000 },
                 2: { name: "Subscribe on YouTube", url: "https://youtube.com/your_channel", icon: "fab fa-youtube", reward: 5000 },
@@ -3739,7 +3923,20 @@
                 4: { name: "Like & Share Latest Post", url: "https://t.me/your_channel/123", icon: "fas fa-heart", reward: 5000 }
             },
             
-            // Referral Configuration
+            VIP_TASKS: {
+                MINING: {
+                    2: { reward: 20000, name: "Level 2 Master", icon: "fas fa-rocket" },
+                    3: { reward: 40000, name: "Level 3 Pro", icon: "fas fa-crown" },
+                    4: { reward: 80000, name: "Level 4 Legend", icon: "fas fa-star" },
+                    5: { reward: 200000, name: "Level 5 Mythic", icon: "fas fa-sun" }
+                },
+                STAKING: {
+                    silver: { reward: 20000, name: "Silver Staker", icon: "fas fa-gem", planId: 1 },
+                    gold: { reward: 40000, name: "Gold Staker", icon: "fas fa-gem", planId: 2 },
+                    diamond: { reward: 100000, name: "Diamond Staker", icon: "fas fa-gem", planId: 3 }
+                }
+            },
+            
             REFERRAL: {
                 BONUS: {
                     REFERRER: 10000,
@@ -3755,7 +3952,6 @@
                 }
             },
             
-            // Deposit Configuration
             DEPOSIT: {
                 ADDRESSES: {
                     BNB_USDT: "0xbe7D6b0910d1019100c5CD32b4160cA30A8EB5D4",
@@ -3768,13 +3964,11 @@
                 }
             },
             
-            // Withdraw Configuration
             WITHDRAW: {
                 MIN_USDT: 100,
                 FEE_BNB: 0.00025
             },
             
-            // Swap Configuration
             SWAP: {
                 RATES: {
                     USDT_TO_AMSK: 5000,
@@ -3790,14 +3984,12 @@
                 ]
             },
             
-            // Admin Configuration
             ADMIN: {
                 TELEGRAM_ID: "1653918641",
                 PASSWORD: "Ali97$"
             }
         };
 
-        // User Data Management
         let userData = {
             id: null,
             telegramId: null,
@@ -3813,10 +4005,9 @@
             referralBonusClaimed: false
         };
 
-        // Wallet Data
         let walletData = {
             balances: {
-                AMSK: 2500,
+                AMSK: 1000,
                 USDT: 0,
                 BNB: 0,
                 TON: 0
@@ -3826,8 +4017,8 @@
                 active: false,
                 lastReward: null,
                 nextReward: null,
-                totalMined: 2500,
-                minedToday: 2500
+                totalMined: 1000,
+                minedToday: 1000
             },
             staking: {
                 activeStakes: [],
@@ -3843,6 +4034,10 @@
             tasks: {
                 completed: []
             },
+            vipTasks: {
+                claimedMiningRewards: [],
+                claimedStakingRewards: []
+            },
             pendingDeposits: [],
             pendingWithdrawals: [],
             transactions: [],
@@ -3851,7 +4046,6 @@
             lastUpdate: Date.now()
         };
 
-        // Firebase Collections
         const DB_COLLECTIONS = {
             USERS: 'users',
             DEPOSITS: 'deposit_requests',
@@ -3860,22 +4054,16 @@
             ADMIN_LOGS: 'admin_logs'
         };
 
-        // Elements Cache
         const elements = {};
 
-        // Intervals
         let intervals = {
             miningTimer: null,
             autoSave: null,
             realtimeSync: null
         };
 
-        // Realtime Listener
         let unsubscribeUserListener = null;
 
-        // ============================================
-        // دالة إنشاء كود إحالة فريد
-        // ============================================
         function generateReferralCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
             let code = '';
@@ -3885,9 +4073,6 @@
             return code;
         }
 
-        // ============================================
-        // دالة عرض الرسائل مع مدة محددة (محسنة)
-        // ============================================
         function showMessage(text, type = 'info', duration = 3000) {
             const container = document.getElementById('notification-container');
             if (!container) return;
@@ -3931,17 +4116,13 @@
             }, duration);
         }
 
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-
         async function initAlienMuskApp() {
             if (appInitialized) {
                 console.log("⚠️ Already initialized, skipping...");
                 return;
             }
             appInitialized = true;
-            console.log("🚀 Initializing Alien Musk Platform v6.4...");
+            console.log("🚀 Initializing Alien Musk Platform v6.5...");
             
             try {
                 cacheElements();
@@ -3957,7 +4138,7 @@
                 console.log("✅ Platform initialized successfully");
                 
                 setTimeout(() => {
-                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.4!", "success");
+                    showMessage("👽 Welcome to Alien Musk Quantum Platform v6.5!", "success");
                 }, 800);
                 
             } catch (error) {
@@ -4015,14 +4196,15 @@
             elements.refEarned = document.getElementById('ref-earned');
             elements.milestonesList = document.getElementById('milestones-list');
             elements.tasksGrid = document.getElementById('tasks-grid');
+            elements.vipTasksGrid = document.getElementById('vip-tasks-grid');
             elements.tasksProgress = document.getElementById('tasks-progress');
+            elements.tasksTabs = document.querySelectorAll('.tasks-tab');
+            elements.scrollToTasksBtn = document.getElementById('scroll-to-tasks-btn');
+            elements.boosterBtn = document.getElementById('booster-btn');
             
             console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
         }
 
-        // ============================================
-        // دالة setupUser
-        // ============================================
         async function setupUser() {
             console.log("👤 Setting up user...");
             
@@ -4084,6 +4266,13 @@
                 walletData.tasks = { completed: [] };
             }
             
+            if (!walletData.vipTasks) {
+                walletData.vipTasks = {
+                    claimedMiningRewards: [],
+                    claimedStakingRewards: []
+                };
+            }
+            
             updateUserUI();
         }
 
@@ -4108,10 +4297,6 @@
                 elements.referralLinkInput.value = `https://t.me/AlienMuskbot/Musk?startapp=${userData.referralCode}`;
             }
         }
-
-        // ============================================
-        // REALTIME LISTENER
-        // ============================================
 
         function setupUserRealtimeListener() {
             if (!window.db || !userData.id) {
@@ -4147,6 +4332,9 @@
                         if (firebaseData.tasks) {
                             walletData.tasks = firebaseData.tasks;
                         }
+                        if (firebaseData.vipTasks) {
+                            walletData.vipTasks = firebaseData.vipTasks;
+                        }
                         if (firebaseData.transactions) {
                             walletData.transactions = firebaseData.transactions;
                         }
@@ -4161,12 +4349,7 @@
                     console.error("❌ Realtime listener error:", error);
                 });
         }
-
-        // ============================================
-        // FIREBASE DATABASE FUNCTIONS
-        // ============================================
-
-        async function loadUserDataFromFirebase() {
+                async function loadUserDataFromFirebase() {
             console.log("🔥 Loading user data from Firebase...");
             
             try {
@@ -4197,6 +4380,9 @@
                     }
                     if (firebaseData.tasks) {
                         walletData.tasks = firebaseData.tasks;
+                    }
+                    if (firebaseData.vipTasks) {
+                        walletData.vipTasks = firebaseData.vipTasks;
                     }
                     if (firebaseData.transactions) {
                         walletData.transactions = firebaseData.transactions;
@@ -4298,6 +4484,7 @@
                     staking: walletData.staking,
                     referrals: walletData.referrals,
                     tasks: walletData.tasks,
+                    vipTasks: walletData.vipTasks,
                     transactions: walletData.transactions || [],
                     transactionHistory: walletData.transactionHistory || [],
                     userInfo: {
@@ -4335,6 +4522,7 @@
                     staking: walletData.staking,
                     referrals: walletData.referrals,
                     tasks: walletData.tasks,
+                    vipTasks: walletData.vipTasks,
                     pendingDeposits: walletData.pendingDeposits,
                     pendingWithdrawals: walletData.pendingWithdrawals,
                     transactions: walletData.transactions,
@@ -4361,7 +4549,7 @@
                     
                     if (parsed.balances) {
                         walletData.balances = {
-                            AMSK: parsed.balances.AMSK || 2500,
+                            AMSK: parsed.balances.AMSK || 1000,
                             USDT: parsed.balances.USDT || 0,
                             BNB: parsed.balances.BNB || 0,
                             TON: parsed.balances.TON || 0
@@ -4384,6 +4572,15 @@
                         walletData.tasks = parsed.tasks;
                     } else {
                         walletData.tasks = { completed: [] };
+                    }
+                    
+                    if (parsed.vipTasks) {
+                        walletData.vipTasks = parsed.vipTasks;
+                    } else {
+                        walletData.vipTasks = {
+                            claimedMiningRewards: [],
+                            claimedStakingRewards: []
+                        };
                     }
                     
                     if (parsed.pendingDeposits) {
@@ -4420,14 +4617,14 @@
         }
 
         function initializeDefaultData() {
-            walletData.balances = { AMSK: 2500, USDT: 0, BNB: 0, TON: 0 };
+            walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
             walletData.mining = {
                 level: 1,
                 active: false,
                 lastReward: null,
                 nextReward: null,
-                totalMined: 2500,
-                minedToday: 2500
+                totalMined: 1000,
+                minedToday: 1000
             };
             walletData.staking = {
                 activeStakes: [],
@@ -4442,6 +4639,10 @@
             };
             walletData.tasks = {
                 completed: []
+            };
+            walletData.vipTasks = {
+                claimedMiningRewards: [],
+                claimedStakingRewards: []
             };
             walletData.pendingDeposits = [];
             walletData.pendingWithdrawals = [];
@@ -4472,10 +4673,6 @@
             await saveUserDataToFirebase();
             saveUserDataToLocalStorage();
         }
-
-        // ============================================
-        // TRANSACTION SYSTEM
-        // ============================================
 
         function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
             const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -4560,6 +4757,9 @@
                 },
                 'task_reward': {
                     'completed': 'Task completed successfully.'
+                },
+                'vip_task_reward': {
+                    'completed': 'VIP task reward claimed successfully.'
                 }
             };
             
@@ -4595,10 +4795,6 @@
             }
         }
 
-        // ============================================
-        // HISTORY SYSTEM
-        // ============================================
-
         function showTransactionHistory() {
             const modalContent = `
                 <div class="modal-overlay active" onclick="closeModal()">
@@ -4624,6 +4820,7 @@
                                 <button class="history-filter-btn" data-filter="swap">Swap</button>
                                 <button class="history-filter-btn" data-filter="referral">Referral</button>
                                 <button class="history-filter-btn" data-filter="task">Tasks</button>
+                                <button class="history-filter-btn" data-filter="vip">VIP Tasks</button>
                             </div>
                             
                             <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
@@ -4722,7 +4919,9 @@
                 } else if (filterType === 'referral') {
                     transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
                 } else if (filterType === 'task') {
-                    transactions = transactions.filter(tx => tx.type.includes('task'));
+                    transactions = transactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
+                } else if (filterType === 'vip') {
+                    transactions = transactions.filter(tx => tx.type.includes('vip'));
                 }
             }
             
@@ -4776,6 +4975,10 @@
                     iconClass = 'task';
                     icon = 'fa-tasks';
                     typeText = 'Task';
+                } else if (tx.type.includes('vip')) {
+                    iconClass = 'milestone';
+                    icon = 'fa-crown';
+                    typeText = 'VIP Task';
                 }
                 
                 let statusClass = '';
@@ -4829,9 +5032,173 @@
             historyContent.innerHTML = html;
         }
 
-        // ============================================
-        // MINING SYSTEM
-        // ============================================
+        function checkMiningVipReward(newLevel) {
+            if (!walletData.vipTasks) {
+                walletData.vipTasks = {
+                    claimedMiningRewards: [],
+                    claimedStakingRewards: []
+                };
+            }
+            
+            for (let level = 2; level <= newLevel; level++) {
+                const vipTask = CONFIG.VIP_TASKS.MINING[level];
+                if (!vipTask) continue;
+                
+                if (!walletData.vipTasks.claimedMiningRewards.includes(level)) {
+                    showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for reaching Level ${level}!`, "success", 5000);
+                }
+            }
+            
+            updateVipTasksDisplay();
+        }
+
+        function checkStakingVipReward(planId, planName) {
+            if (!walletData.vipTasks) {
+                walletData.vipTasks = {
+                    claimedMiningRewards: [],
+                    claimedStakingRewards: []
+                };
+            }
+            
+            let planKey = '';
+            if (planName.toLowerCase().includes('silver')) planKey = 'silver';
+            else if (planName.toLowerCase().includes('gold')) planKey = 'gold';
+            else if (planName.toLowerCase().includes('diamond')) planKey = 'diamond';
+            else return;
+            
+            const vipTask = CONFIG.VIP_TASKS.STAKING[planKey];
+            if (!vipTask) return;
+            
+            if (!walletData.vipTasks.claimedStakingRewards.includes(planKey)) {
+                showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for your first ${planName} Staking!`, "success", 5000);
+            }
+            
+            updateVipTasksDisplay();
+        }
+
+        function claimVipTask(type, id, reward, taskName) {
+            try {
+                if (type === 'mining') {
+                    if (walletData.vipTasks.claimedMiningRewards.includes(id)) {
+                        showMessage("Task already claimed!", "warning");
+                        return false;
+                    }
+                    
+                    walletData.balances.AMSK += reward;
+                    walletData.vipTasks.claimedMiningRewards.push(id);
+                    
+                    addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Mining Task: ${taskName}`, 'completed', 'VIP task reward claimed');
+                    
+                } else if (type === 'staking') {
+                    if (walletData.vipTasks.claimedStakingRewards.includes(id)) {
+                        showMessage("Task already claimed!", "warning");
+                        return false;
+                    }
+                    
+                    walletData.balances.AMSK += reward;
+                    walletData.vipTasks.claimedStakingRewards.push(id);
+                    
+                    addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Staking Task: ${taskName}`, 'completed', 'VIP task reward claimed');
+                }
+                
+                updateVipTasksDisplay();
+                updateWalletUI();
+                saveUserData();
+                
+                showMessage(`✅ Claimed ${reward.toLocaleString()} AMSK from ${taskName}!`, "success");
+                return true;
+                
+            } catch (error) {
+                console.error("❌ Error claiming VIP task:", error);
+                showMessage("Failed to claim VIP task", "error");
+                return false;
+            }
+        }
+
+        function updateVipTasksDisplay() {
+            if (!elements.vipTasksGrid) return;
+            
+            const miningTasks = CONFIG.VIP_TASKS.MINING;
+            const stakingTasks = CONFIG.VIP_TASKS.STAKING;
+            const currentLevel = walletData.mining.level;
+            
+            let html = '';
+            
+            html += `
+                <div class="vip-task-category">
+                    <h5><i class="fas fa-rocket"></i> Mining Level Rewards</h5>
+            `;
+            
+            for (let level = 2; level <= 5; level++) {
+                const task = miningTasks[level];
+                if (!task) continue;
+                
+                const isClaimed = walletData.vipTasks?.claimedMiningRewards?.includes(level) || false;
+                const isAvailable = currentLevel >= level && !isClaimed;
+                const isLocked = currentLevel < level;
+                
+                let statusButton = '';
+                if (isClaimed) {
+                    statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
+                } else if (isAvailable) {
+                    statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('mining', ${level}, ${task.reward}, '${task.name}')">Claim</button>`;
+                } else {
+                    statusButton = `<button class="vip-task-btn locked" disabled>🔒 Level ${level}</button>`;
+                }
+                
+                html += `
+                    <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
+                        <div class="vip-task-icon">
+                            <i class="${task.icon}"></i>
+                        </div>
+                        <div class="vip-task-details">
+                            <div class="vip-task-name">${task.name}</div>
+                            <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
+                        </div>
+                        <div class="vip-task-status">
+                            ${statusButton}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            
+            html += `
+                <div class="vip-task-category">
+                    <h5><i class="fas fa-gem"></i> First Staking Rewards</h5>
+            `;
+            
+            for (let [planKey, task] of Object.entries(stakingTasks)) {
+                const isClaimed = walletData.vipTasks?.claimedStakingRewards?.includes(planKey) || false;
+                
+                let statusButton = '';
+                if (isClaimed) {
+                    statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
+                } else {
+                    statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('staking', '${planKey}', ${task.reward}, '${task.name}')">Claim</button>`;
+                }
+                
+                html += `
+                    <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
+                        <div class="vip-task-icon">
+                            <i class="${task.icon}"></i>
+                        </div>
+                        <div class="vip-task-details">
+                            <div class="vip-task-name">${task.name}</div>
+                            <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
+                        </div>
+                        <div class="vip-task-status">
+                            ${statusButton}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            
+            elements.vipTasksGrid.innerHTML = html;
+        }
 
         function updateMiningDisplay() {
             if (!walletData.mining) return;
@@ -5076,10 +5443,13 @@
                     return;
                 }
                 
+                const oldLevel = walletData.mining.level;
                 walletData.balances.USDT -= levelData.cost;
                 walletData.mining.level = level;
                 
                 addTransactionToHistory('mining_upgrade', -levelData.cost, 'USDT', `Upgrade to ${levelData.name} level`, 'completed', 'Mining level upgraded');
+                
+                checkMiningVipReward(level);
                 
                 updateMiningDisplay();
                 updateWalletUI();
@@ -5093,9 +5463,53 @@
             }
         }
 
-        // ============================================
-        // WALLET SYSTEM
-        // ============================================
+        async function boosterUpgrade() {
+            const targetLevel = 5;
+            const currentLevel = walletData.mining.level;
+            
+            if (currentLevel >= targetLevel) {
+                showMessage("You are already at maximum level!", "info");
+                return;
+            }
+            
+            const levelData = CONFIG.MINING.LEVELS[targetLevel];
+            const totalCost = levelData.cost;
+            
+            if (walletData.balances.USDT < totalCost) {
+                showMessage(`⚠️ You need ${totalCost} USDT for Level 5 upgrade!`, "warning", 4500);
+                return;
+            }
+            
+            if (!confirm(`Upgrade directly to Level 5 (Mythic) for ${totalCost} USDT?`)) {
+                return;
+            }
+            
+            try {
+                walletData.balances.USDT -= totalCost;
+                walletData.mining.level = targetLevel;
+                
+                addTransactionToHistory('mining_upgrade', -totalCost, 'USDT', 'Booster upgrade to Level 5', 'completed', 'Mining level upgraded via Booster');
+                
+                checkMiningVipReward(targetLevel);
+                
+                updateMiningDisplay();
+                updateWalletUI();
+                await saveUserData();
+                
+                showMessage(`🚀 BOOSTER ACTIVATED! Upgraded to Level 5 Mythic! Hashrate: ${levelData.hashrate.toLocaleString()}/s`, "success");
+                
+            } catch (error) {
+                console.error("❌ Error in booster upgrade:", error);
+                showMessage("Failed to upgrade via Booster", "error");
+            }
+        }
+
+        function scrollToTasks() {
+            const tasksSection = document.getElementById('tasks-section');
+            if (tasksSection) {
+                tasksSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
 
         function updateWalletUI() {
             if (!walletData.balances) return;
@@ -5149,10 +5563,6 @@
                 elements.walletTonValue.textContent = `$${(TON * PRICES.TON).toFixed(2)}`;
             }
         }
-
-        // ============================================
-        // STAKING SYSTEM
-        // ============================================
 
         function updateStakingDisplay() {
             updateStakingStats();
@@ -5482,6 +5892,8 @@
                 
                 addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
                 
+                checkStakingVipReward(planId, plan.name);
+                
                 updateWalletUI();
                 updateStakingDisplay();
                 
@@ -5582,10 +5994,6 @@
             showMessage(`⚠️ Stake canceled. ${returnedAmount.toFixed(2)} USDT returned (50% penalty)`, "warning", 4500);
             await saveUserData();
         }
-
-        // ============================================
-        // REFERRAL SYSTEM
-        // ============================================
 
         async function checkForReferral() {
             console.log("🔍 Checking for referral...");
@@ -5791,10 +6199,6 @@
             }
         }
 
-        // ============================================
-        // TASKS SYSTEM
-        // ============================================
-
         function updateTasksDisplay() {
             if (!elements.tasksGrid || !elements.tasksProgress) return;
             
@@ -5823,6 +6227,8 @@
                 `;
             }
             elements.tasksGrid.innerHTML = html;
+            
+            updateVipTasksDisplay();
         }
 
         window.handleTaskClick = async function(taskId) {
@@ -5859,10 +6265,6 @@
             
             showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned from ${CONFIG.TASKS[taskId].name}!`, "success");
         }
-
-        // ============================================
-        // SWAP SYSTEM
-        // ============================================
 
         function openSwapModal() {
             const modalContent = `
@@ -6137,10 +6539,6 @@
             showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}! New balance: ${walletData.balances[toCurrency].toLocaleString()} ${toCurrency}`, "success");
             await saveUserData();
         }
-
-        // ============================================
-        // DEPOSIT SYSTEM
-        // ============================================
 
         async function openDepositModal() {
             const modalContent = `
@@ -6461,10 +6859,6 @@
             }
         }
 
-        // ============================================
-        // WITHDRAW SYSTEM
-        // ============================================
-
         async function openWithdrawModal() {
             if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
                 const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
@@ -6472,7 +6866,7 @@
 📈 **Your Path to 100 USDT:**
 
 ⛏️ **Mining:** 
-   • 2,500 AMSK/hour = 0.5 USDT/day
+   • 1,000 AMSK/hour = 0.2 USDT/day
 
 👥 **Referrals:** 
    • You get 10,000 AMSK per friend
@@ -6641,10 +7035,6 @@
                 showMessage("Failed to submit withdrawal request", "error");
             }
         }
-
-        // ============================================
-        // ADMIN SYSTEM
-        // ============================================
 
         function initAdminSystem() {
             if (elements.adminLogo) {
@@ -6924,10 +7314,6 @@
             
             return html;
         }
-
-        // ============================================
-        // ADMIN APPROVAL/REJECTION FUNCTIONS
-        // ============================================
 
         async function approveDeposit(depositId, depositIndex) {
             try {
@@ -7263,10 +7649,6 @@
                 showMessage("Failed to reject withdrawal", "error");
             }
         }
-
-        // ============================================
-        // OTHER ADMIN FUNCTIONS
-        // ============================================
 
         async function adminSearchUser() {
             const searchTerm = prompt("Enter Telegram ID or username to search:");
@@ -7756,10 +8138,6 @@
             }
         }
 
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-
         function setupEventListeners() {
             console.log("🎯 Setting up event listeners...");
             
@@ -7835,14 +8213,36 @@
                 });
             }
             
+            elements.tasksTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    elements.tasksTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const tabType = tab.dataset.tab;
+                    document.querySelectorAll('[data-tab-content]').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    if (tabType === 'basic') {
+                        document.getElementById('tasks-grid').style.display = 'grid';
+                    } else {
+                        document.getElementById('vip-tasks-grid').style.display = 'grid';
+                    }
+                });
+            });
+            
+            if (elements.scrollToTasksBtn) {
+                elements.scrollToTasksBtn.addEventListener('click', scrollToTasks);
+            }
+            
+            if (elements.boosterBtn) {
+                elements.boosterBtn.addEventListener('click', boosterUpgrade);
+            }
+            
             initAdminSystem();
             
             console.log("✅ Event listeners setup complete");
         }
-
-        // ============================================
-        // UI MANAGEMENT
-        // ============================================
 
         function updateUI() {
             updateUserUI();
@@ -7852,10 +8252,6 @@
             updateReferralDisplay();
             updateTasksDisplay();
         }
-
-        // ============================================
-        // BACKGROUND SERVICES
-        // ============================================
 
         function startBackgroundServices() {
             intervals.miningTimer = setInterval(() => {
@@ -7896,10 +8292,6 @@
             }
         });
 
-        // ============================================
-        // UTILITY FUNCTIONS
-        // ============================================
-
         function formatNumber(num, decimals = 0) {
             if (typeof num !== 'number' || isNaN(num)) return '0';
             
@@ -7914,10 +8306,6 @@
                 maximumFractionDigits: decimals
             });
         }
-
-        // ============================================
-        // GLOBAL EXPORTS
-        // ============================================
 
         window.initAlienMuskApp = initAlienMuskApp;
         window.switchPage = switchPage;
@@ -7950,8 +8338,11 @@
         window.approveWithdrawal = approveWithdrawal;
         window.rejectWithdrawal = rejectWithdrawal;
         window.formatNumber = formatNumber;
+        window.claimVipTask = claimVipTask;
+        window.boosterUpgrade = boosterUpgrade;
+        window.scrollToTasks = scrollToTasks;
 
-        console.log("👽 Alien Musk Quantum Platform v6.4 - مع جميع التعديلات Ready!");
+        console.log("👽 Alien Musk Quantum Platform v6.5 - مع جميع التعديلات Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
