@@ -5084,7 +5084,7 @@
             PASSWORD: "Ali97$"
         }
     };
-            let userData = {
+                    let userData = {
             id: null,
             telegramId: null,
             username: 'Alien',
@@ -8114,7 +8114,7 @@
         }
 
         // ===========================================
-        // 👑 دوال المشرف المحسنة (باستخدام ID بدلاً من index)
+        // 👑 دوال المشرف (باستخدام الطريقة القديمة - index)
         // ===========================================
         function initAdminSystem() {
             if (elements.adminLogo) {
@@ -8324,7 +8324,7 @@
         }
 
         // ===========================================
-        // 🎯 دوال عرض الطلبات (مع الحفاظ على البنية ولكن استخدام ID)
+        // 🎯 دوال عرض الطلبات (باستخدام index - الطريقة القديمة)
         // ===========================================
         function getPendingDepositsHTML(pendingDeposits) {
             if (pendingDeposits.length === 0) {
@@ -8337,7 +8337,7 @@
             }
             
             let html = '';
-            pendingDeposits.forEach((deposit) => {
+            pendingDeposits.forEach((deposit, index) => {
                 const date = new Date(deposit.createdAt).toLocaleDateString();
                 
                 html += `
@@ -8352,8 +8352,8 @@
                             <div>Date: ${date}</div>
                         </div>
                         <div class="request-actions">
-                            <button class="btn-approve" onclick="approveDeposit('${deposit.id}')">Approve</button>
-                            <button class="btn-reject" onclick="rejectDeposit('${deposit.id}')">Reject</button>
+                            <button class="btn-approve" onclick="approveDeposit('${deposit.id}', ${index})">Approve</button>
+                            <button class="btn-reject" onclick="rejectDeposit('${deposit.id}', ${index})">Reject</button>
                         </div>
                     </div>
                 `;
@@ -8373,7 +8373,7 @@
             }
             
             let html = '';
-            pendingWithdrawals.forEach((withdrawal) => {
+            pendingWithdrawals.forEach((withdrawal, index) => {
                 const date = new Date(withdrawal.createdAt).toLocaleDateString();
                 
                 html += `
@@ -8388,8 +8388,8 @@
                             <div>Date: ${date}</div>
                         </div>
                         <div class="request-actions">
-                            <button class="btn-approve" onclick="approveWithdrawal('${withdrawal.id}')">Approve</button>
-                            <button class="btn-reject" onclick="rejectWithdrawal('${withdrawal.id}')">Reject</button>
+                            <button class="btn-approve" onclick="approveWithdrawal('${withdrawal.id}', ${index})">Approve</button>
+                            <button class="btn-reject" onclick="rejectWithdrawal('${withdrawal.id}', ${index})">Reject</button>
                         </div>
                     </div>
                 `;
@@ -8399,20 +8399,21 @@
         }
 
         // ===========================================
-        // 🎯 دوال الموافقة والرفض المحسنة (باستخدام ID)
+        // 🎯 دوال الموافقة والرفض (باستخدام index - الطريقة القديمة)
         // ===========================================
-        async function approveDeposit(depositId) {
+        async function approveDeposit(depositId, depositIndex) {
             try {
-                // البحث عن الإيداع باستخدام ID
-                const depositIndex = walletData.pendingDeposits.findIndex(d => d.id === depositId);
-                if (depositIndex === -1) {
+                console.log("🔍 Approving deposit with ID:", depositId, "at index:", depositIndex);
+                
+                const deposit = walletData.pendingDeposits[depositIndex];
+                if (!deposit) {
+                    console.error("❌ Deposit not found at index:", depositIndex);
                     showMessage("Deposit request not found", "error");
                     return;
                 }
                 
-                const deposit = walletData.pendingDeposits[depositIndex];
-                
-                console.log("✅ Approving deposit for user:", deposit.userId);
+                console.log("✅ Found deposit:", deposit);
+                console.log("👤 User ID:", deposit.userId);
                 
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.DEPOSITS)
@@ -8428,7 +8429,8 @@
                     
                     if (userDoc.exists) {
                         const userDataFB = userDoc.data();
-                        const newBalance = (userDataFB.balances?.[deposit.currency] || 0) + deposit.amount;
+                        const currentBalance = userDataFB.balances?.[deposit.currency] || 0;
+                        const newBalance = currentBalance + deposit.amount;
                         
                         await userRef.update({
                             [`balances.${deposit.currency}`]: newBalance
@@ -8455,6 +8457,10 @@
                         });
                         
                         console.log(`✅ Added ${deposit.amount} ${deposit.currency} to user ${deposit.userId}`);
+                    } else {
+                        console.error("❌ User not found in Firebase:", deposit.userId);
+                        showMessage(`User ${deposit.userId} not found in Firebase`, "error");
+                        return;
                     }
                 }
                 
@@ -8475,7 +8481,6 @@
                     updateWalletUI();
                 }
                 
-                // حذف الإيداع من قائمة المعلقة
                 walletData.pendingDeposits.splice(depositIndex, 1);
                 
                 await saveUserData();
@@ -8489,13 +8494,16 @@
             }
         }
 
-        async function rejectDeposit(depositId) {
+        async function rejectDeposit(depositId, depositIndex) {
             try {
-                // البحث عن الإيداع باستخدام ID
-                const depositIndex = walletData.pendingDeposits.findIndex(d => d.id === depositId);
-                if (depositIndex === -1) return;
+                console.log("🔍 Rejecting deposit with ID:", depositId, "at index:", depositIndex);
                 
                 const deposit = walletData.pendingDeposits[depositIndex];
+                if (!deposit) {
+                    console.error("❌ Deposit not found at index:", depositIndex);
+                    showMessage("Deposit request not found", "error");
+                    return;
+                }
                 
                 const reason = prompt("Enter reason for rejection:", "Invalid transaction");
                 if (reason === null) return;
@@ -8557,7 +8565,6 @@
                     addTransactionToHistory('deposit_rejected', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
                 }
                 
-                // حذف الإيداع من قائمة المعلقة
                 walletData.pendingDeposits.splice(depositIndex, 1);
                 
                 await saveUserData();
@@ -8571,18 +8578,19 @@
             }
         }
 
-        async function approveWithdrawal(withdrawalId) {
+        async function approveWithdrawal(withdrawalId, withdrawalIndex) {
             try {
-                // البحث عن السحب باستخدام ID
-                const withdrawalIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
-                if (withdrawalIndex === -1) {
+                console.log("🔍 Approving withdrawal with ID:", withdrawalId, "at index:", withdrawalIndex);
+                
+                const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
+                if (!withdrawal) {
+                    console.error("❌ Withdrawal not found at index:", withdrawalIndex);
                     showMessage("Withdrawal request not found", "error");
                     return;
                 }
                 
-                const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
-                
-                console.log("✅ Approving withdrawal for user:", withdrawal.userId);
+                console.log("✅ Found withdrawal:", withdrawal);
+                console.log("👤 User ID:", withdrawal.userId);
                 
                 if (window.db) {
                     await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
@@ -8640,6 +8648,10 @@
                             
                             console.log(`✅ Deducted ${withdrawal.amount} ${withdrawal.currency} and ${withdrawal.fee} BNB from user ${withdrawal.userId}`);
                         }
+                    } else {
+                        console.error("❌ User not found in Firebase:", withdrawal.userId);
+                        showMessage(`User ${withdrawal.userId} not found in Firebase`, "error");
+                        return;
                     }
                 }
                 
@@ -8666,7 +8678,6 @@
                     }
                 }
                 
-                // حذف السحب من قائمة المعلقة
                 walletData.pendingWithdrawals.splice(withdrawalIndex, 1);
                 
                 await saveUserData();
@@ -8680,13 +8691,16 @@
             }
         }
 
-        async function rejectWithdrawal(withdrawalId) {
+        async function rejectWithdrawal(withdrawalId, withdrawalIndex) {
             try {
-                // البحث عن السحب باستخدام ID
-                const withdrawalIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
-                if (withdrawalIndex === -1) return;
+                console.log("🔍 Rejecting withdrawal with ID:", withdrawalId, "at index:", withdrawalIndex);
                 
                 const withdrawal = walletData.pendingWithdrawals[withdrawalIndex];
+                if (!withdrawal) {
+                    console.error("❌ Withdrawal not found at index:", withdrawalIndex);
+                    showMessage("Withdrawal request not found", "error");
+                    return;
+                }
                 
                 const reason = prompt("Enter reason for rejection:", "Invalid address");
                 if (reason === null) return;
@@ -8742,7 +8756,6 @@
                     addTransactionToHistory('withdrawal_rejected', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
                 }
                 
-                // حذف السحب من قائمة المعلقة
                 walletData.pendingWithdrawals.splice(withdrawalIndex, 1);
                 
                 await saveUserData();
@@ -9415,9 +9428,9 @@
             });
         }
 
-        // دوال التحديث الديناميكي للنصوص (اختيارية)
+        // دوال التحديث الديناميكي للنصوص
         function updateDynamicTexts() {
-            // يمكن تركها فارغة أو إضافة تحديثات للنصوص الديناميكية
+            // يمكن تركها فارغة
         }
 
         window.initAlienMuskApp = initAlienMuskApp;
@@ -9459,7 +9472,7 @@
         window.selectWelcomeLanguage = selectWelcomeLanguage;
         window.closeLanguageWelcome = closeLanguageWelcome;
 
-        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار المحسن النهائي - Ready!");
+        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار المحسن النهائي (باستخدام الطريقة القديمة) - Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
