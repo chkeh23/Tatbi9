@@ -22,9 +22,10 @@
     <style>
         /* =========================================== */
         /* 👽 ALIEN MUSK QUANTUM PLATFORM v7.0 */
-        /* CSS محسن مع دعم اللغات وتصميم هيدر جديد */
+        /* CSS كامل غير مختصر - جميع التنسيقات */
         /* =========================================== */
         
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
@@ -606,7 +607,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* باقي التنسيقات (كما هي من الكود السابق) */
         body::before {
             content: '';
             position: fixed;
@@ -1690,8 +1690,1656 @@
             color: var(--quantum-blue);
         }
         
-        /* باقي التنسيقات (مشابهة للكود الأصلي) */
-        /* ... للإختصار، أكمل بنفس التنسيقات من الكود السابق ... */
+        /* =========================================== */
+        /* تنسيقات Staking Card */
+        /* =========================================== */
+        
+        .staking-content {
+            padding: 0 5px;
+        }
+        
+        .staking-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .staking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .staking-card h4 {
+            font-size: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .staking-card h4 i {
+            color: var(--quantum-purple);
+            font-size: 17px;
+        }
+        
+        .staking-description {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+        
+        .total-staked-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.15);
+            color: var(--quantum-text);
+        }
+        
+        .staked-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .staked-label {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+        }
+        
+        .staked-amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            font-family: monospace;
+        }
+        
+        .staked-earnings {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+        }
+        
+        .staked-earnings i {
+            color: var(--quantum-green);
+        }
+        
+        .staking-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+        
+        .plan-item {
+            background: linear-gradient(145deg, var(--space-card-light), #2a2a5a);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-item:hover {
+            border-color: var(--quantum-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+        }
+        
+        .plan-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, var(--quantum-purple), var(--quantum-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .plan-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            margin-bottom: 5px;
+            font-family: monospace;
+        }
+        
+        .plan-duration {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 5px;
+        }
+        
+        .plan-apr {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 12px;
+        }
+        
+        .plan-reward {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            margin-bottom: 18px;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+        
+        .stake-plan-btn {
+            width: 100%;
+            padding: 11px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stake-plan-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .stake-plan-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .stake-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+        }
+        
+        .active-stakes {
+            min-height: 100px;
+        }
+        
+        .empty-stakes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            color: var(--quantum-text-light);
+            text-align: center;
+        }
+        
+        .empty-stakes i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: var(--quantum-text-muted);
+            opacity: 0.5;
+        }
+        
+        .empty-stakes p {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--quantum-text);
+        }
+        
+        .empty-stakes small {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Wallet */
+        /* =========================================== */
+        
+        .wallet-content {
+            padding: 0 5px;
+        }
+        
+        .wallet-balance-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wallet-balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-quantum);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .wallet-balance-card h4 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-balance-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 17px;
+        }
+        
+        .wallet-balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 4px;
+            font-family: monospace;
+            text-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+        }
+        
+        .wallet-balance-subtitle {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 12px;
+        }
+        
+        .wallet-balance-usd {
+            font-size: 18px;
+            color: var(--quantum-text);
+            font-weight: 600;
+        }
+        
+        .wallet-actions-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-actions-card h4 {
+            font-size: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-actions-card h4 i {
+            color: var(--quantum-blue);
+        }
+        
+        .wallet-actions-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+        
+        .wallet-action-btn {
+            padding: 10px 6px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-height: 65px;
+        }
+        
+        .wallet-action-btn i {
+            font-size: 16px;
+            color: var(--quantum-blue);
+            margin-bottom: 4px;
+        }
+        
+        .wallet-action-btn span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .wallet-action-btn:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 212, 255, 0.2);
+        }
+        
+        .wallet-assets-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-assets-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 5px;
+        }
+        
+        .wallet-assets-card h4 i {
+            color: var(--quantum-green);
+            font-size: 17px;
+        }
+        
+        .asset-list-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .asset-item-compact {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .asset-item-compact:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        .asset-icon-compact {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            flex-shrink: 0;
+        }
+        
+        .ams-icon {
+            border-color: var(--quantum-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .ams-icon i {
+            color: var(--quantum-green);
+        }
+        
+        .usdt-icon {
+            border-color: var(--quantum-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .usdt-icon i {
+            color: var(--quantum-blue);
+        }
+        
+        .bnb-icon {
+            border-color: var(--quantum-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .bnb-icon i {
+            color: var(--quantum-gold);
+        }
+        
+        .ton-icon {
+            border-color: var(--quantum-purple);
+            background: rgba(157, 78, 221, 0.1);
+        }
+        
+        .ton-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .asset-details-compact {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .asset-name-compact {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .asset-balance-compact {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            font-family: monospace;
+        }
+        
+        .asset-value-compact {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            text-align: left;
+            flex-shrink: 0;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Referral */
+        /* =========================================== */
+        
+        .referral-content {
+            padding: 0 5px;
+        }
+        
+        .referral-stats-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .referral-stats-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-stats-card h4 i {
+            color: var(--quantum-pink);
+            font-size: 17px;
+        }
+        
+        .referral-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .ref-stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s;
+        }
+        
+        .ref-stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 0, 128, 0.2);
+        }
+        
+        .ref-stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            margin-bottom: 5px;
+        }
+        
+        .ref-stat-label {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .referral-code-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        
+        .referral-code-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .referral-code-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 17px;
+        }
+        
+        .referral-description {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .referral-description p {
+            color: var(--quantum-text);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .referral-description ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .referral-description li {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-description li i {
+            color: var(--quantum-green);
+            font-size: 12px;
+        }
+        
+        .referral-code-display {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            padding: 12px;
+            background: rgba(255, 0, 128, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 128, 0.15);
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+        
+        .btn-copy-code {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-copy-code:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+        }
+        
+        .referral-link-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .referral-link-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-link-card h4 i {
+            color: var(--quantum-green);
+            font-size: 17px;
+        }
+        
+        .link-input-group {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+        
+        .link-input {
+            flex: 1;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+            font-family: monospace;
+            direction: ltr;
+        }
+        
+        .link-input:focus {
+            outline: none;
+            border-color: var(--quantum-blue);
+        }
+        
+        .copy-link-btn {
+            padding: 0 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-blue);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+        }
+        
+        .copy-link-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .share-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .share-btn.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Milestones */
+        /* =========================================== */
+        
+        .milestones-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .milestones-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .milestones-card h4 i {
+            color: var(--quantum-gold);
+            font-size: 17px;
+        }
+        
+        .milestones-description {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin-bottom: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            transition: all 0.2s;
+        }
+        
+        .milestone-item.locked {
+            border-color: rgba(255, 68, 68, 0.2);
+            opacity: 0.7;
+        }
+        
+        .milestone-item.can-claim {
+            border-color: var(--quantum-green);
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+            animation: quantumPulseSuccess 2s infinite;
+        }
+        
+        .milestone-item.claimed {
+            border-color: var(--quantum-purple);
+            opacity: 0.8;
+        }
+        
+        @keyframes quantumPulseSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        
+        .milestone-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.15);
+            flex-shrink: 0;
+        }
+        
+        .milestone-item.can-claim .milestone-icon {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.15);
+        }
+        
+        .milestone-item.claimed .milestone-icon {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: rgba(157, 78, 221, 0.15);
+        }
+        
+        .milestone-icon i {
+            font-size: 16px;
+            color: #ff4444;
+        }
+        
+        .milestone-item.can-claim .milestone-icon i {
+            color: var(--quantum-green);
+        }
+        
+        .milestone-item.claimed .milestone-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .milestone-details {
+            flex: 1;
+        }
+        
+        .milestone-requirement {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 3px;
+        }
+        
+        .milestone-progress {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 3px;
+            font-family: monospace;
+        }
+        
+        .milestone-reward {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+        
+        .milestone-action {
+            flex-shrink: 0;
+        }
+        
+        .btn-claim-milestone {
+            padding: 7px 14px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-claim-milestone:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn-claim-milestone:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text-light);
+            cursor: not-allowed;
+        }
+        
+        .claimed-badge {
+            padding: 5px 10px;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--quantum-purple);
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .locked-badge {
+            padding: 5px 10px;
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Modal */
+        /* =========================================== */
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--gradient-space);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-header {
+            padding: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--quantum-text-light);
+            font-size: 22px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text);
+        }
+        
+        .modal-body {
+            padding: 18px;
+        }
+        
+        .stake-plan-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        
+        .plan-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-stellar);
+            color: white;
+            font-size: 22px;
+        }
+        
+        .plan-details h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 5px;
+        }
+        
+        .plan-apr {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--quantum-green);
+        }
+        
+        .plan-duration {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+        }
+        
+        .deposit-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 18px 0;
+        }
+        
+        .deposit-option {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .deposit-option:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-2px);
+        }
+        
+        .deposit-option.active {
+            border-color: var(--quantum-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .deposit-option i {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        
+        .deposit-option span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            display: block;
+        }
+        
+        .swap-direction {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 18px 0;
+        }
+        
+        .swap-arrow {
+            font-size: 22px;
+            color: var(--quantum-blue);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .swap-arrow:hover {
+            transform: rotate(180deg);
+        }
+        
+        .swap-from, .swap-to {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .swap-currency-select {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .swap-amount-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            text-align: center;
+        }
+        
+        .swap-rate {
+            text-align: center;
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .swap-quick-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .swap-quick-btn {
+            flex: 1;
+            padding: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 6px;
+            color: var(--quantum-blue);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .swap-quick-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .history-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+        }
+        
+        .history-tab {
+            flex: 1;
+            padding: 8px 5px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .history-tab.active {
+            background: var(--gradient-quantum);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .history-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .history-filter-btn {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .history-filter-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--quantum-blue);
+            color: var(--quantum-blue);
+        }
+        
+        .history-filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .history-card {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .history-card:hover {
+            border-color: var(--quantum-blue);
+            transform: translateX(-2px);
+        }
+        
+        .history-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .history-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .history-card-icon.mining {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--quantum-green);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-card-icon.deposit {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--quantum-blue);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .history-card-icon.withdraw {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+        
+        .history-card-icon.swap {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+        
+        .history-card-icon.staking {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--quantum-gold);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .history-card-icon.referral {
+            background: rgba(255, 0, 128, 0.1);
+            color: var(--quantum-pink);
+            border: 1px solid rgba(255, 0, 128, 0.2);
+        }
+        
+        .history-card-icon.milestone {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+        
+        .history-card-details {
+            flex: 1;
+        }
+        
+        .history-card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .history-card-type {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .history-card-amount {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .history-card-amount.positive {
+            color: var(--quantum-green);
+        }
+        
+        .history-card-amount.negative {
+            color: #ff4444;
+        }
+        
+        .history-card-description {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .history-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+        }
+        
+        .history-card-date {
+            color: var(--quantum-text-muted);
+        }
+        
+        .history-card-status {
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .history-card-status.pending {
+            background: rgba(255, 153, 0, 0.15);
+            color: var(--status-pending);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+        }
+        
+        .history-card-status.completed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--status-completed);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-card-status.rejected {
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--status-rejected);
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+        
+        .history-card-status.processing {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--status-processing);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .history-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--quantum-text-light);
+        }
+        
+        .history-empty i {
+            font-size: 48px;
+            color: var(--quantum-text-muted);
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+        
+        .history-empty p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .history-empty small {
+            font-size: 12px;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Admin Panel */
+        /* =========================================== */
+        
+        .admin-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .admin-section h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-section h4 i {
+            color: #ff4444;
+            font-size: 17px;
+        }
+        
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        
+        .admin-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .admin-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+            font-family: monospace;
+        }
+        
+        .admin-stat-label {
+            font-size: 10px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-search-box {
+            margin-bottom: 18px;
+        }
+        
+        .admin-search-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+        }
+        
+        .admin-requests-list {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 18px;
+        }
+        
+        .request-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .request-user {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .request-amount {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+        
+        .request-details {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-approve {
+            flex: 1;
+            padding: 6px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-reject {
+            flex: 1;
+            padding: 6px;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .admin-user-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 18px;
+        }
+        
+        .admin-user-control {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .admin-user-control:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-1px);
+        }
+        
+        .admin-user-control i {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+        
+        .admin-user-control span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            display: block;
+        }
+        
+        .tx-id-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text);
+            font-family: monospace;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .validation-message {
+            font-size: 11px;
+            padding: 6px;
+            border-radius: 6px;
+            margin: 5px 0;
+        }
+        
+        .validation-success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--quantum-green);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+        }
+        
+        .validation-error {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.15);
+        }
+        
+        .validation-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.15);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Responsive */
+        /* =========================================== */
         
         @media (max-width: 768px) {
             .app-header {
@@ -1718,6 +3366,148 @@
             .balance-amount-header span:first-of-type {
                 font-size: 13px;
             }
+            
+            .lang-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            
+            .header-left {
+                max-width: 150px;
+            }
+            
+            .header-right {
+                max-width: 150px;
+            }
+            
+            .user-info-vertical {
+                margin-left: 25px;
+            }
+            
+            .main-nav {
+                margin: 6px 10px;
+                bottom: 6px;
+                left: 10px;
+                right: 10px;
+            }
+            
+            .nav-btn {
+                padding: 6px 2px;
+            }
+            
+            .nav-btn i {
+                font-size: 15px;
+            }
+            
+            .page {
+                padding: 10px;
+            }
+            
+            .mining-section,
+            .upgrade-section,
+            .tasks-section,
+            .staking-card,
+            .wallet-balance-card,
+            .referral-stats-card,
+            .referral-code-card,
+            .referral-link-card,
+            .milestones-card {
+                padding: 15px;
+            }
+            
+            .mining-header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .mining-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .timer-display span {
+                font-size: 16px;
+            }
+            
+            .info-item {
+                min-width: 100%;
+            }
+            
+            .upgrade-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vip-tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-actions-compact {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            
+            .wallet-action-btn {
+                padding: 8px 4px;
+                min-height: 60px;
+            }
+            
+            .wallet-action-btn i {
+                font-size: 15px;
+            }
+            
+            .wallet-action-btn span {
+                font-size: 9px;
+            }
+            
+            .referral-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .staking-plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .asset-item-compact {
+                padding: 10px;
+            }
+            
+            .asset-icon-compact {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .modal {
+                max-width: 100%;
+                margin: 8px;
+            }
+            
+            .deposit-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .history-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .history-tab {
+                flex: 1 0 45%;
+                margin-bottom: 2px;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 480px) {
@@ -1737,11 +3527,181 @@
                 margin-left: 20px;
             }
             
+            .user-name-display {
+                font-size: 11px;
+            }
+            
+            .user-id-display {
+                font-size: 9px;
+            }
+            
             .lang-icon {
-                width: 28px;
-                height: 28px;
+                width: 26px;
+                height: 26px;
+                font-size: 13px;
+            }
+            
+            .balance-amount-header span:first-of-type {
+                font-size: 12px;
+            }
+            
+            .balance-amount-header .currency {
+                font-size: 10px;
+            }
+            
+            .balance-usd-header {
+                font-size: 9px;
+            }
+            
+            :root {
                 font-size: 14px;
             }
+            
+            .loading-title {
+                font-size: 24px;
+            }
+            
+            .loading-subtitle {
+                font-size: 15px;
+            }
+            
+            .alien-logo {
+                font-size: 44px;
+            }
+            
+            .user-info-mini {
+                padding: 4px 6px;
+            }
+            
+            .main-nav {
+                border-radius: 16px;
+                margin: 5px;
+                padding: 3px;
+            }
+            
+            .nav-btn span {
+                font-size: 9px;
+            }
+            
+            .wallet-balance-amount {
+                font-size: 24px;
+            }
+            
+            .asset-name-compact {
+                font-size: 13px;
+            }
+            
+            .asset-value-compact {
+                font-size: 13px;
+            }
+            
+            .referral-code-display {
+                font-size: 16px;
+                padding: 10px;
+            }
+            
+            .deposit-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-tab {
+                flex: 1 0 100%;
+                margin-bottom: 2px;
+            }
+            
+            .history-filters {
+                justify-content: center;
+            }
+            
+            .history-filter-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Scrollbar */
+        /* =========================================== */
+        
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--space-card);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-quantum);
+            border-radius: 5px;
+            border: 1px solid var(--space-card);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
+        }
+        
+        ::selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
+        
+        ::-moz-selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Helper Classes */
+        /* =========================================== */
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .quantum-text-gradient {
+            background: var(--gradient-quantum);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .quantum-glow {
+            filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+        
+        .mb-15 {
+            margin-bottom: 15px;
+        }
+        
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+        
+        .mt-10 {
+            margin-top: 10px;
+        }
+        
+        .mt-15 {
+            margin-top: 15px;
+        }
+        
+        .mt-20 {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -1762,7 +3722,7 @@
 
 <div id="app-container" class="hidden">
     <header class="app-header">
-        <!-- القسم الأيسر - اسم التطبيق واسم المستخدم -->
+        <!-- القسم الأيسر - اسم التطبيق واسم المستخدم ومعرف المستخدم -->
         <div class="header-left">
             <div class="app-title">
                 <span class="logo-icon">👽</span>
@@ -1770,12 +3730,14 @@
             </div>
             
             <div class="user-info-vertical">
-                <div id="username-mini" class="user-name-display">Alien</div>
-                <div id="user-id-mini" class="user-id-display" data-translate="user_id_prefix">ID: Loading...</div>
+                <!-- اسم المستخدم يظهر بوضوح -->
+                <div class="user-name-display" id="username-mini">Alien</div>
+                <!-- معرف المستخدم (Telegram ID) يظهر تحته مباشرة -->
+                <div class="user-id-display" id="user-id-mini" data-translate="user_id_prefix">ID: Loading...</div>
             </div>
         </div>
         
-        <!-- القسم الأوسط - أيقونة فضائية -->
+        <!-- القسم الأوسط - أيقونة فضائية مع تأثيرات -->
         <div class="header-center">
             <div class="space-icon">
                 <div class="glow-effect"></div>
@@ -1787,6 +3749,7 @@
         <!-- القسم الأيمن - الرصيد وأيقونات اللغة -->
         <div class="header-right">
             <div class="balance-section">
+                <!-- الرصيد في الأعلى -->
                 <div class="total-balance-header" id="admin-logo">
                     <div class="balance-amount-header">
                         <i class="fas fa-coins"></i>
@@ -1798,7 +3761,7 @@
                     </div>
                 </div>
                 
-                <!-- أيقونات اللغة تحت الرصيد -->
+                <!-- أيقونات اللغة تحت الرصيد مباشرة -->
                 <div class="language-icons" id="languageIcons">
                     <div class="lang-icon active" data-lang="en" title="English">🇬🇧</div>
                     <div class="lang-icon" data-lang="ar" title="العربية">🇸🇦</div>
@@ -1834,6 +3797,7 @@
         </div>
     </header>
 
+    <!-- القائمة السفلية (التبويبات) -->
     <nav class="main-nav">
         <button class="nav-btn active" data-page="home">
             <i class="fas fa-home"></i>
@@ -1853,9 +3817,14 @@
         </button>
     </nav>
 
+    <!-- حاوية الإشعارات -->
     <div id="notification-container" class="notification-container"></div>
 
+    <!-- =========================================== -->
+    <!-- صفحة الرئيسية (Home) -->
+    <!-- =========================================== -->
     <div id="home-page" class="page active">
+        <!-- قسم التعدين -->
         <section class="mining-section">
             <div class="mining-header">
                 <h3><i class="fas fa-microchip"></i> <span data-translate="mining_title">Quantum Mining Station</span></h3>
@@ -1871,6 +3840,7 @@
                 </div>
             </div>
 
+            <!-- مؤقت التعدين -->
             <div class="mining-timer-card">
                 <div class="timer-display">
                     <i class="fas fa-clock"></i>
@@ -1881,11 +3851,13 @@
                 </div>
             </div>
 
+            <!-- زر التعدين -->
             <button class="mining-action-btn" id="start-mining-btn">
                 <i class="fas fa-play"></i>
                 <span data-translate="mining_start">Start Quantum Mining</span>
             </button>
 
+            <!-- معلومات التعدين -->
             <div class="mining-info">
                 <div class="info-item">
                     <i class="fas fa-chart-line"></i>
@@ -1897,6 +3869,7 @@
                 </div>
             </div>
             
+            <!-- أزرار سريعة -->
             <div class="quick-actions">
                 <button class="quick-action-btn tasks-btn" id="scroll-to-tasks-btn">
                     <i class="fas fa-tasks"></i>
@@ -1909,18 +3882,22 @@
             </div>
         </section>
 
+        <!-- قسم تطوير مستوى التعدين -->
         <section class="upgrade-section">
             <h4><i class="fas fa-level-up-alt"></i> <span data-translate="upgrade_title">Upgrade Mining Level</span></h4>
             <div class="upgrade-cards" id="upgrade-cards">
+                <!-- بطاقات التطوير ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
         </section>
 
+        <!-- قسم المهام -->
         <section class="tasks-section" id="tasks-section">
             <div class="tasks-header">
                 <h4><i class="fas fa-tasks"></i> <span data-translate="tasks_title">Tasks & Rewards</span></h4>
                 <div class="tasks-progress" id="tasks-progress">0/4 <span data-translate="tasks_completed">Completed</span></div>
             </div>
             
+            <!-- تبويبات المهام -->
             <div class="tasks-tabs">
                 <button class="tasks-tab active" data-tab="basic">
                     <i class="fas fa-tasks"></i> <span data-translate="tasks_basic">Basic</span>
@@ -1930,16 +3907,24 @@
                 </button>
             </div>
             
+            <!-- شبكة المهام الأساسية -->
             <div class="tasks-grid active" id="tasks-grid" data-tab-content="basic">
+                <!-- المهام ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
             
+            <!-- شبكة مهام VIP -->
             <div class="vip-tasks-grid" id="vip-tasks-grid" data-tab-content="vip" style="display: none;">
+                <!-- مهام VIP ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
         </section>
     </div>
 
+    <!-- =========================================== -->
+    <!-- صفحة Staking (الإيداع) -->
+    <!-- =========================================== -->
     <div id="staking-page" class="page">
         <div class="staking-content">
+            <!-- بطاقة Staking الرئيسية -->
             <div class="staking-card">
                 <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
                 <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
@@ -1956,10 +3941,12 @@
                 </div>
             </div>
 
+            <!-- خطط Staking -->
             <div class="staking-card">
                 <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
                 
                 <div class="staking-plans-grid">
+                    <!-- الخطة الفضية -->
                     <div class="plan-item">
                         <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
                         <div class="plan-amount">10+ USDT</div>
@@ -1969,6 +3956,7 @@
                         <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
                     </div>
 
+                    <!-- الخطة الذهبية -->
                     <div class="plan-item">
                         <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
                         <div class="plan-amount">50+ USDT</div>
@@ -1978,6 +3966,7 @@
                         <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
                     </div>
 
+                    <!-- الخطة الماسية -->
                     <div class="plan-item">
                         <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
                         <div class="plan-amount">100+ USDT</div>
@@ -1989,6 +3978,7 @@
                 </div>
             </div>
 
+            <!-- الإيداعات النشطة -->
             <div class="staking-card">
                 <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
                 <div class="active-stakes" id="active-stakes-list">
@@ -2002,8 +3992,12 @@
         </div>
     </div>
     
+    <!-- =========================================== -->
+    <!-- صفحة Wallet (المحفظة) -->
+    <!-- =========================================== -->
     <div id="wallet-page" class="page">
         <div class="wallet-content">
+            <!-- بطاقة الرصيد الإجمالي -->
             <div class="wallet-balance-card">
                 <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
                 <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
@@ -2011,6 +4005,7 @@
                 <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
             </div>
 
+            <!-- الأزرار السريعة -->
             <div class="wallet-actions-card">
                 <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
                 
@@ -2034,11 +4029,13 @@
                 </div>
             </div>
 
+            <!-- قائمة الأصول -->
             <div class="wallet-assets-card">
                 <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
                 
                 <div class="assets-section">
                     <div class="asset-list-compact">
+                        <!-- AMSK Token -->
                         <div class="asset-item-compact">
                             <div class="asset-icon-compact ams-icon">
                                 <i class="fas fa-robot"></i>
@@ -2050,6 +4047,7 @@
                             <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
                         </div>
 
+                        <!-- USDT -->
                         <div class="asset-item-compact">
                             <div class="asset-icon-compact usdt-icon">
                                 <i class="fas fa-coins"></i>
@@ -2061,6 +4059,7 @@
                             <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
                         </div>
 
+                        <!-- BNB -->
                         <div class="asset-item-compact">
                             <div class="asset-icon-compact bnb-icon">
                                 <i class="fab fa-btc"></i>
@@ -2072,6 +4071,7 @@
                             <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
                         </div>
 
+                        <!-- TON -->
                         <div class="asset-item-compact">
                             <div class="asset-icon-compact ton-icon">
                                 <i class="fas fa-bolt"></i>
@@ -2088,8 +4088,12 @@
         </div>
     </div>
 
+    <!-- =========================================== -->
+    <!-- صفحة Referral (الدعوات) -->
+    <!-- =========================================== -->
     <div id="referral-page" class="page">
         <div class="referral-content">
+            <!-- إحصائيات الدعوات -->
             <div class="referral-stats-card">
                 <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
                 
@@ -2105,9 +4109,11 @@
                 </div>
             </div>
 
+            <!-- رابط الدعوة -->
             <div class="referral-link-card">
                 <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
                 
+                <!-- وصف الدعوة -->
                 <div class="referral-description">
                     <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
                     <ul>
@@ -2117,6 +4123,7 @@
                     </ul>
                 </div>
                 
+                <!-- حقل الرابط وزر النسخ -->
                 <div class="link-input-group">
                     <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
                     <button class="copy-link-btn" id="copy-link-btn">
@@ -2124,6 +4131,7 @@
                     </button>
                 </div>
                 
+                <!-- أزرار المشاركة -->
                 <div class="share-buttons">
                     <button class="share-btn telegram" id="telegram-share-btn">
                         <i class="fab fa-telegram"></i>
@@ -2136,11 +4144,13 @@
                 </div>
             </div>
 
+            <!-- مراحل الدعوات (Milestones) -->
             <div class="milestones-card">
                 <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
                 <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
                 
                 <div class="milestones-list" id="milestones-list">
+                    <!-- مرحلة 10 دعوات -->
                     <div class="milestone-item locked" data-milestone="10">
                         <div class="milestone-icon">
                             <i class="fas fa-users"></i>
@@ -2155,6 +4165,7 @@
                         </div>
                     </div>
 
+                    <!-- مرحلة 25 دعوة -->
                     <div class="milestone-item locked" data-milestone="25">
                         <div class="milestone-icon">
                             <i class="fas fa-user-friends"></i>
@@ -2169,6 +4180,7 @@
                         </div>
                     </div>
 
+                    <!-- مرحلة 50 دعوة -->
                     <div class="milestone-item locked" data-milestone="50">
                         <div class="milestone-icon">
                             <i class="fas fa-user-plus"></i>
@@ -2183,6 +4195,7 @@
                         </div>
                     </div>
 
+                    <!-- مرحلة 100 دعوة -->
                     <div class="milestone-item locked" data-milestone="100">
                         <div class="milestone-icon">
                             <i class="fas fa-crown"></i>
@@ -2197,6 +4210,7 @@
                         </div>
                     </div>
 
+                    <!-- مرحلة 250 دعوة -->
                     <div class="milestone-item locked" data-milestone="250">
                         <div class="milestone-icon">
                             <i class="fas fa-crown"></i>
@@ -2217,7 +4231,7 @@
 </div>
 
 <script>
-    console.log("🔗 Loading Alien Musk Quantum Platform v7.0 - النسخة النهائية المعدلة");
+    console.log("🔗 Loading Alien Musk Quantum Platform v7.0 - النسخة النهائية الكاملة");
     
     window.tg = null;
     window.firebaseApp = null;
@@ -2235,7 +4249,7 @@
     };
     
     // ===========================================
-    // 🌐 نظام اللغات المتعددة - نسخة محسنة
+    // 🌐 نظام اللغات المتعددة - كامل غير مختصر
     // ===========================================
     const LANGUAGES = {
         en: {
@@ -2856,9 +4870,9 @@
     };
 
     let currentLanguage = 'en';
-    let isLanguageChanging = false; // لمنع التكرار
+    let isLanguageChanging = false;
     
-    // دالة تغيير اللغة (بدون رسالة تأكيد)
+    // دالة تغيير اللغة
     function setLanguage(langCode) {
         if (isLanguageChanging || !LANGUAGES[langCode]) return;
         
@@ -2871,7 +4885,6 @@
             document.documentElement.lang = langCode;
             document.body.lang = langCode;
             
-            // تحديث الأيقونات النشطة
             document.querySelectorAll('.lang-icon').forEach(icon => {
                 if (icon.dataset.lang === langCode) {
                     icon.classList.add('active');
@@ -2987,7 +5000,6 @@
             showLanguageWelcomeModal();
         }
         
-        // إضافة مستمع لأيقونات اللغة
         const langIcons = document.querySelectorAll('.lang-icon');
         const tooltip = document.getElementById('languageTooltip');
         
@@ -2997,13 +5009,11 @@
                 const lang = icon.dataset.lang;
                 
                 if (tooltip) {
-                    // إظهار القائمة عند النقر
                     const rect = icon.getBoundingClientRect();
                     tooltip.style.top = (rect.bottom + 5) + 'px';
                     tooltip.style.right = (window.innerWidth - rect.right) + 'px';
                     tooltip.classList.toggle('show');
                     
-                    // تحديث الخيارات
                     const options = tooltip.querySelectorAll('.language-option');
                     options.forEach(opt => {
                         if (opt.dataset.lang === currentLanguage) {
@@ -3013,18 +5023,15 @@
                         }
                     });
                 } else {
-                    // إذا لم توجد قائمة، نغير اللغة مباشرة
                     setLanguage(lang);
                 }
             });
         });
         
-        // إغلاق القائمة عند النقر خارجها
         document.addEventListener('click', () => {
             if (tooltip) tooltip.classList.remove('show');
         });
         
-        // إضافة مستمع لخيارات اللغة
         if (tooltip) {
             const options = tooltip.querySelectorAll('.language-option');
             options.forEach(option => {
@@ -3037,195 +5044,195 @@
             });
         }
     }
-            // دوال تهيئة Telegram و Firebase
-        function initTelegram() {
-            try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    window.tg = Telegram.WebApp;
-                    window.tg.ready();
-                    window.tg.expand();
-                    window.tg.setHeaderColor('#0a0a0f');
-                    window.tg.setBackgroundColor('#0a0a0f');
-                    console.log("✅ Telegram WebApp initialized");
-                    return true;
-                }
-            } catch (e) {
-                console.log("⚠️ Not in Telegram environment");
+    
+    // دوال تهيئة Telegram و Firebase
+    function initTelegram() {
+        try {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.tg = Telegram.WebApp;
+                window.tg.ready();
+                window.tg.expand();
+                window.tg.setHeaderColor('#0a0a0f');
+                window.tg.setBackgroundColor('#0a0a0f');
+                console.log("✅ Telegram WebApp initialized");
+                return true;
             }
-            return false;
+        } catch (e) {
+            console.log("⚠️ Not in Telegram environment");
         }
-        
-        function initFirebase() {
-            if (typeof firebase !== 'undefined') {
-                try {
-                    window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
-                    window.db = firebase.firestore();
-                    window.auth = firebase.auth();
-                    console.log("✅ Firebase initialized");
-                    return true;
-                } catch (error) {
-                    console.error("❌ Firebase error:", error);
-                }
-            }
-            return false;
-        }
-        
-        // دوال مساعدة
-        window.switchPage = function(pageName) {
-            console.log(`🔀 Switching to page: ${pageName}`);
-            
+        return false;
+    }
+    
+    function initFirebase() {
+        if (typeof firebase !== 'undefined') {
             try {
-                closeModal();
-                
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                    if (page.id === `${pageName}-page`) {
-                        page.classList.add('active');
-                    }
-                });
-                
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.page === pageName) {
-                        btn.classList.add('active');
-                    }
-                });
-                
+                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                window.db = firebase.firestore();
+                window.auth = firebase.auth();
+                console.log("✅ Firebase initialized");
+                return true;
             } catch (error) {
-                console.error("❌ Page switch error:", error);
+                console.error("❌ Firebase error:", error);
             }
-        };
+        }
+        return false;
+    }
+    
+    // دوال مساعدة
+    window.switchPage = function(pageName) {
+        console.log(`🔀 Switching to page: ${pageName}`);
         
-        window.closeModal = function() {
-            document.querySelectorAll('.modal-overlay').forEach(modal => {
-                modal.remove();
+        try {
+            closeModal();
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+                if (page.id === `${pageName}-page`) {
+                    page.classList.add('active');
+                }
             });
-        };
-        
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text)
-                .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-                .catch(() => showMessage('❌ Failed to copy', 'error'));
-        };
-        
-        function showMessage(text, type = 'info', duration = 3000) {
-            const container = document.getElementById('notification-container');
-            if (!container) return;
             
-            if (duration === 3000) {
-                if (type === 'warning' || type === 'error') {
-                    duration = 4500;
-                } else if (type === 'success') {
-                    duration = 3000;
-                } else {
-                    duration = 3500;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === pageName) {
+                    btn.classList.add('active');
                 }
+            });
+            
+        } catch (error) {
+            console.error("❌ Page switch error:", error);
+        }
+    };
+    
+    window.closeModal = function() {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.remove();
+        });
+    };
+    
+    window.copyToClipboard = function(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => showMessage('✅ Copied to clipboard!', 'success'))
+            .catch(() => showMessage('❌ Failed to copy', 'error'));
+    };
+    
+    function showMessage(text, type = 'info', duration = 3000) {
+        const container = document.getElementById('notification-container');
+        if (!container) return;
+        
+        if (duration === 3000) {
+            if (type === 'warning' || type === 'error') {
+                duration = 4500;
+            } else if (type === 'success') {
+                duration = 3000;
+            } else {
+                duration = 3500;
             }
-            
-            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-            const messageDiv = document.createElement('div');
-            messageDiv.id = messageId;
-            messageDiv.className = `message ${type}`;
-            
-            let icon = 'fa-info-circle';
-            if (type === 'success') icon = 'fa-check-circle';
-            else if (type === 'error') icon = 'fa-times-circle';
-            else if (type === 'warning') icon = 'fa-exclamation-triangle';
-            
-            let displayText = text;
-            if (text.startsWith('msg_')) {
-                displayText = getTranslation(text);
-            }
-            
-            messageDiv.innerHTML = `
-                <i class="fas ${icon}"></i>
-                <span>${displayText}</span>
-            `;
-            
-            container.appendChild(messageDiv);
-            
-            setTimeout(() => {
-                const msgElement = document.getElementById(messageId);
-                if (msgElement) {
-                    msgElement.style.opacity = '0';
-                    msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
-                    setTimeout(() => {
-                        if (msgElement.parentNode) msgElement.remove();
-                    }, 300);
-                }
-            }, duration);
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("📱 DOM Content Loaded - Starting initialization...");
-            
-            initTelegram();
-            initFirebase();
-            initLanguageSystem();
-            
-            let progress = 25;
-            const progressInterval = setInterval(() => {
-                progress += 15;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(progressInterval);
-                }
-                
-                const progressBar = document.getElementById('loading-progress-bar');
-                const progressText = document.getElementById('loading-progress-text');
-                
-                if (progressBar) progressBar.style.width = `${progress}%`;
-                if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
-            }, 300);
-            
-            setTimeout(() => {
-                clearInterval(progressInterval);
-                
-                const loadingScreen = document.getElementById('loading-screen');
-                const appContainer = document.getElementById('app-container');
-                
-                if (loadingScreen) {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                }
-                
-                if (appContainer) {
-                    appContainer.classList.remove('hidden');
-                }
-                
-                if (typeof initAlienMuskApp === 'function') {
-                    console.log("🚀 Starting main application...");
-                    initAlienMuskApp();
-                } else {
-                    console.error("❌ Main app function not found!");
-                    showMessage("Welcome to Alien Musk Quantum!", "success");
-                }
-            }, 2500);
-        });
+        const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const messageDiv = document.createElement('div');
+        messageDiv.id = messageId;
+        messageDiv.className = `message ${type}`;
+        
+        let icon = 'fa-info-circle';
+        if (type === 'success') icon = 'fa-check-circle';
+        else if (type === 'error') icon = 'fa-times-circle';
+        else if (type === 'warning') icon = 'fa-exclamation-triangle';
+        
+        let displayText = text;
+        if (text.startsWith('msg_')) {
+            displayText = getTranslation(text);
+        }
+        
+        messageDiv.innerHTML = `
+            <i class="fas ${icon}"></i>
+            <span>${displayText}</span>
+        `;
+        
+        container.appendChild(messageDiv);
         
         setTimeout(() => {
-            if (!window.tg && !window.firebaseApp) {
-                console.log("⚠️ Using fallback initialization...");
-                const loadingScreen = document.getElementById('loading-screen');
-                const appContainer = document.getElementById('app-container');
-                
-                if (loadingScreen) {
-                    loadingScreen.style.display = 'none';
-                }
-                
-                if (appContainer) {
-                    appContainer.classList.remove('hidden');
-                }
-                
-                showMessage("Running in standalone mode", "info");
+            const msgElement = document.getElementById(messageId);
+            if (msgElement) {
+                msgElement.style.opacity = '0';
+                msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
+                setTimeout(() => {
+                    if (msgElement.parentNode) msgElement.remove();
+                }, 300);
             }
-        }, 10000);
+        }, duration);
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("📱 DOM Content Loaded - Starting initialization...");
         
-        console.log("✅ Alien Musk Connector Loaded Successfully");
+        initTelegram();
+        initFirebase();
+        initLanguageSystem();
         
-        const CONFIG = {
+        let progress = 25;
+        const progressInterval = setInterval(() => {
+            progress += 15;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(progressInterval);
+            }
+            
+            const progressBar = document.getElementById('loading-progress-bar');
+            const progressText = document.getElementById('loading-progress-text');
+            
+            if (progressBar) progressBar.style.width = `${progress}%`;
+            if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
+        }, 300);
+        
+        setTimeout(() => {
+            clearInterval(progressInterval);
+            
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+            
+            if (typeof initAlienMuskApp === 'function') {
+                console.log("🚀 Starting main application...");
+                initAlienMuskApp();
+            } else {
+                console.error("❌ Main app function not found!");
+                showMessage("Welcome to Alien Musk Quantum!", "success");
+            }
+        }, 2500);
+    });
+    
+    setTimeout(() => {
+        if (!window.tg && !window.firebaseApp) {
+            console.log("⚠️ Using fallback initialization...");
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            
+            if (loadingScreen) {
+                loadingScreen.style.display = 'none';
+            }
+            
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+            
+            showMessage("Running in standalone mode", "info");
+        }
+    }, 10000);
+    
+    console.log("✅ Alien Musk Connector Loaded Successfully");
+            const CONFIG = {
             PRICES: {
                 AMSK: 0.0002,
                 USDT: 1.00,
@@ -4181,7 +6188,7 @@
             // دمج جميع المعاملات
             const allTransactions = [...pendingRequests, ...transactions];
             
-            // إزالة التكرار باستخدام Map
+            // إزالة التكرار باستخدام Map (الحفاظ على أحدث حالة)
             const uniqueMap = new Map();
             
             allTransactions.forEach(tx => {
@@ -6577,7 +8584,7 @@
             }
             
             let html = '';
-            pendingDeposits.forEach((deposit, index) => {
+            pendingDeposits.forEach((deposit) => {
                 const date = new Date(deposit.createdAt).toLocaleDateString();
                 
                 html += `
@@ -6613,7 +8620,7 @@
             }
             
             let html = '';
-            pendingWithdrawals.forEach((withdrawal, index) => {
+            pendingWithdrawals.forEach((withdrawal) => {
                 const date = new Date(withdrawal.createdAt).toLocaleDateString();
                 
                 html += `
@@ -6638,7 +8645,7 @@
             return html;
         }
 
-        // دوال الموافقة والرفض المحسنة (باستخدام ID فقط)
+        // دوال الموافقة والرفض المحسنة (باستخدام ID فقط مع التحقق من وجود المستند)
         async function approveDeposit(depositId) {
             try {
                 console.log("🔍 Approving deposit with ID:", depositId);
@@ -7754,7 +9761,7 @@
         window.selectWelcomeLanguage = selectWelcomeLanguage;
         window.closeLanguageWelcome = closeLanguageWelcome;
 
-        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار النهائي المحسن - Ready!");
+        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار النهائي الكامل غير المختصر - Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
