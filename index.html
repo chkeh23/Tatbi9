@@ -5095,6 +5095,18 @@
                         return false;
                     }
                     
+                    const hasActiveStake = walletData.staking.activeStakes.some(stake => {
+                        const plan = CONFIG.STAKING.PLANS[stake.planId];
+                        if (!plan) return false;
+                        const stakePlanKey = plan.name.toLowerCase();
+                        return stakePlanKey === id;
+                    });
+                    
+                    if (!hasActiveStake) {
+                        showMessage("You need an active stake in this plan to claim the reward!", "warning", 4500);
+                        return false;
+                    }
+                    
                     walletData.balances.AMSK += reward;
                     walletData.vipTasks.claimedStakingRewards.push(id);
                     
@@ -5172,11 +5184,25 @@
             for (let [planKey, task] of Object.entries(stakingTasks)) {
                 const isClaimed = walletData.vipTasks?.claimedStakingRewards?.includes(planKey) || false;
                 
+                const hasActiveStake = walletData.staking.activeStakes.some(stake => {
+                    const plan = CONFIG.STAKING.PLANS[stake.planId];
+                    if (!plan) return false;
+                    const stakePlanKey = plan.name.toLowerCase();
+                    return stakePlanKey === planKey;
+                });
+                
                 let statusButton = '';
+                let statusClass = '';
+                
                 if (isClaimed) {
                     statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
-                } else {
+                    statusClass = 'completed';
+                } else if (hasActiveStake) {
                     statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('staking', '${planKey}', ${task.reward}, '${task.name}')">Claim</button>`;
+                    statusClass = '';
+                } else {
+                    statusButton = `<button class="vip-task-btn locked" disabled>🔒 Need Active Stake</button>`;
+                    statusClass = '';
                 }
                 
                 html += `
@@ -5319,15 +5345,9 @@
                     buttonClass = 'active-btn';
                     disabled = true;
                 } else {
-                    if (canAfford) {
-                        buttonText = 'Upgrade';
-                        buttonClass = '';
-                        disabled = false;
-                    } else {
-                        buttonText = `${levelData.cost} USDT`;
-                        buttonClass = '';
-                        disabled = true;
-                    }
+                    buttonText = `Upgrade (${levelData.cost} USDT)`;
+                    buttonClass = '';
+                    disabled = false;
                 }
 
                 html += `
@@ -5439,7 +5459,7 @@
                 }
                 
                 if (walletData.balances.USDT < levelData.cost) {
-                    showMessage(`⚠️ Insufficient USDT balance. Need ${levelData.cost} USDT.`, "warning", 4500);
+                    showMessage(`⚠️ Insufficient balance! Need ${levelData.cost} USDT for ${levelData.name} upgrade.`, "warning", 4500);
                     return;
                 }
                 
