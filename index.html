@@ -4869,53 +4869,32 @@
             
             let transactions = [...(walletData.transactionHistory || [])];
             
-            const pendingRequestIds = new Set();
             const pendingRequests = [
-                ...(walletData.pendingDeposits || []).map(deposit => {
-                    const requestId = `pending_deposit_${deposit.id}`;
-                    pendingRequestIds.add(requestId);
-                    return {
-                        id: requestId,
-                        type: 'deposit_request',
-                        amount: deposit.amount,
-                        currency: deposit.currency,
-                        description: `TX: ${deposit.txId?.slice(0, 10)}...`,
-                        status: 'pending',
-                        message: 'Waiting for admin approval',
-                        timestamp: deposit.createdAt || Date.now(),
-                        dateFormatted: deposit.createdAt ? new Date(deposit.createdAt).toLocaleDateString() : 'Just now',
-                        isPending: true
-                    };
-                }),
-                ...(walletData.pendingWithdrawals || []).map(withdrawal => {
-                    const requestId = `pending_withdrawal_${withdrawal.id}`;
-                    pendingRequestIds.add(requestId);
-                    return {
-                        id: requestId,
-                        type: 'withdrawal_request',
-                        amount: -withdrawal.amount,
-                        currency: withdrawal.currency,
-                        description: `To: ${withdrawal.address?.slice(0, 10)}...`,
-                        status: 'pending',
-                        message: 'Processing withdrawal',
-                        timestamp: withdrawal.createdAt || Date.now(),
-                        dateFormatted: withdrawal.createdAt ? new Date(withdrawal.createdAt).toLocaleDateString() : 'Just now',
-                        isPending: true
-                    };
+                ...(walletData.pendingDeposits || []).map(deposit => ({
+                    id: deposit.id,
+                    type: 'deposit_request',
+                    amount: deposit.amount,
+                    currency: deposit.currency,
+                    description: `TX: ${deposit.txId?.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Waiting for admin approval',
+                    timestamp: deposit.createdAt || Date.now(),
+                    dateFormatted: deposit.createdAt ? new Date(deposit.createdAt).toLocaleDateString() : 'Just now'
+                })),
+                ...(walletData.pendingWithdrawals || []).map(withdrawal => ({
+                    id: withdrawal.id,
+                    type: 'withdrawal_request',
+                    amount: -withdrawal.amount,
+                    currency: withdrawal.currency,
+                    description: `To: ${withdrawal.address?.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Processing withdrawal',
+                    timestamp: withdrawal.createdAt || Date.now(),
+                    dateFormatted: withdrawal.createdAt ? new Date(withdrawal.createdAt).toLocaleDateString() : 'Just now'
                 }))
             ];
             
-            const filteredTransactions = transactions.filter(tx => {
-                if (tx.type === 'deposit_request' || tx.type === 'withdrawal_request') {
-                    const txKey = `${tx.type}_${tx.txId || tx.description}`;
-                    return !Array.from(pendingRequestIds).some(pendingId => 
-                        pendingId.includes(tx.txId) || pendingId.includes(tx.description)
-                    );
-                }
-                return true;
-            });
-            
-            transactions = [...pendingRequests, ...filteredTransactions];
+            transactions = [...pendingRequests, ...transactions];
             transactions.sort((a, b) => b.timestamp - a.timestamp);
             
             if (tabType === 'pending') {
