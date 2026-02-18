@@ -22,7 +22,7 @@
     <style>
         /* =========================================== */
         /* 👽 ALIEN MUSK QUANTUM PLATFORM v7.0 */
-        /* CSS كامل غير مختصر - جميع التنسيقات */
+        /* CSS مع الهيدر المحسن - نسخة نهائية */
         /* =========================================== */
         
         /* RESET & BASE */
@@ -193,7 +193,10 @@
             flex-direction: row-reverse;
         }
         
-        /* تصميم الهيدر الجديد */
+        /* =========================================== */
+        /* تصميم الهيدر الجديد - محسن بالكامل */
+        /* =========================================== */
+        
         .app-header {
             background: rgba(26, 26, 46, 0.98);
             backdrop-filter: blur(20px);
@@ -206,12 +209,16 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            min-height: 100px;
+            min-height: 110px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
             animation: quantumSlideDown 0.3s ease;
         }
         
-        /* القسم الأيسر - اسم التطبيق واسم المستخدم */
+        /* =========================================== */
+        /* القسم الأيسر - رأس الروبوت واسم التطبيق */
+        /* 5 نقرات على هذا القسم تفتح لوحة المشرف */
+        /* =========================================== */
+        
         .header-left {
             display: flex;
             flex-direction: column;
@@ -220,34 +227,47 @@
             max-width: 200px;
         }
         
-        .app-title {
+        .robot-title {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 5px;
+            border-radius: 10px;
         }
         
-        .app-title .logo-icon {
-            font-size: 24px;
+        .robot-title:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .robot-icon {
+            font-size: 28px;
             color: var(--quantum-green);
             filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.5));
             animation: quantumFloat 3s ease-in-out infinite;
         }
         
-        .app-title .app-name {
-            font-size: 18px;
+        .app-name {
+            font-size: 16px;
             font-weight: 700;
             background: var(--gradient-quantum);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 0.5px;
+            margin-left: 2px;
         }
         
+        /* اسم المستخدم ومعرف المستخدم تحت رأس الروبوت */
         .user-info-vertical {
             display: flex;
             flex-direction: column;
             gap: 2px;
-            margin-left: 32px;
+            margin-top: 5px;
+            padding-left: 5px;
         }
         
         .user-name-display {
@@ -268,16 +288,28 @@
             text-overflow: ellipsis;
         }
         
-        /* القسم الأوسط - أيقونة فضائية */
+        /* إضافة "ID:" قبل معرف المستخدم */
+        .user-id-display::before {
+            content: "ID: ";
+            color: var(--quantum-text-light);
+            font-weight: normal;
+        }
+        
+        /* =========================================== */
+        /* القسم الأوسط - رأس الفضائي المتحرك */
+        /* يتكب ر ثم يصغر باستمرار */
+        /* =========================================== */
+        
         .header-center {
             flex: 2;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            height: 100%;
         }
         
-        .space-icon {
+        .breathing-alien {
             position: relative;
             display: flex;
             flex-direction: column;
@@ -285,53 +317,39 @@
             justify-content: center;
         }
         
-        .space-icon .main-emoji {
-            font-size: 42px;
+        .alien-emoji {
+            font-size: 48px;
             filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.7));
-            animation: quantumSpin 10s infinite linear;
+            animation: quantumBreathing 3s ease-in-out infinite;
             z-index: 2;
+            cursor: default;
         }
         
-        .space-icon .glow-effect {
+        @keyframes quantumBreathing {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .alien-glow {
             position: absolute;
             width: 80px;
             height: 80px;
             background: radial-gradient(circle, rgba(0,255,136,0.3) 0%, transparent 70%);
             border-radius: 50%;
-            animation: quantumPulse 2s ease-in-out infinite;
+            animation: quantumPulse 3s ease-in-out infinite;
             z-index: 1;
         }
         
-        .space-icon .stars {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: transparent;
-            pointer-events: none;
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.2); }
         }
         
-        .space-icon .stars::before,
-        .space-icon .stars::after {
-            content: '✨';
-            position: absolute;
-            font-size: 16px;
-            color: var(--quantum-gold);
-            animation: quantumFloat 3s ease-in-out infinite;
-        }
+        /* =========================================== */
+        /* القسم الأيمن - الرصيد وأيقونة اللغة */
+        /* =========================================== */
         
-        .space-icon .stars::before {
-            top: -20px;
-            left: -30px;
-            animation-delay: 0.5s;
-        }
-        
-        .space-icon .stars::after {
-            bottom: -20px;
-            right: -30px;
-            animation-delay: 1s;
-        }
-        
-        /* القسم الأيمن - الرصيد وأيقونات اللغة */
         .header-right {
             display: flex;
             flex-direction: column;
@@ -345,7 +363,7 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 2px;
+            gap: 5px;
         }
         
         .total-balance-header {
@@ -393,24 +411,22 @@
             text-align: right;
         }
         
-        /* أيقونات اللغة تحت الرصيد */
-        .language-icons {
-            display: flex;
-            gap: 5px;
-            justify-content: flex-end;
-            margin-top: 2px;
+        /* أيقونة اللغة الواحدة تحت الرصيد */
+        .language-selector {
+            position: relative;
+            display: inline-block;
         }
         
         .lang-icon {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: rgba(0, 212, 255, 0.1);
             border: 1px solid rgba(0, 212, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -427,8 +443,8 @@
             box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
         
-        /* القائمة المنسدلة للغة (تظهر عند النقر على الأيقونات) */
-        .language-tooltip {
+        /* القائمة المنسدلة للغة */
+        .language-dropdown {
             position: absolute;
             top: 100%;
             right: 0;
@@ -443,7 +459,7 @@
             overflow: hidden;
         }
         
-        .language-tooltip.show {
+        .language-dropdown.show {
             display: block;
         }
         
@@ -471,7 +487,19 @@
             color: var(--quantum-green);
         }
         
+        .language-option .flag {
+            font-size: 16px;
+        }
+        
+        .language-option .lang-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* =========================================== */
         /* نافذة اختيار اللغة الأولى */
+        /* =========================================== */
+        
         .language-welcome-modal {
             position: fixed;
             top: 0;
@@ -581,6 +609,10 @@
             box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
         }
         
+        /* =========================================== */
+        /* الأنيميشنات العامة */
+        /* =========================================== */
+        
         @keyframes quantumFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -592,20 +624,19 @@
             75% { transform: translateY(-3px) rotate(2deg); }
         }
         
-        @keyframes quantumSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        @keyframes quantumPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
-        
         @keyframes quantumSlideDown {
             from { opacity: 0; transform: translateY(-15px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        @keyframes quantumShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* =========================================== */
+        /* خلفية الفضاء */
+        /* =========================================== */
         
         body::before {
             content: '';
@@ -621,6 +652,10 @@
             pointer-events: none;
             z-index: -1;
         }
+        
+        /* =========================================== */
+        /* شاشة التحميل */
+        /* =========================================== */
         
         #loading-screen {
             position: fixed;
@@ -664,6 +699,11 @@
             animation: quantumPulse 2s ease-in-out infinite;
         }
         
+        @keyframes quantumPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
         .loading-subtitle {
             font-size: 17px;
             color: var(--quantum-text-light);
@@ -705,11 +745,6 @@
             animation: quantumShimmer 2s infinite;
         }
         
-        @keyframes quantumShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
         #loading-progress-text {
             font-size: 13px;
             color: var(--quantum-text-muted);
@@ -725,6 +760,10 @@
         #app-container.hidden {
             display: none;
         }
+        
+        /* =========================================== */
+        /* القائمة السفلية (Navigation) */
+        /* =========================================== */
         
         .main-nav {
             display: flex;
@@ -826,6 +865,10 @@
             color: var(--quantum-green);
         }
         
+        /* =========================================== */
+        /* الصفحات */
+        /* =========================================== */
+        
         .page {
             display: none;
             padding: 12px;
@@ -840,6 +883,10 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* =========================================== */
+        /* قسم التعدين */
+        /* =========================================== */
         
         .mining-section {
             background: var(--gradient-space);
@@ -960,6 +1007,11 @@
             font-size: 18px;
             color: var(--quantum-green);
             animation: quantumSpin 20s infinite linear;
+        }
+        
+        @keyframes quantumSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         
         .timer-display span {
@@ -1122,6 +1174,10 @@
             box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
         }
         
+        /* =========================================== */
+        /* قسم تطوير المستوى */
+        /* =========================================== */
+        
         .upgrade-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1230,10 +1286,6 @@
             background-clip: text;
         }
         
-        .upgrade-badge {
-            display: none;
-        }
-        
         .upgrade-price-tag {
             font-size: 18px;
             font-weight: 700;
@@ -1329,6 +1381,10 @@
             background: rgba(0, 255, 136, 0.2);
             box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
         }
+        
+        /* =========================================== */
+        /* قسم المهام */
+        /* =========================================== */
         
         .tasks-section {
             background: var(--gradient-space);
@@ -1597,6 +1653,10 @@
             box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
         }
         
+        /* =========================================== */
+        /* الإشعارات */
+        /* =========================================== */
+        
         #notification-container {
             position: fixed;
             top: 15px;
@@ -1691,7 +1751,7 @@
         }
         
         /* =========================================== */
-        /* تنسيقات Staking Card */
+        /* تنسيقات Staking */
         /* =========================================== */
         
         .staking-content {
@@ -3344,15 +3404,19 @@
         @media (max-width: 768px) {
             .app-header {
                 padding: 10px;
-                min-height: 90px;
+                min-height: 100px;
             }
             
-            .app-title .app-name {
-                font-size: 16px;
+            .robot-icon {
+                font-size: 24px;
             }
             
-            .space-icon .main-emoji {
-                font-size: 32px;
+            .app-name {
+                font-size: 14px;
+            }
+            
+            .alien-emoji {
+                font-size: 40px;
             }
             
             .user-name-display {
@@ -3368,9 +3432,9 @@
             }
             
             .lang-icon {
-                width: 28px;
-                height: 28px;
-                font-size: 14px;
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
             }
             
             .header-left {
@@ -3379,10 +3443,6 @@
             
             .header-right {
                 max-width: 150px;
-            }
-            
-            .user-info-vertical {
-                margin-left: 25px;
             }
             
             .main-nav {
@@ -3515,16 +3575,20 @@
                 padding: 8px;
             }
             
-            .app-title .app-name {
-                font-size: 14px;
+            .robot-icon {
+                font-size: 22px;
             }
             
-            .space-icon .main-emoji {
-                font-size: 28px;
+            .app-name {
+                font-size: 13px;
+            }
+            
+            .alien-emoji {
+                font-size: 36px;
             }
             
             .user-info-vertical {
-                margin-left: 20px;
+                margin-top: 3px;
             }
             
             .user-name-display {
@@ -3536,9 +3600,9 @@
             }
             
             .lang-icon {
-                width: 26px;
-                height: 26px;
-                font-size: 13px;
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
             }
             
             .balance-amount-header span:first-of-type {
@@ -3567,10 +3631,6 @@
             
             .alien-logo {
                 font-size: 44px;
-            }
-            
-            .user-info-mini {
-                padding: 4px 6px;
             }
             
             .main-nav {
@@ -3658,7 +3718,7 @@
         }
         
         /* =========================================== */
-        /* تنسيقات Helper Classes */
+        /* Helper Classes */
         /* =========================================== */
         
         .hidden {
@@ -3706,1533 +3766,1531 @@
     </style>
 </head>
 <body>
+    <!-- =========================================== -->
+    <!-- شاشة التحميل -->
+    <!-- =========================================== -->
     <div id="loading-screen" class="loading-screen active">
-    <div class="loading-container">
-        <div class="alien-logo">👽</div>
-        <h1 class="loading-title" data-translate="app_name">Alien Musk Quantum</h1>
-        <p class="loading-subtitle" data-translate="loading_subtitle">Initializing Quantum Systems...</p>
-        <div class="loading-progress">
-            <div class="progress-bar">
-                <div id="loading-progress-bar" class="progress-fill"></div>
-            </div>
-            <span id="loading-progress-text" class="progress-text" data-translate="loading">Loading... 25%</span>
-        </div>
-    </div>
-</div>
-
-<div id="app-container" class="hidden">
-    <header class="app-header">
-        <!-- القسم الأيسر - اسم التطبيق واسم المستخدم ومعرف المستخدم -->
-        <div class="header-left">
-            <div class="app-title">
-                <span class="logo-icon">👽</span>
-                <span class="app-name" data-translate="app_name_short">Alien Musk</span>
-            </div>
-            
-            <div class="user-info-vertical">
-                <!-- اسم المستخدم يظهر بوضوح -->
-                <div class="user-name-display" id="username-mini">Alien</div>
-                <!-- معرف المستخدم (Telegram ID) يظهر تحته مباشرة -->
-                <div class="user-id-display" id="user-id-mini" data-translate="user_id_prefix">ID: Loading...</div>
-            </div>
-        </div>
-        
-        <!-- القسم الأوسط - أيقونة فضائية مع تأثيرات -->
-        <div class="header-center">
-            <div class="space-icon">
-                <div class="glow-effect"></div>
-                <span class="main-emoji">👽</span>
-                <div class="stars"></div>
-            </div>
-        </div>
-        
-        <!-- القسم الأيمن - الرصيد وأيقونات اللغة -->
-        <div class="header-right">
-            <div class="balance-section">
-                <!-- الرصيد في الأعلى -->
-                <div class="total-balance-header" id="admin-logo">
-                    <div class="balance-amount-header">
-                        <i class="fas fa-coins"></i>
-                        <span id="total-balance-amsk">0</span>
-                        <span class="currency">AMSK</span>
-                    </div>
-                    <div class="balance-usd-header">
-                        ≈ $<span id="total-balance-usd">0.00</span>
-                    </div>
+        <div class="loading-container">
+            <div class="alien-logo">👽</div>
+            <h1 class="loading-title" data-translate="app_name">Alien Musk Quantum</h1>
+            <p class="loading-subtitle" data-translate="loading_subtitle">Initializing Quantum Systems...</p>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div id="loading-progress-bar" class="progress-fill"></div>
                 </div>
-                
-                <!-- أيقونات اللغة تحت الرصيد مباشرة -->
-                <div class="language-icons" id="languageIcons">
-                    <div class="lang-icon active" data-lang="en" title="English">🇬🇧</div>
-                    <div class="lang-icon" data-lang="ar" title="العربية">🇸🇦</div>
-                    <div class="lang-icon" data-lang="hi" title="हिन्दी">🇮🇳</div>
-                    <div class="lang-icon" data-lang="bn" title="বাংলা">🇧🇩</div>
-                    <div class="lang-icon" data-lang="ru" title="Русский">🇷🇺</div>
-                </div>
-                
-                <!-- القائمة المنسدلة للغة (تظهر عند النقر) -->
-                <div class="language-tooltip" id="languageTooltip">
-                    <div class="language-option active" data-lang="en" data-flag="🇬🇧" data-name="English">
-                        <span class="flag">🇬🇧</span>
-                        <span class="lang-name">English</span>
-                    </div>
-                    <div class="language-option" data-lang="ar" data-flag="🇸🇦" data-name="العربية">
-                        <span class="flag">🇸🇦</span>
-                        <span class="lang-name">العربية</span>
-                    </div>
-                    <div class="language-option" data-lang="hi" data-flag="🇮🇳" data-name="हिन्दी">
-                        <span class="flag">🇮🇳</span>
-                        <span class="lang-name">हिन्दी</span>
-                    </div>
-                    <div class="language-option" data-lang="bn" data-flag="🇧🇩" data-name="বাংলা">
-                        <span class="flag">🇧🇩</span>
-                        <span class="lang-name">বাংলা</span>
-                    </div>
-                    <div class="language-option" data-lang="ru" data-flag="🇷🇺" data-name="Русский">
-                        <span class="flag">🇷🇺</span>
-                        <span class="lang-name">Русский</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- القائمة السفلية (التبويبات) -->
-    <nav class="main-nav">
-        <button class="nav-btn active" data-page="home">
-            <i class="fas fa-home"></i>
-            <span data-translate="nav_home">Home</span>
-        </button>
-        <button class="nav-btn" data-page="staking">
-            <i class="fas fa-gem"></i>
-            <span data-translate="nav_staking">Staking</span>
-        </button>
-        <button class="nav-btn" data-page="wallet">
-            <i class="fas fa-wallet"></i>
-            <span data-translate="nav_wallet">Wallet</span>
-        </button>
-        <button class="nav-btn" data-page="referral">
-            <i class="fas fa-users"></i>
-            <span data-translate="nav_referral">Referral</span>
-        </button>
-    </nav>
-
-    <!-- حاوية الإشعارات -->
-    <div id="notification-container" class="notification-container"></div>
-
-    <!-- =========================================== -->
-    <!-- صفحة الرئيسية (Home) -->
-    <!-- =========================================== -->
-    <div id="home-page" class="page active">
-        <!-- قسم التعدين -->
-        <section class="mining-section">
-            <div class="mining-header">
-                <h3><i class="fas fa-microchip"></i> <span data-translate="mining_title">Quantum Mining Station</span></h3>
-                <div class="mining-stats">
-                    <div class="stat-item">
-                        <div class="stat-label" data-translate="mining_level">Level</div>
-                        <div class="stat-value" id="current-mining-level">1</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label" data-translate="mining_hashrate">Hashrate</div>
-                        <div class="stat-value" id="current-hashrate-display">1,000</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- مؤقت التعدين -->
-            <div class="mining-timer-card">
-                <div class="timer-display">
-                    <i class="fas fa-clock"></i>
-                    <span id="mining-timer-display">01:00:00</span>
-                </div>
-                <div class="next-reward">
-                    <span data-translate="mining_next_reward">Next Reward:</span> <span id="next-reward-amount">1,000</span> AMSK
-                </div>
-            </div>
-
-            <!-- زر التعدين -->
-            <button class="mining-action-btn" id="start-mining-btn">
-                <i class="fas fa-play"></i>
-                <span data-translate="mining_start">Start Quantum Mining</span>
-            </button>
-
-            <!-- معلومات التعدين -->
-            <div class="mining-info">
-                <div class="info-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span><span data-translate="mining_total">Total Mined:</span> <span id="total-mined">1,000</span> AMSK</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-calendar-day"></i>
-                    <span><span data-translate="mining_today">Today:</span> <span id="mined-today">1,000</span> AMSK</span>
-                </div>
-            </div>
-            
-            <!-- أزرار سريعة -->
-            <div class="quick-actions">
-                <button class="quick-action-btn tasks-btn" id="scroll-to-tasks-btn">
-                    <i class="fas fa-tasks"></i>
-                    <span data-translate="mining_quick_tasks">Tasks</span>
-                </button>
-                <button class="quick-action-btn booster-btn" id="booster-btn">
-                    <i class="fas fa-rocket"></i>
-                    <span data-translate="mining_quick_booster">Booster 🚀</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- قسم تطوير مستوى التعدين -->
-        <section class="upgrade-section">
-            <h4><i class="fas fa-level-up-alt"></i> <span data-translate="upgrade_title">Upgrade Mining Level</span></h4>
-            <div class="upgrade-cards" id="upgrade-cards">
-                <!-- بطاقات التطوير ستتم إضافتها ديناميكياً عبر JavaScript -->
-            </div>
-        </section>
-
-        <!-- قسم المهام -->
-        <section class="tasks-section" id="tasks-section">
-            <div class="tasks-header">
-                <h4><i class="fas fa-tasks"></i> <span data-translate="tasks_title">Tasks & Rewards</span></h4>
-                <div class="tasks-progress" id="tasks-progress">0/4 <span data-translate="tasks_completed">Completed</span></div>
-            </div>
-            
-            <!-- تبويبات المهام -->
-            <div class="tasks-tabs">
-                <button class="tasks-tab active" data-tab="basic">
-                    <i class="fas fa-tasks"></i> <span data-translate="tasks_basic">Basic</span>
-                </button>
-                <button class="tasks-tab" data-tab="vip">
-                    <i class="fas fa-crown"></i> <span data-translate="tasks_vip">VIP 🏆</span>
-                </button>
-            </div>
-            
-            <!-- شبكة المهام الأساسية -->
-            <div class="tasks-grid active" id="tasks-grid" data-tab-content="basic">
-                <!-- المهام ستتم إضافتها ديناميكياً عبر JavaScript -->
-            </div>
-            
-            <!-- شبكة مهام VIP -->
-            <div class="vip-tasks-grid" id="vip-tasks-grid" data-tab-content="vip" style="display: none;">
-                <!-- مهام VIP ستتم إضافتها ديناميكياً عبر JavaScript -->
-            </div>
-        </section>
-    </div>
-
-    <!-- =========================================== -->
-    <!-- صفحة Staking (الإيداع) -->
-    <!-- =========================================== -->
-    <div id="staking-page" class="page">
-        <div class="staking-content">
-            <!-- بطاقة Staking الرئيسية -->
-            <div class="staking-card">
-                <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
-                <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
-                
-                <div class="total-staked-card">
-                    <div class="staked-info">
-                        <div class="staked-label" data-translate="staking_total">Total Staked</div>
-                        <div class="staked-amount" id="total-staked">0 USDT</div>
-                    </div>
-                    <div class="staked-earnings">
-                        <i class="fas fa-coins"></i>
-                        <span data-translate="staking_active">Active Earnings</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- خطط Staking -->
-            <div class="staking-card">
-                <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
-                
-                <div class="staking-plans-grid">
-                    <!-- الخطة الفضية -->
-                    <div class="plan-item">
-                        <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
-                        <div class="plan-amount">10+ USDT</div>
-                        <div class="plan-duration" data-translate="staking_duration_7">7 Days</div>
-                        <div class="plan-apr">40% APR</div>
-                        <div class="plan-reward" data-translate="staking_silver_reward">Daily: 2,857 AMSK per $10</div>
-                        <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
-                    </div>
-
-                    <!-- الخطة الذهبية -->
-                    <div class="plan-item">
-                        <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
-                        <div class="plan-amount">50+ USDT</div>
-                        <div class="plan-duration" data-translate="staking_duration_15">15 Days</div>
-                        <div class="plan-apr">50% APR</div>
-                        <div class="plan-reward" data-translate="staking_gold_reward">Daily: 8,333 AMSK per $50</div>
-                        <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
-                    </div>
-
-                    <!-- الخطة الماسية -->
-                    <div class="plan-item">
-                        <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
-                        <div class="plan-amount">100+ USDT</div>
-                        <div class="plan-duration" data-translate="staking_duration_30">30 Days</div>
-                        <div class="plan-apr">60% APR</div>
-                        <div class="plan-reward" data-translate="staking_diamond_reward">Daily: 10,000 AMSK per $100</div>
-                        <button class="stake-plan-btn" data-plan="3" data-translate="staking_stake_now">Stake Now</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- الإيداعات النشطة -->
-            <div class="staking-card">
-                <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
-                <div class="active-stakes" id="active-stakes-list">
-                    <div class="empty-stakes">
-                        <i class="fas fa-inbox"></i>
-                        <p data-translate="staking_no_active">No active stakes yet</p>
-                        <small data-translate="staking_start_hint">Start staking to earn rewards</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- =========================================== -->
-    <!-- صفحة Wallet (المحفظة) -->
-    <!-- =========================================== -->
-    <div id="wallet-page" class="page">
-        <div class="wallet-content">
-            <!-- بطاقة الرصيد الإجمالي -->
-            <div class="wallet-balance-card">
-                <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
-                <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
-                <div class="wallet-balance-subtitle" data-translate="wallet_total_usd">Total Value in USD</div>
-                <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
-            </div>
-
-            <!-- الأزرار السريعة -->
-            <div class="wallet-actions-card">
-                <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
-                
-                <div class="wallet-actions-compact">
-                    <button class="wallet-action-btn" id="deposit-btn">
-                        <i class="fas fa-download"></i>
-                        <span data-translate="wallet_deposit">Deposit</span>
-                    </button>
-                    <button class="wallet-action-btn" id="withdraw-btn">
-                        <i class="fas fa-upload"></i>
-                        <span data-translate="wallet_withdraw">Withdraw</span>
-                    </button>
-                    <button class="wallet-action-btn" id="swap-btn">
-                        <i class="fas fa-exchange-alt"></i>
-                        <span data-translate="wallet_swap">Swap</span>
-                    </button>
-                    <button class="wallet-action-btn" id="history-btn">
-                        <i class="fas fa-history"></i>
-                        <span data-translate="wallet_history">History</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- قائمة الأصول -->
-            <div class="wallet-assets-card">
-                <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
-                
-                <div class="assets-section">
-                    <div class="asset-list-compact">
-                        <!-- AMSK Token -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact ams-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">AMSK Token</div>
-                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
-                        </div>
-
-                        <!-- USDT -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact usdt-icon">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">USDT</div>
-                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
-                        </div>
-
-                        <!-- BNB -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact bnb-icon">
-                                <i class="fab fa-btc"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">BNB</div>
-                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
-                        </div>
-
-                        <!-- TON -->
-                        <div class="asset-item-compact">
-                            <div class="asset-icon-compact ton-icon">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <div class="asset-details-compact">
-                                <div class="asset-name-compact">TON</div>
-                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                            </div>
-                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
-                        </div>
-                    </div>
-                </div>
+                <span id="loading-progress-text" class="progress-text" data-translate="loading">Loading... 25%</span>
             </div>
         </div>
     </div>
 
     <!-- =========================================== -->
-    <!-- صفحة Referral (الدعوات) -->
+    <!-- التطبيق الرئيسي -->
     <!-- =========================================== -->
-    <div id="referral-page" class="page">
-        <div class="referral-content">
-            <!-- إحصائيات الدعوات -->
-            <div class="referral-stats-card">
-                <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
+    <div id="app-container" class="hidden">
+        <!-- =========================================== -->
+        <!-- الهيدر الجديد - محسن بالكامل -->
+        <!-- =========================================== -->
+        <header class="app-header">
+            <!-- القسم الأيسر - رأس الروبوت واسم المستخدم -->
+            <!-- 5 نقرات على هذا القسم تفتح لوحة المشرف -->
+            <div class="header-left">
+                <div class="robot-title" id="admin-logo">
+                    <span class="robot-icon">👽</span>
+                    <span class="app-name" data-translate="app_name_short">Alien Musk</span>
+                </div>
                 
-                <div class="referral-stats-grid">
-                    <div class="ref-stat-item">
-                        <div class="ref-stat-value" id="ref-count">0</div>
-                        <div class="ref-stat-label" data-translate="referral_count">Referrals</div>
-                    </div>
-                    <div class="ref-stat-item">
-                        <div class="ref-stat-value" id="ref-earned">0</div>
-                        <div class="ref-stat-label" data-translate="referral_earned">AMSK Earned</div>
-                    </div>
+                <!-- اسم المستخدم ومعرف المستخدم تحت رأس الروبوت -->
+                <div class="user-info-vertical">
+                    <div class="user-name-display" id="username-mini">Alien</div>
+                    <!-- معرف المستخدم يظهر بالصيغة "ID: 12345678" (الـ CSS سيضيف "ID:") -->
+                    <div class="user-id-display" id="user-id-mini">Loading...</div>
                 </div>
             </div>
-
-            <!-- رابط الدعوة -->
-            <div class="referral-link-card">
-                <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
-                
-                <!-- وصف الدعوة -->
-                <div class="referral-description">
-                    <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
-                    <ul>
-                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_1" class="allow-html">Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</span></li>
-                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_2" class="allow-html">Earn <strong>16% commission</strong> on their deposits forever</span></li>
-                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_3" class="allow-html">Unlimited referrals, instant rewards!</span></li>
-                    </ul>
-                </div>
-                
-                <!-- حقل الرابط وزر النسخ -->
-                <div class="link-input-group">
-                    <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
-                    <button class="copy-link-btn" id="copy-link-btn">
-                        <i class="far fa-copy"></i>
-                    </button>
-                </div>
-                
-                <!-- أزرار المشاركة -->
-                <div class="share-buttons">
-                    <button class="share-btn telegram" id="telegram-share-btn">
-                        <i class="fab fa-telegram"></i>
-                        <span data-translate="share_telegram">Telegram</span>
-                    </button>
-                    <button class="share-btn whatsapp" id="whatsapp-share-btn">
-                        <i class="fab fa-whatsapp"></i>
-                        <span data-translate="share_whatsapp">WhatsApp</span>
-                    </button>
+            
+            <!-- القسم الأوسط - رأس الفضائي المتحرك (يتكب ر ثم يصغر) -->
+            <div class="header-center">
+                <div class="breathing-alien">
+                    <div class="alien-glow"></div>
+                    <span class="alien-emoji">👽</span>
                 </div>
             </div>
-
-            <!-- مراحل الدعوات (Milestones) -->
-            <div class="milestones-card">
-                <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
-                <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
-                
-                <div class="milestones-list" id="milestones-list">
-                    <!-- مرحلة 10 دعوات -->
-                    <div class="milestone-item locked" data-milestone="10">
-                        <div class="milestone-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement" data-translate="referral_milestone_10">10 Referrals</div>
-                            <div class="milestone-progress">0/10</div>
-                            <div class="milestone-reward">+50,000 AMSK</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/10</span>
-                        </div>
-                    </div>
-
-                    <!-- مرحلة 25 دعوة -->
-                    <div class="milestone-item locked" data-milestone="25">
-                        <div class="milestone-icon">
-                            <i class="fas fa-user-friends"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement" data-translate="referral_milestone_25">25 Referrals</div>
-                            <div class="milestone-progress">0/25</div>
-                            <div class="milestone-reward">+150,000 AMSK</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/25</span>
-                        </div>
-                    </div>
-
-                    <!-- مرحلة 50 دعوة -->
-                    <div class="milestone-item locked" data-milestone="50">
-                        <div class="milestone-icon">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement" data-translate="referral_milestone_50">50 Referrals</div>
-                            <div class="milestone-progress">0/50</div>
-                            <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/50</span>
-                        </div>
-                    </div>
-
-                    <!-- مرحلة 100 دعوة -->
-                    <div class="milestone-item locked" data-milestone="100">
-                        <div class="milestone-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement" data-translate="referral_milestone_100">100 Referrals</div>
-                            <div class="milestone-progress">0/100</div>
-                            <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/100</span>
-                        </div>
-                    </div>
-
-                    <!-- مرحلة 250 دعوة -->
-                    <div class="milestone-item locked" data-milestone="250">
-                        <div class="milestone-icon">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        <div class="milestone-details">
-                            <div class="milestone-requirement" data-translate="referral_milestone_250">250 Referrals</div>
-                            <div class="milestone-progress">0/250</div>
-                            <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
-                        </div>
-                        <div class="milestone-action">
-                            <span class="locked-badge">0/250</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    console.log("🔗 Loading Alien Musk Quantum Platform v7.0 - النسخة النهائية الكاملة");
-    
-    window.tg = null;
-    window.firebaseApp = null;
-    window.db = null;
-    window.auth = null;
-    let appInitialized = false;
-    
-    const FIREBASE_CONFIG = {
-        apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
-        authDomain: "tatbi9-681bf.firebaseapp.com",
-        projectId: "tatbi9-681bf",
-        storageBucket: "tatbi9-681bf.firebasestorage.app",
-        messagingSenderId: "863237064748",
-        appId: "1:863237064748:web:134de1e01d2639ef5fa989"
-    };
-    
-    // ===========================================
-    // 🌐 نظام اللغات المتعددة - كامل غير مختصر
-    // ===========================================
-    const LANGUAGES = {
-        en: {
-            code: 'en',
-            flag: '🇬🇧',
-            name: 'English',
-            nativeName: 'English',
-            dir: 'ltr',
-            translations: {
-                app_name: "Alien Musk Quantum",
-                app_name_short: "Alien Musk",
-                loading: "Loading...",
-                loading_subtitle: "Initializing Quantum Systems...",
-                user_id_prefix: "ID:",
-                nav_home: "Home",
-                nav_staking: "Staking",
-                nav_wallet: "Wallet",
-                nav_referral: "Referral",
-                mining_title: "Quantum Mining Station",
-                mining_level: "Level",
-                mining_hashrate: "Hashrate",
-                mining_next_reward: "Next Reward:",
-                mining_start: "Start Quantum Mining",
-                mining_claim: "Claim Reward",
-                mining_in_progress: "Mining...",
-                mining_total: "Total Mined:",
-                mining_today: "Today:",
-                mining_quick_tasks: "Tasks",
-                mining_quick_booster: "Booster 🚀",
-                upgrade_title: "Upgrade Mining Level",
-                tasks_title: "Tasks & Rewards",
-                tasks_completed: "Completed",
-                tasks_basic: "Basic",
-                tasks_vip: "VIP 🏆",
-                tasks_start: "Start",
-                tasks_done: "Done ✓",
-                staking_title: "Quantum Staking",
-                staking_description: "Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.",
-                staking_total: "Total Staked",
-                staking_active: "Active Earnings",
-                staking_plans: "Staking Plans",
-                staking_plan_silver: "Silver Plan",
-                staking_plan_gold: "Gold Plan",
-                staking_plan_diamond: "Diamond Plan",
-                staking_duration_7: "7 Days",
-                staking_duration_15: "15 Days",
-                staking_duration_30: "30 Days",
-                staking_silver_reward: "Daily: 2,857 AMSK per $10",
-                staking_gold_reward: "Daily: 8,333 AMSK per $50",
-                staking_diamond_reward: "Daily: 10,000 AMSK per $100",
-                staking_stake_now: "Stake Now",
-                staking_active_stakes: "Active Stakes",
-                staking_no_active: "No active stakes yet",
-                staking_start_hint: "Start staking to earn rewards",
-                wallet_total_balance: "Total Balance",
-                wallet_total_usd: "Total Value in USD",
-                wallet_quick_actions: "Quick Actions",
-                wallet_deposit: "Deposit",
-                wallet_withdraw: "Withdraw",
-                wallet_swap: "Swap",
-                wallet_history: "History",
-                wallet_assets: "Assets",
-                referral_stats: "Referral Stats",
-                referral_count: "Referrals",
-                referral_earned: "AMSK Earned",
-                referral_your_link: "Your Referral Link",
-                referral_invite: "🚀 Invite friends and earn big!",
-                referral_bonus_1: "Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining",
-                referral_bonus_2: "Earn <strong>16% commission</strong> on their deposits forever",
-                referral_bonus_3: "Unlimited referrals, instant rewards!",
-                referral_milestones: "Referral Milestones",
-                referral_milestones_desc: "Earn bonus rewards for reaching referral milestones!",
-                referral_milestone_10: "10 Referrals",
-                referral_milestone_25: "25 Referrals",
-                referral_milestone_50: "50 Referrals",
-                referral_milestone_100: "100 Referrals",
-                referral_milestone_250: "250 Referrals",
-                share_telegram: "Telegram",
-                share_whatsapp: "WhatsApp",
-                language_welcome_title: "👽 Welcome to Alien Musk!",
-                language_welcome_subtitle: "Please select your preferred language",
-                language_continue: "Continue",
-                cancel: "Cancel",
-                confirm: "Confirm",
-                close: "Close",
-                save: "Save",
-                edit: "Edit",
-                copy: "Copy",
-                copied: "Copied!",
-                success: "Success",
-                error: "Error",
-                warning: "Warning",
-                info: "Info",
-                free: "Free",
-                deposit_title: "Deposit Funds",
-                withdraw_title: "Withdraw Funds",
-                swap_title: "Swap Tokens",
-                history_title: "Transaction History",
-                history_all: "All",
-                history_pending: "Pending",
-                history_completed: "Completed",
-                history_rejected: "Rejected",
-                history_all_types: "All Types",
-                history_deposits: "Deposits",
-                history_withdrawals: "Withdrawals",
-                history_mining: "Mining",
-                history_staking: "Staking",
-                history_swap: "Swap",
-                history_referral: "Referral",
-                history_tasks: "Tasks",
-                history_vip: "VIP Tasks",
-                history_no_transactions: "No Transactions Found",
-                history_no_transactions_desc: "No transactions match your current filters",
-                admin_access: "Admin Access",
-                admin_dashboard: "Admin Dashboard",
-                admin_welcome: "Welcome to the admin panel",
-                admin_pending_deposits: "Pending Deposits",
-                admin_pending_withdrawals: "Pending Withdrawals",
-                admin_approve: "Approve",
-                admin_reject: "Reject",
-                admin_find_user: "Find User",
-                admin_add_balance: "Add Balance",
-                admin_subtract_balance: "Subtract Balance"
-            }
-        },
-        ar: {
-            code: 'ar',
-            flag: '🇸🇦',
-            name: 'Arabic',
-            nativeName: 'العربية',
-            dir: 'rtl',
-            translations: {
-                app_name: "أليون ماسك كوانتوم",
-                app_name_short: "أليون ماسك",
-                loading: "جاري التحميل...",
-                loading_subtitle: "تشغيل الأنظمة الكمومية...",
-                user_id_prefix: "معرف:",
-                nav_home: "الرئيسية",
-                nav_staking: "الإيداع",
-                nav_wallet: "المحفظة",
-                nav_referral: "الدعوات",
-                mining_title: "محطة التعدين الكمومي",
-                mining_level: "المستوى",
-                mining_hashrate: "قوة التعدين",
-                mining_next_reward: "المكافأة التالية:",
-                mining_start: "بدء التعدين الكمومي",
-                mining_claim: "استلام المكافأة",
-                mining_in_progress: "جاري التعدين...",
-                mining_total: "الإجمالي الملغوم:",
-                mining_today: "اليوم:",
-                mining_quick_tasks: "المهام",
-                mining_quick_booster: "معزز 🚀",
-                upgrade_title: "تطوير مستوى التعدين",
-                tasks_title: "المهام والمكافآت",
-                tasks_completed: "مكتمل",
-                tasks_basic: "أساسية",
-                tasks_vip: "VIP 🏆",
-                tasks_start: "ابدأ",
-                tasks_done: "تم ✓",
-                staking_title: "الإيداع الكمومي",
-                staking_description: "قم بإيداع USDT لكسب رموز AMSK. الإيداعات الأكبر والمدة الأطول تمنح مكافآت أفضل.",
-                staking_total: "إجمالي الإيداع",
-                staking_active: "الأرباح النشطة",
-                staking_plans: "خطط الإيداع",
-                staking_plan_silver: "الفضة",
-                staking_plan_gold: "الذهب",
-                staking_plan_diamond: "الألماس",
-                staking_duration_7: "7 أيام",
-                staking_duration_15: "15 يوم",
-                staking_duration_30: "30 يوم",
-                staking_silver_reward: "يومياً: 2,857 AMSK لكل $10",
-                staking_gold_reward: "يومياً: 8,333 AMSK لكل $50",
-                staking_diamond_reward: "يومياً: 10,000 AMSK لكل $100",
-                staking_stake_now: "إيداع الآن",
-                staking_active_stakes: "الإيداعات النشطة",
-                staking_no_active: "لا توجد إيداعات نشطة",
-                staking_start_hint: "ابدأ الإيداع لكسب المكافآت",
-                wallet_total_balance: "الرصيد الإجمالي",
-                wallet_total_usd: "القيمة الإجمالية بالدولار",
-                wallet_quick_actions: "إجراءات سريعة",
-                wallet_deposit: "إيداع",
-                wallet_withdraw: "سحب",
-                wallet_swap: "تبديل",
-                wallet_history: "السجل",
-                wallet_assets: "الأصول",
-                referral_stats: "إحصائيات الدعوات",
-                referral_count: "الدعوات",
-                referral_earned: "AMSK المكتسب",
-                referral_your_link: "رابط الدعوة الخاص بك",
-                referral_invite: "🚀 ادعُ أصدقائك واربح الكثير!",
-                referral_bonus_1: "احصل على <strong>10,000 AMSK ($2)</strong> عن كل صديق يبدأ التعدين",
-                referral_bonus_2: "اربح <strong>عمولة 16%</strong> من إيداعاتهم مدى الحياة",
-                referral_bonus_3: "دعوات غير محدودة، مكافآت فورية!",
-                referral_milestones: "مراحل الدعوات",
-                referral_milestones_desc: "احصل على مكافآت إضافية عند الوصول لمراحل محددة!",
-                referral_milestone_10: "10 دعوات",
-                referral_milestone_25: "25 دعوة",
-                referral_milestone_50: "50 دعوة",
-                referral_milestone_100: "100 دعوة",
-                referral_milestone_250: "250 دعوة",
-                share_telegram: "تليجرام",
-                share_whatsapp: "واتساب",
-                language_welcome_title: "👽 مرحباً بك في أليون ماسك!",
-                language_welcome_subtitle: "الرجاء اختيار لغتك المفضلة",
-                language_continue: "متابعة",
-                cancel: "إلغاء",
-                confirm: "تأكيد",
-                close: "إغلاق",
-                save: "حفظ",
-                edit: "تعديل",
-                copy: "نسخ",
-                copied: "تم النسخ!",
-                success: "نجاح",
-                error: "خطأ",
-                warning: "تحذير",
-                info: "معلومة",
-                free: "مجاني",
-                deposit_title: "إيداع الأموال",
-                withdraw_title: "سحب الأموال",
-                swap_title: "تبديل العملات",
-                history_title: "سجل المعاملات",
-                history_all: "الكل",
-                history_pending: "معلقة",
-                history_completed: "مكتملة",
-                history_rejected: "مرفوضة",
-                history_all_types: "جميع الأنواع",
-                history_deposits: "إيداعات",
-                history_withdrawals: "سحوبات",
-                history_mining: "تعدين",
-                history_staking: "إيداع",
-                history_swap: "تبديل",
-                history_referral: "دعوات",
-                history_tasks: "مهام",
-                history_vip: "VIP مهام",
-                history_no_transactions: "لا توجد معاملات",
-                history_no_transactions_desc: "لا توجد معاملات تطابق عوامل التصفية الخاصة بك",
-                admin_access: "دخول المشرف",
-                admin_dashboard: "لوحة تحكم المشرف",
-                admin_welcome: "مرحباً بك في لوحة تحكم المشرف",
-                admin_pending_deposits: "إيداعات معلقة",
-                admin_pending_withdrawals: "سحوبات معلقة",
-                admin_approve: "موافقة",
-                admin_reject: "رفض",
-                admin_find_user: "البحث عن مستخدم",
-                admin_add_balance: "إضافة رصيد",
-                admin_subtract_balance: "خصم رصيد"
-            }
-        },
-        hi: {
-            code: 'hi',
-            flag: '🇮🇳',
-            name: 'Hindi',
-            nativeName: 'हिन्दी',
-            dir: 'ltr',
-            translations: {
-                app_name: "एलियन मस्क क्वांटम",
-                app_name_short: "एलियन मस्क",
-                loading: "लोड हो रहा है...",
-                loading_subtitle: "क्वांटम सिस्टम शुरू हो रहे हैं...",
-                user_id_prefix: "आईडी:",
-                nav_home: "होम",
-                nav_staking: "स्टेकिंग",
-                nav_wallet: "वॉलेट",
-                nav_referral: "रेफरल",
-                mining_title: "क्वांटम माइनिंग स्टेशन",
-                mining_level: "स्तर",
-                mining_hashrate: "हैशरेट",
-                mining_next_reward: "अगला इनाम:",
-                mining_start: "क्वांटम माइनिंग शुरू करें",
-                mining_claim: "इनाम प्राप्त करें",
-                mining_in_progress: "माइनिंग जारी...",
-                mining_total: "कुल माइन किया गया:",
-                mining_today: "आज:",
-                mining_quick_tasks: "कार्य",
-                mining_quick_booster: "बूस्टर 🚀",
-                upgrade_title: "माइनिंग स्तर अपग्रेड करें",
-                tasks_title: "कार्य और इनाम",
-                tasks_completed: "पूर्ण",
-                tasks_basic: "बेसिक",
-                tasks_vip: "वीआईपी 🏆",
-                tasks_start: "शुरू करें",
-                tasks_done: "पूर्ण ✓",
-                staking_title: "क्वांटम स्टेकिंग",
-                staking_description: "AMSK टोकन कमाने के लिए अपना USDT स्टेक करें। अधिक स्टेक और लंबी अवधि बेहतर इनाम देती है।",
-                staking_total: "कुल स्टेक",
-                staking_active: "सक्रिय कमाई",
-                staking_plans: "स्टेकिंग योजनाएं",
-                staking_plan_silver: "सिल्वर प्लान",
-                staking_plan_gold: "गोल्ड प्लान",
-                staking_plan_diamond: "डायमंड प्लान",
-                staking_duration_7: "7 दिन",
-                staking_duration_15: "15 दिन",
-                staking_duration_30: "30 दिन",
-                staking_silver_reward: "दैनिक: 2,857 AMSK प्रति $10",
-                staking_gold_reward: "दैनिक: 8,333 AMSK प्रति $50",
-                staking_diamond_reward: "दैनिक: 10,000 AMSK प्रति $100",
-                staking_stake_now: "अभी स्टेक करें",
-                staking_active_stakes: "सक्रिय स्टेक",
-                staking_no_active: "अभी तक कोई सक्रिय स्टेक नहीं",
-                staking_start_hint: "इनाम कमाने के लिए स्टेकिंग शुरू करें",
-                wallet_total_balance: "कुल बैलेंस",
-                wallet_total_usd: "डॉलर में कुल मूल्य",
-                wallet_quick_actions: "त्वरित कार्रवाई",
-                wallet_deposit: "जमा करें",
-                wallet_withdraw: "निकासी",
-                wallet_swap: "स्वैप",
-                wallet_history: "इतिहास",
-                wallet_assets: "संपत्ति",
-                referral_stats: "रेफरल आँकड़े",
-                referral_count: "रेफरल",
-                referral_earned: "AMSK कमाया",
-                referral_your_link: "आपका रेफरल लिंक",
-                referral_invite: "🚀 दोस्तों को आमंत्रित करें और बड़ा कमाएं!",
-                referral_bonus_1: "<strong>10,000 AMSK ($2)</strong> प्रति रेफरल जो माइनिंग शुरू करता है",
-                referral_bonus_2: "उनकी जमा पर <strong>16% कमीशन</strong> हमेशा के लिए कमाएं",
-                referral_bonus_3: "असीमित रेफरल, तत्काल इनाम!",
-                referral_milestones: "रेफरल मील के पत्थर",
-                referral_milestones_desc: "रेफरल मील के पत्थर तक पहुंचने पर बोनस इनाम अर्जित करें!",
-                referral_milestone_10: "10 रेफरल",
-                referral_milestone_25: "25 रेफरल",
-                referral_milestone_50: "50 रेफरल",
-                referral_milestone_100: "100 रेफरल",
-                referral_milestone_250: "250 रेफरल",
-                share_telegram: "टेलीग्राम",
-                share_whatsapp: "व्हाट्सएप",
-                language_welcome_title: "👽 एलियन मस्क में आपका स्वागत है!",
-                language_welcome_subtitle: "कृपया अपनी पसंदीदा भाषा चुनें",
-                language_continue: "जारी रखें",
-                cancel: "रद्द करें",
-                confirm: "पुष्टि करें",
-                close: "बंद करें",
-                save: "सहेजें",
-                edit: "संपादित करें",
-                copy: "कॉपी करें",
-                copied: "कॉपी हो गया!",
-                success: "सफलता",
-                error: "त्रुटि",
-                warning: "चेतावनी",
-                info: "जानकारी",
-                free: "मुफ्त",
-                deposit_title: "धन जमा करें",
-                withdraw_title: "धन निकालें",
-                swap_title: "टोकन स्वैप करें",
-                history_title: "लेनदेन इतिहास",
-                history_all: "सभी",
-                history_pending: "लंबित",
-                history_completed: "पूर्ण",
-                history_rejected: "अस्वीकृत",
-                history_all_types: "सभी प्रकार",
-                history_deposits: "जमा",
-                history_withdrawals: "निकासी",
-                history_mining: "माइनिंग",
-                history_staking: "स्टेकिंग",
-                history_swap: "स्वैप",
-                history_referral: "रेफरल",
-                history_tasks: "कार्य",
-                history_vip: "वीआईपी कार्य",
-                history_no_transactions: "कोई लेनदेन नहीं मिला",
-                history_no_transactions_desc: "आपके वर्तमान फ़िल्टर से कोई लेनदेन मेल नहीं खाता",
-                admin_access: "व्यवस्थापक पहुंच",
-                admin_dashboard: "व्यवस्थापक डैशबोर्ड",
-                admin_welcome: "व्यवस्थापक पैनल में आपका स्वागत है",
-                admin_pending_deposits: "लंबित जमा",
-                admin_pending_withdrawals: "लंबित निकासी",
-                admin_approve: "स्वीकृत करें",
-                admin_reject: "अस्वीकार करें",
-                admin_find_user: "उपयोगकर्ता खोजें",
-                admin_add_balance: "बैलेंस जोड़ें",
-                admin_subtract_balance: "बैलेंस घटाएं"
-            }
-        },
-        bn: {
-            code: 'bn',
-            flag: '🇧🇩',
-            name: 'Bengali',
-            nativeName: 'বাংলা',
-            dir: 'ltr',
-            translations: {
-                app_name: "এলিয়েন মাস্ক কোয়ান্টাম",
-                app_name_short: "এলিয়েন মাস্ক",
-                loading: "লোড হচ্ছে...",
-                loading_subtitle: "কোয়ান্টাম সিস্টেম চালু হচ্ছে...",
-                user_id_prefix: "আইডি:",
-                nav_home: "হোম",
-                nav_staking: "স্টেকিং",
-                nav_wallet: "ওয়ালেট",
-                nav_referral: "রেফারেল",
-                mining_title: "কোয়ান্টাম মাইনিং স্টেশন",
-                mining_level: "স্তর",
-                mining_hashrate: "হ্যাশরেট",
-                mining_next_reward: "পরবর্তী পুরস্কার:",
-                mining_start: "কোয়ান্টাম মাইনিং শুরু করুন",
-                mining_claim: "পুরস্কার দাবি করুন",
-                mining_in_progress: "মাইনিং চলছে...",
-                mining_total: "মোট মাইন করা:",
-                mining_today: "আজ:",
-                mining_quick_tasks: "কাজ",
-                mining_quick_booster: "বুস্টার 🚀",
-                upgrade_title: "মাইনিং স্তর আপগ্রেড করুন",
-                tasks_title: "কাজ এবং পুরস্কার",
-                tasks_completed: "সম্পন্ন",
-                tasks_basic: "মৌলিক",
-                tasks_vip: "ভিআইপি 🏆",
-                tasks_start: "শুরু করুন",
-                tasks_done: "সম্পন্ন ✓",
-                staking_title: "কোয়ান্টাম স্টেকিং",
-                staking_description: "AMSK টোকেন অর্জনের জন্য আপনার USDT স্টেক করুন। বেশি স্টেক এবং দীর্ঘ সময়কাল আরও ভাল পুরস্কার দেয়।",
-                staking_total: "মোট স্টেক",
-                staking_active: "সক্রিয় আয়",
-                staking_plans: "স্টেকিং পরিকল্পনা",
-                staking_plan_silver: "সিলভার প্ল্যান",
-                staking_plan_gold: "গোল্ড প্ল্যান",
-                staking_plan_diamond: "ডায়মন্ড প্ল্যান",
-                staking_duration_7: "৭ দিন",
-                staking_duration_15: "১৫ দিন",
-                staking_duration_30: "৩০ দিন",
-                staking_silver_reward: "দৈনিক: $10 প্রতি 2,857 AMSK",
-                staking_gold_reward: "দৈনিক: $50 প্রতি 8,333 AMSK",
-                staking_diamond_reward: "দৈনিক: $100 প্রতি 10,000 AMSK",
-                staking_stake_now: "এখনই স্টেক করুন",
-                staking_active_stakes: "সক্রিয় স্টেক",
-                staking_no_active: "এখনও কোন সক্রিয় স্টেক নেই",
-                staking_start_hint: "পুরস্কার অর্জনের জন্য স্টেকিং শুরু করুন",
-                wallet_total_balance: "মোট ব্যালেন্স",
-                wallet_total_usd: "ডলারে মোট মূল্য",
-                wallet_quick_actions: "দ্রুত কর্ম",
-                wallet_deposit: "জমা",
-                wallet_withdraw: "উত্তোলন",
-                wallet_swap: "অদলবদল",
-                wallet_history: "ইতিহাস",
-                wallet_assets: "সম্পদ",
-                referral_stats: "রেফারেল পরিসংখ্যান",
-                referral_count: "রেফারেল",
-                referral_earned: "AMSK অর্জিত",
-                referral_your_link: "আপনার রেফারেল লিঙ্ক",
-                referral_invite: "🚀 বন্ধুদের আমন্ত্রণ জানান এবং বড় অর্জন করুন!",
-                referral_bonus_1: "প্রতি রেফারেলের জন্য <strong>১০,০০০ AMSK ($২)</strong> পান যারা মাইনিং শুরু করে",
-                referral_bonus_2: "তাদের জমার উপর <strong>১৬% কমিশন</strong> চিরকাল অর্জন করুন",
-                referral_bonus_3: "সীমাহীন রেফারেল, তাৎক্ষণিক পুরস্কার!",
-                referral_milestones: "রেফারেল মাইলফলক",
-                referral_milestones_desc: "রেফারেল মাইলফলকে পৌঁছানোর জন্য বোনাস পুরস্কার অর্জন করুন!",
-                referral_milestone_10: "১০ রেফারেল",
-                referral_milestone_25: "২৫ রেফারেল",
-                referral_milestone_50: "৫০ রেফারেল",
-                referral_milestone_100: "১০০ রেফারেল",
-                referral_milestone_250: "২৫০ রেফারেল",
-                share_telegram: "টেলিগ্রাম",
-                share_whatsapp: "হোয়াটসঅ্যাপ",
-                language_welcome_title: "👽 এলিয়েন মাস্কে স্বাগতম!",
-                language_welcome_subtitle: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
-                language_continue: "চালিয়ে যান",
-                cancel: "বাতিল",
-                confirm: "নিশ্চিত করুন",
-                close: "বন্ধ করুন",
-                save: "সংরক্ষণ করুন",
-                edit: "সম্পাদনা করুন",
-                copy: "কপি করুন",
-                copied: "কপি হয়েছে!",
-                success: "সফল",
-                error: "ত্রুটি",
-                warning: "সতর্কতা",
-                info: "তথ্য",
-                free: "বিনামূল্যে",
-                deposit_title: "তহবিল জমা দিন",
-                withdraw_title: "তহবিল উত্তোলন",
-                swap_title: "টোকেন অদলবদল করুন",
-                history_title: "লেনদেনের ইতিহাস",
-                history_all: "সব",
-                history_pending: "বিচারাধীন",
-                history_completed: "সম্পন্ন",
-                history_rejected: "প্রত্যাখ্যাত",
-                history_all_types: "সব ধরনের",
-                history_deposits: "জমা",
-                history_withdrawals: "উত্তোলন",
-                history_mining: "মাইনিং",
-                history_staking: "স্টেকিং",
-                history_swap: "অদলবদল",
-                history_referral: "রেফারেল",
-                history_tasks: "কাজ",
-                history_vip: "ভিআইপি কাজ",
-                history_no_transactions: "কোন লেনদেন পাওয়া যায়নি",
-                history_no_transactions_desc: "আপনার বর্তমান ফিল্টারের সাথে কোন লেনদেন মেলে না",
-                admin_access: "প্রশাসক অ্যাক্সেস",
-                admin_dashboard: "প্রশাসক ড্যাশবোর্ড",
-                admin_welcome: "প্রশাসক প্যানেলে স্বাগতম",
-                admin_pending_deposits: "বিচারাধীন জমা",
-                admin_pending_withdrawals: "বিচারাধীন উত্তোলন",
-                admin_approve: "অনুমোদন",
-                admin_reject: "প্রত্যাখ্যান",
-                admin_find_user: "ব্যবহারকারী খুঁজুন",
-                admin_add_balance: "ব্যালেন্স যোগ করুন",
-                admin_subtract_balance: "ব্যালেন্স বিয়োগ করুন"
-            }
-        },
-        ru: {
-            code: 'ru',
-            flag: '🇷🇺',
-            name: 'Russian',
-            nativeName: 'Русский',
-            dir: 'ltr',
-            translations: {
-                app_name: "Alien Musk Quantum",
-                app_name_short: "Alien Musk",
-                loading: "Загрузка...",
-                loading_subtitle: "Инициализация квантовых систем...",
-                user_id_prefix: "ID:",
-                nav_home: "Главная",
-                nav_staking: "Стейкинг",
-                nav_wallet: "Кошелек",
-                nav_referral: "Рефералы",
-                mining_title: "Квантовая майнинг-станция",
-                mining_level: "Уровень",
-                mining_hashrate: "Хешрейт",
-                mining_next_reward: "Следующая награда:",
-                mining_start: "Начать квантовый майнинг",
-                mining_claim: "Получить награду",
-                mining_in_progress: "Майнинг...",
-                mining_total: "Всего добыто:",
-                mining_today: "Сегодня:",
-                mining_quick_tasks: "Задания",
-                mining_quick_booster: "Бустер 🚀",
-                upgrade_title: "Улучшить уровень майнинга",
-                tasks_title: "Задания и награды",
-                tasks_completed: "Выполнено",
-                tasks_basic: "Базовые",
-                tasks_vip: "VIP 🏆",
-                tasks_start: "Начать",
-                tasks_done: "Готово ✓",
-                staking_title: "Квантовый стейкинг",
-                staking_description: "Стейкайте свои USDT, чтобы зарабатывать токены AMSK. Большие стейки и более длительные сроки дают лучшие награды.",
-                staking_total: "Всего в стейкинге",
-                staking_active: "Активный доход",
-                staking_plans: "Планы стейкинга",
-                staking_plan_silver: "Silver",
-                staking_plan_gold: "Gold",
-                staking_plan_diamond: "Diamond",
-                staking_duration_7: "7 дней",
-                staking_duration_15: "15 дней",
-                staking_duration_30: "30 дней",
-                staking_silver_reward: "Ежедневно: 2,857 AMSK за $10",
-                staking_gold_reward: "Ежедневно: 8,333 AMSK за $50",
-                staking_diamond_reward: "Ежедневно: 10,000 AMSK за $100",
-                staking_stake_now: "Начать стейкинг",
-                staking_active_stakes: "Активные стейки",
-                staking_no_active: "Нет активных стейков",
-                staking_start_hint: "Начните стейкинг, чтобы зарабатывать награды",
-                wallet_total_balance: "Общий баланс",
-                wallet_total_usd: "Общая стоимость в USD",
-                wallet_quick_actions: "Быстрые действия",
-                wallet_deposit: "Депозит",
-                wallet_withdraw: "Вывод",
-                wallet_swap: "Обмен",
-                wallet_history: "История",
-                wallet_assets: "Активы",
-                referral_stats: "Реферальная статистика",
-                referral_count: "Рефералы",
-                referral_earned: "Заработано AMSK",
-                referral_your_link: "Ваша реферальная ссылка",
-                referral_invite: "🚀 Приглашайте друзей и зарабатывайте!",
-                referral_bonus_1: "Получите <strong>10,000 AMSK ($2)</strong> за каждого реферала, начавшего майнинг",
-                referral_bonus_2: "Зарабатывайте <strong>16% комиссии</strong> с их депозитов навсегда",
-                referral_bonus_3: "Неограниченное количество рефералов, мгновенные награды!",
-                referral_milestones: "Реферальные этапы",
-                referral_milestones_desc: "Зарабатывайте бонусные награды за достижение реферальных этапов!",
-                referral_milestone_10: "10 рефералов",
-                referral_milestone_25: "25 рефералов",
-                referral_milestone_50: "50 рефералов",
-                referral_milestone_100: "100 рефералов",
-                referral_milestone_250: "250 рефералов",
-                share_telegram: "Telegram",
-                share_whatsapp: "WhatsApp",
-                language_welcome_title: "👽 Добро пожаловать в Alien Musk!",
-                language_welcome_subtitle: "Пожалуйста, выберите предпочитаемый язык",
-                language_continue: "Продолжить",
-                cancel: "Отмена",
-                confirm: "Подтвердить",
-                close: "Закрыть",
-                save: "Сохранить",
-                edit: "Редактировать",
-                copy: "Копировать",
-                copied: "Скопировано!",
-                success: "Успешно",
-                error: "Ошибка",
-                warning: "Предупреждение",
-                info: "Информация",
-                free: "Бесплатно",
-                deposit_title: "Пополнить счет",
-                withdraw_title: "Вывести средства",
-                swap_title: "Обмен токенов",
-                history_title: "История транзакций",
-                history_all: "Все",
-                history_pending: "В ожидании",
-                history_completed: "Завершено",
-                history_rejected: "Отклонено",
-                history_all_types: "Все типы",
-                history_deposits: "Депозиты",
-                history_withdrawals: "Выводы",
-                history_mining: "Майнинг",
-                history_staking: "Стейкинг",
-                history_swap: "Обмен",
-                history_referral: "Рефералы",
-                history_tasks: "Задания",
-                history_vip: "VIP задания",
-                history_no_transactions: "Транзакции не найдены",
-                history_no_transactions_desc: "Нет транзакций, соответствующих текущим фильтрам",
-                admin_access: "Доступ администратора",
-                admin_dashboard: "Панель администратора",
-                admin_welcome: "Добро пожаловать в панель администратора",
-                admin_pending_deposits: "Ожидающие депозиты",
-                admin_pending_withdrawals: "Ожидающие выводы",
-                admin_approve: "Одобрить",
-                admin_reject: "Отклонить",
-                admin_find_user: "Найти пользователя",
-                admin_add_balance: "Добавить баланс",
-                admin_subtract_balance: "Вычесть баланс"
-            }
-        }
-    };
-
-    let currentLanguage = 'en';
-    let isLanguageChanging = false;
-    
-    // دالة تغيير اللغة
-    function setLanguage(langCode) {
-        if (isLanguageChanging || !LANGUAGES[langCode]) return;
-        
-        isLanguageChanging = true;
-        
-        try {
-            currentLanguage = langCode;
-            localStorage.setItem('user_language', langCode);
             
-            document.documentElement.lang = langCode;
-            document.body.lang = langCode;
-            
-            document.querySelectorAll('.lang-icon').forEach(icon => {
-                if (icon.dataset.lang === langCode) {
-                    icon.classList.add('active');
-                } else {
-                    icon.classList.remove('active');
-                }
-            });
-            
-            updateUITexts();
-            
-            if (userData && userData.id && window.db) {
-                window.db.collection('users')
-                    .doc(userData.id)
-                    .update({
-                        'userInfo.language': langCode
-                    }).catch(console.error);
-            }
-        } finally {
-            isLanguageChanging = false;
-        }
-    }
-    
-    // دالة الحصول على الترجمة
-    function getTranslation(key, params = {}) {
-        const lang = LANGUAGES[currentLanguage] || LANGUAGES.en;
-        let text = lang.translations[key] || LANGUAGES.en.translations[key] || key;
-        
-        Object.keys(params).forEach(param => {
-            text = text.replace(`{${param}}`, params[param]);
-        });
-        
-        return text;
-    }
-    
-    // دالة تحديث جميع النصوص
-    function updateUITexts() {
-        document.querySelectorAll('[data-translate]').forEach(element => {
-            const key = element.getAttribute('data-translate');
-            const text = getTranslation(key);
-            
-            if (element.classList.contains('allow-html') || (text.includes('<') && text.includes('>'))) {
-                element.innerHTML = text;
-            } else {
-                element.textContent = text;
-            }
-        });
-    }
-    
-    // دالة إظهار نافذة اختيار اللغة لأول مرة
-    function showLanguageWelcomeModal() {
-        if (localStorage.getItem('user_language')) return;
-        
-        const modal = document.createElement('div');
-        modal.className = 'language-welcome-modal';
-        modal.innerHTML = `
-            <div class="language-welcome-content">
-                <div class="welcome-icon">👽</div>
-                <h2 class="welcome-title" data-translate="language_welcome_title"></h2>
-                <p class="welcome-subtitle" data-translate="language_welcome_subtitle"></p>
-                
-                <div class="language-grid">
-                    <div class="language-grid-item" onclick="selectWelcomeLanguage('en')">
-                        <span class="flag">🇬🇧</span>
-                        <span class="lang-name">English</span>
-                        <span class="native-name">English</span>
+            <!-- القسم الأيمن - الرصيد وأيقونة اللغة الواحدة -->
+            <div class="header-right">
+                <div class="balance-section">
+                    <!-- الرصيد الإجمالي -->
+                    <div class="total-balance-header">
+                        <div class="balance-amount-header">
+                            <i class="fas fa-coins"></i>
+                            <span id="total-balance-amsk">0</span>
+                            <span class="currency">AMSK</span>
+                        </div>
+                        <div class="balance-usd-header">
+                            ≈ $<span id="total-balance-usd">0.00</span>
+                        </div>
                     </div>
-                    <div class="language-grid-item" onclick="selectWelcomeLanguage('ar')">
-                        <span class="flag">🇸🇦</span>
-                        <span class="lang-name">العربية</span>
-                        <span class="native-name">العربية</span>
-                    </div>
-                    <div class="language-grid-item" onclick="selectWelcomeLanguage('hi')">
-                        <span class="flag">🇮🇳</span>
-                        <span class="lang-name">हिन्दी</span>
-                        <span class="native-name">हिन्दी</span>
-                    </div>
-                    <div class="language-grid-item" onclick="selectWelcomeLanguage('bn')">
-                        <span class="flag">🇧🇩</span>
-                        <span class="lang-name">বাংলা</span>
-                        <span class="native-name">বাংলা</span>
-                    </div>
-                    <div class="language-grid-item" onclick="selectWelcomeLanguage('ru')">
-                        <span class="flag">🇷🇺</span>
-                        <span class="lang-name">Русский</span>
-                        <span class="native-name">Русский</span>
-                    </div>
-                </div>
-                
-                <button class="continue-btn" onclick="closeLanguageWelcome()" data-translate="language_continue"></button>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        updateUITexts();
-    }
-    
-    function selectWelcomeLanguage(langCode) {
-        setLanguage(langCode);
-        closeLanguageWelcome();
-    }
-    
-    function closeLanguageWelcome() {
-        const modal = document.querySelector('.language-welcome-modal');
-        if (modal) modal.remove();
-    }
-    
-    // تهيئة نظام اللغة
-    function initLanguageSystem() {
-        const savedLang = localStorage.getItem('user_language');
-        if (savedLang && LANGUAGES[savedLang]) {
-            setLanguage(savedLang);
-        } else {
-            showLanguageWelcomeModal();
-        }
-        
-        const langIcons = document.querySelectorAll('.lang-icon');
-        const tooltip = document.getElementById('languageTooltip');
-        
-        langIcons.forEach(icon => {
-            icon.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const lang = icon.dataset.lang;
-                
-                if (tooltip) {
-                    const rect = icon.getBoundingClientRect();
-                    tooltip.style.top = (rect.bottom + 5) + 'px';
-                    tooltip.style.right = (window.innerWidth - rect.right) + 'px';
-                    tooltip.classList.toggle('show');
                     
-                    const options = tooltip.querySelectorAll('.language-option');
-                    options.forEach(opt => {
-                        if (opt.dataset.lang === currentLanguage) {
-                            opt.classList.add('active');
-                        } else {
-                            opt.classList.remove('active');
-                        }
-                    });
-                } else {
-                    setLanguage(lang);
+                    <!-- أيقونة اللغة الواحدة تحت الرصيد -->
+                    <div class="language-selector">
+                        <div class="lang-icon" id="languageSelectorBtn">🌐</div>
+                        
+                        <!-- القائمة المنسدلة للغة -->
+                        <div class="language-dropdown" id="languageDropdown">
+                            <div class="language-option active" data-lang="en" data-flag="🇬🇧" data-name="English">
+                                <span class="flag">🇬🇧</span>
+                                <span class="lang-name">English</span>
+                            </div>
+                            <div class="language-option" data-lang="ar" data-flag="🇸🇦" data-name="العربية">
+                                <span class="flag">🇸🇦</span>
+                                <span class="lang-name">العربية</span>
+                            </div>
+                            <div class="language-option" data-lang="hi" data-flag="🇮🇳" data-name="हिन्दी">
+                                <span class="flag">🇮🇳</span>
+                                <span class="lang-name">हिन्दी</span>
+                            </div>
+                            <div class="language-option" data-lang="bn" data-flag="🇧🇩" data-name="বাংলা">
+                                <span class="flag">🇧🇩</span>
+                                <span class="lang-name">বাংলা</span>
+                            </div>
+                            <div class="language-option" data-lang="ru" data-flag="🇷🇺" data-name="Русский">
+                                <span class="flag">🇷🇺</span>
+                                <span class="lang-name">Русский</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- =========================================== -->
+        <!-- القائمة السفلية (التبويبات) -->
+        <!-- =========================================== -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span data-translate="nav_home">Home</span>
+            </button>
+            <button class="nav-btn" data-page="staking">
+                <i class="fas fa-gem"></i>
+                <span data-translate="nav_staking">Staking</span>
+            </button>
+            <button class="nav-btn" data-page="wallet">
+                <i class="fas fa-wallet"></i>
+                <span data-translate="nav_wallet">Wallet</span>
+            </button>
+            <button class="nav-btn" data-page="referral">
+                <i class="fas fa-users"></i>
+                <span data-translate="nav_referral">Referral</span>
+            </button>
+        </nav>
+
+        <!-- =========================================== -->
+        <!-- حاوية الإشعارات -->
+        <!-- =========================================== -->
+        <div id="notification-container" class="notification-container"></div>
+
+        <!-- =========================================== -->
+        <!-- صفحة الرئيسية (Home) -->
+        <!-- =========================================== -->
+        <div id="home-page" class="page active">
+            <!-- قسم التعدين -->
+            <section class="mining-section">
+                <div class="mining-header">
+                    <h3><i class="fas fa-microchip"></i> <span data-translate="mining_title">Quantum Mining Station</span></h3>
+                    <div class="mining-stats">
+                        <div class="stat-item">
+                            <div class="stat-label" data-translate="mining_level">Level</div>
+                            <div class="stat-value" id="current-mining-level">1</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label" data-translate="mining_hashrate">Hashrate</div>
+                            <div class="stat-value" id="current-hashrate-display">1,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مؤقت التعدين -->
+                <div class="mining-timer-card">
+                    <div class="timer-display">
+                        <i class="fas fa-clock"></i>
+                        <span id="mining-timer-display">01:00:00</span>
+                    </div>
+                    <div class="next-reward">
+                        <span data-translate="mining_next_reward">Next Reward:</span> <span id="next-reward-amount">1,000</span> AMSK
+                    </div>
+                </div>
+
+                <!-- زر التعدين -->
+                <button class="mining-action-btn" id="start-mining-btn">
+                    <i class="fas fa-play"></i>
+                    <span data-translate="mining_start">Start Quantum Mining</span>
+                </button>
+
+                <!-- معلومات التعدين -->
+                <div class="mining-info">
+                    <div class="info-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span><span data-translate="mining_total">Total Mined:</span> <span id="total-mined">1,000</span> AMSK</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-day"></i>
+                        <span><span data-translate="mining_today">Today:</span> <span id="mined-today">1,000</span> AMSK</span>
+                    </div>
+                </div>
+                
+                <!-- أزرار سريعة -->
+                <div class="quick-actions">
+                    <button class="quick-action-btn tasks-btn" id="scroll-to-tasks-btn">
+                        <i class="fas fa-tasks"></i>
+                        <span data-translate="mining_quick_tasks">Tasks</span>
+                    </button>
+                    <button class="quick-action-btn booster-btn" id="booster-btn">
+                        <i class="fas fa-rocket"></i>
+                        <span data-translate="mining_quick_booster">Booster 🚀</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- قسم تطوير مستوى التعدين -->
+            <section class="upgrade-section">
+                <h4><i class="fas fa-level-up-alt"></i> <span data-translate="upgrade_title">Upgrade Mining Level</span></h4>
+                <div class="upgrade-cards" id="upgrade-cards">
+                    <!-- بطاقات التطوير ستتم إضافتها ديناميكياً عبر JavaScript -->
+                </div>
+            </section>
+
+            <!-- قسم المهام -->
+            <section class="tasks-section" id="tasks-section">
+                <div class="tasks-header">
+                    <h4><i class="fas fa-tasks"></i> <span data-translate="tasks_title">Tasks & Rewards</span></h4>
+                    <div class="tasks-progress" id="tasks-progress">0/4 <span data-translate="tasks_completed">Completed</span></div>
+                </div>
+                
+                <!-- تبويبات المهام -->
+                <div class="tasks-tabs">
+                    <button class="tasks-tab active" data-tab="basic">
+                        <i class="fas fa-tasks"></i> <span data-translate="tasks_basic">Basic</span>
+                    </button>
+                    <button class="tasks-tab" data-tab="vip">
+                        <i class="fas fa-crown"></i> <span data-translate="tasks_vip">VIP 🏆</span>
+                    </button>
+                </div>
+                
+                <!-- شبكة المهام الأساسية -->
+                <div class="tasks-grid active" id="tasks-grid" data-tab-content="basic">
+                    <!-- المهام ستتم إضافتها ديناميكياً عبر JavaScript -->
+                </div>
+                
+                <!-- شبكة مهام VIP -->
+                <div class="vip-tasks-grid" id="vip-tasks-grid" data-tab-content="vip" style="display: none;">
+                    <!-- مهام VIP ستتم إضافتها ديناميكياً عبر JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- =========================================== -->
+        <!-- صفحة Staking (الإيداع) -->
+        <!-- =========================================== -->
+        <div id="staking-page" class="page">
+            <div class="staking-content">
+                <!-- بطاقة Staking الرئيسية -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
+                    <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
+                    
+                    <div class="total-staked-card">
+                        <div class="staked-info">
+                            <div class="staked-label" data-translate="staking_total">Total Staked</div>
+                            <div class="staked-amount" id="total-staked">0 USDT</div>
+                        </div>
+                        <div class="staked-earnings">
+                            <i class="fas fa-coins"></i>
+                            <span data-translate="staking_active">Active Earnings</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- خطط Staking -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
+                    
+                    <div class="staking-plans-grid">
+                        <!-- الخطة الفضية -->
+                        <div class="plan-item">
+                            <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
+                            <div class="plan-amount">10+ USDT</div>
+                            <div class="plan-duration" data-translate="staking_duration_7">7 Days</div>
+                            <div class="plan-apr">40% APR</div>
+                            <div class="plan-reward" data-translate="staking_silver_reward">Daily: 2,857 AMSK per $10</div>
+                            <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
+                        </div>
+
+                        <!-- الخطة الذهبية -->
+                        <div class="plan-item">
+                            <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
+                            <div class="plan-amount">50+ USDT</div>
+                            <div class="plan-duration" data-translate="staking_duration_15">15 Days</div>
+                            <div class="plan-apr">50% APR</div>
+                            <div class="plan-reward" data-translate="staking_gold_reward">Daily: 8,333 AMSK per $50</div>
+                            <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
+                        </div>
+
+                        <!-- الخطة الماسية -->
+                        <div class="plan-item">
+                            <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
+                            <div class="plan-amount">100+ USDT</div>
+                            <div class="plan-duration" data-translate="staking_duration_30">30 Days</div>
+                            <div class="plan-apr">60% APR</div>
+                            <div class="plan-reward" data-translate="staking_diamond_reward">Daily: 10,000 AMSK per $100</div>
+                            <button class="stake-plan-btn" data-plan="3" data-translate="staking_stake_now">Stake Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- الإيداعات النشطة -->
+                <div class="staking-card">
+                    <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
+                    <div class="active-stakes" id="active-stakes-list">
+                        <div class="empty-stakes">
+                            <i class="fas fa-inbox"></i>
+                            <p data-translate="staking_no_active">No active stakes yet</p>
+                            <small data-translate="staking_start_hint">Start staking to earn rewards</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- =========================================== -->
+        <!-- صفحة Wallet (المحفظة) -->
+        <!-- =========================================== -->
+        <div id="wallet-page" class="page">
+            <div class="wallet-content">
+                <!-- بطاقة الرصيد الإجمالي -->
+                <div class="wallet-balance-card">
+                    <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
+                    <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
+                    <div class="wallet-balance-subtitle" data-translate="wallet_total_usd">Total Value in USD</div>
+                    <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
+                </div>
+
+                <!-- الأزرار السريعة -->
+                <div class="wallet-actions-card">
+                    <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
+                    
+                    <div class="wallet-actions-compact">
+                        <button class="wallet-action-btn" id="deposit-btn">
+                            <i class="fas fa-download"></i>
+                            <span data-translate="wallet_deposit">Deposit</span>
+                        </button>
+                        <button class="wallet-action-btn" id="withdraw-btn">
+                            <i class="fas fa-upload"></i>
+                            <span data-translate="wallet_withdraw">Withdraw</span>
+                        </button>
+                        <button class="wallet-action-btn" id="swap-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span data-translate="wallet_swap">Swap</span>
+                        </button>
+                        <button class="wallet-action-btn" id="history-btn">
+                            <i class="fas fa-history"></i>
+                            <span data-translate="wallet_history">History</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- قائمة الأصول -->
+                <div class="wallet-assets-card">
+                    <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
+                    
+                    <div class="assets-section">
+                        <div class="asset-list-compact">
+                            <!-- AMSK Token -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact ams-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">AMSK Token</div>
+                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                            </div>
+
+                            <!-- USDT -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact usdt-icon">
+                                    <i class="fas fa-coins"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">USDT</div>
+                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            </div>
+
+                            <!-- BNB -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact bnb-icon">
+                                    <i class="fab fa-btc"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">BNB</div>
+                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            </div>
+
+                            <!-- TON -->
+                            <div class="asset-item-compact">
+                                <div class="asset-icon-compact ton-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="asset-details-compact">
+                                    <div class="asset-name-compact">TON</div>
+                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                                </div>
+                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================== -->
+        <!-- صفحة Referral (الدعوات) -->
+        <!-- =========================================== -->
+        <div id="referral-page" class="page">
+            <div class="referral-content">
+                <!-- إحصائيات الدعوات -->
+                <div class="referral-stats-card">
+                    <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
+                    
+                    <div class="referral-stats-grid">
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-count">0</div>
+                            <div class="ref-stat-label" data-translate="referral_count">Referrals</div>
+                        </div>
+                        <div class="ref-stat-item">
+                            <div class="ref-stat-value" id="ref-earned">0</div>
+                            <div class="ref-stat-label" data-translate="referral_earned">AMSK Earned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- رابط الدعوة -->
+                <div class="referral-link-card">
+                    <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
+                    
+                    <!-- وصف الدعوة -->
+                    <div class="referral-description">
+                        <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_1" class="allow-html">Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_2" class="allow-html">Earn <strong>16% commission</strong> on their deposits forever</span></li>
+                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_3" class="allow-html">Unlimited referrals, instant rewards!</span></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- حقل الرابط وزر النسخ -->
+                    <div class="link-input-group">
+                        <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
+                        <button class="copy-link-btn" id="copy-link-btn">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- أزرار المشاركة -->
+                    <div class="share-buttons">
+                        <button class="share-btn telegram" id="telegram-share-btn">
+                            <i class="fab fa-telegram"></i>
+                            <span data-translate="share_telegram">Telegram</span>
+                        </button>
+                        <button class="share-btn whatsapp" id="whatsapp-share-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <span data-translate="share_whatsapp">WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- مراحل الدعوات (Milestones) -->
+                <div class="milestones-card">
+                    <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
+                    <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
+                    
+                    <div class="milestones-list" id="milestones-list">
+                        <!-- مرحلة 10 دعوات -->
+                        <div class="milestone-item locked" data-milestone="10">
+                            <div class="milestone-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement" data-translate="referral_milestone_10">10 Referrals</div>
+                                <div class="milestone-progress">0/10</div>
+                                <div class="milestone-reward">+50,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/10</span>
+                            </div>
+                        </div>
+
+                        <!-- مرحلة 25 دعوة -->
+                        <div class="milestone-item locked" data-milestone="25">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement" data-translate="referral_milestone_25">25 Referrals</div>
+                                <div class="milestone-progress">0/25</div>
+                                <div class="milestone-reward">+150,000 AMSK</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/25</span>
+                            </div>
+                        </div>
+
+                        <!-- مرحلة 50 دعوة -->
+                        <div class="milestone-item locked" data-milestone="50">
+                            <div class="milestone-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement" data-translate="referral_milestone_50">50 Referrals</div>
+                                <div class="milestone-progress">0/50</div>
+                                <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/50</span>
+                            </div>
+                        </div>
+
+                        <!-- مرحلة 100 دعوة -->
+                        <div class="milestone-item locked" data-milestone="100">
+                            <div class="milestone-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement" data-translate="referral_milestone_100">100 Referrals</div>
+                                <div class="milestone-progress">0/100</div>
+                                <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/100</span>
+                            </div>
+                        </div>
+
+                        <!-- مرحلة 250 دعوة -->
+                        <div class="milestone-item locked" data-milestone="250">
+                            <div class="milestone-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="milestone-details">
+                                <div class="milestone-requirement" data-translate="referral_milestone_250">250 Referrals</div>
+                                <div class="milestone-progress">0/250</div>
+                                <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
+                            </div>
+                            <div class="milestone-action">
+                                <span class="locked-badge">0/250</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log("🔗 Loading Alien Musk Quantum Platform v7.0 - النسخة النهائية الكاملة");
+        
+        window.tg = null;
+        window.firebaseApp = null;
+        window.db = null;
+        window.auth = null;
+        let appInitialized = false;
+        
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
+            authDomain: "tatbi9-681bf.firebaseapp.com",
+            projectId: "tatbi9-681bf",
+            storageBucket: "tatbi9-681bf.firebasestorage.app",
+            messagingSenderId: "863237064748",
+            appId: "1:863237064748:web:134de1e01d2639ef5fa989"
+        };
+        
+        // ===========================================
+        // 🌐 نظام اللغات المتعددة - كامل غير مختصر
+        // ===========================================
+        const LANGUAGES = {
+            en: {
+                code: 'en',
+                flag: '🇬🇧',
+                name: 'English',
+                nativeName: 'English',
+                dir: 'ltr',
+                translations: {
+                    app_name: "Alien Musk Quantum",
+                    app_name_short: "Alien Musk",
+                    loading: "Loading...",
+                    loading_subtitle: "Initializing Quantum Systems...",
+                    user_id_prefix: "ID:",
+                    nav_home: "Home",
+                    nav_staking: "Staking",
+                    nav_wallet: "Wallet",
+                    nav_referral: "Referral",
+                    mining_title: "Quantum Mining Station",
+                    mining_level: "Level",
+                    mining_hashrate: "Hashrate",
+                    mining_next_reward: "Next Reward:",
+                    mining_start: "Start Quantum Mining",
+                    mining_claim: "Claim Reward",
+                    mining_in_progress: "Mining...",
+                    mining_total: "Total Mined:",
+                    mining_today: "Today:",
+                    mining_quick_tasks: "Tasks",
+                    mining_quick_booster: "Booster 🚀",
+                    upgrade_title: "Upgrade Mining Level",
+                    tasks_title: "Tasks & Rewards",
+                    tasks_completed: "Completed",
+                    tasks_basic: "Basic",
+                    tasks_vip: "VIP 🏆",
+                    tasks_start: "Start",
+                    tasks_done: "Done ✓",
+                    staking_title: "Quantum Staking",
+                    staking_description: "Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.",
+                    staking_total: "Total Staked",
+                    staking_active: "Active Earnings",
+                    staking_plans: "Staking Plans",
+                    staking_plan_silver: "Silver Plan",
+                    staking_plan_gold: "Gold Plan",
+                    staking_plan_diamond: "Diamond Plan",
+                    staking_duration_7: "7 Days",
+                    staking_duration_15: "15 Days",
+                    staking_duration_30: "30 Days",
+                    staking_silver_reward: "Daily: 2,857 AMSK per $10",
+                    staking_gold_reward: "Daily: 8,333 AMSK per $50",
+                    staking_diamond_reward: "Daily: 10,000 AMSK per $100",
+                    staking_stake_now: "Stake Now",
+                    staking_active_stakes: "Active Stakes",
+                    staking_no_active: "No active stakes yet",
+                    staking_start_hint: "Start staking to earn rewards",
+                    wallet_total_balance: "Total Balance",
+                    wallet_total_usd: "Total Value in USD",
+                    wallet_quick_actions: "Quick Actions",
+                    wallet_deposit: "Deposit",
+                    wallet_withdraw: "Withdraw",
+                    wallet_swap: "Swap",
+                    wallet_history: "History",
+                    wallet_assets: "Assets",
+                    referral_stats: "Referral Stats",
+                    referral_count: "Referrals",
+                    referral_earned: "AMSK Earned",
+                    referral_your_link: "Your Referral Link",
+                    referral_invite: "🚀 Invite friends and earn big!",
+                    referral_bonus_1: "Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining",
+                    referral_bonus_2: "Earn <strong>16% commission</strong> on their deposits forever",
+                    referral_bonus_3: "Unlimited referrals, instant rewards!",
+                    referral_milestones: "Referral Milestones",
+                    referral_milestones_desc: "Earn bonus rewards for reaching referral milestones!",
+                    referral_milestone_10: "10 Referrals",
+                    referral_milestone_25: "25 Referrals",
+                    referral_milestone_50: "50 Referrals",
+                    referral_milestone_100: "100 Referrals",
+                    referral_milestone_250: "250 Referrals",
+                    share_telegram: "Telegram",
+                    share_whatsapp: "WhatsApp",
+                    language_welcome_title: "👽 Welcome to Alien Musk!",
+                    language_welcome_subtitle: "Please select your preferred language",
+                    language_continue: "Continue",
+                    cancel: "Cancel",
+                    confirm: "Confirm",
+                    close: "Close",
+                    save: "Save",
+                    edit: "Edit",
+                    copy: "Copy",
+                    copied: "Copied!",
+                    success: "Success",
+                    error: "Error",
+                    warning: "Warning",
+                    info: "Info",
+                    free: "Free",
+                    deposit_title: "Deposit Funds",
+                    withdraw_title: "Withdraw Funds",
+                    swap_title: "Swap Tokens",
+                    history_title: "Transaction History",
+                    history_all: "All",
+                    history_pending: "Pending",
+                    history_completed: "Completed",
+                    history_rejected: "Rejected",
+                    history_all_types: "All Types",
+                    history_deposits: "Deposits",
+                    history_withdrawals: "Withdrawals",
+                    history_mining: "Mining",
+                    history_staking: "Staking",
+                    history_swap: "Swap",
+                    history_referral: "Referral",
+                    history_tasks: "Tasks",
+                    history_vip: "VIP Tasks",
+                    history_no_transactions: "No Transactions Found",
+                    history_no_transactions_desc: "No transactions match your current filters",
+                    admin_access: "Admin Access",
+                    admin_dashboard: "Admin Dashboard",
+                    admin_welcome: "Welcome to the admin panel",
+                    admin_pending_deposits: "Pending Deposits",
+                    admin_pending_withdrawals: "Pending Withdrawals",
+                    admin_approve: "Approve",
+                    admin_reject: "Reject",
+                    admin_find_user: "Find User",
+                    admin_add_balance: "Add Balance",
+                    admin_subtract_balance: "Subtract Balance"
                 }
-            });
-        });
-        
-        document.addEventListener('click', () => {
-            if (tooltip) tooltip.classList.remove('show');
-        });
-        
-        if (tooltip) {
-            const options = tooltip.querySelectorAll('.language-option');
-            options.forEach(option => {
-                option.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const lang = option.dataset.lang;
-                    setLanguage(lang);
-                    tooltip.classList.remove('show');
-                });
-            });
-        }
-    }
-    
-    // دوال تهيئة Telegram و Firebase
-    function initTelegram() {
-        try {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.tg = Telegram.WebApp;
-                window.tg.ready();
-                window.tg.expand();
-                window.tg.setHeaderColor('#0a0a0f');
-                window.tg.setBackgroundColor('#0a0a0f');
-                console.log("✅ Telegram WebApp initialized");
-                return true;
+            },
+            ar: {
+                code: 'ar',
+                flag: '🇸🇦',
+                name: 'Arabic',
+                nativeName: 'العربية',
+                dir: 'rtl',
+                translations: {
+                    app_name: "أليون ماسك كوانتوم",
+                    app_name_short: "أليون ماسك",
+                    loading: "جاري التحميل...",
+                    loading_subtitle: "تشغيل الأنظمة الكمومية...",
+                    user_id_prefix: "معرف:",
+                    nav_home: "الرئيسية",
+                    nav_staking: "الإيداع",
+                    nav_wallet: "المحفظة",
+                    nav_referral: "الدعوات",
+                    mining_title: "محطة التعدين الكمومي",
+                    mining_level: "المستوى",
+                    mining_hashrate: "قوة التعدين",
+                    mining_next_reward: "المكافأة التالية:",
+                    mining_start: "بدء التعدين الكمومي",
+                    mining_claim: "استلام المكافأة",
+                    mining_in_progress: "جاري التعدين...",
+                    mining_total: "الإجمالي الملغوم:",
+                    mining_today: "اليوم:",
+                    mining_quick_tasks: "المهام",
+                    mining_quick_booster: "معزز 🚀",
+                    upgrade_title: "تطوير مستوى التعدين",
+                    tasks_title: "المهام والمكافآت",
+                    tasks_completed: "مكتمل",
+                    tasks_basic: "أساسية",
+                    tasks_vip: "VIP 🏆",
+                    tasks_start: "ابدأ",
+                    tasks_done: "تم ✓",
+                    staking_title: "الإيداع الكمومي",
+                    staking_description: "قم بإيداع USDT لكسب رموز AMSK. الإيداعات الأكبر والمدة الأطول تمنح مكافآت أفضل.",
+                    staking_total: "إجمالي الإيداع",
+                    staking_active: "الأرباح النشطة",
+                    staking_plans: "خطط الإيداع",
+                    staking_plan_silver: "الفضة",
+                    staking_plan_gold: "الذهب",
+                    staking_plan_diamond: "الألماس",
+                    staking_duration_7: "7 أيام",
+                    staking_duration_15: "15 يوم",
+                    staking_duration_30: "30 يوم",
+                    staking_silver_reward: "يومياً: 2,857 AMSK لكل $10",
+                    staking_gold_reward: "يومياً: 8,333 AMSK لكل $50",
+                    staking_diamond_reward: "يومياً: 10,000 AMSK لكل $100",
+                    staking_stake_now: "إيداع الآن",
+                    staking_active_stakes: "الإيداعات النشطة",
+                    staking_no_active: "لا توجد إيداعات نشطة",
+                    staking_start_hint: "ابدأ الإيداع لكسب المكافآت",
+                    wallet_total_balance: "الرصيد الإجمالي",
+                    wallet_total_usd: "القيمة الإجمالية بالدولار",
+                    wallet_quick_actions: "إجراءات سريعة",
+                    wallet_deposit: "إيداع",
+                    wallet_withdraw: "سحب",
+                    wallet_swap: "تبديل",
+                    wallet_history: "السجل",
+                    wallet_assets: "الأصول",
+                    referral_stats: "إحصائيات الدعوات",
+                    referral_count: "الدعوات",
+                    referral_earned: "AMSK المكتسب",
+                    referral_your_link: "رابط الدعوة الخاص بك",
+                    referral_invite: "🚀 ادعُ أصدقائك واربح الكثير!",
+                    referral_bonus_1: "احصل على <strong>10,000 AMSK ($2)</strong> عن كل صديق يبدأ التعدين",
+                    referral_bonus_2: "اربح <strong>عمولة 16%</strong> من إيداعاتهم مدى الحياة",
+                    referral_bonus_3: "دعوات غير محدودة، مكافآت فورية!",
+                    referral_milestones: "مراحل الدعوات",
+                    referral_milestones_desc: "احصل على مكافآت إضافية عند الوصول لمراحل محددة!",
+                    referral_milestone_10: "10 دعوات",
+                    referral_milestone_25: "25 دعوة",
+                    referral_milestone_50: "50 دعوة",
+                    referral_milestone_100: "100 دعوة",
+                    referral_milestone_250: "250 دعوة",
+                    share_telegram: "تليجرام",
+                    share_whatsapp: "واتساب",
+                    language_welcome_title: "👽 مرحباً بك في أليون ماسك!",
+                    language_welcome_subtitle: "الرجاء اختيار لغتك المفضلة",
+                    language_continue: "متابعة",
+                    cancel: "إلغاء",
+                    confirm: "تأكيد",
+                    close: "إغلاق",
+                    save: "حفظ",
+                    edit: "تعديل",
+                    copy: "نسخ",
+                    copied: "تم النسخ!",
+                    success: "نجاح",
+                    error: "خطأ",
+                    warning: "تحذير",
+                    info: "معلومة",
+                    free: "مجاني",
+                    deposit_title: "إيداع الأموال",
+                    withdraw_title: "سحب الأموال",
+                    swap_title: "تبديل العملات",
+                    history_title: "سجل المعاملات",
+                    history_all: "الكل",
+                    history_pending: "معلقة",
+                    history_completed: "مكتملة",
+                    history_rejected: "مرفوضة",
+                    history_all_types: "جميع الأنواع",
+                    history_deposits: "إيداعات",
+                    history_withdrawals: "سحوبات",
+                    history_mining: "تعدين",
+                    history_staking: "إيداع",
+                    history_swap: "تبديل",
+                    history_referral: "دعوات",
+                    history_tasks: "مهام",
+                    history_vip: "VIP مهام",
+                    history_no_transactions: "لا توجد معاملات",
+                    history_no_transactions_desc: "لا توجد معاملات تطابق عوامل التصفية الخاصة بك",
+                    admin_access: "دخول المشرف",
+                    admin_dashboard: "لوحة تحكم المشرف",
+                    admin_welcome: "مرحباً بك في لوحة تحكم المشرف",
+                    admin_pending_deposits: "إيداعات معلقة",
+                    admin_pending_withdrawals: "سحوبات معلقة",
+                    admin_approve: "موافقة",
+                    admin_reject: "رفض",
+                    admin_find_user: "البحث عن مستخدم",
+                    admin_add_balance: "إضافة رصيد",
+                    admin_subtract_balance: "خصم رصيد"
+                }
+            },
+            hi: {
+                code: 'hi',
+                flag: '🇮🇳',
+                name: 'Hindi',
+                nativeName: 'हिन्दी',
+                dir: 'ltr',
+                translations: {
+                    app_name: "एलियन मस्क क्वांटम",
+                    app_name_short: "एलियन मस्क",
+                    loading: "लोड हो रहा है...",
+                    loading_subtitle: "क्वांटम सिस्टम शुरू हो रहे हैं...",
+                    user_id_prefix: "आईडी:",
+                    nav_home: "होम",
+                    nav_staking: "स्टेकिंग",
+                    nav_wallet: "वॉलेट",
+                    nav_referral: "रेफरल",
+                    mining_title: "क्वांटम माइनिंग स्टेशन",
+                    mining_level: "स्तर",
+                    mining_hashrate: "हैशरेट",
+                    mining_next_reward: "अगला इनाम:",
+                    mining_start: "क्वांटम माइनिंग शुरू करें",
+                    mining_claim: "इनाम प्राप्त करें",
+                    mining_in_progress: "माइनिंग जारी...",
+                    mining_total: "कुल माइन किया गया:",
+                    mining_today: "आज:",
+                    mining_quick_tasks: "कार्य",
+                    mining_quick_booster: "बूस्टर 🚀",
+                    upgrade_title: "माइनिंग स्तर अपग्रेड करें",
+                    tasks_title: "कार्य और इनाम",
+                    tasks_completed: "पूर्ण",
+                    tasks_basic: "बेसिक",
+                    tasks_vip: "वीआईपी 🏆",
+                    tasks_start: "शुरू करें",
+                    tasks_done: "पूर्ण ✓",
+                    staking_title: "क्वांटम स्टेकिंग",
+                    staking_description: "AMSK टोकन कमाने के लिए अपना USDT स्टेक करें। अधिक स्टेक और लंबी अवधि बेहतर इनाम देती है।",
+                    staking_total: "कुल स्टेक",
+                    staking_active: "सक्रिय कमाई",
+                    staking_plans: "स्टेकिंग योजनाएं",
+                    staking_plan_silver: "सिल्वर प्लान",
+                    staking_plan_gold: "गोल्ड प्लान",
+                    staking_plan_diamond: "डायमंड प्लान",
+                    staking_duration_7: "7 दिन",
+                    staking_duration_15: "15 दिन",
+                    staking_duration_30: "30 दिन",
+                    staking_silver_reward: "दैनिक: 2,857 AMSK प्रति $10",
+                    staking_gold_reward: "दैनिक: 8,333 AMSK प्रति $50",
+                    staking_diamond_reward: "दैनिक: 10,000 AMSK प्रति $100",
+                    staking_stake_now: "अभी स्टेक करें",
+                    staking_active_stakes: "सक्रिय स्टेक",
+                    staking_no_active: "अभी तक कोई सक्रिय स्टेक नहीं",
+                    staking_start_hint: "इनाम कमाने के लिए स्टेकिंग शुरू करें",
+                    wallet_total_balance: "कुल बैलेंस",
+                    wallet_total_usd: "डॉलर में कुल मूल्य",
+                    wallet_quick_actions: "त्वरित कार्रवाई",
+                    wallet_deposit: "जमा करें",
+                    wallet_withdraw: "निकासी",
+                    wallet_swap: "स्वैप",
+                    wallet_history: "इतिहास",
+                    wallet_assets: "संपत्ति",
+                    referral_stats: "रेफरल आँकड़े",
+                    referral_count: "रेफरल",
+                    referral_earned: "AMSK कमाया",
+                    referral_your_link: "आपका रेफरल लिंक",
+                    referral_invite: "🚀 दोस्तों को आमंत्रित करें और बड़ा कमाएं!",
+                    referral_bonus_1: "<strong>10,000 AMSK ($2)</strong> प्रति रेफरल जो माइनिंग शुरू करता है",
+                    referral_bonus_2: "उनकी जमा पर <strong>16% कमीशन</strong> हमेशा के लिए कमाएं",
+                    referral_bonus_3: "असीमित रेफरल, तत्काल इनाम!",
+                    referral_milestones: "रेफरल मील के पत्थर",
+                    referral_milestones_desc: "रेफरल मील के पत्थर तक पहुंचने पर बोनस इनाम अर्जित करें!",
+                    referral_milestone_10: "10 रेफरल",
+                    referral_milestone_25: "25 रेफरल",
+                    referral_milestone_50: "50 रेफरल",
+                    referral_milestone_100: "100 रेफरल",
+                    referral_milestone_250: "250 रेफरल",
+                    share_telegram: "टेलीग्राम",
+                    share_whatsapp: "व्हाट्सएप",
+                    language_welcome_title: "👽 एलियन मस्क में आपका स्वागत है!",
+                    language_welcome_subtitle: "कृपया अपनी पसंदीदा भाषा चुनें",
+                    language_continue: "जारी रखें",
+                    cancel: "रद्द करें",
+                    confirm: "पुष्टि करें",
+                    close: "बंद करें",
+                    save: "सहेजें",
+                    edit: "संपादित करें",
+                    copy: "कॉपी करें",
+                    copied: "कॉपी हो गया!",
+                    success: "सफलता",
+                    error: "त्रुटि",
+                    warning: "चेतावनी",
+                    info: "जानकारी",
+                    free: "मुफ्त",
+                    deposit_title: "धन जमा करें",
+                    withdraw_title: "धन निकालें",
+                    swap_title: "टोकन स्वैप करें",
+                    history_title: "लेनदेन इतिहास",
+                    history_all: "सभी",
+                    history_pending: "लंबित",
+                    history_completed: "पूर्ण",
+                    history_rejected: "अस्वीकृत",
+                    history_all_types: "सभी प्रकार",
+                    history_deposits: "जमा",
+                    history_withdrawals: "निकासी",
+                    history_mining: "माइनिंग",
+                    history_staking: "स्टेकिंग",
+                    history_swap: "स्वैप",
+                    history_referral: "रेफरल",
+                    history_tasks: "कार्य",
+                    history_vip: "वीआईपी कार्य",
+                    history_no_transactions: "कोई लेनदेन नहीं मिला",
+                    history_no_transactions_desc: "आपके वर्तमान फ़िल्टर से कोई लेनदेन मेल नहीं खाता",
+                    admin_access: "व्यवस्थापक पहुंच",
+                    admin_dashboard: "व्यवस्थापक डैशबोर्ड",
+                    admin_welcome: "व्यवस्थापक पैनल में आपका स्वागत है",
+                    admin_pending_deposits: "लंबित जमा",
+                    admin_pending_withdrawals: "लंबित निकासी",
+                    admin_approve: "स्वीकृत करें",
+                    admin_reject: "अस्वीकार करें",
+                    admin_find_user: "उपयोगकर्ता खोजें",
+                    admin_add_balance: "बैलेंस जोड़ें",
+                    admin_subtract_balance: "बैलेंस घटाएं"
+                }
+            },
+            bn: {
+                code: 'bn',
+                flag: '🇧🇩',
+                name: 'Bengali',
+                nativeName: 'বাংলা',
+                dir: 'ltr',
+                translations: {
+                    app_name: "এলিয়েন মাস্ক কোয়ান্টাম",
+                    app_name_short: "এলিয়েন মাস্ক",
+                    loading: "লোড হচ্ছে...",
+                    loading_subtitle: "কোয়ান্টাম সিস্টেম চালু হচ্ছে...",
+                    user_id_prefix: "আইডি:",
+                    nav_home: "হোম",
+                    nav_staking: "স্টেকিং",
+                    nav_wallet: "ওয়ালেট",
+                    nav_referral: "রেফারেল",
+                    mining_title: "কোয়ান্টাম মাইনিং স্টেশন",
+                    mining_level: "স্তর",
+                    mining_hashrate: "হ্যাশরেট",
+                    mining_next_reward: "পরবর্তী পুরস্কার:",
+                    mining_start: "কোয়ান্টাম মাইনিং শুরু করুন",
+                    mining_claim: "পুরস্কার দাবি করুন",
+                    mining_in_progress: "মাইনিং চলছে...",
+                    mining_total: "মোট মাইন করা:",
+                    mining_today: "আজ:",
+                    mining_quick_tasks: "কাজ",
+                    mining_quick_booster: "বুস্টার 🚀",
+                    upgrade_title: "মাইনিং স্তর আপগ্রেড করুন",
+                    tasks_title: "কাজ এবং পুরস্কার",
+                    tasks_completed: "সম্পন্ন",
+                    tasks_basic: "মৌলিক",
+                    tasks_vip: "ভিআইপি 🏆",
+                    tasks_start: "শুরু করুন",
+                    tasks_done: "সম্পন্ন ✓",
+                    staking_title: "কোয়ান্টাম স্টেকিং",
+                    staking_description: "AMSK টোকেন অর্জনের জন্য আপনার USDT স্টেক করুন। বেশি স্টেক এবং দীর্ঘ সময়কাল আরও ভাল পুরস্কার দেয়।",
+                    staking_total: "মোট স্টেক",
+                    staking_active: "সক্রিয় আয়",
+                    staking_plans: "স্টেকিং পরিকল্পনা",
+                    staking_plan_silver: "সিলভার প্ল্যান",
+                    staking_plan_gold: "গোল্ড প্ল্যান",
+                    staking_plan_diamond: "ডায়মন্ড প্ল্যান",
+                    staking_duration_7: "৭ দিন",
+                    staking_duration_15: "১৫ দিন",
+                    staking_duration_30: "৩০ দিন",
+                    staking_silver_reward: "দৈনিক: $10 প্রতি 2,857 AMSK",
+                    staking_gold_reward: "দৈনিক: $50 প্রতি 8,333 AMSK",
+                    staking_diamond_reward: "দৈনিক: $100 প্রতি 10,000 AMSK",
+                    staking_stake_now: "এখনই স্টেক করুন",
+                    staking_active_stakes: "সক্রিয় স্টেক",
+                    staking_no_active: "এখনও কোন সক্রিয় স্টেক নেই",
+                    staking_start_hint: "পুরস্কার অর্জনের জন্য স্টেকিং শুরু করুন",
+                    wallet_total_balance: "মোট ব্যালেন্স",
+                    wallet_total_usd: "ডলারে মোট মূল্য",
+                    wallet_quick_actions: "দ্রুত কর্ম",
+                    wallet_deposit: "জমা",
+                    wallet_withdraw: "উত্তোলন",
+                    wallet_swap: "অদলবদল",
+                    wallet_history: "ইতিহাস",
+                    wallet_assets: "সম্পদ",
+                    referral_stats: "রেফারেল পরিসংখ্যান",
+                    referral_count: "রেফারেল",
+                    referral_earned: "AMSK অর্জিত",
+                    referral_your_link: "আপনার রেফারেল লিঙ্ক",
+                    referral_invite: "🚀 বন্ধুদের আমন্ত্রণ জানান এবং বড় অর্জন করুন!",
+                    referral_bonus_1: "প্রতি রেফারেলের জন্য <strong>১০,০০০ AMSK ($২)</strong> পান যারা মাইনিং শুরু করে",
+                    referral_bonus_2: "তাদের জমার উপর <strong>১৬% কমিশন</strong> চিরকাল অর্জন করুন",
+                    referral_bonus_3: "সীমাহীন রেফারেল, তাৎক্ষণিক পুরস্কার!",
+                    referral_milestones: "রেফারেল মাইলফলক",
+                    referral_milestones_desc: "রেফারেল মাইলফলকে পৌঁছানোর জন্য বোনাস পুরস্কার অর্জন করুন!",
+                    referral_milestone_10: "১০ রেফারেল",
+                    referral_milestone_25: "২৫ রেফারেল",
+                    referral_milestone_50: "৫০ রেফারেল",
+                    referral_milestone_100: "১০০ রেফারেল",
+                    referral_milestone_250: "২৫০ রেফারেল",
+                    share_telegram: "টেলিগ্রাম",
+                    share_whatsapp: "হোয়াটসঅ্যাপ",
+                    language_welcome_title: "👽 এলিয়েন মাস্কে স্বাগতম!",
+                    language_welcome_subtitle: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
+                    language_continue: "চালিয়ে যান",
+                    cancel: "বাতিল",
+                    confirm: "নিশ্চিত করুন",
+                    close: "বন্ধ করুন",
+                    save: "সংরক্ষণ করুন",
+                    edit: "সম্পাদনা করুন",
+                    copy: "কপি করুন",
+                    copied: "কপি হয়েছে!",
+                    success: "সফল",
+                    error: "ত্রুটি",
+                    warning: "সতর্কতা",
+                    info: "তথ্য",
+                    free: "বিনামূল্যে",
+                    deposit_title: "তহবিল জমা দিন",
+                    withdraw_title: "তহবিল উত্তোলন",
+                    swap_title: "টোকেন অদলবদল করুন",
+                    history_title: "লেনদেনের ইতিহাস",
+                    history_all: "সব",
+                    history_pending: "বিচারাধীন",
+                    history_completed: "সম্পন্ন",
+                    history_rejected: "প্রত্যাখ্যাত",
+                    history_all_types: "সব ধরনের",
+                    history_deposits: "জমা",
+                    history_withdrawals: "উত্তোলন",
+                    history_mining: "মাইনিং",
+                    history_staking: "স্টেকিং",
+                    history_swap: "অদলবদল",
+                    history_referral: "রেফারেল",
+                    history_tasks: "কাজ",
+                    history_vip: "ভিআইপি কাজ",
+                    history_no_transactions: "কোন লেনদেন পাওয়া যায়নি",
+                    history_no_transactions_desc: "আপনার বর্তমান ফিল্টারের সাথে কোন লেনদেন মেলে না",
+                    admin_access: "প্রশাসক অ্যাক্সেস",
+                    admin_dashboard: "প্রশাসক ড্যাশবোর্ড",
+                    admin_welcome: "প্রশাসক প্যানেলে স্বাগতম",
+                    admin_pending_deposits: "বিচারাধীন জমা",
+                    admin_pending_withdrawals: "বিচারাধীন উত্তোলন",
+                    admin_approve: "অনুমোদন",
+                    admin_reject: "প্রত্যাখ্যান",
+                    admin_find_user: "ব্যবহারকারী খুঁজুন",
+                    admin_add_balance: "ব্যালেন্স যোগ করুন",
+                    admin_subtract_balance: "ব্যালেন্স বিয়োগ করুন"
+                }
+            },
+            ru: {
+                code: 'ru',
+                flag: '🇷🇺',
+                name: 'Russian',
+                nativeName: 'Русский',
+                dir: 'ltr',
+                translations: {
+                    app_name: "Alien Musk Quantum",
+                    app_name_short: "Alien Musk",
+                    loading: "Загрузка...",
+                    loading_subtitle: "Инициализация квантовых систем...",
+                    user_id_prefix: "ID:",
+                    nav_home: "Главная",
+                    nav_staking: "Стейкинг",
+                    nav_wallet: "Кошелек",
+                    nav_referral: "Рефералы",
+                    mining_title: "Квантовая майнинг-станция",
+                    mining_level: "Уровень",
+                    mining_hashrate: "Хешрейт",
+                    mining_next_reward: "Следующая награда:",
+                    mining_start: "Начать квантовый майнинг",
+                    mining_claim: "Получить награду",
+                    mining_in_progress: "Майнинг...",
+                    mining_total: "Всего добыто:",
+                    mining_today: "Сегодня:",
+                    mining_quick_tasks: "Задания",
+                    mining_quick_booster: "Бустер 🚀",
+                    upgrade_title: "Улучшить уровень майнинга",
+                    tasks_title: "Задания и награды",
+                    tasks_completed: "Выполнено",
+                    tasks_basic: "Базовые",
+                    tasks_vip: "VIP 🏆",
+                    tasks_start: "Начать",
+                    tasks_done: "Готово ✓",
+                    staking_title: "Квантовый стейкинг",
+                    staking_description: "Стейкайте свои USDT, чтобы зарабатывать токены AMSK. Большие стейки и более длительные сроки дают лучшие награды.",
+                    staking_total: "Всего в стейкинге",
+                    staking_active: "Активный доход",
+                    staking_plans: "Планы стейкинга",
+                    staking_plan_silver: "Silver",
+                    staking_plan_gold: "Gold",
+                    staking_plan_diamond: "Diamond",
+                    staking_duration_7: "7 дней",
+                    staking_duration_15: "15 дней",
+                    staking_duration_30: "30 дней",
+                    staking_silver_reward: "Ежедневно: 2,857 AMSK за $10",
+                    staking_gold_reward: "Ежедневно: 8,333 AMSK за $50",
+                    staking_diamond_reward: "Ежедневно: 10,000 AMSK за $100",
+                    staking_stake_now: "Начать стейкинг",
+                    staking_active_stakes: "Активные стейки",
+                    staking_no_active: "Нет активных стейков",
+                    staking_start_hint: "Начните стейкинг, чтобы зарабатывать награды",
+                    wallet_total_balance: "Общий баланс",
+                    wallet_total_usd: "Общая стоимость в USD",
+                    wallet_quick_actions: "Быстрые действия",
+                    wallet_deposit: "Депозит",
+                    wallet_withdraw: "Вывод",
+                    wallet_swap: "Обмен",
+                    wallet_history: "История",
+                    wallet_assets: "Активы",
+                    referral_stats: "Реферальная статистика",
+                    referral_count: "Рефералы",
+                    referral_earned: "Заработано AMSK",
+                    referral_your_link: "Ваша реферальная ссылка",
+                    referral_invite: "🚀 Приглашайте друзей и зарабатывайте!",
+                    referral_bonus_1: "Получите <strong>10,000 AMSK ($2)</strong> за каждого реферала, начавшего майнинг",
+                    referral_bonus_2: "Зарабатывайте <strong>16% комиссии</strong> с их депозитов навсегда",
+                    referral_bonus_3: "Неограниченное количество рефералов, мгновенные награды!",
+                    referral_milestones: "Реферальные этапы",
+                    referral_milestones_desc: "Зарабатывайте бонусные награды за достижение реферальных этапов!",
+                    referral_milestone_10: "10 рефералов",
+                    referral_milestone_25: "25 рефералов",
+                    referral_milestone_50: "50 рефералов",
+                    referral_milestone_100: "100 рефералов",
+                    referral_milestone_250: "250 рефералов",
+                    share_telegram: "Telegram",
+                    share_whatsapp: "WhatsApp",
+                    language_welcome_title: "👽 Добро пожаловать в Alien Musk!",
+                    language_welcome_subtitle: "Пожалуйста, выберите предпочитаемый язык",
+                    language_continue: "Продолжить",
+                    cancel: "Отмена",
+                    confirm: "Подтвердить",
+                    close: "Закрыть",
+                    save: "Сохранить",
+                    edit: "Редактировать",
+                    copy: "Копировать",
+                    copied: "Скопировано!",
+                    success: "Успешно",
+                    error: "Ошибка",
+                    warning: "Предупреждение",
+                    info: "Информация",
+                    free: "Бесплатно",
+                    deposit_title: "Пополнить счет",
+                    withdraw_title: "Вывести средства",
+                    swap_title: "Обмен токенов",
+                    history_title: "История транзакций",
+                    history_all: "Все",
+                    history_pending: "В ожидании",
+                    history_completed: "Завершено",
+                    history_rejected: "Отклонено",
+                    history_all_types: "Все типы",
+                    history_deposits: "Депозиты",
+                    history_withdrawals: "Выводы",
+                    history_mining: "Майнинг",
+                    history_staking: "Стейкинг",
+                    history_swap: "Обмен",
+                    history_referral: "Рефералы",
+                    history_tasks: "Задания",
+                    history_vip: "VIP задания",
+                    history_no_transactions: "Транзакции не найдены",
+                    history_no_transactions_desc: "Нет транзакций, соответствующих текущим фильтрам",
+                    admin_access: "Доступ администратора",
+                    admin_dashboard: "Панель администратора",
+                    admin_welcome: "Добро пожаловать в панель администратора",
+                    admin_pending_deposits: "Ожидающие депозиты",
+                    admin_pending_withdrawals: "Ожидающие выводы",
+                    admin_approve: "Одобрить",
+                    admin_reject: "Отклонить",
+                    admin_find_user: "Найти пользователя",
+                    admin_add_balance: "Добавить баланс",
+                    admin_subtract_balance: "Вычесть баланс"
+                }
             }
-        } catch (e) {
-            console.log("⚠️ Not in Telegram environment");
-        }
-        return false;
-    }
-    
-    function initFirebase() {
-        if (typeof firebase !== 'undefined') {
+        };
+
+        let currentLanguage = 'en';
+        let isLanguageChanging = false;
+        
+        // دالة تغيير اللغة (بدون رسالة تأكيد)
+        function setLanguage(langCode) {
+            if (isLanguageChanging || !LANGUAGES[langCode]) return;
+            
+            isLanguageChanging = true;
+            
             try {
-                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
-                window.db = firebase.firestore();
-                window.auth = firebase.auth();
-                console.log("✅ Firebase initialized");
-                return true;
+                currentLanguage = langCode;
+                localStorage.setItem('user_language', langCode);
+                
+                document.documentElement.lang = langCode;
+                document.body.lang = langCode;
+                
+                // تحديث الأيقونة النشطة
+                const langIcon = document.getElementById('languageSelectorBtn');
+                if (langIcon) {
+                    // يمكن تغيير الأيقونة حسب اللغة إذا أردت
+                }
+                
+                updateUITexts();
+                
+                if (userData && userData.id && window.db) {
+                    window.db.collection('users')
+                        .doc(userData.id)
+                        .update({
+                            'userInfo.language': langCode
+                        }).catch(console.error);
+                }
+            } finally {
+                isLanguageChanging = false;
+            }
+        }
+        
+        // دالة الحصول على الترجمة
+        function getTranslation(key, params = {}) {
+            const lang = LANGUAGES[currentLanguage] || LANGUAGES.en;
+            let text = lang.translations[key] || LANGUAGES.en.translations[key] || key;
+            
+            Object.keys(params).forEach(param => {
+                text = text.replace(`{${param}}`, params[param]);
+            });
+            
+            return text;
+        }
+        
+        // دالة تحديث جميع النصوص
+        function updateUITexts() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const text = getTranslation(key);
+                
+                if (element.classList.contains('allow-html') || (text.includes('<') && text.includes('>'))) {
+                    element.innerHTML = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+        }
+        
+        // دالة إظهار نافذة اختيار اللغة لأول مرة
+        function showLanguageWelcomeModal() {
+            if (localStorage.getItem('user_language')) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'language-welcome-modal';
+            modal.innerHTML = `
+                <div class="language-welcome-content">
+                    <div class="welcome-icon">👽</div>
+                    <h2 class="welcome-title" data-translate="language_welcome_title"></h2>
+                    <p class="welcome-subtitle" data-translate="language_welcome_subtitle"></p>
+                    
+                    <div class="language-grid">
+                        <div class="language-grid-item" onclick="selectWelcomeLanguage('en')">
+                            <span class="flag">🇬🇧</span>
+                            <span class="lang-name">English</span>
+                            <span class="native-name">English</span>
+                        </div>
+                        <div class="language-grid-item" onclick="selectWelcomeLanguage('ar')">
+                            <span class="flag">🇸🇦</span>
+                            <span class="lang-name">العربية</span>
+                            <span class="native-name">العربية</span>
+                        </div>
+                        <div class="language-grid-item" onclick="selectWelcomeLanguage('hi')">
+                            <span class="flag">🇮🇳</span>
+                            <span class="lang-name">हिन्दी</span>
+                            <span class="native-name">हिन्दी</span>
+                        </div>
+                        <div class="language-grid-item" onclick="selectWelcomeLanguage('bn')">
+                            <span class="flag">🇧🇩</span>
+                            <span class="lang-name">বাংলা</span>
+                            <span class="native-name">বাংলা</span>
+                        </div>
+                        <div class="language-grid-item" onclick="selectWelcomeLanguage('ru')">
+                            <span class="flag">🇷🇺</span>
+                            <span class="lang-name">Русский</span>
+                            <span class="native-name">Русский</span>
+                        </div>
+                    </div>
+                    
+                    <button class="continue-btn" onclick="closeLanguageWelcome()" data-translate="language_continue"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            updateUITexts();
+        }
+        
+        function selectWelcomeLanguage(langCode) {
+            setLanguage(langCode);
+            closeLanguageWelcome();
+        }
+        
+        function closeLanguageWelcome() {
+            const modal = document.querySelector('.language-welcome-modal');
+            if (modal) modal.remove();
+        }
+        
+        // تهيئة نظام اللغة
+        function initLanguageSystem() {
+            const savedLang = localStorage.getItem('user_language');
+            if (savedLang && LANGUAGES[savedLang]) {
+                setLanguage(savedLang);
+            } else {
+                showLanguageWelcomeModal();
+            }
+            
+            // أيقونة اللغة الواحدة
+            const langIcon = document.getElementById('languageSelectorBtn');
+            const dropdown = document.getElementById('languageDropdown');
+            
+            if (langIcon && dropdown) {
+                langIcon.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    dropdown.classList.toggle('show');
+                });
+                
+                // إغلاق القائمة عند النقر خارجها
+                document.addEventListener('click', (e) => {
+                    if (!langIcon.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+                
+                // اختيار اللغة من القائمة
+                const options = dropdown.querySelectorAll('.language-option');
+                options.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const lang = option.dataset.lang;
+                        setLanguage(lang);
+                        
+                        // تحديث الحالة النشطة
+                        options.forEach(opt => opt.classList.remove('active'));
+                        option.classList.add('active');
+                        
+                        dropdown.classList.remove('show');
+                    });
+                });
+            }
+        }
+        
+        // دوال تهيئة Telegram و Firebase
+        function initTelegram() {
+            try {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.tg = Telegram.WebApp;
+                    window.tg.ready();
+                    window.tg.expand();
+                    window.tg.setHeaderColor('#0a0a0f');
+                    window.tg.setBackgroundColor('#0a0a0f');
+                    console.log("✅ Telegram WebApp initialized");
+                    return true;
+                }
+            } catch (e) {
+                console.log("⚠️ Not in Telegram environment");
+            }
+            return false;
+        }
+        
+        function initFirebase() {
+            if (typeof firebase !== 'undefined') {
+                try {
+                    window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                    window.db = firebase.firestore();
+                    window.auth = firebase.auth();
+                    console.log("✅ Firebase initialized");
+                    return true;
+                } catch (error) {
+                    console.error("❌ Firebase error:", error);
+                }
+            }
+            return false;
+        }
+        
+        // دوال مساعدة
+        window.switchPage = function(pageName) {
+            console.log(`🔀 Switching to page: ${pageName}`);
+            
+            try {
+                closeModal();
+                
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                    if (page.id === `${pageName}-page`) {
+                        page.classList.add('active');
+                    }
+                });
+                
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.page === pageName) {
+                        btn.classList.add('active');
+                    }
+                });
+                
             } catch (error) {
-                console.error("❌ Firebase error:", error);
+                console.error("❌ Page switch error:", error);
             }
-        }
-        return false;
-    }
-    
-    // دوال مساعدة
-    window.switchPage = function(pageName) {
-        console.log(`🔀 Switching to page: ${pageName}`);
+        };
         
-        try {
-            closeModal();
-            
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-                if (page.id === `${pageName}-page`) {
-                    page.classList.add('active');
-                }
+        window.closeModal = function() {
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.remove();
             });
+        };
+        
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text)
+                .then(() => showMessage('✅ Copied to clipboard!', 'success'))
+                .catch(() => showMessage('❌ Failed to copy', 'error'));
+        };
+        
+        function showMessage(text, type = 'info', duration = 3000) {
+            const container = document.getElementById('notification-container');
+            if (!container) return;
             
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.page === pageName) {
-                    btn.classList.add('active');
+            if (duration === 3000) {
+                if (type === 'warning' || type === 'error') {
+                    duration = 4500;
+                } else if (type === 'success') {
+                    duration = 3000;
+                } else {
+                    duration = 3500;
                 }
-            });
+            }
             
-        } catch (error) {
-            console.error("❌ Page switch error:", error);
-        }
-    };
-    
-    window.closeModal = function() {
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.remove();
-        });
-    };
-    
-    window.copyToClipboard = function(text) {
-        navigator.clipboard.writeText(text)
-            .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-            .catch(() => showMessage('❌ Failed to copy', 'error'));
-    };
-    
-    function showMessage(text, type = 'info', duration = 3000) {
-        const container = document.getElementById('notification-container');
-        if (!container) return;
-        
-        if (duration === 3000) {
-            if (type === 'warning' || type === 'error') {
-                duration = 4500;
-            } else if (type === 'success') {
-                duration = 3000;
-            } else {
-                duration = 3500;
+            const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            const messageDiv = document.createElement('div');
+            messageDiv.id = messageId;
+            messageDiv.className = `message ${type}`;
+            
+            let icon = 'fa-info-circle';
+            if (type === 'success') icon = 'fa-check-circle';
+            else if (type === 'error') icon = 'fa-times-circle';
+            else if (type === 'warning') icon = 'fa-exclamation-triangle';
+            
+            let displayText = text;
+            if (text.startsWith('msg_')) {
+                displayText = getTranslation(text);
             }
+            
+            messageDiv.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${displayText}</span>
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                const msgElement = document.getElementById(messageId);
+                if (msgElement) {
+                    msgElement.style.opacity = '0';
+                    msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
+                    setTimeout(() => {
+                        if (msgElement.parentNode) msgElement.remove();
+                    }, 300);
+                }
+            }, duration);
         }
         
-        const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-        const messageDiv = document.createElement('div');
-        messageDiv.id = messageId;
-        messageDiv.className = `message ${type}`;
-        
-        let icon = 'fa-info-circle';
-        if (type === 'success') icon = 'fa-check-circle';
-        else if (type === 'error') icon = 'fa-times-circle';
-        else if (type === 'warning') icon = 'fa-exclamation-triangle';
-        
-        let displayText = text;
-        if (text.startsWith('msg_')) {
-            displayText = getTranslation(text);
-        }
-        
-        messageDiv.innerHTML = `
-            <i class="fas ${icon}"></i>
-            <span>${displayText}</span>
-        `;
-        
-        container.appendChild(messageDiv);
-        
-        setTimeout(() => {
-            const msgElement = document.getElementById(messageId);
-            if (msgElement) {
-                msgElement.style.opacity = '0';
-                msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
-                setTimeout(() => {
-                    if (msgElement.parentNode) msgElement.remove();
-                }, 300);
-            }
-        }, duration);
-    }
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("📱 DOM Content Loaded - Starting initialization...");
-        
-        initTelegram();
-        initFirebase();
-        initLanguageSystem();
-        
-        let progress = 25;
-        const progressInterval = setInterval(() => {
-            progress += 15;
-            if (progress >= 100) {
-                progress = 100;
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("📱 DOM Content Loaded - Starting initialization...");
+            
+            initTelegram();
+            initFirebase();
+            initLanguageSystem();
+            
+            let progress = 25;
+            const progressInterval = setInterval(() => {
+                progress += 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                }
+                
+                const progressBar = document.getElementById('loading-progress-bar');
+                const progressText = document.getElementById('loading-progress-text');
+                
+                if (progressBar) progressBar.style.width = `${progress}%`;
+                if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
+            }, 300);
+            
+            setTimeout(() => {
                 clearInterval(progressInterval);
-            }
-            
-            const progressBar = document.getElementById('loading-progress-bar');
-            const progressText = document.getElementById('loading-progress-text');
-            
-            if (progressBar) progressBar.style.width = `${progress}%`;
-            if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
-        }, 300);
+                
+                const loadingScreen = document.getElementById('loading-screen');
+                const appContainer = document.getElementById('app-container');
+                
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
+                
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                }
+                
+                if (typeof initAlienMuskApp === 'function') {
+                    console.log("🚀 Starting main application...");
+                    initAlienMuskApp();
+                } else {
+                    console.error("❌ Main app function not found!");
+                    showMessage("Welcome to Alien Musk Quantum!", "success");
+                }
+            }, 2500);
+        });
         
         setTimeout(() => {
-            clearInterval(progressInterval);
-            
-            const loadingScreen = document.getElementById('loading-screen');
-            const appContainer = document.getElementById('app-container');
-            
-            if (loadingScreen) {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
+            if (!window.tg && !window.firebaseApp) {
+                console.log("⚠️ Using fallback initialization...");
+                const loadingScreen = document.getElementById('loading-screen');
+                const appContainer = document.getElementById('app-container');
+                
+                if (loadingScreen) {
                     loadingScreen.style.display = 'none';
-                }, 500);
+                }
+                
+                if (appContainer) {
+                    appContainer.classList.remove('hidden');
+                }
+                
+                showMessage("Running in standalone mode", "info");
             }
-            
-            if (appContainer) {
-                appContainer.classList.remove('hidden');
-            }
-            
-            if (typeof initAlienMuskApp === 'function') {
-                console.log("🚀 Starting main application...");
-                initAlienMuskApp();
-            } else {
-                console.error("❌ Main app function not found!");
-                showMessage("Welcome to Alien Musk Quantum!", "success");
-            }
-        }, 2500);
-    });
-    
-    setTimeout(() => {
-        if (!window.tg && !window.firebaseApp) {
-            console.log("⚠️ Using fallback initialization...");
-            const loadingScreen = document.getElementById('loading-screen');
-            const appContainer = document.getElementById('app-container');
-            
-            if (loadingScreen) {
-                loadingScreen.style.display = 'none';
-            }
-            
-            if (appContainer) {
-                appContainer.classList.remove('hidden');
-            }
-            
-            showMessage("Running in standalone mode", "info");
-        }
-    }, 10000);
-    
-    console.log("✅ Alien Musk Connector Loaded Successfully");
-            const CONFIG = {
+        }, 10000);
+        
+        console.log("✅ Alien Musk Connector Loaded Successfully");
+        
+        const CONFIG = {
             PRICES: {
                 AMSK: 0.0002,
                 USDT: 1.00,
@@ -5606,8 +5664,9 @@
             }
             
             if (elements.userIdMini) {
+                // CSS سيضيف "ID:" تلقائياً، نضع الرقم فقط
                 const displayId = userData.telegramId ? userData.telegramId.slice(-8) : userData.id.slice(-8);
-                elements.userIdMini.textContent = `${getTranslation('user_id_prefix')} ${displayId}`;
+                elements.userIdMini.textContent = displayId;
             }
             
             if (elements.referralLinkInput) {
@@ -9761,7 +9820,7 @@
         window.selectWelcomeLanguage = selectWelcomeLanguage;
         window.closeLanguageWelcome = closeLanguageWelcome;
 
-        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار النهائي الكامل غير المختصر - Ready!");
+        console.log("👽 Alien Musk Quantum Platform v7.0 - الإصدار النهائي الكامل - Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
