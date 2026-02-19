@@ -1118,582 +1118,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0, 212, 255, 0.2);
         }
-        
-        /* =========================================== */
-        /* قسم تطوير المستوى */
-        /* =========================================== */
-        
-        .upgrade-section {
-            background: var(--gradient-space);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .upgrade-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
-            border-radius: 16px 16px 0 0;
-        }
-        
-        .upgrade-section h4 {
-            font-size: 16px;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--quantum-text);
-        }
-        
-        .upgrade-section h4 i {
-            color: var(--quantum-blue);
-            font-size: 17px;
-        }
-        
-        .upgrade-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 12px;
-        }
-        
-        .upgrade-card {
-            background: linear-gradient(145deg, var(--space-card-light), #2a2a5a);
-            border-radius: 12px;
-            padding: 14px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .upgrade-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(0, 212, 255, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .upgrade-card:hover::before {
-            opacity: 1;
-        }
-        
-        .upgrade-card.active {
-            border-color: var(--quantum-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
-            transform: translateY(-3px);
-        }
-        
-        .upgrade-card.active::before {
-            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-        }
-        
-        .upgrade-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .upgrade-level {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--quantum-text-light);
-            background: rgba(255, 255, 255, 0.1);
-            padding: 3px 6px;
-            border-radius: 6px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        
-        .upgrade-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--quantum-text);
-            background: linear-gradient(90deg, var(--quantum-blue), var(--quantum-green));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .upgrade-price-tag {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--quantum-gold);
-            background: rgba(255, 215, 0, 0.1);
-            padding: 8px 12px;
-            border-radius: 12px;
-            margin: 10px 0;
-            text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            display: inline-block;
-            width: 100%;
-        }
-        
-        .upgrade-stats {
-            margin-bottom: 12px;
-        }
-        
-        .upgrade-stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 13px;
-            color: var(--quantum-text-light);
-            margin-bottom: 5px;
-            padding: 2px 0;
-        }
-        
-        .upgrade-stat i {
-            font-size: 11px;
-            width: 15px;
-            text-align: center;
-            color: var(--quantum-green);
-        }
-        
-        .upgrade-stat.roi i {
-            color: var(--quantum-gold);
-        }
-        
-        .upgrade-btn {
-            width: 100%;
-            padding: 9px;
-            font-size: 13px;
-            font-weight: 700;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: rgba(0, 212, 255, 0.15);
-            color: var(--quantum-blue);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-            margin-top: auto;
-        }
-        
-        .upgrade-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .upgrade-btn:hover::before {
-            opacity: 1;
-        }
-        
-        .upgrade-btn:hover:not(:disabled) {
-            background: rgba(0, 212, 255, 0.2);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(0, 212, 255, 0.2);
-        }
-        
-        .upgrade-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .upgrade-btn.active-btn {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--quantum-green);
-            border-color: rgba(0, 255, 136, 0.2);
-        }
-        
-        .upgrade-btn.active-btn:hover {
-            background: rgba(0, 255, 136, 0.2);
-            box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
-        }
-        
-        /* =========================================== */
-        /* قسم المهام */
-        /* =========================================== */
-        
-        .tasks-section {
-            background: var(--gradient-space);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .tasks-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(135deg, var(--quantum-gold), var(--quantum-orange));
-            border-radius: 16px 16px 0 0;
-        }
-        
-        .tasks-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .tasks-header h4 {
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--quantum-text);
-        }
-        
-        .tasks-header h4 i {
-            color: var(--quantum-gold);
-        }
-        
-        .tasks-progress {
-            font-size: 13px;
-            color: var(--quantum-text-light);
-            background: rgba(255, 215, 0, 0.1);
-            padding: 4px 8px;
-            border-radius: 20px;
-        }
-        
-        .tasks-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-        
-        .tasks-tab {
-            padding: 8px 16px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            color: var(--quantum-text-light);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tasks-tab i {
-            margin-right: 6px;
-        }
-        
-        .tasks-tab.active {
-            background: var(--gradient-quantum);
-            color: white;
-            border-color: transparent;
-        }
-        
-        .tasks-tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .tasks-grid, .vip-tasks-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        
-        .vip-tasks-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .vip-task-category {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
-        
-        .vip-task-category h5 {
-            font-size: 14px;
-            color: var(--quantum-text);
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-        }
-        
-        .vip-task-category h5 i {
-            margin-right: 8px;
-            color: var(--quantum-gold);
-        }
-        
-        .vip-task-item {
-            background: linear-gradient(145deg, #1e1e35, #15152a);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .vip-task-item.completed {
-            opacity: 0.6;
-            border-color: var(--quantum-green);
-        }
-        
-        .vip-task-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            flex-shrink: 0;
-        }
-        
-        .vip-task-icon i {
-            font-size: 18px;
-            color: var(--quantum-gold);
-        }
-        
-        .vip-task-details {
-            flex: 1;
-        }
-        
-        .vip-task-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--quantum-text);
-            margin-bottom: 2px;
-        }
-        
-        .vip-task-reward {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--quantum-green);
-        }
-        
-        .vip-task-status {
-            flex-shrink: 0;
-        }
-        
-        .vip-task-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-        }
-        
-        .vip-task-btn.claim {
-            background: var(--gradient-quantum);
-            color: white;
-        }
-        
-        .vip-task-btn.claim:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 3px 10px rgba(0, 255, 136, 0.3);
-        }
-        
-        .vip-task-btn.claimed {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--quantum-green);
-            border: 1px solid var(--quantum-green);
-            cursor: default;
-        }
-        
-        .vip-task-btn.locked {
-            background: rgba(255, 68, 68, 0.15);
-            color: #ff4444;
-            border: 1px solid #ff4444;
-            cursor: not-allowed;
-        }
-        
-        .task-item {
-            background: linear-gradient(145deg, #1e1e35, #15152a);
-            border-radius: 12px;
-            padding: 14px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .task-item.completed {
-            opacity: 0.6;
-            border-color: var(--quantum-green);
-        }
-        
-        .task-item .task-icon {
-            font-size: 22px;
-            color: var(--quantum-gold);
-            margin-bottom: 5px;
-        }
-        
-        .task-item .task-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--quantum-text);
-        }
-        
-        .task-item .task-reward {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--quantum-green);
-        }
-        
-        .task-item .task-btn {
-            width: 100%;
-            padding: 8px;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-        
-        .task-btn.start {
-            background: var(--gradient-quantum);
-            color: white;
-        }
-        
-        .task-btn.done {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--quantum-green);
-            cursor: default;
-            border: 1px solid var(--quantum-green);
-        }
-        
-        .task-btn.start:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
-        }
-        
-        /* =========================================== */
-        /* الإشعارات */
-        /* =========================================== */
-        
-        #notification-container {
-            position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 90%;
-            max-width: 360px;
-            pointer-events: none;
-        }
-        
-        .message {
-            padding: 14px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            animation: quantumNotificationSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid;
-            pointer-events: auto;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        @keyframes quantumNotificationSlide {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        .message::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .message:hover::before {
-            opacity: 1;
-        }
-        
-        .message i {
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        
-        .message span {
-            flex: 1;
-            line-height: 1.4;
-        }
-        
-        .message.success {
-            background: rgba(0, 255, 136, 0.15);
-            border-color: rgba(0, 255, 136, 0.2);
-            color: var(--quantum-green);
-        }
-        
-        .message.error {
-            background: rgba(255, 68, 68, 0.15);
-            border-color: rgba(255, 68, 68, 0.2);
-            color: #ff4444;
-        }
-        
-        .message.warning {
-            background: rgba(255, 193, 7, 0.15);
-            border-color: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-        }
-        
-        .message.info {
-            background: rgba(0, 212, 255, 0.15);
-            border-color: rgba(0, 212, 255, 0.2);
-            color: var(--quantum-blue);
-        }
                 /* =========================================== */
         /* تنسيقات Staking */
         /* =========================================== */
@@ -5309,8 +4733,10 @@
             lastActive: null,
             isInitialized: false,
             lastSaveTime: 0,
+            lastFirebaseSave: 0,
             referralBonusClaimed: false,
-            language: 'en'
+            language: 'en',
+            isNewUser: true
         };
 
         let walletData = {
@@ -5387,12 +4813,20 @@
                 return;
             }
             appInitialized = true;
-            console.log("🚀 Initializing Alien Musk Platform v7.0...");
+            console.log("🚀 Initializing Alien Musk Platform v7.0 with Firebase Optimizations...");
             
             try {
                 cacheElements();
                 await setupUser();
-                await loadUserDataFromFirebase();
+                
+                // تحميل من localStorage أولاً (سريع)
+                await loadUserFromLocalStorage();
+                
+                // ثم تحميل من Firebase في الخلفية
+                setTimeout(() => {
+                    loadUserDataFromFirebase();
+                }, 500);
+                
                 setupUserRealtimeListener();
                 setupEventListeners();
                 await checkForReferral();
@@ -5569,6 +5003,7 @@
 
             console.log("👂 Setting up realtime listener for user:", userData.id);
 
+            // realtime listener للجميع (مهم لتجربة المستخدم)
             unsubscribeUserListener = window.db.collection(DB_COLLECTIONS.USERS)
                 .doc(userData.id)
                 .onSnapshot((doc) => {
@@ -5576,44 +5011,71 @@
                         console.log("🔄 Realtime update received from Firestore");
                         const firebaseData = doc.data();
 
+                        // تحديث البيانات المهمة فقط
+                        let hasChanges = false;
+                        
                         if (firebaseData.balances) {
-                            walletData.balances = firebaseData.balances;
+                            // تحقق إذا تغير الرصيد
+                            if (JSON.stringify(walletData.balances) !== JSON.stringify(firebaseData.balances)) {
+                                walletData.balances = firebaseData.balances;
+                                hasChanges = true;
+                                showMessage("💰 Your balance has been updated!", "info", 2000);
+                            }
                         }
+                        
                         if (firebaseData.mining) {
                             walletData.mining = firebaseData.mining;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.staking) {
                             walletData.staking = firebaseData.staking;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.referrals) {
                             walletData.referrals = firebaseData.referrals;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.tasks) {
                             walletData.tasks = firebaseData.tasks;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.vipTasks) {
                             walletData.vipTasks = firebaseData.vipTasks;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.transactions) {
                             walletData.transactions = firebaseData.transactions;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.transactionHistory) {
                             walletData.transactionHistory = firebaseData.transactionHistory;
+                            hasChanges = true;
                         }
+                        
                         if (firebaseData.userInfo && firebaseData.userInfo.language) {
                             userData.language = firebaseData.userInfo.language;
                             setLanguage(userData.language);
                         }
 
-                        walletData.lastUpdate = Date.now();
-                        updateUI();
+                        if (hasChanges) {
+                            walletData.lastUpdate = Date.now();
+                            updateUI();
+                            // حفظ التغييرات محلياً
+                            saveUserDataToLocalStorage();
+                        }
                     }
                 }, (error) => {
                     console.error("❌ Realtime listener error:", error);
                 });
         }
         
-        async function loadUserDataFromFirebase() {
+        async function loadUserDataFromFirebase(force = false) {
             console.log("🔥 Loading user data from Firebase...");
             
             try {
@@ -5621,6 +5083,24 @@
                     console.log("⚠️ Firebase or user ID not available, using localStorage");
                     await loadUserFromLocalStorage();
                     return;
+                }
+                
+                // إذا لم يكن force، تحقق من حداثة البيانات المحلية
+                if (!force) {
+                    const localData = localStorage.getItem(`alien_musk_${userData.id}`);
+                    if (localData) {
+                        try {
+                            const parsed = JSON.parse(localData);
+                            const isRecent = (Date.now() - (parsed.lastUpdate || 0)) < 300000; // 5 دقائق
+                            
+                            if (isRecent && parsed.balances) {
+                                console.log("📦 Using recent data from localStorage");
+                                walletData = parsed;
+                                userData.isNewUser = false;
+                                return;
+                            }
+                        } catch (e) {}
+                    }
                 }
                 
                 const userDoc = await window.db.collection(DB_COLLECTIONS.USERS)
@@ -5664,14 +5144,16 @@
                         setLanguage(userData.language);
                     }
                     
+                    userData.isNewUser = false;
                     console.log("✅ Data loaded from Firebase");
                     
                     await loadPendingRequests();
                     cleanDuplicateTransactions();
                     
                 } else {
-                    console.log("📝 No Firebase data found, using defaults");
-                    await saveUserDataToFirebase();
+                    console.log("📝 New user, saving to Firebase...");
+                    userData.isNewUser = true;
+                    await saveUserDataToFirebase(); // حفظ المستخدم الجديد فوراً
                 }
                 
                 saveUserDataToLocalStorage();
@@ -5690,6 +5172,7 @@
                 const isAdmin = userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
                 
                 if (isAdmin) {
+                    // المشرف يحمل جميع الطلبات
                     const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('status', '==', 'pending')
                         .get();
@@ -5707,80 +5190,123 @@
                         id: doc.id,
                         ...doc.data()
                     }));
+                    
+                    console.log(`📥 Admin loaded ${walletData.pendingDeposits.length} pending deposits`);
+                    console.log(`📤 Admin loaded ${walletData.pendingWithdrawals.length} pending withdrawals`);
                 } else {
-                    const depositSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                        .where('userId', '==', userData.id)
-                        .where('status', '==', 'pending')
-                        .get();
-                    
-                    walletData.pendingDeposits = depositSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
-                    
-                    const withdrawalSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                        .where('userId', '==', userData.id)
-                        .where('status', '==', 'pending')
-                        .get();
-                    
-                    walletData.pendingWithdrawals = withdrawalSnapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }));
+                    // المستخدم العادي: لا نحمل الطلبات المعلقة من Firebase إلا عند الحاجة
+                    // الطلبات موجودة بالفعل في localStorage
+                    console.log("👤 User mode - pending requests loaded from localStorage");
                 }
-                
-                console.log(`📥 Loaded ${walletData.pendingDeposits.length} pending deposits`);
-                console.log(`📤 Loaded ${walletData.pendingWithdrawals.length} pending withdrawals`);
                 
             } catch (error) {
                 console.error("❌ Error loading pending requests:", error);
             }
         }
 
-        async function saveUserDataToFirebase() {
+        async function saveUserDataToFirebase(retries = 3) {
             if (!window.db || !userData.id) {
                 console.log("⚠️ Cannot save to Firebase: No DB connection or user ID");
-                return;
+                return false;
             }
             
-            try {
-                userData.lastActive = new Date().toISOString();
-                walletData.lastUpdate = Date.now();
-                
-                const firebaseData = {
-                    balances: walletData.balances,
-                    mining: walletData.mining,
-                    staking: walletData.staking,
-                    referrals: walletData.referrals,
-                    tasks: walletData.tasks,
-                    vipTasks: walletData.vipTasks,
-                    transactions: walletData.transactions || [],
-                    transactionHistory: walletData.transactionHistory || [],
-                    userInfo: {
-                        id: userData.id,
-                        telegramId: userData.telegramId,
-                        username: userData.username,
-                        firstName: userData.firstName,
-                        referralCode: userData.referralCode,
-                        referredBy: userData.referredBy,
-                        joinedAt: userData.joinedAt,
-                        lastActive: userData.lastActive,
-                        referralBonusClaimed: userData.referralBonusClaimed,
-                        language: userData.language || currentLanguage
-                    },
-                    lastUpdate: walletData.lastUpdate
-                };
-                
-                await window.db.collection(DB_COLLECTIONS.USERS)
-                    .doc(userData.id)
-                    .set(firebaseData, { merge: true });
-                
-                console.log("💾 User data saved to Firebase");
-                userData.lastSaveTime = Date.now();
-                
-            } catch (error) {
-                console.error("❌ Error saving to Firebase:", error);
+            // التحقق من وجود تغييرات مهمة
+            if (!hasImportantChanges()) {
+                console.log("⏭️ No important changes, skipping Firebase save");
+                return true;
             }
+            
+            for (let i = 0; i < retries; i++) {
+                try {
+                    userData.lastActive = new Date().toISOString();
+                    walletData.lastUpdate = Date.now();
+                    
+                    const firebaseData = {
+                        balances: walletData.balances,
+                        mining: walletData.mining,
+                        staking: walletData.staking,
+                        referrals: walletData.referrals,
+                        tasks: walletData.tasks,
+                        vipTasks: walletData.vipTasks,
+                        transactions: walletData.transactions || [],
+                        transactionHistory: walletData.transactionHistory || [],
+                        userInfo: {
+                            id: userData.id,
+                            telegramId: userData.telegramId,
+                            username: userData.username,
+                            firstName: userData.firstName,
+                            referralCode: userData.referralCode,
+                            referredBy: userData.referredBy,
+                            joinedAt: userData.joinedAt,
+                            lastActive: userData.lastActive,
+                            referralBonusClaimed: userData.referralBonusClaimed,
+                            language: userData.language || currentLanguage
+                        },
+                        lastUpdate: walletData.lastUpdate
+                    };
+                    
+                    await window.db.collection(DB_COLLECTIONS.USERS)
+                        .doc(userData.id)
+                        .set(firebaseData, { merge: true });
+                    
+                    console.log("💾 User data saved to Firebase");
+                    userData.lastFirebaseSave = Date.now();
+                    userData.lastSaveTime = Date.now();
+                    
+                    if (userData.isNewUser) {
+                        userData.isNewUser = false;
+                    }
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error(`❌ Error saving to Firebase (attempt ${i + 1}/${retries}):`, error);
+                    
+                    if (i < retries - 1) {
+                        console.log(`⏳ Waiting 2 seconds before retry ${i + 2}...`);
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                }
+            }
+            
+            console.error("❌ All retries failed for Firebase save");
+            return false;
+        }
+
+        function hasImportantChanges() {
+            // لا تحفظ أكثر من مرة كل دقيقتين
+            const now = Date.now();
+            if (now - (userData.lastFirebaseSave || 0) < 120000) { // دقيقتان
+                return false;
+            }
+            
+            // التحقق من تغييرات مهمة
+            const lastSave = userData.lastSaveTime || 0;
+            
+            // تغيير في الرصيد
+            if (walletData.balances.AMSK !== 1000 || 
+                walletData.balances.USDT !== 0 || 
+                walletData.balances.BNB !== 0 || 
+                walletData.balances.TON !== 0) {
+                return true;
+            }
+            
+            // وجود إيداعات أو سحوبات معلقة
+            if (walletData.pendingDeposits.length > 0 || walletData.pendingWithdrawals.length > 0) {
+                return true;
+            }
+            
+            // وجود تغيير في مستوى التعدين
+            if (walletData.mining.level !== 1 || walletData.mining.totalMined !== 1000) {
+                return true;
+            }
+            
+            // وجود إيداعات نشطة في staking
+            if (walletData.staking.activeStakes.length > 0) {
+                return true;
+            }
+            
+            return false;
         }
 
         function saveUserDataToLocalStorage() {
@@ -5945,8 +5471,11 @@
         }
 
         async function saveUserData() {
-            await saveUserDataToFirebase();
+            // حفظ محلي فوري
             saveUserDataToLocalStorage();
+            
+            // حفظ في Firebase (مع إعادة محاولة)
+            await saveUserDataToFirebase();
         }
 
         function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
@@ -5990,6 +5519,9 @@
                 }
                 
                 console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
+                
+                // حفظ فوري بعد إضافة معاملة
+                saveUserDataToLocalStorage();
             } else {
                 console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
             }
@@ -8401,7 +7933,8 @@
                 let pendingDeposits = [];
                 let pendingWithdrawals = [];
                 
-                if (window.db) {
+                // المشرف يحمل الطلبات من Firebase
+                if (window.db && userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
                     const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
                         .where('status', '==', 'pending')
                         .get();
@@ -8420,6 +7953,7 @@
                         ...doc.data()
                     }));
                 } else {
+                    // للمستخدمين العاديين، استخدم البيانات المحلية
                     pendingDeposits = walletData.pendingDeposits?.filter(d => d.status === 'pending') || [];
                     pendingWithdrawals = walletData.pendingWithdrawals?.filter(w => w.status === 'pending') || [];
                 }
@@ -9483,6 +9017,40 @@
             }
         }
 
+        // تحسين دالة بدء الخدمات الخلفية
+        function startBackgroundServices() {
+            // مؤقت التعدين (يبقى كل ثانية)
+            intervals.miningTimer = setInterval(() => {
+                updateMiningTimer();
+            }, 1000);
+            
+            // حفظ تلقائي كل 5 دقائق بدلاً من 30 ثانية
+            intervals.autoSave = setInterval(() => {
+                if (userData.id && userData.isInitialized) {
+                    saveUserData();
+                }
+            }, 300000); // 300000 = 5 دقائق
+            
+            // realtimeSync فقط للمشرف (كل دقيقة)
+            if (userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
+                console.log("👑 Admin mode - realtimeSync enabled");
+                intervals.realtimeSync = setInterval(async () => {
+                    if (window.db && userData.id) {
+                        try {
+                            await loadPendingRequests();
+                        } catch (error) {
+                            console.error("❌ Error syncing with Firebase:", error);
+                        }
+                    }
+                }, 60000); // دقيقة واحدة
+            } else {
+                console.log("👤 User mode - realtimeSync disabled");
+                intervals.realtimeSync = null;
+            }
+            
+            console.log("⏱️ Background services started with optimizations");
+        }
+
         function setupEventListeners() {
             console.log("🎯 Setting up event listeners...");
             
@@ -9599,34 +9167,13 @@
             updateUITexts();
         }
 
-        function startBackgroundServices() {
-            intervals.miningTimer = setInterval(() => {
-                updateMiningTimer();
-            }, 1000);
-            
-            intervals.autoSave = setInterval(() => {
-                if (userData.id && userData.isInitialized) {
-                    saveUserData();
-                }
-            }, 30000);
-            
-            intervals.realtimeSync = setInterval(async () => {
-                if (window.db && userData.id) {
-                    try {
-                        await loadPendingRequests();
-                    } catch (error) {
-                        console.error("❌ Error syncing with Firebase:", error);
-                    }
-                }
-            }, 60000);
-            
-            console.log("⏱️ Background services started");
-        }
-
         window.addEventListener('beforeunload', function() {
             if (userData.id && userData.isInitialized) {
                 console.log("💾 Saving data before page unload...");
-                saveUserData();
+                // حفظ محلي فوري قبل الإغلاق
+                saveUserDataToLocalStorage();
+                // محاولة حفظ في Firebase (لا تنتظر)
+                saveUserDataToFirebase().catch(() => {});
                 
                 Object.values(intervals).forEach(interval => {
                     if (interval) clearInterval(interval);
@@ -9696,7 +9243,7 @@
         window.selectWelcomeLanguage = selectWelcomeLanguage;
         window.closeLanguageWelcome = closeLanguageWelcome;
 
-        console.log("👽 Alien Musk Quantum Platform v7.0 - النسخة النهائية مع لوحة المشرف الأصلية - Ready!");
+        console.log("👽 Alien Musk Quantum Platform v7.0 - النسخة النهائية مع تحسينات Firebase - Ready!");
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
