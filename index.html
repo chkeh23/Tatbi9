@@ -6490,7 +6490,7 @@
             }
         }
 
-      // ===========================================
+// ===========================================
 // 💰 WALLET UI - تحديث واجهة المحفظة (محسنة بالكامل)
 // ===========================================
 function updateWalletUI() {
@@ -6556,7 +6556,7 @@ function updateWalletUI() {
 }
 
 // ===========================================
-// 👑 ADMIN SYSTEM - دوال الموافقة والرفض المحسنة
+// 👑 ADMIN SYSTEM - دوال الموافقة والرفض المحسنة (مع تحديث History المستخدم)
 // ===========================================
 async function approveDeposit(depositId) {
     try {
@@ -6625,25 +6625,48 @@ async function approveDeposit(depositId) {
                     [`balances.${deposit.currency}`]: newBalance
                 });
                 
-                // ✅ تحديث transactionHistory للمستخدم المستهدف
+                // ===========================================
+                // 🔥 تحديث transactionHistory للمستخدم المستهدف
+                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
+                
+                // البحث عن الطلب في History المستخدم
+                let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
+                        found = true;
                         return {
                             ...tx,
                             status: 'approved',
                             message: '✅ Deposit approved by admin',
-                            approvedAt: Date.now()
+                            approvedAt: Date.now(),
+                            updatedAt: Date.now()
                         };
                     }
                     return tx;
                 });
                 
+                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
+                if (!found) {
+                    updatedHistory.unshift({
+                        id: depositId,
+                        type: 'deposit',
+                        amount: deposit.amount,
+                        currency: deposit.currency,
+                        description: `TX: ${deposit.txId?.slice(0, 10)}...`,
+                        status: 'approved',
+                        message: '✅ Deposit approved by admin',
+                        timestamp: deposit.createdAt || Date.now(),
+                        dateFormatted: new Date(deposit.createdAt || Date.now()).toLocaleDateString(),
+                        approvedAt: Date.now()
+                    });
+                }
+                
                 await userRef.update({
                     transactionHistory: updatedHistory
                 });
                 
-                console.log(`✅ Updated transaction history for user ${userId}`);
+                console.log(`🔥 Updated transaction history for user ${userId} - Status: approved`);
             }
         }
         
@@ -6655,8 +6678,10 @@ async function approveDeposit(depositId) {
         if (transactionIndex > -1 && walletData.transactionHistory) {
             walletData.transactionHistory[transactionIndex].status = 'approved';
             walletData.transactionHistory[transactionIndex].message = 'Deposit approved by admin';
+            walletData.transactionHistory[transactionIndex].updatedAt = Date.now();
         } else {
-            addTransactionToHistory('deposit_approved', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved by admin', deposit.txId);
+            addTransactionToHistory('deposit_approved', deposit.amount, deposit.currency, 
+                `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved by admin', deposit.txId);
         }
         
         // تنظيف TX ID
@@ -6666,6 +6691,9 @@ async function approveDeposit(depositId) {
                 walletData.usedTxIds.splice(txIdIndex, 1);
             }
         }
+        
+        // حفظ التغييرات المحلية
+        saveUserDataToLocalStorage();
         
         // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
@@ -6735,7 +6763,9 @@ async function rejectDeposit(depositId) {
             userId = deposit.userId || userData.id;
         }
         
-        // ✅ تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
+        // ===========================================
+        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
+        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -6744,24 +6774,45 @@ async function rejectDeposit(depositId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
+                // البحث عن الطلب في History المستخدم
+                let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
+                        found = true;
                         return {
                             ...tx,
                             status: 'rejected',
                             message: `❌ Deposit rejected: ${reason}`,
                             rejectionReason: reason,
-                            rejectedAt: Date.now()
+                            rejectedAt: Date.now(),
+                            updatedAt: Date.now()
                         };
                     }
                     return tx;
                 });
                 
+                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
+                if (!found) {
+                    updatedHistory.unshift({
+                        id: depositId,
+                        type: 'deposit',
+                        amount: deposit.amount,
+                        currency: deposit.currency,
+                        description: `TX: ${deposit.txId?.slice(0, 10)}...`,
+                        status: 'rejected',
+                        message: `❌ Deposit rejected: ${reason}`,
+                        rejectionReason: reason,
+                        timestamp: deposit.createdAt || Date.now(),
+                        dateFormatted: new Date(deposit.createdAt || Date.now()).toLocaleDateString(),
+                        rejectedAt: Date.now()
+                    });
+                }
+                
                 await userRef.update({
                     transactionHistory: updatedHistory
                 });
                 
-                console.log(`✅ Updated transaction history for user ${userId} with rejection reason`);
+                console.log(`🔥 Updated transaction history for user ${userId} with rejection reason`);
             }
         }
         
@@ -6774,9 +6825,14 @@ async function rejectDeposit(depositId) {
             walletData.transactionHistory[transactionIndex].status = 'rejected';
             walletData.transactionHistory[transactionIndex].message = `Deposit rejected: ${reason}`;
             walletData.transactionHistory[transactionIndex].rejectionReason = reason;
+            walletData.transactionHistory[transactionIndex].updatedAt = Date.now();
         } else {
-            addTransactionToHistory('deposit_rejected', deposit.amount, deposit.currency, `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
+            addTransactionToHistory('deposit_rejected', deposit.amount, deposit.currency, 
+                `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
         }
+        
+        // حفظ التغييرات المحلية
+        saveUserDataToLocalStorage();
         
         await saveUserData();
         showAdminPanel();
@@ -6863,25 +6919,49 @@ async function approveWithdrawal(withdrawalId) {
                     });
                 }
                 
-                // ✅ تحديث transactionHistory للمستخدم المستهدف
+                // ===========================================
+                // 🔥 تحديث transactionHistory للمستخدم المستهدف
+                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
+                
+                // البحث عن الطلب في History المستخدم
+                let found = false;
                 const updatedHistory = userHistory.map(tx => {
-                    if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId)) {
+                    if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) || 
+                        (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))) {
+                        found = true;
                         return {
                             ...tx,
                             status: 'approved',
                             message: '✅ Withdrawal approved. Funds sent to your wallet.',
-                            approvedAt: Date.now()
+                            approvedAt: Date.now(),
+                            updatedAt: Date.now()
                         };
                     }
                     return tx;
                 });
                 
+                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
+                if (!found) {
+                    updatedHistory.unshift({
+                        id: withdrawalId,
+                        type: 'withdrawal',
+                        amount: -withdrawal.amount,
+                        currency: withdrawal.currency,
+                        description: `To: ${withdrawal.address?.slice(0, 10)}...`,
+                        status: 'approved',
+                        message: '✅ Withdrawal approved. Funds sent to your wallet.',
+                        timestamp: withdrawal.createdAt || Date.now(),
+                        dateFormatted: new Date(withdrawal.createdAt || Date.now()).toLocaleDateString(),
+                        approvedAt: Date.now()
+                    });
+                }
+                
                 await userRef.update({
                     transactionHistory: updatedHistory
                 });
                 
-                console.log(`✅ Updated transaction history for user ${userId}`);
+                console.log(`🔥 Updated transaction history for user ${userId} - Status: approved`);
             }
         }
         
@@ -6893,10 +6973,15 @@ async function approveWithdrawal(withdrawalId) {
         if (transactionIndex > -1 && walletData.transactionHistory) {
             walletData.transactionHistory[transactionIndex].status = 'approved';
             walletData.transactionHistory[transactionIndex].message = 'Withdrawal approved by admin';
+            walletData.transactionHistory[transactionIndex].updatedAt = Date.now();
         } else {
-            addTransactionToHistory('withdrawal_approved', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'approved', 'Withdrawal approved by admin');
+            addTransactionToHistory('withdrawal_approved', -withdrawal.amount, withdrawal.currency, 
+                `To: ${withdrawal.address?.slice(0, 10)}...`, 'approved', 'Withdrawal approved by admin');
             addTransactionToHistory('withdrawal_fee', -withdrawal.fee, 'BNB', 'Fee for withdrawal', 'completed', 'Withdrawal fee charged');
         }
+        
+        // حفظ التغييرات المحلية
+        saveUserDataToLocalStorage();
         
         // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
@@ -6966,7 +7051,9 @@ async function rejectWithdrawal(withdrawalId) {
             userId = withdrawal.userId || userData.id;
         }
         
-        // ✅ تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
+        // ===========================================
+        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
+        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -6975,24 +7062,46 @@ async function rejectWithdrawal(withdrawalId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
+                // البحث عن الطلب في History المستخدم
+                let found = false;
                 const updatedHistory = userHistory.map(tx => {
-                    if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId)) {
+                    if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) ||
+                        (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))) {
+                        found = true;
                         return {
                             ...tx,
                             status: 'rejected',
                             message: `❌ Withdrawal rejected: ${reason}`,
                             rejectionReason: reason,
-                            rejectedAt: Date.now()
+                            rejectedAt: Date.now(),
+                            updatedAt: Date.now()
                         };
                     }
                     return tx;
                 });
                 
+                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
+                if (!found) {
+                    updatedHistory.unshift({
+                        id: withdrawalId,
+                        type: 'withdrawal',
+                        amount: -withdrawal.amount,
+                        currency: withdrawal.currency,
+                        description: `To: ${withdrawal.address?.slice(0, 10)}...`,
+                        status: 'rejected',
+                        message: `❌ Withdrawal rejected: ${reason}`,
+                        rejectionReason: reason,
+                        timestamp: withdrawal.createdAt || Date.now(),
+                        dateFormatted: new Date(withdrawal.createdAt || Date.now()).toLocaleDateString(),
+                        rejectedAt: Date.now()
+                    });
+                }
+                
                 await userRef.update({
                     transactionHistory: updatedHistory
                 });
                 
-                console.log(`✅ Updated transaction history for user ${userId} with rejection reason`);
+                console.log(`🔥 Updated transaction history for user ${userId} with rejection reason`);
             }
         }
         
@@ -7005,9 +7114,14 @@ async function rejectWithdrawal(withdrawalId) {
             walletData.transactionHistory[transactionIndex].status = 'rejected';
             walletData.transactionHistory[transactionIndex].message = `Withdrawal rejected: ${reason}`;
             walletData.transactionHistory[transactionIndex].rejectionReason = reason;
+            walletData.transactionHistory[transactionIndex].updatedAt = Date.now();
         } else {
-            addTransactionToHistory('withdrawal_rejected', -withdrawal.amount, withdrawal.currency, `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
+            addTransactionToHistory('withdrawal_rejected', -withdrawal.amount, withdrawal.currency, 
+                `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
         }
+        
+        // حفظ التغييرات المحلية
+        saveUserDataToLocalStorage();
         
         await saveUserData();
         showAdminPanel();
@@ -7240,7 +7354,6 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     
     historyContent.innerHTML = html;
 }
-
         // ===========================================
         // 💎 STAKING SYSTEM - نظام الإيداع
         // ===========================================
