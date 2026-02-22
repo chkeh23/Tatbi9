@@ -5681,90 +5681,152 @@
         }
 
         function setupUserRealtimeListener() {
-            if (!window.db || !userData.id) {
-                console.log("⚠️ Cannot setup realtime listener: Firebase not available or user ID missing");
-                return;
-            }
+    if (!window.db || !userData.id) {
+        console.log("⚠️ Cannot setup realtime listener: Firebase not available or user ID missing");
+        return;
+    }
 
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-            }
+    if (unsubscribeUserListener) {
+        unsubscribeUserListener();
+    }
 
-            console.log("👂 Setting up optimized realtime listener for user:", userData.id);
+    console.log("👂 Setting up optimized realtime listener for user:", userData.id);
 
-            unsubscribeUserListener = window.db.collection(DB_COLLECTIONS.USERS)
-                .doc(userData.id)
-                .onSnapshot((doc) => {
-                    if (doc.exists) {
-                        console.log("🔄 Realtime update received from Firestore");
-                        const firebaseData = doc.data();
+    unsubscribeUserListener = window.db.collection(DB_COLLECTIONS.USERS)
+        .doc(userData.id)
+        .onSnapshot((doc) => {
+            if (doc.exists) {
+                console.log("🔄 Realtime update received from Firestore");
+                const firebaseData = doc.data();
 
-                        let hasChanges = false;
+                let hasChanges = false;
+                let historyUpdated = false;
+                
+                // تحديث الرصيد
+                if (firebaseData.balances) {
+                    if (JSON.stringify(walletData.balances) !== JSON.stringify(firebaseData.balances)) {
+                        walletData.balances = firebaseData.balances;
+                        hasChanges = true;
+                        showMessage("💰 Your balance has been updated!", "info", 2000);
+                    }
+                }
+                
+                // تحديث بيانات التعدين
+                if (firebaseData.mining) {
+                    walletData.mining = firebaseData.mining;
+                    hasChanges = true;
+                }
+                
+                // تحديث بيانات الإيداع
+                if (firebaseData.staking) {
+                    walletData.staking = firebaseData.staking;
+                    hasChanges = true;
+                }
+                
+                // تحديث بيانات الإحالات
+                if (firebaseData.referrals) {
+                    walletData.referrals = firebaseData.referrals;
+                    hasChanges = true;
+                }
+                
+                // تحديث المهام
+                if (firebaseData.tasks) {
+                    walletData.tasks = firebaseData.tasks;
+                    hasChanges = true;
+                }
+                
+                // تحديث مهام VIP
+                if (firebaseData.vipTasks) {
+                    walletData.vipTasks = firebaseData.vipTasks;
+                    hasChanges = true;
+                }
+                
+                // ===========================================
+                // 🔥 التعديل المهم هنا - تحديث transactionHistory
+                // ===========================================
+                if (firebaseData.transactionHistory) {
+                    const newTransactions = firebaseData.transactionHistory || [];
+                    
+                    // التحقق مما إذا كان هناك تغيير في History
+                    if (!walletData.transactionHistory || walletData.transactionHistory.length !== newTransactions.length) {
+                        // الأطوال مختلفة → تمت إضافة معاملة جديدة
+                        walletData.transactionHistory = newTransactions;
+                        hasChanges = true;
+                        historyUpdated = true;
+                        console.log("📜 Transaction history updated from Firebase (new transaction)");
+                    } else if (walletData.transactionHistory.length > 0 && newTransactions.length > 0) {
+                        // التحقق من آخر معاملة إذا تغيرت حالتها
+                        const oldLastTx = walletData.transactionHistory[0];
+                        const newLastTx = newTransactions[0];
                         
-                        if (firebaseData.balances) {
-                            if (JSON.stringify(walletData.balances) !== JSON.stringify(firebaseData.balances)) {
-                                walletData.balances = firebaseData.balances;
-                                hasChanges = true;
-                                showMessage("💰 Your balance has been updated!", "info", 2000);
+                        if (oldLastTx && newLastTx && oldLastTx.status !== newLastTx.status) {
+                            walletData.transactionHistory = newTransactions;
+                            hasChanges = true;
+                            historyUpdated = true;
+                            console.log(`📜 Transaction status updated: ${oldLastTx.status} → ${newLastTx.status}`);
+                        } else {
+                            // تحقق أعمق - هل هناك أي معاملة تغيرت حالتها؟
+                            for (let i = 0; i < Math.min(walletData.transactionHistory.length, newTransactions.length); i++) {
+                                if (walletData.transactionHistory[i].status !== newTransactions[i].status) {
+                                    walletData.transactionHistory = newTransactions;
+                                    hasChanges = true;
+                                    historyUpdated = true;
+                                    console.log("📜 Transaction status updated (detected change)");
+                                    break;
+                                }
                             }
                         }
-                        
-                        if (firebaseData.mining) {
-                            walletData.mining = firebaseData.mining;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.staking) {
-                            walletData.staking = firebaseData.staking;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.referrals) {
-                            walletData.referrals = firebaseData.referrals;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.tasks) {
-                            walletData.tasks = firebaseData.tasks;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.vipTasks) {
-                            walletData.vipTasks = firebaseData.vipTasks;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.transactionHistory) {
-                            const newTransactions = firebaseData.transactionHistory || [];
-                            const existingIds = new Set(walletData.transactionHistory.map(tx => tx.id));
-                            
-                            newTransactions.forEach(tx => {
-                                if (!existingIds.has(tx.id)) {
-                                    walletData.transactionHistory.push(tx);
-                                    existingIds.add(tx.id);
-                                }
-                            });
-                            
-                            walletData.transactionHistory.sort((a, b) => b.timestamp - a.timestamp);
-                            
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.userInfo && firebaseData.userInfo.language) {
-                            userData.language = firebaseData.userInfo.language;
-                            setLanguage(userData.language);
-                        }
+                    }
+                }
+                
+                // تحديث اللغة
+                if (firebaseData.userInfo && firebaseData.userInfo.language) {
+                    userData.language = firebaseData.userInfo.language;
+                    setLanguage(userData.language);
+                }
 
-                        if (hasChanges) {
-                            walletData.lastUpdate = Date.now();
-                            updateUI();
-                            saveUserDataToLocalStorage();
+                // إذا كان هناك تغييرات، حدث الواجهة واحفظ محلياً
+                if (hasChanges) {
+                    walletData.lastUpdate = Date.now();
+                    updateUI();
+                    saveUserDataToLocalStorage();
+                    
+                    // إذا كان هناك تحديث في History، أظهر إشعار للمستخدم
+                    if (historyUpdated && walletData.transactionHistory && walletData.transactionHistory.length > 0) {
+                        const lastTx = walletData.transactionHistory[0];
+                        if (lastTx && (lastTx.status === 'approved' || lastTx.status === 'rejected')) {
+                            // تحديد نوع المعاملة
+                            let txTypeText = '';
+                            if (lastTx.type.includes('deposit')) txTypeText = 'Deposit';
+                            else if (lastTx.type.includes('withdrawal')) txTypeText = 'Withdrawal';
+                            else txTypeText = lastTx.type;
+                            
+                            const statusText = lastTx.status === 'approved' ? '✅ Approved' : '❌ Rejected';
+                            const message = lastTx.rejectionReason ? 
+                                `${statusText} - Reason: ${lastTx.rejectionReason}` : 
+                                `${statusText}`;
+                            
+                            showMessage(`📬 ${txTypeText} request: ${message}`, 'info', 5000);
+                            
+                            // اهتزاز خفيف للإشعار
+                            if (window.tg && window.tg.HapticFeedback) {
+                                window.tg.HapticFeedback.notificationOccurred('success');
+                            }
                         }
                     }
-                }, (error) => {
-                    console.error("❌ Realtime listener error:", error);
-                });
-        }
+                }
+            }
+        }, (error) => {
+            console.error("❌ Realtime listener error:", error);
+            // محاولة إعادة الاتصال بعد خطأ
+            setTimeout(() => {
+                if (unsubscribeUserListener) {
+                    unsubscribeUserListener();
+                    setupUserRealtimeListener();
+                }
+            }, 5000);
+        });
+}
         
         async function loadUserDataFromFirebase(force = false) {
             console.log("🔥 Loading user data from Firebase...");
