@@ -22,7 +22,7 @@
     <style>
         /* =========================================== */
         /* 👽 ALIEN MUSK QUANTUM PLATFORM v7.0 */
-        /* CSS الأصلي بالكامل - بدون تغيير */
+        /* CSS الكامل مع الهيدر المضغوط احترافياً */
         /* =========================================== */
         
         /* RESET & BASE */
@@ -272,7 +272,7 @@
         }
         
         /* =========================================== */
-        /* الهيدر - كما كان مع إضافة أيقونة الدعم فقط */
+        /* الهيدر الجديد - مضغوط بشكل احترافي + أيقونة الدعم */
         /* =========================================== */
         
         .app-header {
@@ -297,6 +297,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* القسم الأيسر - ثلاث أسطر عمودية */
         .header-left {
             display: flex;
             flex-direction: column;
@@ -305,6 +306,7 @@
             max-width: 250px;
         }
         
+        /* السطر الأول: 🛸 Alien Musk (للضغط 5 مرات) */
         .app-title-row {
             display: flex;
             align-items: center;
@@ -337,6 +339,7 @@
             line-height: 1.2;
         }
         
+        /* السطر الثاني: 👤 @ahmed */
         .username-row {
             display: flex;
             align-items: center;
@@ -363,6 +366,7 @@
             line-height: 1.3;
         }
         
+        /* السطر الثالث: 🆔 12345678901234567 (معرف كامل) */
         .userid-row {
             display: flex;
             align-items: center;
@@ -389,6 +393,7 @@
             line-height: 1.3;
         }
         
+        /* القسم الأوسط - تأثيرات فضائية */
         .header-center {
             flex: 2;
             display: flex;
@@ -441,15 +446,17 @@
             animation-delay: 1s;
         }
         
+        /* القسم الأيمن - سطرين عموديين + أيقونة الدعم */
         .header-right {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
             flex: 1;
-            max-width: 220px; /* زيادة لاستيعاب الأيقونتين */
+            max-width: 220px;
         }
         
+        /* السطر الأول: الرصيد */
         .balance-row {
             display: flex;
             flex-direction: column;
@@ -503,7 +510,7 @@
             line-height: 1.2;
         }
         
-        /* السطر الثاني - أيقونات الدعم واللغة */
+        /* السطر الثاني: صف الأيقونات (الدعم + اللغة) */
         .header-icons-row {
             display: flex;
             justify-content: flex-end;
@@ -537,6 +544,7 @@
             font-size: 16px;
         }
         
+        /* أيقونة اللغة */
         .language-selector {
             position: relative;
             display: inline-block;
@@ -615,10 +623,9 @@
         }
         
         /* =========================================== */
-        /* باقي الـ CSS الأصلي - تماماً كما كان */
+        /* نافذة اختيار اللغة الأولى */
         /* =========================================== */
         
-        /* نافذة اختيار اللغة الأولى */
         .language-welcome-modal {
             position: fixed;
             top: 0;
@@ -728,7 +735,10 @@
             box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
         }
         
-        /* القائمة السفلية */
+        /* =========================================== */
+        /* القائمة السفلية (Navigation) */
+        /* =========================================== */
+        
         .main-nav {
             display: flex;
             background: rgba(26, 26, 46, 0.95);
@@ -829,7 +839,10 @@
             color: var(--quantum-green);
         }
         
+        /* =========================================== */
         /* الصفحات */
+        /* =========================================== */
+        
         .page {
             display: none;
             padding: 10px;
@@ -845,7 +858,10 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* =========================================== */
         /* قسم التعدين */
+        /* =========================================== */
+        
         .mining-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1132,7 +1148,10 @@
             box-shadow: 0 4px 10px rgba(0, 212, 255, 0.2);
         }
         
+        /* =========================================== */
         /* قسم تطوير المستوى */
+        /* =========================================== */
+        
         .upgrade-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1337,7 +1356,10 @@
             box-shadow: 0 3px 10px rgba(0, 255, 136, 0.2);
         }
         
+        /* =========================================== */
         /* قسم المهام */
+        /* =========================================== */
+        
         .tasks-section {
             background: var(--gradient-space);
             border-radius: 16px;
@@ -1605,7 +1627,10 @@
             box-shadow: 0 4px 10px rgba(0, 255, 136, 0.3);
         }
         
+        /* =========================================== */
         /* الإشعارات */
+        /* =========================================== */
+        
         #notification-container {
             position: fixed;
             top: 15px;
@@ -1699,8 +1724,1989 @@
             color: var(--quantum-blue);
         }
         
-        /* باقي الـ CSS الأصلي - Staking, Wallet, Referral, Milestones, Modal */
-        /* تم حذف التكرار للاختصار ولكنها موجودة في الكود الأصلي */
+        /* =========================================== */
+        /* تنسيقات Staking */
+        /* =========================================== */
+        
+        .staking-content {
+            padding: 0 5px;
+        }
+        
+        .staking-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .staking-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .staking-card h4 {
+            font-size: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .staking-card h4 i {
+            color: var(--quantum-purple);
+            font-size: 17px;
+        }
+        
+        .staking-description {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+        
+        .total-staked-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(157, 78, 221, 0.15);
+            color: var(--quantum-text);
+        }
+        
+        .staked-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .staked-label {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+        }
+        
+        .staked-amount {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            font-family: monospace;
+        }
+        
+        .staked-earnings {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+        }
+        
+        .staked-earnings i {
+            color: var(--quantum-green);
+        }
+        
+        .staking-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+        
+        .plan-item {
+            background: linear-gradient(145deg, var(--space-card-light), #2a2a5a);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plan-item:hover {
+            border-color: var(--quantum-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+        }
+        
+        .plan-name {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 6px;
+            background: linear-gradient(90deg, var(--quantum-purple), var(--quantum-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .plan-amount {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--quantum-purple);
+            margin-bottom: 5px;
+            font-family: monospace;
+        }
+        
+        .plan-duration {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 5px;
+        }
+        
+        .plan-apr {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 12px;
+        }
+        
+        .plan-reward {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            margin-bottom: 18px;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+        }
+        
+        .stake-plan-btn {
+            width: 100%;
+            padding: 11px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stake-plan-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .stake-plan-btn:hover::before {
+            opacity: 1;
+        }
+        
+        .stake-plan-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+        }
+        
+        .active-stakes {
+            min-height: 100px;
+        }
+        
+        .empty-stakes {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            color: var(--quantum-text-light);
+            text-align: center;
+        }
+        
+        .empty-stakes i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: var(--quantum-text-muted);
+            opacity: 0.5;
+        }
+        
+        .empty-stakes p {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: var(--quantum-text);
+        }
+        
+        .empty-stakes small {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Wallet */
+        /* =========================================== */
+        
+        .wallet-content {
+            padding: 0 5px;
+        }
+        
+        .wallet-balance-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wallet-balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-quantum);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .wallet-balance-card h4 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-balance-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 17px;
+        }
+        
+        .wallet-balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            margin-bottom: 4px;
+            font-family: monospace;
+            text-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+        }
+        
+        .wallet-balance-subtitle {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+            margin-bottom: 12px;
+        }
+        
+        .wallet-balance-usd {
+            font-size: 18px;
+            color: var(--quantum-text);
+            font-weight: 600;
+        }
+        
+        .wallet-actions-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-actions-card h4 {
+            font-size: 16px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--quantum-text);
+        }
+        
+        .wallet-actions-card h4 i {
+            color: var(--quantum-blue);
+        }
+        
+        .wallet-actions-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+        
+        .wallet-action-btn {
+            padding: 10px 6px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-height: 65px;
+        }
+        
+        .wallet-action-btn i {
+            font-size: 16px;
+            color: var(--quantum-blue);
+            margin-bottom: 4px;
+        }
+        
+        .wallet-action-btn span {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .wallet-action-btn:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 212, 255, 0.2);
+        }
+        
+        .wallet-assets-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .wallet-assets-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 5px;
+        }
+        
+        .wallet-assets-card h4 i {
+            color: var(--quantum-green);
+            font-size: 17px;
+        }
+        
+        .asset-list-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .asset-item-compact {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .asset-item-compact:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(-2px);
+        }
+        
+        .asset-icon-compact {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid;
+            flex-shrink: 0;
+        }
+        
+        .ams-icon {
+            border-color: var(--quantum-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .ams-icon i {
+            color: var(--quantum-green);
+        }
+        
+        .usdt-icon {
+            border-color: var(--quantum-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .usdt-icon i {
+            color: var(--quantum-blue);
+        }
+        
+        .bnb-icon {
+            border-color: var(--quantum-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .bnb-icon i {
+            color: var(--quantum-gold);
+        }
+        
+        .ton-icon {
+            border-color: var(--quantum-purple);
+            background: rgba(157, 78, 221, 0.1);
+        }
+        
+        .ton-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .asset-details-compact {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .asset-name-compact {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .asset-balance-compact {
+            font-size: 12px;
+            color: var(--quantum-text-light);
+            font-family: monospace;
+        }
+        
+        .asset-value-compact {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            text-align: left;
+            flex-shrink: 0;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Referral */
+        /* =========================================== */
+        
+        .referral-content {
+            padding: 0 5px;
+        }
+        
+        .referral-stats-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 0, 128, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-stellar);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .referral-stats-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-stats-card h4 i {
+            color: var(--quantum-pink);
+            font-size: 17px;
+        }
+        
+        .referral-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .ref-stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s;
+        }
+        
+        .ref-stat-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 0, 128, 0.2);
+        }
+        
+        .ref-stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            margin-bottom: 5px;
+        }
+        
+        .ref-stat-label {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .referral-code-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        
+        .referral-code-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .referral-code-card h4 i {
+            color: var(--quantum-blue);
+            font-size: 17px;
+        }
+        
+        .referral-description {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .referral-description p {
+            color: var(--quantum-text);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .referral-description ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .referral-description li {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-description li i {
+            color: var(--quantum-green);
+            font-size: 12px;
+        }
+        
+        .referral-code-display {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-pink);
+            font-family: monospace;
+            padding: 12px;
+            background: rgba(255, 0, 128, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 0, 128, 0.15);
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+            direction: ltr;
+        }
+        
+        .btn-copy-code {
+            width: 100%;
+            padding: 12px;
+            background: var(--gradient-stellar);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-copy-code:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
+        }
+        
+        .referral-link-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .referral-link-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .referral-link-card h4 i {
+            color: var(--quantum-green);
+            font-size: 17px;
+        }
+        
+        .link-input-group {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+        
+        .link-input {
+            flex: 1;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+            font-family: monospace;
+            direction: ltr;
+        }
+        
+        .link-input:focus {
+            outline: none;
+            border-color: var(--quantum-blue);
+        }
+        
+        .copy-link-btn {
+            padding: 0 16px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-blue);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+        }
+        
+        .copy-link-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .share-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .share-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .share-btn.telegram {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+        
+        .share-btn.whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Milestones */
+        /* =========================================== */
+        
+        .milestones-card {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .milestones-card h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .milestones-card h4 i {
+            color: var(--quantum-gold);
+            font-size: 17px;
+        }
+        
+        .milestones-description {
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin-bottom: 18px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            transition: all 0.2s;
+        }
+        
+        .milestone-item.locked {
+            border-color: rgba(255, 68, 68, 0.2);
+            opacity: 0.7;
+        }
+        
+        .milestone-item.can-claim {
+            border-color: var(--quantum-green);
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+            animation: quantumPulseSuccess 2s infinite;
+        }
+        
+        .milestone-item.claimed {
+            border-color: var(--quantum-purple);
+            opacity: 0.8;
+        }
+        
+        @keyframes quantumPulseSuccess {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.6); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+        
+        .milestone-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.15);
+            flex-shrink: 0;
+        }
+        
+        .milestone-item.can-claim .milestone-icon {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.15);
+        }
+        
+        .milestone-item.claimed .milestone-icon {
+            background: rgba(157, 78, 221, 0.1);
+            border-color: rgba(157, 78, 221, 0.15);
+        }
+        
+        .milestone-icon i {
+            font-size: 16px;
+            color: #ff4444;
+        }
+        
+        .milestone-item.can-claim .milestone-icon i {
+            color: var(--quantum-green);
+        }
+        
+        .milestone-item.claimed .milestone-icon i {
+            color: var(--quantum-purple);
+        }
+        
+        .milestone-details {
+            flex: 1;
+        }
+        
+        .milestone-requirement {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            margin-bottom: 3px;
+        }
+        
+        .milestone-progress {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 3px;
+            font-family: monospace;
+        }
+        
+        .milestone-reward {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+        
+        .milestone-action {
+            flex-shrink: 0;
+        }
+        
+        .btn-claim-milestone {
+            padding: 7px 14px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-claim-milestone:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn-claim-milestone:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text-light);
+            cursor: not-allowed;
+        }
+        
+        .claimed-badge {
+            padding: 5px 10px;
+            background: rgba(157, 78, 221, 0.2);
+            color: var(--quantum-purple);
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .locked-badge {
+            padding: 5px 10px;
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Modal */
+        /* =========================================== */
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: var(--gradient-space);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 380px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .modal-header {
+            padding: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--quantum-text-light);
+            font-size: 22px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--quantum-text);
+        }
+        
+        .modal-body {
+            padding: 18px;
+        }
+        
+        .stake-plan-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        
+        .plan-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-stellar);
+            color: white;
+            font-size: 22px;
+        }
+        
+        .plan-details h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--quantum-text);
+            margin-bottom: 5px;
+        }
+        
+        .plan-apr {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--quantum-green);
+        }
+        
+        .plan-duration {
+            font-size: 13px;
+            color: var(--quantum-text-light);
+        }
+        
+        .deposit-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 18px 0;
+        }
+        
+        .deposit-option {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .deposit-option:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-2px);
+        }
+        
+        .deposit-option.active {
+            border-color: var(--quantum-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .deposit-option i {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+        
+        .deposit-option span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            display: block;
+        }
+        
+        .swap-direction {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin: 18px 0;
+        }
+        
+        .swap-arrow {
+            font-size: 22px;
+            color: var(--quantum-blue);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .swap-arrow:hover {
+            transform: rotate(180deg);
+        }
+        
+        .swap-from, .swap-to {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .swap-currency-select {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .swap-amount-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            text-align: center;
+        }
+        
+        .swap-rate {
+            text-align: center;
+            color: var(--quantum-text-light);
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .swap-quick-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .swap-quick-btn {
+            flex: 1;
+            padding: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 6px;
+            color: var(--quantum-blue);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .swap-quick-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .history-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+        }
+        
+        .history-tab {
+            flex: 1;
+            padding: 8px 5px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .history-tab.active {
+            background: var(--gradient-quantum);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .history-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .history-filter-btn {
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text-light);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .history-filter-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--quantum-blue);
+            color: var(--quantum-blue);
+        }
+        
+        .history-filter-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .history-card {
+            background: linear-gradient(145deg, #1e1e35, #15152a);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .history-card:hover {
+            border-color: var(--quantum-blue);
+            transform: translateX(-2px);
+        }
+        
+        .history-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .history-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .history-card-icon.mining {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--quantum-green);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-card-icon.deposit {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--quantum-blue);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .history-card-icon.withdraw {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+        
+        .history-card-icon.swap {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+        
+        .history-card-icon.staking {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--quantum-gold);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .history-card-icon.referral {
+            background: rgba(255, 0, 128, 0.1);
+            color: var(--quantum-pink);
+            border: 1px solid rgba(255, 0, 128, 0.2);
+        }
+        
+        .history-card-icon.milestone {
+            background: rgba(157, 78, 221, 0.1);
+            color: var(--quantum-purple);
+            border: 1px solid rgba(157, 78, 221, 0.2);
+        }
+        
+        .history-card-details {
+            flex: 1;
+        }
+        
+        .history-card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .history-card-type {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .history-card-amount {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .history-card-amount.positive {
+            color: var(--quantum-green);
+        }
+        
+        .history-card-amount.negative {
+            color: #ff4444;
+        }
+        
+        .history-card-description {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .history-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+        }
+        
+        .history-card-date {
+            color: var(--quantum-text-muted);
+        }
+        
+        .history-card-status {
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .history-card-status.pending {
+            background: rgba(255, 153, 0, 0.15);
+            color: var(--status-pending);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+        }
+        
+        .history-card-status.completed {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--status-completed);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        
+        .history-card-status.rejected {
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--status-rejected);
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+        
+        .history-card-status.processing {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--status-processing);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+        
+        .history-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--quantum-text-light);
+        }
+        
+        .history-empty i {
+            font-size: 48px;
+            color: var(--quantum-text-muted);
+            opacity: 0.5;
+            margin-bottom: 15px;
+        }
+        
+        .history-empty p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .history-empty small {
+            font-size: 12px;
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Admin Panel */
+        /* =========================================== */
+        
+        .admin-section {
+            background: var(--gradient-space);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+        }
+        
+        .admin-section h4 {
+            font-size: 16px;
+            color: var(--quantum-text);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-section h4 i {
+            color: #ff4444;
+            font-size: 17px;
+        }
+        
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        
+        .admin-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .admin-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--quantum-text);
+            margin-bottom: 4px;
+            font-family: monospace;
+        }
+        
+        .admin-stat-label {
+            font-size: 10px;
+            color: var(--quantum-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-search-box {
+            margin-bottom: 18px;
+        }
+        
+        .admin-search-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            color: var(--quantum-text);
+            font-size: 13px;
+        }
+        
+        .admin-requests-list {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 18px;
+        }
+        
+        .request-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .request-user {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--quantum-text);
+        }
+        
+        .request-amount {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--quantum-green);
+            font-family: monospace;
+        }
+        
+        .request-details {
+            font-size: 11px;
+            color: var(--quantum-text-light);
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-approve {
+            flex: 1;
+            padding: 6px;
+            background: var(--gradient-quantum);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-reject {
+            flex: 1;
+            padding: 6px;
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .admin-user-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 18px;
+        }
+        
+        .admin-user-control {
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .admin-user-control:hover {
+            border-color: var(--quantum-blue);
+            transform: translateY(-1px);
+        }
+        
+        .admin-user-control i {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+        
+        .admin-user-control span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--quantum-text);
+            display: block;
+        }
+        
+        .tx-id-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            color: var(--quantum-text);
+            font-family: monospace;
+            font-size: 13px;
+            margin: 8px 0;
+        }
+        
+        .validation-message {
+            font-size: 11px;
+            padding: 6px;
+            border-radius: 6px;
+            margin: 5px 0;
+        }
+        
+        .validation-success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--quantum-green);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+        }
+        
+        .validation-error {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.15);
+        }
+        
+        .validation-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.15);
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Responsive */
+        /* =========================================== */
+        
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 10px;
+                min-height: 100px;
+            }
+            
+            .ufo-icon {
+                font-size: 22px;
+            }
+            
+            .app-name {
+                font-size: 16px;
+            }
+            
+            .username-display {
+                font-size: 13px;
+                max-width: 150px;
+            }
+            
+            .userid-display {
+                font-size: 11px;
+                max-width: 170px;
+            }
+            
+            .floating-alien {
+                font-size: 30px;
+            }
+            
+            .balance-amount-header span:first-of-type {
+                font-size: 13px;
+            }
+            
+            .lang-icon, .support-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            
+            .header-left {
+                max-width: 230px;
+            }
+            
+            .header-right {
+                max-width: 200px;
+            }
+            
+            .main-nav {
+                margin: 6px 10px;
+                bottom: 6px;
+                left: 10px;
+                right: 10px;
+            }
+            
+            .nav-btn {
+                padding: 6px 2px;
+            }
+            
+            .nav-btn i {
+                font-size: 15px;
+            }
+            
+            .page {
+                padding: 10px;
+            }
+            
+            .mining-section,
+            .upgrade-section,
+            .tasks-section,
+            .staking-card,
+            .wallet-balance-card,
+            .referral-stats-card,
+            .referral-code-card,
+            .referral-link-card,
+            .milestones-card {
+                padding: 15px;
+            }
+            
+            .mining-header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            
+            .mining-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            
+            .timer-display span {
+                font-size: 16px;
+            }
+            
+            .info-item {
+                min-width: 100%;
+            }
+            
+            .upgrade-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vip-tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-actions-compact {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            
+            .wallet-action-btn {
+                padding: 8px 4px;
+                min-height: 60px;
+            }
+            
+            .wallet-action-btn i {
+                font-size: 15px;
+            }
+            
+            .wallet-action-btn span {
+                font-size: 9px;
+            }
+            
+            .referral-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .staking-plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .share-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .asset-item-compact {
+                padding: 10px;
+            }
+            
+            .asset-icon-compact {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .modal {
+                max-width: 100%;
+                margin: 8px;
+            }
+            
+            .deposit-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .history-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .history-tab {
+                flex: 1 0 45%;
+                margin-bottom: 2px;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .app-header {
+                padding: 8px;
+            }
+            
+            .ufo-icon {
+                font-size: 20px;
+            }
+            
+            .app-name {
+                font-size: 14px;
+            }
+            
+            .username-display {
+                font-size: 12px;
+                max-width: 120px;
+            }
+            
+            .userid-display {
+                font-size: 10px;
+                max-width: 140px;
+            }
+            
+            .user-icon, .id-icon {
+                width: 20px;
+                font-size: 12px;
+            }
+            
+            .floating-alien {
+                font-size: 26px;
+            }
+            
+            .lang-icon, .support-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
+            }
+            
+            .balance-amount-header span:first-of-type {
+                font-size: 12px;
+            }
+            
+            .balance-amount-header .currency {
+                font-size: 10px;
+            }
+            
+            .balance-usd-header {
+                font-size: 9px;
+            }
+            
+            .header-left {
+                max-width: 180px;
+            }
+            
+            .header-right {
+                max-width: 160px;
+            }
+            
+            .username-row, .userid-row, .app-title-row {
+                gap: 5px;
+            }
+            
+            :root {
+                font-size: 14px;
+            }
+            
+            .loading-title {
+                font-size: 24px;
+            }
+            
+            .loading-subtitle {
+                font-size: 15px;
+            }
+            
+            .alien-logo {
+                font-size: 44px;
+            }
+            
+            .main-nav {
+                border-radius: 16px;
+                margin: 5px;
+                padding: 3px;
+            }
+            
+            .nav-btn span {
+                font-size: 9px;
+            }
+            
+            .wallet-balance-amount {
+                font-size: 24px;
+            }
+            
+            .asset-name-compact {
+                font-size: 13px;
+            }
+            
+            .asset-value-compact {
+                font-size: 13px;
+            }
+            
+            .referral-code-display {
+                font-size: 16px;
+                padding: 10px;
+            }
+            
+            .deposit-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .history-tab {
+                flex: 1 0 100%;
+                margin-bottom: 2px;
+            }
+            
+            .history-filters {
+                justify-content: center;
+            }
+            
+            .history-filter-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            
+            .admin-stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* =========================================== */
+        /* تنسيقات Scrollbar */
+        /* =========================================== */
+        
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--space-card);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-quantum);
+            border-radius: 5px;
+            border: 1px solid var(--space-card);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--quantum-blue), var(--quantum-green));
+        }
+        
+        ::selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
+        
+        ::-moz-selection {
+            background: var(--quantum-green);
+            color: var(--space-dark);
+        }
         
         /* =========================================== */
         /* Helper Classes */
@@ -1766,25 +3772,32 @@
 </div>
 
 <div id="app-container" class="hidden">
-    <!-- الهيدر مع أيقونة الدعم الجديدة -->
+    <!-- =========================================== -->
+    <!-- الهيدر الجديد - مضغوط بشكل احترافي + أيقونة الدعم -->
+    <!-- =========================================== -->
     <header class="app-header">
+        <!-- القسم الأيسر - ثلاث أسطر عمودية -->
         <div class="header-left">
+            <!-- السطر الأول: 🛸 Alien Musk (للضغط 5 مرات) -->
             <div class="app-title-row" id="admin-logo">
                 <span class="ufo-icon">🛸</span>
                 <span class="app-name" data-translate="app_name_short">Alien Musk</span>
             </div>
             
+            <!-- السطر الثاني: 👤 @ahmed -->
             <div class="username-row">
                 <span class="user-icon">👤</span>
                 <span class="username-display" id="username-mini">Alien</span>
             </div>
             
+            <!-- السطر الثالث: 🆔 12345678901234567 (معرف كامل) -->
             <div class="userid-row">
                 <span class="id-icon">🆔</span>
                 <span class="userid-display" id="user-id-mini">Loading...</span>
             </div>
         </div>
         
+        <!-- القسم الأوسط - تأثيرات فضائية -->
         <div class="header-center">
             <div class="space-effects">
                 <div class="stars-effect"></div>
@@ -1792,7 +3805,9 @@
             </div>
         </div>
         
+        <!-- القسم الأيمن - سطرين عموديين + أيقونة الدعم -->
         <div class="header-right">
+            <!-- السطر الأول: الرصيد -->
             <div class="balance-row">
                 <div class="total-balance-header">
                     <div class="balance-amount-header">
@@ -1806,7 +3821,7 @@
                 </div>
             </div>
             
-            <!-- صف الأيقونات: الدعم + اللغة -->
+            <!-- السطر الثاني: صف الأيقونات (الدعم + اللغة) -->
             <div class="header-icons-row">
                 <!-- أيقونة الدعم الفني - جديدة -->
                 <div class="support-icon" id="support-icon" title="Contact Support">
@@ -1817,6 +3832,7 @@
                 <div class="language-selector">
                     <div class="lang-icon" id="languageSelectorBtn">🇬🇧</div>
                     
+                    <!-- القائمة المنسدلة للغة -->
                     <div class="language-dropdown" id="languageDropdown">
                         <div class="language-option active" data-lang="en" data-flag="🇬🇧" data-name="English">
                             <span class="flag">🇬🇧</span>
@@ -1844,7 +3860,9 @@
         </div>
     </header>
 
-    <!-- القائمة السفلية -->
+    <!-- =========================================== -->
+    <!-- القائمة السفلية (التبويبات) -->
+    <!-- =========================================== -->
     <nav class="main-nav">
         <button class="nav-btn active" data-page="home">
             <i class="fas fa-home"></i>
@@ -1864,12 +3882,16 @@
         </button>
     </nav>
 
+    <!-- =========================================== -->
     <!-- حاوية الإشعارات -->
+    <!-- =========================================== -->
     <div id="notification-container" class="notification-container"></div>
 
-    <!-- صفحة الرئيسية -->
+    <!-- =========================================== -->
+    <!-- صفحة الرئيسية (Home) -->
+    <!-- =========================================== -->
     <div id="home-page" class="page active">
-        <!-- محتوى الصفحة الرئيسية - نفس الأصلي -->
+        <!-- قسم التعدين -->
         <section class="mining-section">
             <div class="mining-header">
                 <h3><i class="fas fa-microchip"></i> <span data-translate="mining_title">Quantum Mining Station</span></h3>
@@ -1885,6 +3907,7 @@
                 </div>
             </div>
 
+            <!-- مؤقت التعدين -->
             <div class="mining-timer-card">
                 <div class="timer-display">
                     <i class="fas fa-clock"></i>
@@ -1895,11 +3918,13 @@
                 </div>
             </div>
 
+            <!-- زر التعدين -->
             <button class="mining-action-btn" id="start-mining-btn">
                 <i class="fas fa-play"></i>
                 <span data-translate="mining_start">Start Quantum Mining</span>
             </button>
 
+            <!-- معلومات التعدين -->
             <div class="mining-info">
                 <div class="info-item">
                     <i class="fas fa-chart-line"></i>
@@ -1911,6 +3936,7 @@
                 </div>
             </div>
             
+            <!-- أزرار سريعة -->
             <div class="quick-actions">
                 <button class="quick-action-btn tasks-btn" id="scroll-to-tasks-btn">
                     <i class="fas fa-tasks"></i>
@@ -1923,19 +3949,22 @@
             </div>
         </section>
 
+        <!-- قسم تطوير مستوى التعدين -->
         <section class="upgrade-section">
             <h4><i class="fas fa-level-up-alt"></i> <span data-translate="upgrade_title">Upgrade Mining Level</span></h4>
             <div class="upgrade-cards" id="upgrade-cards">
-                <!-- بطاقات التطوير ستتم إضافتها ديناميكياً -->
+                <!-- بطاقات التطوير ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
         </section>
 
+        <!-- قسم المهام -->
         <section class="tasks-section" id="tasks-section">
             <div class="tasks-header">
                 <h4><i class="fas fa-tasks"></i> <span data-translate="tasks_title">Tasks & Rewards</span></h4>
                 <div class="tasks-progress" id="tasks-progress">0/4 <span data-translate="tasks_completed">Completed</span></div>
             </div>
             
+            <!-- تبويبات المهام -->
             <div class="tasks-tabs">
                 <button class="tasks-tab active" data-tab="basic">
                     <i class="fas fa-tasks"></i> <span data-translate="tasks_basic">Basic</span>
@@ -1945,27 +3974,326 @@
                 </button>
             </div>
             
+            <!-- شبكة المهام الأساسية -->
             <div class="tasks-grid active" id="tasks-grid" data-tab-content="basic">
-                <!-- المهام الأساسية -->
+                <!-- المهام ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
             
+            <!-- شبكة مهام VIP -->
             <div class="vip-tasks-grid" id="vip-tasks-grid" data-tab-content="vip" style="display: none;">
-                <!-- مهام VIP -->
+                <!-- مهام VIP ستتم إضافتها ديناميكياً عبر JavaScript -->
             </div>
         </section>
     </div>
 
-    <!-- باقي الصفحات (Staking, Wallet, Referral) بنفس المحتوى الأصلي -->
+    <!-- =========================================== -->
+    <!-- صفحة Staking (الإيداع) -->
+    <!-- =========================================== -->
     <div id="staking-page" class="page">
-        <!-- محتوى Staging الأصلي -->
+        <div class="staking-content">
+            <!-- بطاقة Staking الرئيسية -->
+            <div class="staking-card">
+                <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
+                <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
+                
+                <div class="total-staked-card">
+                    <div class="staked-info">
+                        <div class="staked-label" data-translate="staking_total">Total Staked</div>
+                        <div class="staked-amount" id="total-staked">0 USDT</div>
+                    </div>
+                    <div class="staked-earnings">
+                        <i class="fas fa-coins"></i>
+                        <span data-translate="staking_active">Active Earnings</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خطط Staking -->
+            <div class="staking-card">
+                <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
+                
+                <div class="staking-plans-grid">
+                    <!-- الخطة الفضية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
+                        <div class="plan-amount">10+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_7">7 Days</div>
+                        <div class="plan-apr">40% APR</div>
+                        <div class="plan-reward" data-translate="staking_silver_reward">Daily: 2,857 AMSK per $10</div>
+                        <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
+                    </div>
+
+                    <!-- الخطة الذهبية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
+                        <div class="plan-amount">50+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_15">15 Days</div>
+                        <div class="plan-apr">50% APR</div>
+                        <div class="plan-reward" data-translate="staking_gold_reward">Daily: 8,333 AMSK per $50</div>
+                        <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
+                    </div>
+
+                    <!-- الخطة الماسية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
+                        <div class="plan-amount">100+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_30">30 Days</div>
+                        <div class="plan-apr">60% APR</div>
+                        <div class="plan-reward" data-translate="staking_diamond_reward">Daily: 10,000 AMSK per $100</div>
+                        <button class="stake-plan-btn" data-plan="3" data-translate="staking_stake_now">Stake Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الإيداعات النشطة -->
+            <div class="staking-card">
+                <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
+                <div class="active-stakes" id="active-stakes-list">
+                    <div class="empty-stakes">
+                        <i class="fas fa-inbox"></i>
+                        <p data-translate="staking_no_active">No active stakes yet</p>
+                        <small data-translate="staking_start_hint">Start staking to earn rewards</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
+    <!-- =========================================== -->
+    <!-- صفحة Wallet (المحفظة) -->
+    <!-- =========================================== -->
     <div id="wallet-page" class="page">
-        <!-- محتوى Wallet الأصلي -->
+        <div class="wallet-content">
+            <!-- بطاقة الرصيد الإجمالي -->
+            <div class="wallet-balance-card">
+                <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
+                <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
+                <div class="wallet-balance-subtitle" data-translate="wallet_total_usd">Total Value in USD</div>
+                <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
+            </div>
+
+            <!-- الأزرار السريعة -->
+            <div class="wallet-actions-card">
+                <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
+                
+                <div class="wallet-actions-compact">
+                    <button class="wallet-action-btn" id="deposit-btn">
+                        <i class="fas fa-download"></i>
+                        <span data-translate="wallet_deposit">Deposit</span>
+                    </button>
+                    <button class="wallet-action-btn" id="withdraw-btn">
+                        <i class="fas fa-upload"></i>
+                        <span data-translate="wallet_withdraw">Withdraw</span>
+                    </button>
+                    <button class="wallet-action-btn" id="swap-btn">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span data-translate="wallet_swap">Swap</span>
+                    </button>
+                    <button class="wallet-action-btn" id="history-btn">
+                        <i class="fas fa-history"></i>
+                        <span data-translate="wallet_history">History</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- قائمة الأصول -->
+            <div class="wallet-assets-card">
+                <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
+                
+                <div class="assets-section">
+                    <div class="asset-list-compact">
+                        <!-- AMSK Token -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ams-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">AMSK Token</div>
+                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                        </div>
+
+                        <!-- USDT -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact usdt-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">USDT</div>
+                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                        </div>
+
+                        <!-- BNB -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact bnb-icon">
+                                <i class="fab fa-btc"></i>
+                            </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">BNB</div>
+                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                        </div>
+
+                        <!-- TON -->
+                        <div class="asset-item-compact">
+                            <div class="asset-icon-compact ton-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">TON</div>
+                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- =========================================== -->
+    <!-- صفحة Referral (الدعوات) -->
+    <!-- =========================================== -->
     <div id="referral-page" class="page">
-        <!-- محتوى Referral الأصلي -->
+        <div class="referral-content">
+            <!-- إحصائيات الدعوات -->
+            <div class="referral-stats-card">
+                <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
+                
+                <div class="referral-stats-grid">
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-count">0</div>
+                        <div class="ref-stat-label" data-translate="referral_count">Referrals</div>
+                    </div>
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-earned">0</div>
+                        <div class="ref-stat-label" data-translate="referral_earned">AMSK Earned</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- رابط الدعوة -->
+            <div class="referral-link-card">
+                <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
+                
+                <!-- وصف الدعوة -->
+                <div class="referral-description">
+                    <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_1" class="allow-html">Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_2" class="allow-html">Earn <strong>16% commission</strong> on their deposits forever</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_3" class="allow-html">Unlimited referrals, instant rewards!</span></li>
+                    </ul>
+                </div>
+                
+                <!-- حقل الرابط وزر النسخ -->
+                <div class="link-input-group">
+                    <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
+                    <button class="copy-link-btn" id="copy-link-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                
+                <!-- أزرار المشاركة -->
+                <div class="share-buttons">
+                    <button class="share-btn telegram" id="telegram-share-btn">
+                        <i class="fab fa-telegram"></i>
+                        <span data-translate="share_telegram">Telegram</span>
+                    </button>
+                    <button class="share-btn whatsapp" id="whatsapp-share-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        <span data-translate="share_whatsapp">WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- مراحل الدعوات (Milestones) -->
+            <div class="milestones-card">
+                <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
+                <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
+                
+                <div class="milestones-list" id="milestones-list">
+                    <!-- مرحلة 10 دعوات -->
+                    <div class="milestone-item locked" data-milestone="10">
+                        <div class="milestone-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_10">10 Referrals</div>
+                            <div class="milestone-progress">0/10</div>
+                            <div class="milestone-reward">+50,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/10</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 25 دعوة -->
+                    <div class="milestone-item locked" data-milestone="25">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_25">25 Referrals</div>
+                            <div class="milestone-progress">0/25</div>
+                            <div class="milestone-reward">+150,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/25</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 50 دعوة -->
+                    <div class="milestone-item locked" data-milestone="50">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_50">50 Referrals</div>
+                            <div class="milestone-progress">0/50</div>
+                            <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/50</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 100 دعوة -->
+                    <div class="milestone-item locked" data-milestone="100">
+                        <div class="milestone-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_100">100 Referrals</div>
+                            <div class="milestone-progress">0/100</div>
+                            <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/100</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 250 دعوة -->
+                    <div class="milestone-item locked" data-milestone="250">
+                        <div class="milestone-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_250">250 Referrals</div>
+                            <div class="milestone-progress">0/250</div>
+                            <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/250</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -2209,7 +4537,7 @@
                 history_no_transactions_desc: "لا توجد معاملات تطابق عوامل التصفية الخاصة بك"
             }
         }
-        // باقي اللغات (hi, bn, ru) كما هي
+        // باقي اللغات (hi, bn, ru) كما هي في الكود الأصلي
     };
 
     let currentLanguage = 'en';
@@ -7095,7 +9423,7 @@
     window.selectWelcomeLanguage = selectWelcomeLanguage;
     window.closeLanguageWelcome = closeLanguageWelcome;
 
-    console.log("👽 Alien Musk Quantum Platform v7.1 - مع التعديلات المطلوبة - Ready!");
+    console.log("👽 Alien Musk Quantum Platform v7.1 - مع التعديلات المطلوبة - جميع الصفحات مستعادة!");
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initAlienMuskApp);
