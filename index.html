@@ -5385,7 +5385,7 @@ const CONFIG = {
 };
 
 // ===========================================
-// 👤 USER DATA - بيانات المستخدم (محدثة)
+// 👤 USER DATA - بيانات المستخدم
 // ===========================================
 let userData = {
     id: null,
@@ -5401,13 +5401,12 @@ let userData = {
     lastSaveTime: 0,
     lastFirebaseSave: 0,
     referralBonusClaimed: false,
-    referralDate: null,
     language: 'en',
     isNewUser: true
 };
 
 // ===========================================
-// 💰 WALLET DATA - بيانات المحفظة (محسنة)
+// 💰 WALLET DATA - بيانات المحفظة (محسنة بالقيم الافتراضية)
 // ===========================================
 let walletData = {
     balances: {
@@ -5447,434 +5446,42 @@ let walletData = {
     lastUpdate: Date.now()
 };
 
-// ===========================================
-// 📁 COLLECTIONS - مجموعات Firebase (محدثة)
-// ===========================================
 const DB_COLLECTIONS = {
     USERS: 'users',
     DEPOSITS: 'deposit_requests',
     WITHDRAWALS: 'withdrawal_requests',
     TRANSACTIONS: 'transactions',
-    ADMIN_LOGS: 'admin_logs',
-    REFERRAL_LOGS: 'referral_logs' // ✅ جديد
+    ADMIN_LOGS: 'admin_logs'
 };
 
-// ===========================================
-// 👥 REFERRAL SYSTEM - نظام الإحالات المحسن (يمنع التكرار نهائياً)
-// ===========================================
+const elements = {};
 
-// دالة الحصول على IP
-async function getUserIp() {
-    try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-    } catch (error) {
-        console.error("❌ Error getting IP:", error);
-        return null;
-    }
-}
+let intervals = {
+    miningTimer: null,
+    realtimeSync: null
+};
 
-// دالة معالجة الإحالة (آمنة تماماً)
-async function processReferral(referralCode) {
-    console.log("🎯 Processing referral with code:", referralCode);
-    
-    // ===========================================
-    // 🔥 التحقق من أن المستخدم لسا جديد (الأهم!)
-    // ===========================================
-    if (userData.isNewUser === false) {
-        console.log("❌ User already exists, cannot process referral again");
-        showMessage("⚠️ Referral codes only work for new users", "warning", 3000);
-        return;
+let unsubscribeUserListener = null;
+let pendingFirebaseSave = null;
+let lastImportantChange = 0;
+
+function generateReferralCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 8; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    
-    // ===========================================
-    // 🔥 التحقق من 4 مستويات (أمان كامل)
-    // ===========================================
-    
-    // 1. التحقق من localStorage
-    const referralKey = `referred_${userData.id}`;
-    if (localStorage.getItem(referralKey) === 'true') {
-        console.log("❌ LocalStorage says: already referred");
-        showMessage("⚠️ You have already used a referral link", "warning", 3000);
-        return;
-    }
-    
-    // 2. التحقق من userData
-    if (userData.referredBy) {
-        console.log("❌ UserData says: already referred by:", userData.referredBy);
-        localStorage.setItem(referralKey, 'true');
-        showMessage("⚠️ You have already used a referral link", "warning", 3000);
-        return;
-    }
-    
-    // 3. التحقق من Firebase (الأهم)
-    if (window.db) {
-        try {
-            const referralLogSnapshot = await window.db.collection(DB_COLLECTIONS.REFERRAL_LOGS)
-                .where('referredId', '==', userData.id)
-                .get();
-            
-            if (!referralLogSnapshot.empty) {
-                console.log("❌ Firebase says: already referred");
-                
-                // تسجيل في localStorage
-                localStorage.setItem(referralKey, 'true');
-                
-                // استعادة الـ referrerId
-                const logData = referralLogSnapshot.docs[0].data();
-                userData.referredBy = logData.referrerId;
-                userData.referralBonusClaimed = true;
-                
-                showMessage("⚠️ You have already used a referral link", "warning", 3000);
-                return;
-            }
-            
-            // 4. التحقق من IP (يمنع الحسابات المتعددة)
-            const userIp = await getUserIp();
-            if (userIp) {
-                const ipSnapshot = await window.db.collection(DB_COLLECTIONS.REFERRAL_LOGS)
-                    .where('ip', '==', userIp)
-                    .where('timestamp', '>', Date.now() - (30 * 24 * 60 * 60 * 1000)) // آخر 30 يوم
-                    .get();
-                
-                if (!ipSnapshot.empty) {
-                    console.log("❌ IP already used for referral");
-                    showMessage("⚠️ This IP has already used a referral link", "warning", 3000);
-                    return;
-                }
-            }
-            
-        } catch (error) {
-            console.error("❌ Error checking Firebase:", error);
-        }
-    }
-    
-    // منع دعوة النفس
-    if (referralCode === userData.referralCode) {
-        console.log("⚠️ Cannot use your own referral code");
-        showMessage("⚠️ Cannot use your own referral code", "warning");
-        return;
-    }
-    
-    try {
-        let referrerId = null;
-        let referrerData = null;
-        
-        if (window.db) {
-            const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
-            const querySnapshot = await usersRef.where('userInfo.referralCode', '==', referralCode).get();
-            
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                referrerId = doc.id;
-                referrerData = doc.data();
-            }
-        }
-        
-        if (!referrerId || referrerId === userData.id) {
-            console.log("❌ Referrer not found or self-referral");
-            showMessage("❌ Invalid referral code", "error");
-            return;
-        }
-        
-        // ✅ الحصول على IP
-        const userIp = await getUserIp();
-        
-        // ===========================================
-        // 🔥 تسجيل الإحالة (مرة واحدة فقط)
-        // ===========================================
-        
-        // 1. تسجيل في localStorage
-        localStorage.setItem(referralKey, 'true');
-        localStorage.setItem(`referred_by_${userData.id}`, referrerId);
-        localStorage.setItem(`referral_date_${userData.id}`, Date.now().toString());
-        
-        // 2. تسجيل في Firebase (سجل دائم)
-        if (window.db) {
-            try {
-                await window.db.collection(DB_COLLECTIONS.REFERRAL_LOGS).add({
-                    referrerId: referrerId,
-                    referredId: userData.id,
-                    referredUsername: userData.username,
-                    timestamp: Date.now(),
-                    ip: userIp || 'unknown',
-                    userAgent: navigator.userAgent
-                });
-                console.log("✅ Referral logged in Firebase");
-            } catch (error) {
-                console.error("❌ Error logging referral to Firebase:", error);
-            }
-        }
-        
-        // 3. تحديث userData
-        userData.referredBy = referrerId;
-        userData.referralBonusClaimed = true;
-        userData.referralDate = Date.now();
-        userData.isNewUser = false; // ✅ مهم جداً!
-        
-        // ✅ منح مكافأة للمدعو
-        walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
-        
-        // ✅ تحديث الداعي في Firebase
-        if (window.db && referrerId) {
-            try {
-                const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
-                
-                // تحديث إحصائيات الداعي
-                const newCount = (referrerData?.referrals?.count || 0) + 1;
-                const newReferrals = referrerData?.referrals?.referrals || [];
-                newReferrals.push({
-                    userId: userData.id,
-                    username: userData.username,
-                    joinedAt: Date.now()
-                });
-                
-                await referrerRef.update({
-                    'balances.AMSK': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.BONUS.REFERRER),
-                    'referrals.count': newCount,
-                    'referrals.referrals': newReferrals,
-                    'referrals.earned.amsk': firebase.firestore.FieldValue.increment(CONFIG.REFERRAL.BONUS.REFERRER)
-                });
-                
-                console.log(`✅ Referrer ${referrerId} updated with +10000 AMSK`);
-            } catch (error) {
-                console.error("❌ Error updating referrer:", error);
-            }
-        }
-        
-        // ✅ إضافة للتاريخ
-        addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 
-            'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
-        
-        // ✅ حفظ البيانات
-        await saveUserData();
-        
-        // ✅ تحديث الواجهة
-        updateWalletUI();
-        updateReferralDisplay();
-        
-        showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error processing referral:", error);
-        showMessage("Failed to process referral", "error");
-    }
+    return code;
 }
 
 // ===========================================
-// 🔍 التحقق من وجود إحالة عند فتح التطبيق (محدث)
-// ===========================================
-async function checkForReferral() {
-    console.log("🔍 Checking for referral...");
-    
-    // التحقق من localStorage أولاً
-    const referralKey = `referred_${userData.id}`;
-    if (localStorage.getItem(referralKey) === 'true') {
-        console.log("✅ User already referred (localStorage)");
-        
-        // استعادة بيانات الإحالة من localStorage
-        const referredById = localStorage.getItem(`referred_by_${userData.id}`);
-        const referralDate = localStorage.getItem(`referral_date_${userData.id}`);
-        
-        if (referredById && !userData.referredBy) {
-            userData.referredBy = referredById;
-            userData.referralBonusClaimed = true;
-            userData.referralDate = parseInt(referralDate) || Date.now();
-            console.log("✅ Restored referral from localStorage");
-        }
-        return;
-    }
-    
-    // التحقق من userData
-    if (userData.referredBy || userData.referralBonusClaimed) {
-        console.log("✅ User already referred or bonus claimed");
-        
-        // تسجيل في localStorage للمستقبل
-        localStorage.setItem(referralKey, 'true');
-        if (userData.referredBy) {
-            localStorage.setItem(`referred_by_${userData.id}`, userData.referredBy);
-        }
-        return;
-    }
-    
-    // البحث عن كود الإحالة في رابط Telegram
-    let referralCode = null;
-    
-    if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.start_param) {
-        referralCode = window.tg.initDataUnsafe.start_param;
-        console.log("📱 Telegram referral detected:", referralCode);
-    }
-    
-    // البحث في رابط المتصفح
-    if (!referralCode) {
-        const urlParams = new URLSearchParams(window.location.search);
-        referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
-    }
-    
-    if (!referralCode) {
-        console.log("ℹ️ No referral code detected");
-        return;
-    }
-    
-    // معالجة الإحالة
-    await processReferral(referralCode);
-}
-
-// ===========================================
-// 👥 تحديث عرض الإحالات
-// ===========================================
-function updateReferralDisplay() {
-    if (!walletData.referrals) {
-        walletData.referrals = {
-            count: 0,
-            earned: { amsk: 0, bnb: 0 },
-            referrals: [],
-            claimedMilestones: []
-        };
-        return;
-    }
-    
-    const referrals = walletData.referrals;
-    
-    if (elements.refCount) {
-        elements.refCount.textContent = referrals.count || 0;
-    }
-    
-    if (elements.refEarned) {
-        const earnedAmsk = referrals.earned?.amsk || 0;
-        elements.refEarned.textContent = formatNumber(earnedAmsk);
-    }
-    
-    updateMilestonesDisplay();
-}
-
-// ===========================================
-// 🏆 تحديث عرض المراحل
-// ===========================================
-function updateMilestonesDisplay() {
-    if (!elements.milestonesList) return;
-    
-    const referralCount = walletData.referrals?.count || 0;
-    const claimedMilestones = walletData.referrals?.claimedMilestones || [];
-    
-    const milestones = elements.milestonesList.querySelectorAll('.milestone-item');
-    milestones.forEach(item => {
-        const milestoneNum = parseInt(item.dataset.milestone);
-        const progressElement = item.querySelector('.milestone-progress');
-        const actionElement = item.querySelector('.milestone-action');
-        
-        if (!milestoneNum) return;
-        
-        item.classList.remove('locked', 'can-claim', 'claimed');
-        
-        if (progressElement) {
-            progressElement.textContent = `${referralCount}/${milestoneNum}`;
-        }
-        
-        if (claimedMilestones.includes(milestoneNum)) {
-            item.classList.add('claimed');
-            if (actionElement) {
-                actionElement.innerHTML = '<span class="claimed-badge">Claimed</span>';
-            }
-        } else if (referralCount >= milestoneNum) {
-            item.classList.add('can-claim');
-            if (actionElement) {
-                actionElement.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
-            }
-        } else {
-            item.classList.add('locked');
-            if (actionElement) {
-                actionElement.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
-            }
-        }
-    });
-}
-
-// ===========================================
-// 💰 صرف مكافأة المرحلة
-// ===========================================
-async function claimMilestone(milestoneNum) {
-    try {
-        const milestoneReward = CONFIG.REFERRAL.MILESTONES[milestoneNum];
-        if (!milestoneReward) {
-            throw new Error("Invalid milestone");
-        }
-        
-        if (!walletData.referrals) {
-            walletData.referrals = {
-                count: 0,
-                earned: { amsk: 0, bnb: 0 },
-                referrals: [],
-                claimedMilestones: []
-            };
-        }
-        
-        if (walletData.referrals.claimedMilestones.includes(milestoneNum)) {
-            showMessage("Milestone already claimed", "warning");
-            return;
-        }
-        
-        if (walletData.referrals.count < milestoneNum) {
-            showMessage(`Need ${milestoneNum} referrals to claim this milestone`, "error");
-            return;
-        }
-        
-        if (milestoneReward.amsk > 0) {
-            walletData.balances.AMSK += milestoneReward.amsk;
-            if (!walletData.referrals.earned) walletData.referrals.earned = { amsk: 0, bnb: 0 };
-            walletData.referrals.earned.amsk += milestoneReward.amsk;
-            addTransactionToHistory('referral_milestone', milestoneReward.amsk, 'AMSK', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
-        }
-        
-        if (milestoneReward.bnb > 0) {
-            walletData.balances.BNB += milestoneReward.bnb;
-            if (!walletData.referrals.earned) walletData.referrals.earned = { amsk: 0, bnb: 0 };
-            walletData.referrals.earned.bnb += milestoneReward.bnb;
-            addTransactionToHistory('referral_milestone', milestoneReward.bnb, 'BNB', `Milestone ${milestoneNum} referrals`, 'completed', 'Referral milestone reward claimed');
-        }
-        
-        walletData.referrals.claimedMilestones.push(milestoneNum);
-        
-        updateWalletUI();
-        updateReferralDisplay();
-        await saveUserData();
-        
-        let rewardText = `+${formatNumber(milestoneReward.amsk)} AMSK`;
-        if (milestoneReward.bnb > 0) {
-            rewardText += ` + ${milestoneReward.bnb} BNB`;
-        }
-        showMessage(`🏆 Milestone claimed! ${rewardText}`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error claiming milestone:", error);
-        showMessage("Failed to claim milestone", "error");
-    }
-}
-
-// ===========================================
-// 🔐 دالة تنظيف النص من XSS
-// ===========================================
-function sanitizeInput(text) {
-    if (!text) return '';
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/`/g, '&#096;')
-        .replace(/\$/g, '&#036;')
-        .replace(/\(/g, '&#040;')
-        .replace(/\)/g, '&#041;');
-}
-
-// ===========================================
-// 🚀 INITIALIZATION - بدء التطبيق (محدث)
+// 🚀 INITIALIZATION - بدء التطبيق
 // ===========================================
 async function initAlienMuskApp() {
+    // تأكيد وضع التشغيل المستقل
     console.log("🚀 Running in STANDALONE HTML mode - app.js is disabled");
     
+    // منع أي تداخل مع app.js (لو تم تحميله بالخطأ)
     if (window.appJsLoaded) {
         console.warn("⚠️ app.js detected, but ignoring in standalone mode");
     }
@@ -5884,33 +5491,33 @@ async function initAlienMuskApp() {
         return;
     }
     appInitialized = true;
+    console.log("🚀 Initializing Alien Musk Platform v7.1 with Optimized Firebase & Unified Transactions - STANDALONE MODE...");
     
     try {
         cacheElements();
         await setupUser();
         
-        // تحميل من localStorage أولاً
+        // تحميل من localStorage أولاً (سريع)
         await loadUserFromLocalStorage();
         
-        // التحقق من الإحالة (بعد تحميل البيانات)
-        await checkForReferral();
-        
-        // تحميل من Firebase في الخلفية
+        // ثم تحميل من Firebase في الخلفية
         setTimeout(() => {
             loadUserDataFromFirebase();
         }, 500);
         
         setupUserRealtimeListener();
         setupEventListeners();
+        await checkForReferral();
         updateUI();
         startBackgroundServices();
+        
         initSupportIcon();
         
         userData.isInitialized = true;
-        console.log("✅ Platform initialized successfully");
+        console.log("✅ Platform initialized successfully in standalone mode");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum Platform v7.1 (Standalone Mode)!", "success");
         }, 800);
         
     } catch (error) {
