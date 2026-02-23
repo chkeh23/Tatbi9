@@ -5460,7 +5460,7 @@ const DB_COLLECTIONS = {
 };
 
 // ===========================================
-// 👥 REFERRAL SYSTEM - نظام الإحالات المحسن (يمنع التكرار)
+// 👥 REFERRAL SYSTEM - نظام الإحالات المحسن (يمنع التكرار نهائياً)
 // ===========================================
 
 // دالة الحصول على IP
@@ -5480,7 +5480,16 @@ async function processReferral(referralCode) {
     console.log("🎯 Processing referral with code:", referralCode);
     
     // ===========================================
-    // 🔥 التحقق من 3 مستويات (أمان كامل)
+    // 🔥 التحقق من أن المستخدم لسا جديد (الأهم!)
+    // ===========================================
+    if (userData.isNewUser === false) {
+        console.log("❌ User already exists, cannot process referral again");
+        showMessage("⚠️ Referral codes only work for new users", "warning", 3000);
+        return;
+    }
+    
+    // ===========================================
+    // 🔥 التحقق من 4 مستويات (أمان كامل)
     // ===========================================
     
     // 1. التحقق من localStorage
@@ -5495,6 +5504,7 @@ async function processReferral(referralCode) {
     if (userData.referredBy) {
         console.log("❌ UserData says: already referred by:", userData.referredBy);
         localStorage.setItem(referralKey, 'true');
+        showMessage("⚠️ You have already used a referral link", "warning", 3000);
         return;
     }
     
@@ -5519,8 +5529,24 @@ async function processReferral(referralCode) {
                 showMessage("⚠️ You have already used a referral link", "warning", 3000);
                 return;
             }
+            
+            // 4. التحقق من IP (يمنع الحسابات المتعددة)
+            const userIp = await getUserIp();
+            if (userIp) {
+                const ipSnapshot = await window.db.collection(DB_COLLECTIONS.REFERRAL_LOGS)
+                    .where('ip', '==', userIp)
+                    .where('timestamp', '>', Date.now() - (30 * 24 * 60 * 60 * 1000)) // آخر 30 يوم
+                    .get();
+                
+                if (!ipSnapshot.empty) {
+                    console.log("❌ IP already used for referral");
+                    showMessage("⚠️ This IP has already used a referral link", "warning", 3000);
+                    return;
+                }
+            }
+            
         } catch (error) {
-            console.error("❌ Error checking Firebase referral:", error);
+            console.error("❌ Error checking Firebase:", error);
         }
     }
     
@@ -5555,12 +5581,16 @@ async function processReferral(referralCode) {
         // ✅ الحصول على IP
         const userIp = await getUserIp();
         
-        // ✅ تسجيل في localStorage (يمنع التكرار حتى بعد إغلاق التطبيق)
+        // ===========================================
+        // 🔥 تسجيل الإحالة (مرة واحدة فقط)
+        // ===========================================
+        
+        // 1. تسجيل في localStorage
         localStorage.setItem(referralKey, 'true');
         localStorage.setItem(`referred_by_${userData.id}`, referrerId);
         localStorage.setItem(`referral_date_${userData.id}`, Date.now().toString());
         
-        // ✅ تسجيل في Firebase (سجل دائم)
+        // 2. تسجيل في Firebase (سجل دائم)
         if (window.db) {
             try {
                 await window.db.collection(DB_COLLECTIONS.REFERRAL_LOGS).add({
@@ -5577,10 +5607,11 @@ async function processReferral(referralCode) {
             }
         }
         
-        // تحديث بيانات المستخدم
+        // 3. تحديث userData
         userData.referredBy = referrerId;
         userData.referralBonusClaimed = true;
         userData.referralDate = Date.now();
+        userData.isNewUser = false; // ✅ مهم جداً!
         
         // ✅ منح مكافأة للمدعو
         walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
@@ -5631,8 +5662,6 @@ async function processReferral(referralCode) {
     }
 }
 
-// ===========================================
-// 🔍 التحقق من وجود إحالة عند فتح التطبيق (محدث)
 // ===========================================
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
