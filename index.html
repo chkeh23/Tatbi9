@@ -7333,225 +7333,225 @@
             }
         }
 
-        // ===========================================
-        // 📊 HISTORY SYSTEM - نظام سجل المعاملات (محسن)
-        // ===========================================
-        function showTransactionHistory() {
-            const modalContent = `
-                <div class="modal-overlay active" onclick="closeModal()">
-                    <div class="modal active" onclick="event.stopPropagation()">
-                        <div class="modal-header">
-                            <h3><i class="fas fa-history"></i> ${getTranslation('history_title') || 'Transaction History'}</h3>
-                            <button class="modal-close" onclick="closeModal()">×</button>
+// ===========================================
+// 📊 HISTORY SYSTEM - نظام سجل المعاملات
+// ===========================================
+function showTransactionHistory() {
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-history"></i> ${getTranslation('history_title') || 'Transaction History'}</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="history-tabs" id="historyTabs">
+                        <button class="history-tab active" data-tab="all">${getTranslation('history_all') || 'All'}</button>
+                        <button class="history-tab" data-tab="pending">${getTranslation('history_pending') || 'Pending'}</button>
+                        <button class="history-tab" data-tab="completed">${getTranslation('history_completed') || 'Completed'}</button>
+                        <button class="history-tab" data-tab="rejected">${getTranslation('history_rejected') || 'Rejected'}</button>
+                    </div>
+                    
+                    <div class="history-filters" id="historyFilters">
+                        <button class="history-filter-btn active" data-filter="all">${getTranslation('history_all_types') || 'All Types'}</button>
+                        <button class="history-filter-btn" data-filter="deposit">${getTranslation('history_deposits') || 'Deposits'}</button>
+                        <button class="history-filter-btn" data-filter="withdrawal">${getTranslation('history_withdrawals') || 'Withdrawals'}</button>
+                        <button class="history-filter-btn" data-filter="mining">${getTranslation('history_mining') || 'Mining'}</button>
+                        <button class="history-filter-btn" data-filter="staking">${getTranslation('history_staking') || 'Staking'}</button>
+                        <button class="history-filter-btn" data-filter="swap">${getTranslation('history_swap') || 'Swap'}</button>
+                        <button class="history-filter-btn" data-filter="referral">${getTranslation('history_referral') || 'Referral'}</button>
+                        <button class="history-filter-btn" data-filter="task">${getTranslation('history_tasks') || 'Tasks'}</button>
+                        <button class="history-filter-btn" data-filter="vip">${getTranslation('history_vip') || 'VIP Tasks'}</button>
+                    </div>
+                    
+                    <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
+                    
+                    <div class="modal-actions mt-20">
+                        <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">${getTranslation('close') || 'Close'}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+    
+    loadHistoryContent('all', 'all');
+    
+    setTimeout(() => {
+        const tabs = document.querySelectorAll('#historyTabs .history-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const tabType = tab.dataset.tab;
+                const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                loadHistoryContent(tabType, activeFilter);
+            });
+        });
+        
+        const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                filters.forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+                const filterType = filter.dataset.filter;
+                const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                loadHistoryContent(activeTab, filterType);
+            });
+        });
+    }, 100);
+}
+
+function loadHistoryContent(tabType = 'all', filterType = 'all') {
+    const historyContent = document.getElementById('historyContent');
+    if (!historyContent) return;
+    
+    if (!walletData.transactionHistory) {
+        walletData.transactionHistory = [];
+    }
+    
+    let transactions = [...(walletData.transactionHistory || [])];
+    
+    transactions.sort((a, b) => b.timestamp - a.timestamp);
+    
+    if (tabType === 'pending') {
+        transactions = transactions.filter(tx => tx.status === 'pending');
+    } else if (tabType === 'completed') {
+        transactions = transactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
+    } else if (tabType === 'rejected') {
+        transactions = transactions.filter(tx => tx.status === 'rejected');
+    }
+    
+    if (filterType !== 'all') {
+        if (filterType === 'deposit') {
+            transactions = transactions.filter(tx => tx.type.includes('deposit'));
+        } else if (filterType === 'withdrawal') {
+            transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
+        } else if (filterType === 'mining') {
+            transactions = transactions.filter(tx => tx.type.includes('mining'));
+        } else if (filterType === 'staking') {
+            transactions = transactions.filter(tx => tx.type.includes('staking'));
+        } else if (filterType === 'swap') {
+            transactions = transactions.filter(tx => tx.type.includes('swap'));
+        } else if (filterType === 'referral') {
+            transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+        } else if (filterType === 'task') {
+            transactions = transactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
+        } else if (filterType === 'vip') {
+            transactions = transactions.filter(tx => tx.type.includes('vip'));
+        }
+    }
+    
+    if (transactions.length === 0) {
+        historyContent.innerHTML = `
+            <div class="history-empty">
+                <i class="fas fa-history"></i>
+                <p>${getTranslation('history_no_transactions') || 'No Transactions Found'}</p>
+                <small>${getTranslation('history_no_transactions_desc') || 'No transactions match your current filters'}</small>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="history-list">';
+    
+    transactions.slice(0, 50).forEach(tx => {
+        const amountColor = tx.amount > 0 ? 'positive' : 'negative';
+        const amountSign = tx.amount > 0 ? '+' : '';
+        const absAmount = Math.abs(tx.amount);
+        
+        let iconClass = tx.iconClass || 'swap';
+        let icon = tx.icon || 'fa-exchange-alt';
+        let typeText = 'Transaction';
+        
+        if (tx.type.includes('mining')) {
+            typeText = 'Mining';
+        } else if (tx.type.includes('staking')) {
+            typeText = 'Staking';
+        } else if (tx.type.includes('deposit')) {
+            typeText = 'Deposit';
+        } else if (tx.type.includes('withdrawal')) {
+            typeText = 'Withdrawal';
+        } else if (tx.type.includes('referral')) {
+            typeText = 'Referral';
+        } else if (tx.type.includes('milestone')) {
+            typeText = 'Milestone';
+        } else if (tx.type.includes('task')) {
+            typeText = 'Task';
+        } else if (tx.type.includes('vip')) {
+            typeText = 'VIP Task';
+        } else if (tx.type.includes('swap')) {
+            typeText = 'Swap';
+        }
+        
+        let statusClass = '';
+        let statusText = '';
+        if (tx.status === 'pending') {
+            statusClass = 'pending';
+            statusText = 'Pending';
+        } else if (tx.status === 'completed' || tx.status === 'approved') {
+            statusClass = 'completed';
+            statusText = 'Completed';
+        } else if (tx.status === 'rejected') {
+            statusClass = 'rejected';
+            statusText = 'Rejected';
+        } else if (tx.status === 'processing') {
+            statusClass = 'processing';
+            statusText = 'Processing';
+        }
+        
+        let displayAmount = `${amountSign}${absAmount.toLocaleString()} ${tx.currency}`;
+        if (tx.currency === 'AMSK' && absAmount >= 1000) {
+            displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
+        }
+        
+        const rejectionMessage = tx.rejectionReason ? 
+            `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
+        
+        const approvalMessage = tx.message && tx.status === 'approved' ?
+            `<br><small style="color: #00ff88;">✅ ${tx.message}</small>` : '';
+        
+        const pendingMessage = tx.message && tx.status === 'pending' ?
+            `<br><small style="color: #ff9900;">⏳ ${tx.message}</small>` : '';
+        
+        html += `
+            <div class="history-card">
+                <div class="history-card-header">
+                    <div class="history-card-icon ${iconClass}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="history-card-details">
+                        <div class="history-card-title">
+                            <span class="history-card-type">${typeText}</span>
+                            <span class="history-card-amount ${amountColor}">${displayAmount}</span>
                         </div>
-                        <div class="modal-body">
-                            <div class="history-tabs" id="historyTabs">
-                                <button class="history-tab active" data-tab="all">${getTranslation('history_all') || 'All'}</button>
-                                <button class="history-tab" data-tab="pending">${getTranslation('history_pending') || 'Pending'}</button>
-                                <button class="history-tab" data-tab="completed">${getTranslation('history_completed') || 'Completed'}</button>
-                                <button class="history-tab" data-tab="rejected">${getTranslation('history_rejected') || 'Rejected'}</button>
-                            </div>
-                            
-                            <div class="history-filters" id="historyFilters">
-                                <button class="history-filter-btn active" data-filter="all">${getTranslation('history_all_types') || 'All Types'}</button>
-                                <button class="history-filter-btn" data-filter="deposit">${getTranslation('history_deposits') || 'Deposits'}</button>
-                                <button class="history-filter-btn" data-filter="withdrawal">${getTranslation('history_withdrawals') || 'Withdrawals'}</button>
-                                <button class="history-filter-btn" data-filter="mining">${getTranslation('history_mining') || 'Mining'}</button>
-                                <button class="history-filter-btn" data-filter="staking">${getTranslation('history_staking') || 'Staking'}</button>
-                                <button class="history-filter-btn" data-filter="swap">${getTranslation('history_swap') || 'Swap'}</button>
-                                <button class="history-filter-btn" data-filter="referral">${getTranslation('history_referral') || 'Referral'}</button>
-                                <button class="history-filter-btn" data-filter="task">${getTranslation('history_tasks') || 'Tasks'}</button>
-                                <button class="history-filter-btn" data-filter="vip">${getTranslation('history_vip') || 'VIP Tasks'}</button>
-                            </div>
-                            
-                            <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
-                            
-                            <div class="modal-actions mt-20">
-                                <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">${getTranslation('close') || 'Close'}</button>
-                            </div>
+                        <div class="history-card-description">
+                            ${tx.description || ''}
+                            ${approvalMessage}
+                            ${rejectionMessage}
+                            ${pendingMessage}
+                        </div>
+                        <div class="history-card-footer">
+                            <span class="history-card-date">${tx.dateFormatted || new Date(tx.timestamp).toLocaleDateString()}</span>
+                            <span class="history-card-status ${statusClass}">${statusText}</span>
                         </div>
                     </div>
                 </div>
-            `;
-            
-            document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-            document.body.insertAdjacentHTML('beforeend', modalContent);
-            
-            loadHistoryContent('all', 'all');
-            
-            setTimeout(() => {
-                const tabs = document.querySelectorAll('#historyTabs .history-tab');
-                tabs.forEach(tab => {
-                    tab.addEventListener('click', () => {
-                        tabs.forEach(t => t.classList.remove('active'));
-                        tab.classList.add('active');
-                        const tabType = tab.dataset.tab;
-                        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
-                        loadHistoryContent(tabType, activeFilter);
-                    });
-                });
-                
-                const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
-                filters.forEach(filter => {
-                    filter.addEventListener('click', () => {
-                        filters.forEach(f => f.classList.remove('active'));
-                        filter.classList.add('active');
-                        const filterType = filter.dataset.filter;
-                        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
-                        loadHistoryContent(activeTab, filterType);
-                    });
-                });
-            }, 100);
-        }
-
-        function loadHistoryContent(tabType = 'all', filterType = 'all') {
-            const historyContent = document.getElementById('historyContent');
-            if (!historyContent) return;
-            
-            if (!walletData.transactionHistory) {
-                walletData.transactionHistory = [];
-            }
-            
-            let transactions = [...(walletData.transactionHistory || [])];
-            
-            transactions.sort((a, b) => b.timestamp - a.timestamp);
-            
-            if (tabType === 'pending') {
-                transactions = transactions.filter(tx => tx.status === 'pending');
-            } else if (tabType === 'completed') {
-                transactions = transactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
-            } else if (tabType === 'rejected') {
-                transactions = transactions.filter(tx => tx.status === 'rejected');
-            }
-            
-            if (filterType !== 'all') {
-                if (filterType === 'deposit') {
-                    transactions = transactions.filter(tx => tx.type.includes('deposit'));
-                } else if (filterType === 'withdrawal') {
-                    transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
-                } else if (filterType === 'mining') {
-                    transactions = transactions.filter(tx => tx.type.includes('mining'));
-                } else if (filterType === 'staking') {
-                    transactions = transactions.filter(tx => tx.type.includes('staking'));
-                } else if (filterType === 'swap') {
-                    transactions = transactions.filter(tx => tx.type.includes('swap'));
-                } else if (filterType === 'referral') {
-                    transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
-                } else if (filterType === 'task') {
-                    transactions = transactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
-                } else if (filterType === 'vip') {
-                    transactions = transactions.filter(tx => tx.type.includes('vip'));
-                }
-            }
-            
-            if (transactions.length === 0) {
-                historyContent.innerHTML = `
-                    <div class="history-empty">
-                        <i class="fas fa-history"></i>
-                        <p>${getTranslation('history_no_transactions') || 'No Transactions Found'}</p>
-                        <small>${getTranslation('history_no_transactions_desc') || 'No transactions match your current filters'}</small>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = '<div class="history-list">';
-            
-            transactions.slice(0, 50).forEach(tx => {
-                const amountColor = tx.amount > 0 ? 'positive' : 'negative';
-                const amountSign = tx.amount > 0 ? '+' : '';
-                const absAmount = Math.abs(tx.amount);
-                
-                let iconClass = tx.iconClass || 'swap';
-                let icon = tx.icon || 'fa-exchange-alt';
-                let typeText = 'Transaction';
-                
-                if (tx.type.includes('mining')) {
-                    typeText = 'Mining';
-                } else if (tx.type.includes('staking')) {
-                    typeText = 'Staking';
-                } else if (tx.type.includes('deposit')) {
-                    typeText = 'Deposit';
-                } else if (tx.type.includes('withdrawal')) {
-                    typeText = 'Withdrawal';
-                } else if (tx.type.includes('referral')) {
-                    typeText = 'Referral';
-                } else if (tx.type.includes('milestone')) {
-                    typeText = 'Milestone';
-                } else if (tx.type.includes('task')) {
-                    typeText = 'Task';
-                } else if (tx.type.includes('vip')) {
-                    typeText = 'VIP Task';
-                } else if (tx.type.includes('swap')) {
-                    typeText = 'Swap';
-                }
-                
-                let statusClass = '';
-                let statusText = '';
-                if (tx.status === 'pending') {
-                    statusClass = 'pending';
-                    statusText = 'Pending';
-                } else if (tx.status === 'completed' || tx.status === 'approved') {
-                    statusClass = 'completed';
-                    statusText = 'Completed';
-                } else if (tx.status === 'rejected') {
-                    statusClass = 'rejected';
-                    statusText = 'Rejected';
-                } else if (tx.status === 'processing') {
-                    statusClass = 'processing';
-                    statusText = 'Processing';
-                }
-                
-                let displayAmount = `${amountSign}${absAmount.toLocaleString()} ${tx.currency}`;
-                if (tx.currency === 'AMSK' && absAmount >= 1000) {
-                    displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
-                }
-                
-                const rejectionMessage = tx.rejectionReason ? 
-                    `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
-                
-                const approvalMessage = tx.message && tx.status === 'approved' ?
-                    `<br><small style="color: #00ff88;">✅ ${tx.message}</small>` : '';
-                
-                const pendingMessage = tx.message && tx.status === 'pending' ?
-                    `<br><small style="color: #ff9900;">⏳ ${tx.message}</small>` : '';
-                
-                html += `
-                    <div class="history-card">
-                        <div class="history-card-header">
-                            <div class="history-card-icon ${iconClass}">
-                                <i class="fas ${icon}"></i>
-                            </div>
-                            <div class="history-card-details">
-                                <div class="history-card-title">
-                                    <span class="history-card-type">${typeText}</span>
-                                    <span class="history-card-amount ${amountColor}">${displayAmount}</span>
-                                </div>
-                                <div class="history-card-description">
-                                    ${tx.description || ''}
-                                    ${approvalMessage}
-                                    ${rejectionMessage}
-                                    ${pendingMessage}
-                                </div>
-                                <div class="history-card-footer">
-                                    <span class="history-card-date">${tx.dateFormatted || new Date(tx.timestamp).toLocaleDateString()}</span>
-                                    <span class="history-card-status ${statusClass}">${statusText}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            html += '</div>';
-            if (transactions.length > 50) {
-                html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
-                    Showing 50 of ${transactions.length} transactions
-                </div>`;
-            }
-            
-            historyContent.innerHTML = html;
-        }
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    if (transactions.length > 50) {
+        html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
+            Showing 50 of ${transactions.length} transactions
+        </div>`;
+    }
+    
+    historyContent.innerHTML = html;
+}
 
         // ===========================================
         // 💎 STAKING SYSTEM - نظام الإيداع
