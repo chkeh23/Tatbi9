@@ -7334,7 +7334,7 @@
         }
 
 // ===========================================
-// 📊 HISTORY SYSTEM - نظام سجل المعاملات
+// 📊 HISTORY SYSTEM - نظام سجل المعاملات (محسن)
 // ===========================================
 function showTransactionHistory() {
     const modalContent = `
@@ -7507,6 +7507,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
             displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
         }
         
+        // ✅ إضافة ملاحظة المشرف إذا موجودة
         const rejectionMessage = tx.rejectionReason ? 
             `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
         
