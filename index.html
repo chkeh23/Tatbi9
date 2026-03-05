@@ -4204,7 +4204,7 @@
         // ===========================================
         // تأكيد وضع التشغيل المستقل
         // ===========================================
-        console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - FIXED VERSION");
+        console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - NO ERROR MESSAGES VERSION");
         
         window.tg = null;
         window.firebaseApp = null;
@@ -5126,31 +5126,43 @@
         }
         
         // ===========================================
-        // 🚀 INITIALIZATION - بدء التطبيق
+        // 🚀 INITIALIZATION - بدء التطبيق (معدل - بدون رسائل خطأ)
         // ===========================================
         async function initAlienMuskApp() {
-            console.log("🚀 Running in FIXED VERSION - with working referral and history");
+            console.log("🚀 Running in NO-ERROR-VERSION");
+            
+            if (window.appJsLoaded) {
+                console.warn("⚠️ app.js detected, but ignoring");
+            }
             
             if (appInitialized) {
                 console.log("⚠️ Already initialized, skipping...");
                 return;
             }
             appInitialized = true;
+            console.log("🚀 Initializing Alien Musk Platform v7.1 (Clean Version)...");
             
             try {
                 cacheElements();
                 await setupUser();
                 
+                // تحميل من localStorage أولاً (سريع)
                 await loadUserFromLocalStorage();
                 
+                // ثم تحميل من Firebase في الخلفية (بدون انتظار - بدون رسائل خطأ)
                 setTimeout(() => {
-                    loadUserDataFromFirebase();
+                    loadUserDataFromFirebase().catch(err => {
+                        // ✅ فقط تسجيل في الكونسول - لا رسالة للمستخدم
+                        console.log("ℹ️ Firebase sync deferred - using local data");
+                    });
                 }, 500);
                 
-                setupUserRealtimeListener();
+                // إعداد listeners للمعاملات المالية فقط
+                setupFinancialListeners();
                 
                 setupEventListeners();
                 
+                // فحص الإحالة عند بدء التشغيل
                 await checkForReferral();
                 
                 updateUI();
@@ -5161,13 +5173,29 @@
                 userData.isInitialized = true;
                 console.log("✅ Platform initialized successfully");
                 
+                // ✅ رسالة ترحيب واحدة فقط
                 setTimeout(() => {
                     showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
                 }, 800);
                 
             } catch (error) {
-                console.error("❌ Initialization failed:", error);
-                showMessage("Failed to initialize platform", "error");
+                // ✅ فقط تسجيل في الكونسول - لا رسالة للمستخدم
+                console.error("❌ Initialization error (non-critical):", error);
+                console.log("ℹ️ App continuing with local data");
+                
+                // ✅ حتى لو فشل التهيئة، نحاول إظهار الواجهة
+                try {
+                    if (!userData.isInitialized) {
+                        if (!elements.usernameMini) cacheElements();
+                        if (!userData.id) await setupUser();
+                        if (!walletData.balances) await loadUserFromLocalStorage();
+                        
+                        updateUI();
+                        userData.isInitialized = true;
+                    }
+                } catch (fallbackError) {
+                    console.error("❌ Fallback also failed:", fallbackError);
+                }
             }
         }
         
@@ -5324,137 +5352,103 @@
         }
         
         // ===========================================
-        // 🔥 دالة الاستماع المباشر (الأصلية)
+        // 🔥 دالة الاستماع المباشر للمعاملات المالية فقط (معدل)
         // ===========================================
-        function setupUserRealtimeListener() {
+        function setupFinancialListeners() {
             if (!window.db || !userData.id) {
-                console.log("⚠️ Cannot setup realtime listener: Firebase not available or user ID missing");
+                console.log("ℹ️ Real-time updates disabled - working offline");
                 return;
             }
 
-            if (unsubscribeUserListener) {
-                unsubscribeUserListener();
-            }
+            console.log("👂 Setting up real-time listeners for financial transactions only...");
 
-            console.log("👂 Setting up realtime listener for user:", userData.id);
-
-            unsubscribeUserListener = window.db.collection(DB_COLLECTIONS.USERS)
-                .doc(userData.id)
-                .onSnapshot((doc) => {
-                    if (doc.exists) {
-                        console.log("🔄 Realtime update received from Firestore");
-                        const firebaseData = doc.data();
-
-                        let hasChanges = false;
-                        let historyUpdated = false;
-                        
-                        if (firebaseData.balances) {
-                            if (JSON.stringify(walletData.balances) !== JSON.stringify(firebaseData.balances)) {
-                                walletData.balances = firebaseData.balances;
-                                hasChanges = true;
-                                showMessage("💰 Your balance has been updated!", "info", 2000);
-                            }
+            // الاستماع فقط لطلبات الإيداع
+            window.db.collection(DB_COLLECTIONS.DEPOSITS)
+                .where('userId', '==', userData.id)
+                .onSnapshot((snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        const data = change.doc.data();
+                        if (change.type === 'modified' && data.status) {
+                            console.log('🔄 Deposit update received:', data.status);
+                            updateTransactionStatus(change.doc.id, data, 'deposit');
                         }
-                        
-                        if (firebaseData.mining) {
-                            walletData.mining = firebaseData.mining;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.staking) {
-                            walletData.staking = firebaseData.staking;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.referrals) {
-                            walletData.referrals = firebaseData.referrals;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.tasks) {
-                            walletData.tasks = firebaseData.tasks;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.vipTasks) {
-                            walletData.vipTasks = firebaseData.vipTasks;
-                            hasChanges = true;
-                        }
-                        
-                        if (firebaseData.transactionHistory) {
-                            const newTransactions = firebaseData.transactionHistory || [];
-                            
-                            if (!walletData.transactionHistory || walletData.transactionHistory.length !== newTransactions.length) {
-                                walletData.transactionHistory = newTransactions;
-                                hasChanges = true;
-                                historyUpdated = true;
-                                console.log("📜 Transaction history updated from Firebase");
-                            } else if (walletData.transactionHistory.length > 0 && newTransactions.length > 0) {
-                                const oldLastTx = walletData.transactionHistory[0];
-                                const newLastTx = newTransactions[0];
-                                
-                                if (oldLastTx && newLastTx && oldLastTx.status !== newLastTx.status) {
-                                    walletData.transactionHistory = newTransactions;
-                                    hasChanges = true;
-                                    historyUpdated = true;
-                                    console.log(`📜 Transaction status updated: ${oldLastTx.status} → ${newLastTx.status}`);
-                                }
-                            }
-                        }
-                        
-                        if (firebaseData.userInfo && firebaseData.userInfo.language) {
-                            userData.language = firebaseData.userInfo.language;
-                            setLanguage(userData.language);
-                        }
-
-                        if (hasChanges) {
-                            walletData.lastUpdate = Date.now();
-                            updateUI();
-                            saveUserDataToLocalStorage();
-                            
-                            if (historyUpdated && walletData.transactionHistory && walletData.transactionHistory.length > 0) {
-                                const lastTx = walletData.transactionHistory[0];
-                                if (lastTx && (lastTx.status === 'approved' || lastTx.status === 'rejected')) {
-                                    let txTypeText = '';
-                                    if (lastTx.type.includes('deposit')) txTypeText = 'Deposit';
-                                    else if (lastTx.type.includes('withdrawal')) txTypeText = 'Withdrawal';
-                                    else txTypeText = lastTx.type;
-                                    
-                                    const statusText = lastTx.status === 'approved' ? '✅ Approved' : '❌ Rejected';
-                                    const message = lastTx.rejectionReason ? 
-                                        `${statusText} - Reason: ${lastTx.rejectionReason}` : 
-                                        `${statusText}`;
-                                    
-                                    showMessage(`📬 ${txTypeText} request: ${message}`, 'info', 5000);
-                                    
-                                    if (window.tg && window.tg.HapticFeedback) {
-                                        window.tg.HapticFeedback.notificationOccurred('success');
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    });
                 }, (error) => {
-                    console.error("❌ Realtime listener error:", error);
-                    setTimeout(() => {
-                        if (unsubscribeUserListener) {
-                            unsubscribeUserListener();
-                            setupUserRealtimeListener();
-                        }
-                    }, 5000);
+                    console.log("ℹ️ Real-time updates paused - check connection");
                 });
+
+            // الاستماع فقط لطلبات السحب
+            window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                .where('userId', '==', userData.id)
+                .onSnapshot((snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        const data = change.doc.data();
+                        if (change.type === 'modified' && data.status) {
+                            console.log('🔄 Withdrawal update received:', data.status);
+                            updateTransactionStatus(change.doc.id, data, 'withdrawal');
+                        }
+                    });
+                }, (error) => {
+                    console.log("ℹ️ Real-time updates paused - check connection");
+                });
+
+            console.log("✅ Financial listeners set");
         }
         
         // ===========================================
-        // 📂 تحميل بيانات المستخدم من Firebase
+        // 📝 تحديث حالة المعاملة في History
+        // ===========================================
+        function updateTransactionStatus(firebaseId, data, type) {
+            if (!walletData.transactionHistory) {
+                walletData.transactionHistory = [];
+            }
+            
+            const status = data.status ? data.status.toLowerCase() : '';
+            
+            const txIndex = walletData.transactionHistory.findIndex(tx => 
+                tx.id === firebaseId || tx.txId === data.txId
+            );
+            
+            if (txIndex > -1) {
+                walletData.transactionHistory[txIndex].status = status;
+                walletData.transactionHistory[txIndex].updatedAt = Date.now();
+                
+                if (status === 'approved' || status === 'completed') {
+                    walletData.transactionHistory[txIndex].message = type === 'deposit' ? 
+                        '✅ Deposit approved' : '✅ Withdrawal completed';
+                } else if (status === 'rejected') {
+                    walletData.transactionHistory[txIndex].message = type === 'deposit' ? 
+                        `❌ Deposit rejected: ${data.rejectionReason || 'No reason'}` : 
+                        `❌ Withdrawal rejected: ${data.rejectionReason || 'No reason'}`;
+                    walletData.transactionHistory[txIndex].rejectionReason = data.rejectionReason;
+                }
+                
+                saveUserDataToLocalStorage();
+                
+                if (document.querySelector('.modal-overlay.active') && 
+                    document.querySelector('#historyContent')) {
+                    const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                    const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                    loadHistoryContent(activeTab, activeFilter);
+                }
+                
+                if (status === 'approved' || status === 'completed') {
+                    showMessage(`✅ Your ${type} request has been approved!`, 'success', 4000);
+                } else if (status === 'rejected') {
+                    showMessage(`❌ Your ${type} request was rejected: ${data.rejectionReason || 'No reason provided'}`, 'warning', 5000);
+                }
+            }
+        }
+        
+        // ===========================================
+        // 📂 تحميل بيانات المستخدم من Firebase (معدل - بدون رسائل خطأ)
         // ===========================================
         async function loadUserDataFromFirebase(force = false) {
             console.log("🔥 Loading user data from Firebase...");
             
             try {
                 if (!window.db || !userData.id) {
-                    console.log("⚠️ Firebase or user ID not available, using localStorage");
-                    await loadUserFromLocalStorage();
+                    console.log("ℹ️ Firebase or user ID not available, using localStorage only");
                     return;
                 }
                 
@@ -5501,7 +5495,16 @@
                         walletData.vipTasks = firebaseData.vipTasks;
                     }
                     if (firebaseData.transactionHistory) {
-                        walletData.transactionHistory = firebaseData.transactionHistory;
+                        const fbHistory = firebaseData.transactionHistory || [];
+                        const localHistory = walletData.transactionHistory || [];
+                        
+                        const mergedMap = new Map();
+                        [...fbHistory, ...localHistory].forEach(tx => {
+                            mergedMap.set(tx.id, tx);
+                        });
+                        
+                        walletData.transactionHistory = Array.from(mergedMap.values())
+                            .sort((a, b) => b.timestamp - a.timestamp);
                     }
                     
                     if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
@@ -5516,8 +5519,6 @@
                     userData.isNewUser = false;
                     console.log("✅ Data loaded from Firebase");
                     
-                    cleanDuplicateTransactions();
-                    
                 } else {
                     console.log("📝 New user, saving to Firebase...");
                     userData.isNewUser = true;
@@ -5527,9 +5528,7 @@
                 saveUserDataToLocalStorage();
                 
             } catch (error) {
-                console.error("❌ Error loading from Firebase, falling back to localStorage:", error);
-                showMessage("Using offline mode", "info");
-                await loadUserFromLocalStorage();
+                console.log("ℹ️ Firebase sync unavailable - using local data");
             }
         }
         
@@ -5637,7 +5636,7 @@
                     usedTxIds: walletData.usedTxIds,
                     lastUpdate: walletData.lastUpdate,
                     language: currentLanguage,
-                    version: '7.1-fixed'
+                    version: '7.1-no-errors'
                 };
                 
                 localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -5709,7 +5708,6 @@
                     }
                     
                     console.log("✅ Data loaded from localStorage");
-                    cleanDuplicateTransactions();
                     
                 } catch (error) {
                     console.error("❌ Parse error:", error);
@@ -5751,23 +5749,6 @@
             };
             walletData.transactionHistory = [];
             walletData.usedTxIds = [];
-        }
-        
-        function cleanDuplicateTransactions() {
-            if (!walletData.transactionHistory) {
-                walletData.transactionHistory = [];
-                return;
-            }
-            
-            const uniqueMap = new Map();
-            walletData.transactionHistory.forEach(tx => {
-                uniqueMap.set(tx.id, tx);
-            });
-            
-            walletData.transactionHistory = Array.from(uniqueMap.values());
-            walletData.transactionHistory.sort((a, b) => b.timestamp - a.timestamp);
-            
-            console.log(`🔄 Cleaned transactions: ${walletData.transactionHistory.length} unique transactions`);
         }
         
         async function saveUserData() {
@@ -5858,8 +5839,6 @@
                 if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
                     saveUserDataToFirebase();
                 }
-            } else {
-                console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
             }
             
             return transaction;
@@ -9464,7 +9443,7 @@
                     console.log("✅ Firebase initialized");
                     return true;
                 } catch (error) {
-                    console.error("❌ Firebase error:", error);
+                    console.log("ℹ️ Firebase not available - working offline");
                 }
             }
             return false;
@@ -9599,7 +9578,6 @@
                     initAlienMuskApp();
                 } else {
                     console.error("❌ Main app function not found!");
-                    showMessage("Welcome to Alien Musk Quantum!", "success");
                 }
             }, 2500);
         });
@@ -9618,11 +9596,13 @@
                     appContainer.classList.remove('hidden');
                 }
                 
-                showMessage("Running in standalone mode", "info");
+                if (typeof initAlienMuskApp === 'function') {
+                    initAlienMuskApp();
+                }
             }
         }, 10000);
         
-        console.log("✅ Alien Musk Platform - FIXED VERSION Ready!");
+        console.log("✅ Alien Musk Platform - NO ERROR MESSAGES VERSION Ready!");
         
         // ===========================================
         // 🔚 BEFORE UNLOAD - قبل إغلاق الصفحة
