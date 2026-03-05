@@ -5259,7 +5259,7 @@
         console.log("✅ Alien Musk Connector Loaded Successfully - STANDALONE MODE");
         
        // ===========================================
-// ⚙️ CONFIGURATION - الإعدادات الأساسية (محدثة)
+// ⚙️ CONFIGURATION - الإعدادات الأساسية (بدون تغيير)
 // ===========================================
 const CONFIG = {
     PRICES: {
@@ -5385,7 +5385,7 @@ const CONFIG = {
 };
 
 // ===========================================
-// 👤 USER DATA - بيانات المستخدم
+// 👤 USER DATA - بيانات المستخدم (بدون تغيير)
 // ===========================================
 let userData = {
     id: null,
@@ -5406,7 +5406,7 @@ let userData = {
 };
 
 // ===========================================
-// 💰 WALLET DATA - بيانات المحفظة (محسنة بالقيم الافتراضية)
+// 💰 WALLET DATA - بيانات المحفظة (بدون تغيير - الأهم!)
 // ===========================================
 let walletData = {
     balances: {
@@ -5441,18 +5441,21 @@ let walletData = {
         claimedMiningRewards: [],
         claimedStakingRewards: []
     },
-    transactionHistory: [],
+    transactionHistory: [], // ⚡ هذا هو مصدر History الوحيد - لا نحذف منه أبداً!
     usedTxIds: [],
     lastUpdate: Date.now()
 };
 
+// ===========================================
+// 📚 FIREBASE COLLECTIONS (محدث)
+// ===========================================
 const DB_COLLECTIONS = {
     USERS: 'users',
     DEPOSITS: 'deposit_requests',
     WITHDRAWALS: 'withdrawal_requests',
     TRANSACTIONS: 'transactions',
     ADMIN_LOGS: 'admin_logs',
-    REFERRALS: 'referrals' // ⚡ كولكشن جديد للإحالات
+    REFERRALS: 'referrals' // كولكشن جديد للإحالات فقط
 };
 
 const elements = {};
@@ -5476,13 +5479,11 @@ function generateReferralCode() {
 }
 
 // ===========================================
-// 🚀 INITIALIZATION - بدء التطبيق
+// 🚀 INITIALIZATION - بدء التطبيق (محسن)
 // ===========================================
 async function initAlienMuskApp() {
-    // تأكيد وضع التشغيل المستقل
     console.log("🚀 Running in STANDALONE HTML mode - app.js is disabled");
     
-    // منع أي تداخل مع app.js (لو تم تحميله بالخطأ)
     if (window.appJsLoaded) {
         console.warn("⚠️ app.js detected, but ignoring in standalone mode");
     }
@@ -5492,7 +5493,7 @@ async function initAlienMuskApp() {
         return;
     }
     appInitialized = true;
-    console.log("🚀 Initializing Alien Musk Platform v7.1 with Optimized Firebase & Unified Transactions - STANDALONE MODE...");
+    console.log("🚀 Initializing Alien Musk Platform v7.1 (Clean Version)...");
     
     try {
         cacheElements();
@@ -5501,24 +5502,29 @@ async function initAlienMuskApp() {
         // تحميل من localStorage أولاً (سريع)
         await loadUserFromLocalStorage();
         
-        // ثم تحميل من Firebase في الخلفية
+        // ثم تحميل من Firebase في الخلفية (بدون انتظار)
         setTimeout(() => {
             loadUserDataFromFirebase();
         }, 500);
         
-        setupFinancialListeners(); // ⚡ تم تعديلها لتركز على المعاملات المالية فقط
+        // إعداد listeners للمعاملات المالية فقط
+        setupFinancialListeners();
+        
         setupEventListeners();
-        await checkForReferral(); // فحص الإحالة عند بدء التشغيل
+        
+        // فحص الإحالة عند بدء التشغيل
+        await checkForReferral();
+        
         updateUI();
         startBackgroundServices();
         
         initSupportIcon();
         
         userData.isInitialized = true;
-        console.log("✅ Platform initialized successfully in standalone mode");
+        console.log("✅ Platform initialized successfully");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum Platform v7.1 (Standalone Mode)!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum Platform!", "success");
         }, 800);
         
     } catch (error) {
@@ -5682,7 +5688,7 @@ function updateUserUI() {
 }
 
 // ===========================================
-// 🔥 دالة الاستماع المباشر للمعاملات المالية فقط (محدثة بالكامل)
+// 🔥 REAL-TIME LISTENERS - للمعاملات المالية فقط
 // ===========================================
 function setupFinancialListeners() {
     if (!window.db || !userData.id) {
@@ -5700,7 +5706,7 @@ function setupFinancialListeners() {
                 const data = change.doc.data();
                 if (change.type === 'modified' && data.status) {
                     console.log('🔄 Deposit update received:', data.status);
-                    updateLocalDepositStatus(change.doc.id, data);
+                    updateTransactionStatus(change.doc.id, data, 'deposit');
                 }
             });
         });
@@ -5713,7 +5719,7 @@ function setupFinancialListeners() {
                 const data = change.doc.data();
                 if (change.type === 'modified' && data.status) {
                     console.log('🔄 Withdrawal update received:', data.status);
-                    updateLocalWithdrawalStatus(change.doc.id, data);
+                    updateTransactionStatus(change.doc.id, data, 'withdrawal');
                 }
             });
         });
@@ -5721,70 +5727,41 @@ function setupFinancialListeners() {
     console.log("✅ Financial listeners set - no other data will be synced in real-time");
 }
 
-// تحديث حالة الإيداع محلياً
-function updateLocalDepositStatus(firebaseId, depositData) {
-    const status = depositData.status ? depositData.status.toLowerCase() : '';
-    
-    // البحث عن الإيداع في transactionHistory
-    const txIndex = walletData.transactionHistory?.findIndex(tx => 
-        tx.id === firebaseId || tx.txId === depositData.txId
-    );
-    
-    if (txIndex > -1 && walletData.transactionHistory) {
-        // تحديث الحالة فقط دون تعديل الرصيد (لأن الموافقة/الرفض تمت بالفعل)
-        walletData.transactionHistory[txIndex].status = status;
-        walletData.transactionHistory[txIndex].updatedAt = Date.now();
-        
-        if (status === 'approved') {
-            walletData.transactionHistory[txIndex].message = '✅ Deposit approved';
-        } else if (status === 'rejected') {
-            walletData.transactionHistory[txIndex].message = `❌ Deposit rejected: ${depositData.rejectionReason || 'No reason provided'}`;
-            walletData.transactionHistory[txIndex].rejectionReason = depositData.rejectionReason;
-        }
-        
-        saveUserDataToLocalStorage();
-        
-        // تحديث واجهة المستخدم إذا كانت نافذة History مفتوحة
-        if (document.querySelector('.modal-overlay.active') && 
-            document.querySelector('#historyContent')) {
-            const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
-            const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
-            loadHistoryContent(activeTab, activeFilter);
-        }
-        
-        // إظهار إشعار للمستخدم
-        if (status === 'approved') {
-            showMessage(`✅ Your deposit request has been approved!`, 'success', 4000);
-        } else if (status === 'rejected') {
-            showMessage(`❌ Your deposit request was rejected: ${depositData.rejectionReason || 'No reason provided'}`, 'warning', 5000);
-        }
+// ===========================================
+// 📝 تحديث حالة المعاملة في History (بدون حذف)
+// ===========================================
+function updateTransactionStatus(firebaseId, data, type) {
+    if (!walletData.transactionHistory) {
+        walletData.transactionHistory = [];
     }
-}
-
-// تحديث حالة السحب محلياً
-function updateLocalWithdrawalStatus(firebaseId, withdrawalData) {
-    const status = withdrawalData.status ? withdrawalData.status.toLowerCase() : '';
     
-    // البحث عن السحب في transactionHistory
-    const txIndex = walletData.transactionHistory?.findIndex(tx => 
-        tx.id === firebaseId || (tx.description && tx.description.includes(withdrawalData.address?.slice(0, 10)))
+    const status = data.status ? data.status.toLowerCase() : '';
+    
+    // البحث عن المعاملة في history
+    const txIndex = walletData.transactionHistory.findIndex(tx => 
+        tx.id === firebaseId || tx.txId === data.txId
     );
     
-    if (txIndex > -1 && walletData.transactionHistory) {
-        // تحديث الحالة فقط دون تعديل الرصيد
+    if (txIndex > -1) {
+        // ✅ تحديث الحالة فقط - لا نحذف المعاملة!
         walletData.transactionHistory[txIndex].status = status;
         walletData.transactionHistory[txIndex].updatedAt = Date.now();
         
+        // إضافة رسالة حسب الحالة
         if (status === 'approved' || status === 'completed') {
-            walletData.transactionHistory[txIndex].message = '✅ Withdrawal approved and sent';
+            walletData.transactionHistory[txIndex].message = type === 'deposit' ? 
+                '✅ Deposit approved' : '✅ Withdrawal completed';
         } else if (status === 'rejected') {
-            walletData.transactionHistory[txIndex].message = `❌ Withdrawal rejected: ${withdrawalData.rejectionReason || 'No reason provided'}`;
-            walletData.transactionHistory[txIndex].rejectionReason = withdrawalData.rejectionReason;
+            walletData.transactionHistory[txIndex].message = type === 'deposit' ? 
+                `❌ Deposit rejected: ${data.rejectionReason || 'No reason'}` : 
+                `❌ Withdrawal rejected: ${data.rejectionReason || 'No reason'}`;
+            walletData.transactionHistory[txIndex].rejectionReason = data.rejectionReason;
         }
         
+        // حفظ التغييرات
         saveUserDataToLocalStorage();
         
-        // تحديث واجهة المستخدم إذا كانت نافذة History مفتوحة
+        // تحديث الواجهة إذا كانت نافذة History مفتوحة
         if (document.querySelector('.modal-overlay.active') && 
             document.querySelector('#historyContent')) {
             const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
@@ -5794,10 +5771,22 @@ function updateLocalWithdrawalStatus(firebaseId, withdrawalData) {
         
         // إظهار إشعار للمستخدم
         if (status === 'approved' || status === 'completed') {
-            showMessage(`✅ Your withdrawal request has been processed and sent!`, 'success', 4000);
+            showMessage(`✅ Your ${type} request has been approved!`, 'success', 4000);
         } else if (status === 'rejected') {
-            showMessage(`❌ Your withdrawal request was rejected: ${withdrawalData.rejectionReason || 'No reason provided'}`, 'warning', 5000);
+            showMessage(`❌ Your ${type} request was rejected: ${data.rejectionReason || 'No reason provided'}`, 'warning', 5000);
         }
+    } else {
+        // إذا لم نجد المعاملة (نادراً ما يحدث)، نضيفها جديدة
+        console.log("⚠️ Transaction not found in history, adding it now");
+        addTransactionToHistory(
+            `${type}_request`,
+            type === 'deposit' ? data.amount : -data.amount,
+            data.currency || 'USDT',
+            type === 'deposit' ? `TX: ${data.txId?.slice(0, 10)}...` : `To: ${data.address?.slice(0, 10)}...`,
+            status,
+            status === 'approved' ? `✅ ${type} approved` : `❌ ${type} rejected: ${data.rejectionReason || ''}`,
+            data.txId
+        );
     }
 }
 
@@ -5858,7 +5847,18 @@ async function loadUserDataFromFirebase(force = false) {
                 walletData.vipTasks = firebaseData.vipTasks;
             }
             if (firebaseData.transactionHistory) {
-                walletData.transactionHistory = firebaseData.transactionHistory;
+                // ⚡ دمج history بدلاً من استبداله
+                const fbHistory = firebaseData.transactionHistory || [];
+                const localHistory = walletData.transactionHistory || [];
+                
+                // دمج مع تجنب التكرار
+                const mergedMap = new Map();
+                [...fbHistory, ...localHistory].forEach(tx => {
+                    mergedMap.set(tx.id, tx);
+                });
+                
+                walletData.transactionHistory = Array.from(mergedMap.values())
+                    .sort((a, b) => b.timestamp - a.timestamp);
             }
             
             if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
@@ -5873,12 +5873,10 @@ async function loadUserDataFromFirebase(force = false) {
             userData.isNewUser = false;
             console.log("✅ Data loaded from Firebase");
             
-            cleanDuplicateTransactions();
-            
         } else {
             console.log("📝 New user, saving to Firebase...");
             userData.isNewUser = true;
-            await saveUserDataToFirebase(true); // حفظ المستخدم الجديد فوراً
+            await saveUserDataToFirebase(true);
         }
         
         saveUserDataToLocalStorage();
@@ -5891,7 +5889,7 @@ async function loadUserDataFromFirebase(force = false) {
 }
 
 // ===========================================
-// ✅ FIREBASE SAVE - محسن بالكامل مع حفظ كل ساعة فقط
+// ✅ FIREBASE SAVE - محسن بالكامل (كل ساعة فقط)
 // ===========================================
 async function saveUserDataToFirebase(force = false) {
     if (!window.db || !userData.id) {
@@ -5905,7 +5903,7 @@ async function saveUserDataToFirebase(force = false) {
         return true;
     }
     
-    // ⚡ حفظ في Firebase كل ساعة فقط للمستخدمين العاديين
+    // حفظ في Firebase كل ساعة فقط
     const now = Date.now();
     const oneHour = 3600000; // 60 دقيقة
     
@@ -5961,41 +5959,26 @@ async function saveUserDataToFirebase(force = false) {
     }
 }
 
-// ✅ تحديد الأحداث المهمة فقط للحفظ
+// تحديد الأحداث المهمة فقط للحفظ
 function hasImportantChanges() {
-    const now = Date.now();
-    
-    // أحداث مهمة تستحق الحفظ الفوري
     const importantEvents = [
-        // تغيير في الرصيد (أكبر من الصفر)
         walletData.balances.AMSK !== 1000 || 
         walletData.balances.USDT !== 0 || 
         walletData.balances.BNB !== 0 || 
         walletData.balances.TON !== 0,
         
-        // تغيير في مستوى التعدين
         walletData.mining.level !== 1,
         
-        // وجود إيداعات نشطة في staking
         walletData.staking.activeStakes.length > 0,
         
-        // وجود معاملات معلقة
         walletData.transactionHistory.some(tx => tx.status === 'pending'),
         
-        // تغيير في عدد الدعوات
         walletData.referrals.count > 0,
         
-        // تغيير في المهام المكتملة
         walletData.tasks.completed.length > 0
     ];
     
-    // إذا كان أي حدث مهم موجود
-    if (importantEvents.some(event => event === true)) {
-        console.log("🔥 Important change detected, saving to Firebase");
-        return true;
-    }
-    
-    return false;
+    return importantEvents.some(event => event === true);
 }
 
 function saveUserDataToLocalStorage() {
@@ -6012,11 +5995,11 @@ function saveUserDataToLocalStorage() {
             usedTxIds: walletData.usedTxIds,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.1-standalone'
+            version: '7.1-clean'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-        console.log("💾 Data backed up to localStorage (standalone mode)");
+        console.log("💾 Data backed up to localStorage");
         
     } catch (error) {
         console.error("❌ Error saving to localStorage:", error);
@@ -6084,7 +6067,6 @@ async function loadUserFromLocalStorage() {
             }
             
             console.log("✅ Data loaded from localStorage");
-            cleanDuplicateTransactions();
             
         } catch (error) {
             console.error("❌ Parse error:", error);
@@ -6128,38 +6110,19 @@ function initializeDefaultData() {
     walletData.usedTxIds = [];
 }
 
-function cleanDuplicateTransactions() {
-    if (!walletData.transactionHistory) {
-        walletData.transactionHistory = [];
-        return;
-    }
-    
-    const uniqueMap = new Map();
-    walletData.transactionHistory.forEach(tx => {
-        uniqueMap.set(tx.id, tx);
-    });
-    
-    walletData.transactionHistory = Array.from(uniqueMap.values());
-    walletData.transactionHistory.sort((a, b) => b.timestamp - a.timestamp);
-    
-    console.log(`🔄 Cleaned transactions: ${walletData.transactionHistory.length} unique transactions`);
-}
-
 async function saveUserData() {
-    // حفظ محلي فوري
     saveUserDataToLocalStorage();
     
-    // حفظ في Firebase فقط إذا كان هناك تغييرات مهمة
     if (hasImportantChanges()) {
         await saveUserDataToFirebase();
     }
 }
 
-// ✅ مصدر واحد للمعاملات - تم توحيده بالكامل
+// ✅ مصدر واحد للمعاملات - لا نحذف أبداً!
 function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
     const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     
-    // تحديد أيقونة المعاملة بناءً على النوع
+    // تحديد أيقونة المعاملة
     let iconClass = 'swap';
     let icon = 'fa-exchange-alt';
     
@@ -6214,7 +6177,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         walletData.transactionHistory = [];
     }
     
-    // التحقق من عدم وجود تكرار
+    // التحقق من عدم وجود تكرار قريب
     const isDuplicate = walletData.transactionHistory.some(tx => 
         tx.type === type && 
         tx.amount === amount && 
@@ -6226,28 +6189,34 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     if (!isDuplicate) {
         walletData.transactionHistory.unshift(transaction);
         
+        // نحتفظ بآخر 100 معاملة فقط (لكن لا نحذف المعلقة!)
         if (walletData.transactionHistory.length > 100) {
-            walletData.transactionHistory = walletData.transactionHistory.slice(0, 100);
+            // نحذف فقط المعاملات المكتملة القديمة
+            const completedCount = walletData.transactionHistory.filter(tx => 
+                tx.status === 'completed' || tx.status === 'rejected'
+            ).length;
+            
+            if (completedCount > 50) {
+                walletData.transactionHistory = walletData.transactionHistory
+                    .filter((tx, index) => index < 100 || tx.status === 'pending');
+            }
         }
         
         console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
         
-        // حفظ فوري بعد إضافة معاملة
         saveUserDataToLocalStorage();
         
-        // حفظ في Firebase إذا كانت معاملة مهمة (خاصة الإيداع/السحب)
-        if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
+        if (status === 'pending' || type.includes('approved') || type.includes('rejected') || 
+            type.includes('deposit') || type.includes('withdrawal')) {
             saveUserDataToFirebase();
         }
-    } else {
-        console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
     }
     
     return transaction;
 }
 
 // ===========================================
-// 🎯 MINING SYSTEM - نظام التعدين
+// 🎯 MINING SYSTEM - نظام التعدين (بدون تغيير)
 // ===========================================
 function updateMiningDisplay() {
     if (!walletData.mining) return;
@@ -6288,7 +6257,7 @@ function updateMiningTimer() {
     const nextRewardTime = walletData.mining.nextReward;
     
     if (!nextRewardTime) {
-        elements.miningTimerDisplay.textContent = "02:30:00"; // 2.5 ساعة
+        elements.miningTimerDisplay.textContent = "02:30:00";
         return;
     }
     
@@ -6553,16 +6522,14 @@ function scrollToTasks() {
 }
 
 // ===========================================
-// 💰 WALLET UI - تحديث واجهة المحفظة (محسنة بالكامل)
+// 💰 WALLET UI - تحديث واجهة المحفظة (بدون تغيير)
 // ===========================================
 function updateWalletUI() {
-    // التحقق القوي من وجود البيانات
     if (!walletData || !walletData.balances) {
         console.log("⚠️ Wallet data not ready yet");
         return;
     }
     
-    // استخدام قيم افتراضية مع التحقق من الوجود
     const AMSK = walletData.balances.AMSK ?? 0;
     const USDT = walletData.balances.USDT ?? 0;
     const BNB = walletData.balances.BNB ?? 0;
@@ -6618,8 +6585,292 @@ function updateWalletUI() {
 }
 
 // ===========================================
-// 👑 ADMIN SYSTEM - دوال الموافقة والرفض المحسنة (مع تحديث History المستخدم)
+// 👑 ADMIN SYSTEM - نظام المشرف (بدون تغيير)
 // ===========================================
+function initAdminSystem() {
+    if (elements.adminLogo) {
+        let gemClickCount = 0;
+        let lastGemClickTime = 0;
+        
+        elements.adminLogo.addEventListener('click', () => {
+            const now = Date.now();
+            
+            if (now - lastGemClickTime > 2000) {
+                gemClickCount = 0;
+            }
+            
+            gemClickCount++;
+            lastGemClickTime = now;
+            
+            console.log(`💎 Logo click ${gemClickCount}/5`);
+            
+            if (gemClickCount >= 5) {
+                showAdminLogin();
+                gemClickCount = 0;
+            }
+        });
+        
+        console.log("💎 Admin system initialized");
+    }
+}
+
+function showAdminLogin() {
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-lock"></i> Admin Access</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+                        <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Administrator Access</h3>
+                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <input type="password" 
+                                   id="adminPasswordInput" 
+                                   style="width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; font-size: 16px;"
+                                   placeholder="Enter password">
+                        </div>
+                        
+                        <button onclick="checkAdminPassword()" 
+                                style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        
+                        <div id="adminError" style="color: #ff4444; margin-top: 15px; display: none;">
+                            <i class="fas fa-exclamation-circle"></i> <span id="adminErrorText"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+}
+
+function checkAdminPassword() {
+    const passwordInput = document.getElementById('adminPasswordInput');
+    const errorDiv = document.getElementById('adminError');
+    const errorText = document.getElementById('adminErrorText');
+    
+    if (!passwordInput) return;
+    
+    if (passwordInput.value !== CONFIG.ADMIN.PASSWORD) {
+        if (errorDiv && errorText) {
+            errorText.textContent = "Incorrect password";
+            errorDiv.style.display = 'block';
+        }
+        return;
+    }
+    
+    let telegramUserId = userData.telegramId;
+    
+    if (!telegramUserId || telegramUserId !== CONFIG.ADMIN.TELEGRAM_ID) {
+        if (errorDiv && errorText) {
+            errorText.textContent = "Access denied: Invalid Telegram ID";
+            errorDiv.style.display = 'block';
+        }
+        return;
+    }
+    
+    closeModal();
+    showAdminPanel();
+    showMessage("✅ Admin access granted", "success");
+}
+
+async function showAdminPanel() {
+    try {
+        let pendingDeposits = [];
+        let pendingWithdrawals = [];
+        
+        if (window.db && userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
+            const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
+                .where('status', '==', 'pending')
+                .get();
+            
+            pendingDeposits = depositsSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            
+            const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                .where('status', '==', 'pending')
+                .get();
+            
+            pendingWithdrawals = withdrawalsSnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        } else {
+            pendingDeposits = walletData.transactionHistory?.filter(tx => 
+                tx.type.includes('deposit') && tx.status === 'pending'
+            ) || [];
+            
+            pendingWithdrawals = walletData.transactionHistory?.filter(tx => 
+                tx.type.includes('withdrawal') && tx.status === 'pending'
+            ) || [];
+        }
+        
+        const modalContent = `
+            <div class="modal-overlay active" onclick="closeModal()">
+                <div class="modal active" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
+                        <button class="modal-close" onclick="closeModal()">×</button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">👑</div>
+                            <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Admin Dashboard</h3>
+                            <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
+                            
+                            <div class="admin-search-box mb-20">
+                                <input type="text" 
+                                       id="adminSearchInput" 
+                                       class="admin-search-input"
+                                       placeholder="🔍 Search by Telegram ID, username, or transaction..."
+                                       onkeyup="adminSearchUsers()">
+                            </div>
+                            
+                            <div class="admin-stats-grid mb-20">
+                                <div class="admin-stat">
+                                    <div class="admin-stat-value">${pendingDeposits.length}</div>
+                                    <div class="admin-stat-label">Pending Deposits</div>
+                                </div>
+                                <div class="admin-stat">
+                                    <div class="admin-stat-value">${pendingWithdrawals.length}</div>
+                                    <div class="admin-stat-label">Pending Withdrawals</div>
+                                </div>
+                            </div>
+                            
+                            <div class="admin-section mb-15">
+                                <h4><i class="fas fa-download"></i> Pending Deposit Requests</h4>
+                                <div class="admin-requests-list" id="admin-deposits-list">
+                                    ${getPendingDepositsHTML(pendingDeposits)}
+                                </div>
+                            </div>
+                            
+                            <div class="admin-section mb-15">
+                                <h4><i class="fas fa-upload"></i> Pending Withdrawal Requests</h4>
+                                <div class="admin-requests-list" id="admin-withdrawals-list">
+                                    ${getPendingWithdrawalsHTML(pendingWithdrawals)}
+                                </div>
+                            </div>
+                            
+                            <div class="admin-section">
+                                <h4><i class="fas fa-user-cog"></i> User Management</h4>
+                                <div class="admin-user-controls">
+                                    <div class="admin-user-control" onclick="adminSearchUser()">
+                                        <i class="fas fa-search" style="color: var(--quantum-blue);"></i>
+                                        <span>Find User</span>
+                                    </div>
+                                    <div class="admin-user-control" onclick="adminAddBalance()">
+                                        <i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i>
+                                        <span>Add Balance</span>
+                                    </div>
+                                    <div class="admin-user-control" onclick="adminSubtractBalance()">
+                                        <i class="fas fa-minus-circle" style="color: #ff4444;"></i>
+                                        <span>Subtract Balance</span>
+                                    </div>
+                                    <div class="admin-user-control" onclick="closeModal()">
+                                        <i class="fas fa-times" style="color: var(--quantum-text-light);"></i>
+                                        <span>Close</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        
+    } catch (error) {
+        console.error("❌ Error loading admin panel:", error);
+        showMessage("Failed to load admin panel", "error");
+    }
+}
+
+function getPendingDepositsHTML(pendingDeposits) {
+    if (pendingDeposits.length === 0) {
+        return `
+            <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                <p>No pending deposits</p>
+            </div>
+        `;
+    }
+    
+    let html = '';
+    pendingDeposits.forEach((deposit) => {
+        const date = new Date(deposit.createdAt || deposit.timestamp).toLocaleDateString();
+        
+        html += `
+            <div class="request-item" data-deposit-id="${deposit.id}">
+                <div class="request-header">
+                    <div class="request-user">${deposit.username || 'User'}</div>
+                    <div class="request-amount">+${deposit.amount} ${deposit.currency}</div>
+                </div>
+                <div class="request-details">
+                    <div>TX ID: ${deposit.txId?.slice(0, 20)}...</div>
+                    <div>User: ${deposit.telegramId || deposit.userId?.replace('tg_', '')}</div>
+                    <div>Date: ${date}</div>
+                </div>
+                <div class="request-actions">
+                    <button class="btn-approve" onclick="approveDeposit('${deposit.id}')">Approve</button>
+                    <button class="btn-reject" onclick="rejectDeposit('${deposit.id}')">Reject</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
+function getPendingWithdrawalsHTML(pendingWithdrawals) {
+    if (pendingWithdrawals.length === 0) {
+        return `
+            <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
+                <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
+                <p>No pending withdrawals</p>
+            </div>
+        `;
+    }
+    
+    let html = '';
+    pendingWithdrawals.forEach((withdrawal) => {
+        const date = new Date(withdrawal.createdAt || withdrawal.timestamp).toLocaleDateString();
+        
+        html += `
+            <div class="request-item" data-withdrawal-id="${withdrawal.id}">
+                <div class="request-header">
+                    <div class="request-user">${withdrawal.username || 'User'}</div>
+                    <div class="request-amount">-${withdrawal.amount} ${withdrawal.currency}</div>
+                </div>
+                <div class="request-details">
+                    <div>Address: ${withdrawal.address?.slice(0, 20)}...</div>
+                    <div>User: ${withdrawal.telegramId || withdrawal.userId?.replace('tg_', '')}</div>
+                    <div>Date: ${date}</div>
+                </div>
+                <div class="request-actions">
+                    <button class="btn-approve" onclick="approveWithdrawal('${withdrawal.id}')">Approve</button>
+                    <button class="btn-reject" onclick="rejectWithdrawal('${withdrawal.id}')">Reject</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    return html;
+}
+
 async function approveDeposit(depositId) {
     try {
         console.log("🔍 Approving deposit with ID:", depositId);
@@ -6670,7 +6921,6 @@ async function approveDeposit(depositId) {
         
         console.log("✅ Found deposit:", deposit);
         
-        // تحديث رصيد المستخدم
         if (userId === userData.id) {
             if (!walletData.balances) walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
             walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
@@ -6687,12 +6937,8 @@ async function approveDeposit(depositId) {
                     [`balances.${deposit.currency}`]: newBalance
                 });
                 
-                // ===========================================
-                // 🔥 تحديث transactionHistory للمستخدم المستهدف
-                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
@@ -6708,7 +6954,6 @@ async function approveDeposit(depositId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: depositId,
@@ -6732,7 +6977,6 @@ async function approveDeposit(depositId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === depositId || (tx.txId && tx.txId === deposit.txId)
         );
@@ -6746,7 +6990,6 @@ async function approveDeposit(depositId) {
                 `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved by admin', deposit.txId);
         }
         
-        // تنظيف TX ID
         if (deposit.txId && walletData.usedTxIds) {
             const txIdIndex = walletData.usedTxIds.indexOf(deposit.txId);
             if (txIdIndex > -1) {
@@ -6754,10 +6997,8 @@ async function approveDeposit(depositId) {
             }
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
-        // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
             updateWalletUI();
         }
@@ -6825,9 +7066,6 @@ async function rejectDeposit(depositId) {
             userId = deposit.userId || userData.id;
         }
         
-        // ===========================================
-        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
-        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -6836,7 +7074,6 @@ async function rejectDeposit(depositId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
@@ -6853,7 +7090,6 @@ async function rejectDeposit(depositId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: depositId,
@@ -6878,7 +7114,6 @@ async function rejectDeposit(depositId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === depositId || (tx.txId && tx.txId === deposit.txId)
         );
@@ -6893,7 +7128,6 @@ async function rejectDeposit(depositId) {
                 `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
         await saveUserData();
@@ -6957,7 +7191,6 @@ async function approveWithdrawal(withdrawalId) {
         
         console.log("✅ Found withdrawal:", withdrawal);
         
-        // تحديث رصيد المستخدم
         if (userId === userData.id) {
             if (walletData.balances[withdrawal.currency] >= withdrawal.amount && 
                 walletData.balances.BNB >= withdrawal.fee) {
@@ -6981,12 +7214,8 @@ async function approveWithdrawal(withdrawalId) {
                     });
                 }
                 
-                // ===========================================
-                // 🔥 تحديث transactionHistory للمستخدم المستهدف
-                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) || 
@@ -7003,7 +7232,6 @@ async function approveWithdrawal(withdrawalId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: withdrawalId,
@@ -7027,7 +7255,6 @@ async function approveWithdrawal(withdrawalId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === withdrawalId || (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))
         );
@@ -7042,10 +7269,8 @@ async function approveWithdrawal(withdrawalId) {
             addTransactionToHistory('withdrawal_fee', -withdrawal.fee, 'BNB', 'Fee for withdrawal', 'completed', 'Withdrawal fee charged');
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
-        // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
             updateWalletUI();
         }
@@ -7113,9 +7338,6 @@ async function rejectWithdrawal(withdrawalId) {
             userId = withdrawal.userId || userData.id;
         }
         
-        // ===========================================
-        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
-        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -7124,7 +7346,6 @@ async function rejectWithdrawal(withdrawalId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) ||
@@ -7142,7 +7363,6 @@ async function rejectWithdrawal(withdrawalId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: withdrawalId,
@@ -7167,7 +7387,6 @@ async function rejectWithdrawal(withdrawalId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === withdrawalId || (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))
         );
@@ -7182,7 +7401,6 @@ async function rejectWithdrawal(withdrawalId) {
                 `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
         await saveUserData();
@@ -7197,7 +7415,7 @@ async function rejectWithdrawal(withdrawalId) {
 }
 
 // ===========================================
-// 📊 HISTORY SYSTEM - نظام سجل المعاملات (محسن)
+// 📊 HISTORY SYSTEM - نظام سجل المعاملات (محسن - لا يحذف!)
 // ===========================================
 function showTransactionHistory() {
     const modalContent = `
@@ -7275,10 +7493,13 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         walletData.transactionHistory = [];
     }
     
-    let transactions = [...(walletData.transactionHistory || [])];
+    // نأخذ نسخة من الـ history بالكامل (لا نحذف شيئاً)
+    let transactions = [...walletData.transactionHistory];
     
+    // ترتيب من الأحدث إلى الأقدم
     transactions.sort((a, b) => b.timestamp - a.timestamp);
     
+    // تطبيق الفلتر حسب الحالة
     if (tabType === 'pending') {
         transactions = transactions.filter(tx => tx.status === 'pending');
     } else if (tabType === 'completed') {
@@ -7287,6 +7508,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         transactions = transactions.filter(tx => tx.status === 'rejected');
     }
     
+    // تطبيق الفلتر حسب النوع
     if (filterType !== 'all') {
         if (filterType === 'deposit') {
             transactions = transactions.filter(tx => tx.type.includes('deposit'));
@@ -7320,7 +7542,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     
     let html = '<div class="history-list">';
     
-    transactions.slice(0, 50).forEach(tx => {
+    transactions.slice(0, 100).forEach(tx => { // عرض 100 معاملة كحد أقصى
         const amountColor = tx.amount > 0 ? 'positive' : 'negative';
         const amountSign = tx.amount > 0 ? '+' : '';
         const absAmount = Math.abs(tx.amount);
@@ -7329,25 +7551,15 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         let icon = tx.icon || 'fa-exchange-alt';
         let typeText = 'Transaction';
         
-        if (tx.type.includes('mining')) {
-            typeText = 'Mining';
-        } else if (tx.type.includes('staking')) {
-            typeText = 'Staking';
-        } else if (tx.type.includes('deposit')) {
-            typeText = 'Deposit';
-        } else if (tx.type.includes('withdrawal')) {
-            typeText = 'Withdrawal';
-        } else if (tx.type.includes('referral')) {
-            typeText = 'Referral';
-        } else if (tx.type.includes('milestone')) {
-            typeText = 'Milestone';
-        } else if (tx.type.includes('task')) {
-            typeText = 'Task';
-        } else if (tx.type.includes('vip')) {
-            typeText = 'VIP Task';
-        } else if (tx.type.includes('swap')) {
-            typeText = 'Swap';
-        }
+        if (tx.type.includes('mining')) typeText = 'Mining';
+        else if (tx.type.includes('staking')) typeText = 'Staking';
+        else if (tx.type.includes('deposit')) typeText = 'Deposit';
+        else if (tx.type.includes('withdrawal')) typeText = 'Withdrawal';
+        else if (tx.type.includes('referral')) typeText = 'Referral';
+        else if (tx.type.includes('milestone')) typeText = 'Milestone';
+        else if (tx.type.includes('task')) typeText = 'Task';
+        else if (tx.type.includes('vip')) typeText = 'VIP Task';
+        else if (tx.type.includes('swap')) typeText = 'Swap';
         
         let statusClass = '';
         let statusText = '';
@@ -7370,11 +7582,10 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
             displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
         }
         
-        // ✅ إضافة ملاحظة المشرف إذا موجودة
         const rejectionMessage = tx.rejectionReason ? 
             `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
         
-        const approvalMessage = tx.message && tx.status === 'approved' ?
+        const approvalMessage = tx.message && (tx.status === 'approved' || tx.status === 'completed') ?
             `<br><small style="color: #00ff88;">✅ ${tx.message}</small>` : '';
         
         const pendingMessage = tx.message && tx.status === 'pending' ?
@@ -7408,9 +7619,9 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     });
     
     html += '</div>';
-    if (transactions.length > 50) {
+    if (transactions.length > 100) {
         html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
-            Showing 50 of ${transactions.length} transactions
+            Showing 100 of ${transactions.length} transactions
         </div>`;
     }
     
@@ -7418,10 +7629,9 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
 }
 
 // ===========================================
-// 💎 STAKING SYSTEM - نظام الإيداع
+// 💎 STAKING SYSTEM - نظام الإيداع (بدون تغيير)
 // ===========================================
 function updateStakingDisplay() {
-    // التحقق من وجود بيانات staking
     if (!walletData.staking) {
         console.log("⚠️ Staking data not ready");
         return;
@@ -7862,7 +8072,7 @@ async function cancelStake(stakeIndex) {
 }
 
 // ===========================================
-// 🏆 VIP TASKS SYSTEM - نظام مهام VIP
+// 🏆 VIP TASKS SYSTEM - نظام مهام VIP (بدون تغيير)
 // ===========================================
 function checkMiningVipReward(newLevel) {
     if (!walletData.vipTasks) {
@@ -8069,18 +8279,16 @@ function updateVipTasksDisplay() {
 }
 
 // ===========================================
-// 👥 REFERRAL SYSTEM - نظام الدعوات (محسن بالكامل - آمن وبدون تكرار)
+// 👥 REFERRAL SYSTEM - نظام الدعوات (محسن بالكامل - يحدث فقط عند فتح الصفحة)
 // ===========================================
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
-    // إذا كان المستخدم مأخوذ بالفعل، لا تفعل شيء
     if (userData.referredBy) {
         console.log("✅ User already referred by:", userData.referredBy);
         return;
     }
     
-    // التحقق من وجود إحالة في localStorage (قد تكون من جلسة سابقة)
     const pendingRef = localStorage.getItem('pending_referral');
     if (pendingRef && pendingRef !== userData.referralCode) {
         console.log("📦 Found pending referral in localStorage:", pendingRef);
@@ -8089,7 +8297,6 @@ async function checkForReferral() {
         return;
     }
     
-    // التحقق من وجود إحالة من تيليجرام
     let referralCode = null;
     
     if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.start_param) {
@@ -8097,7 +8304,6 @@ async function checkForReferral() {
         console.log("📱 Telegram referral detected:", referralCode);
     }
     
-    // التحقق من وجود إحالة في رابط الصفحة
     if (!referralCode) {
         const urlParams = new URLSearchParams(window.location.search);
         referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
@@ -8111,13 +8317,11 @@ async function checkForReferral() {
         return;
     }
     
-    // منع دعوة النفس
     if (referralCode === userData.referralCode) {
         console.log("⚠️ Cannot refer yourself");
         return;
     }
     
-    // حفظ في localStorage مؤقتاً في حال فشل الاتصال
     localStorage.setItem('pending_referral', referralCode);
     
     await processReferral(referralCode);
@@ -8127,14 +8331,12 @@ async function processReferral(referralCode) {
     console.log("🎯 Processing referral with code:", referralCode);
     
     try {
-        // التحقق من وجود إحالة سابقة محلياً
         if (userData.referredBy) {
             console.log("⚠️ User already referred locally");
             localStorage.removeItem('pending_referral');
             return;
         }
         
-        // التحقق من وجود إحالة سابقة في Firebase
         if (window.db) {
             const existingRef = await window.db.collection(DB_COLLECTIONS.REFERRALS)
                 .where('referredId', '==', userData.id)
@@ -8150,7 +8352,6 @@ async function processReferral(referralCode) {
             }
         }
         
-        // البحث عن المُحيل باستخدام كود الإحالة
         let referrerId = null;
         let referrerData = null;
         
@@ -8165,7 +8366,6 @@ async function processReferral(referralCode) {
             }
         } else {
             console.log("⚠️ Firebase not available, checking localStorage...");
-            // البحث في localStorage عن المُحيل (للمستخدمين المسجلين محلياً)
             const allUsers = Object.keys(localStorage)
                 .filter(key => key.startsWith('alien_musk_'))
                 .map(key => {
@@ -8187,14 +8387,12 @@ async function processReferral(referralCode) {
             return;
         }
         
-        // التحقق النهائي من عدم وجود إحالة سابقة
         if (userData.referredBy) {
             console.log("❌ User already referred by:", userData.referredBy);
             localStorage.removeItem('pending_referral');
             return;
         }
         
-        // تسجيل الإحالة في Firebase
         if (window.db) {
             const referralData = {
                 referrerId: referrerId,
@@ -8211,14 +8409,11 @@ async function processReferral(referralCode) {
             console.log("✅ Referral recorded in Firebase");
         }
         
-        // تحديث بيانات المستخدم محلياً
         userData.referredBy = referralCode;
         userData.referralBonusClaimed = true;
         
-        // منح مكافأة للمدعو
         walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
         
-        // تحديث إحصائيات المُحيل
         if (window.db && referrerId) {
             const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
             const referrerDoc = await referrerRef.get();
@@ -8248,7 +8443,6 @@ async function processReferral(referralCode) {
             }
         }
         
-        // إضافة معاملة للإحالة في history
         addTransactionToHistory(
             'referral_bonus', 
             CONFIG.REFERRAL.BONUS.REFERRED, 
@@ -8258,11 +8452,9 @@ async function processReferral(referralCode) {
             'Welcome bonus for joining via referral'
         );
         
-        // تحديث واجهة المستخدم
         updateWalletUI();
         updateReferralDisplay();
         
-        // حفظ جميع التغييرات
         await saveUserData();
         localStorage.removeItem('pending_referral');
         
@@ -8274,7 +8466,6 @@ async function processReferral(referralCode) {
     }
 }
 
-// دالة جديدة للتحقق من صحة كود الإحالة قبل المعالجة
 async function validateReferralCode(referralCode) {
     if (!referralCode || referralCode === userData.referralCode) {
         return { valid: false, reason: "Invalid or self-referral" };
@@ -8286,7 +8477,6 @@ async function validateReferralCode(referralCode) {
     
     if (window.db) {
         try {
-            // التحقق من وجود الإحالة في Firebase
             const existingRef = await window.db.collection(DB_COLLECTIONS.REFERRALS)
                 .where('referredId', '==', userData.id)
                 .get();
@@ -8295,7 +8485,6 @@ async function validateReferralCode(referralCode) {
                 return { valid: false, reason: "Already referred in database" };
             }
             
-            // التحقق من وجود المُحيل
             const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
             const querySnapshot = await usersRef.where('userInfo.referralCode', '==', referralCode).get();
             
@@ -8316,10 +8505,9 @@ async function validateReferralCode(referralCode) {
         }
     }
     
-    return { valid: true }; // في حالة عدم وجود Firebase، نقبل الإحالة مؤقتاً
+    return { valid: true };
 }
 
-// دالة جديدة لإعادة معالجة الإحالات المعلقة عند استعادة الاتصال
 async function retryPendingReferrals() {
     const pendingRef = localStorage.getItem('pending_referral');
     if (pendingRef && !userData.referredBy) {
@@ -8328,23 +8516,25 @@ async function retryPendingReferrals() {
     }
 }
 
-// دالة جديدة للحصول على إحصائيات الإحالات من Firebase
+// ⚡ دالة محدثة - يتم استدعاؤها فقط عند دخول صفحة الإحالات
 async function refreshReferralStats() {
-    if (!window.db || !userData.id) return;
+    if (!window.db || !userData.id) {
+        console.log("⚠️ Cannot refresh referral stats: Firebase or user ID missing");
+        return;
+    }
     
     try {
-        // الحصول على عدد الإحالات من Firebase
+        console.log("🔄 Refreshing referral stats from Firebase...");
+        
         const referralsSnapshot = await window.db.collection(DB_COLLECTIONS.REFERRALS)
             .where('referrerId', '==', userData.id)
             .get();
         
         const firebaseCount = referralsSnapshot.size;
         
-        // تحديث العدد المحلي إذا كان مختلفاً
         if (firebaseCount > (walletData.referrals?.count || 0)) {
             walletData.referrals.count = firebaseCount;
             
-            // تحديث قائمة الإحالات
             const referrals = [];
             referralsSnapshot.forEach(doc => {
                 referrals.push(doc.data());
@@ -8355,6 +8545,10 @@ async function refreshReferralStats() {
             updateReferralDisplay();
             
             console.log(`📊 Referral stats updated: ${firebaseCount} total referrals`);
+            
+            if (firebaseCount > 0) {
+                showMessage(`🎉 You have ${firebaseCount} referral${firebaseCount > 1 ? 's' : ''}!`, "success", 3000);
+            }
         }
         
     } catch (error) {
@@ -8362,7 +8556,7 @@ async function refreshReferralStats() {
     }
 }
 
-// تحديث دالة updateReferralDisplay لتشمل إحصائيات Firebase
+// تحديث دالة updateReferralDisplay - تحدث فقط عند فتح الصفحة
 function updateReferralDisplay() {
     if (!walletData.referrals) {
         walletData.referrals = {
@@ -8387,11 +8581,13 @@ function updateReferralDisplay() {
     
     updateMilestonesDisplay();
     
-    // تحديث إحصائيات Firebase في الخلفية
-    setTimeout(refreshReferralStats, 2000);
+    // ✅ تحديث إحصائيات Firebase فقط إذا كانت صفحة الإحالات مفتوحة
+    if (document.getElementById('referral-page')?.classList.contains('active')) {
+        console.log("📊 Referral page is active, refreshing stats...");
+        setTimeout(refreshReferralStats, 500);
+    }
 }
 
-// تحديث دالة claimMilestone لتسجيل المكافآت في Firebase
 async function claimMilestone(milestoneNum) {
     try {
         const milestoneReward = CONFIG.REFERRAL.MILESTONES[milestoneNum];
@@ -8418,7 +8614,6 @@ async function claimMilestone(milestoneNum) {
             return;
         }
         
-        // تسجيل المكافأة في Firebase
         if (window.db) {
             const milestoneData = {
                 userId: userData.id,
@@ -8465,7 +8660,7 @@ async function claimMilestone(milestoneNum) {
 }
 
 // ===========================================
-// ✅ TASKS SYSTEM - نظام المهام
+// ✅ TASKS SYSTEM - نظام المهام (بدون تغيير)
 // ===========================================
 function updateTasksDisplay() {
     if (!elements.tasksGrid || !elements.tasksProgress) return;
@@ -8543,7 +8738,7 @@ async function markTaskCompleted(taskId) {
 }
 
 // ===========================================
-// 🔄 SWAP SYSTEM - نظام التبديل
+// 🔄 SWAP SYSTEM - نظام التبديل (بدون تغيير)
 // ===========================================
 function openSwapModal() {
     const modalContent = `
@@ -8824,7 +9019,7 @@ async function confirmSwap() {
 }
 
 // ===========================================
-// 💰 DEPOSIT SYSTEM - نظام الإيداع (يبقى مباشر في Firebase)
+// 💰 DEPOSIT SYSTEM - نظام الإيداع (بدون تغيير)
 // ===========================================
 async function openDepositModal() {
     const modalContent = `
@@ -9148,10 +9343,8 @@ async function submitDepositRequest() {
 }
 
 // ===========================================
-// 💸 WITHDRAWAL SYSTEM - نظام السحب (يبقى مباشر في Firebase)
+// 💸 WITHDRAWAL SYSTEM - نظام السحب (بدون تغيير)
 // ===========================================
-
-// دالة مساعدة لحساب إجمالي طلبات السحب المعلقة
 function getPendingWithdrawalsTotal() {
     if (!walletData.transactionHistory) return 0;
     
@@ -9163,7 +9356,6 @@ function getPendingWithdrawalsTotal() {
 async function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
-    // حساب الرصيد المتاح بعد خصم الطلبات المعلقة
     const pendingTotal = getPendingWithdrawalsTotal();
     const availableBalance = walletData.balances.USDT - pendingTotal;
     
@@ -9307,7 +9499,6 @@ async function submitWithdrawRequest() {
     
     if (!walletData || !walletData.balances) return;
     
-    // التحقق من الرصيد المتاح (مع مراعاة الطلبات المعلقة)
     const pendingTotal = getPendingWithdrawalsTotal();
     const availableBalance = walletData.balances.USDT - pendingTotal;
     
@@ -9327,7 +9518,6 @@ async function submitWithdrawRequest() {
     }
     
     try {
-        // خصم الرصيد فوراً (تجميده)
         walletData.balances.USDT -= amount;
         
         const withdrawRequest = {
@@ -9354,13 +9544,11 @@ async function submitWithdrawRequest() {
             withdrawRequest.id = withdrawalId;
         }
         
-        // إضافة المعاملة للتاريخ مع علامة "pending"
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal request submitted. Funds frozen pending approval.', 
             withdrawalId);
         
-        // تحديث الواجهة
         updateWalletUI();
         await saveUserData();
         closeModal();
@@ -9371,7 +9559,6 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
-        // في حال الخطأ، أرجع الرصيد
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -9380,294 +9567,7 @@ async function submitWithdrawRequest() {
 }
 
 // ===========================================
-// 👑 ADMIN SYSTEM - نظام المشرف (يبقى كما هو)
-// ===========================================
-function initAdminSystem() {
-    if (elements.adminLogo) {
-        let gemClickCount = 0;
-        let lastGemClickTime = 0;
-        
-        elements.adminLogo.addEventListener('click', () => {
-            const now = Date.now();
-            
-            if (now - lastGemClickTime > 2000) {
-                gemClickCount = 0;
-            }
-            
-            gemClickCount++;
-            lastGemClickTime = now;
-            
-            console.log(`💎 Logo click ${gemClickCount}/5`);
-            
-            if (gemClickCount >= 5) {
-                showAdminLogin();
-                gemClickCount = 0;
-            }
-        });
-        
-        console.log("💎 Admin system initialized");
-    }
-}
-
-function showAdminLogin() {
-    const modalContent = `
-        <div class="modal-overlay active" onclick="closeModal()">
-            <div class="modal active" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3><i class="fas fa-lock"></i> Admin Access</h3>
-                    <button class="modal-close" onclick="closeModal()">×</button>
-                </div>
-                <div class="modal-body">
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
-                        <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Administrator Access</h3>
-                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <input type="password" 
-                                   id="adminPasswordInput" 
-                                   style="width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; font-size: 16px;"
-                                   placeholder="Enter password">
-                        </div>
-                        
-                        <button onclick="checkAdminPassword()" 
-                                style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                            <i class="fas fa-sign-in-alt"></i> Login
-                        </button>
-                        
-                        <div id="adminError" style="color: #ff4444; margin-top: 15px; display: none;">
-                            <i class="fas fa-exclamation-circle"></i> <span id="adminErrorText"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-    document.body.insertAdjacentHTML('beforeend', modalContent);
-}
-
-function checkAdminPassword() {
-    const passwordInput = document.getElementById('adminPasswordInput');
-    const errorDiv = document.getElementById('adminError');
-    const errorText = document.getElementById('adminErrorText');
-    
-    if (!passwordInput) return;
-    
-    if (passwordInput.value !== CONFIG.ADMIN.PASSWORD) {
-        if (errorDiv && errorText) {
-            errorText.textContent = "Incorrect password";
-            errorDiv.style.display = 'block';
-        }
-        return;
-    }
-    
-    let telegramUserId = userData.telegramId;
-    
-    if (!telegramUserId || telegramUserId !== CONFIG.ADMIN.TELEGRAM_ID) {
-        if (errorDiv && errorText) {
-            errorText.textContent = "Access denied: Invalid Telegram ID";
-            errorDiv.style.display = 'block';
-        }
-        return;
-    }
-    
-    closeModal();
-    showAdminPanel();
-    showMessage("✅ Admin access granted", "success");
-}
-
-async function showAdminPanel() {
-    try {
-        let pendingDeposits = [];
-        let pendingWithdrawals = [];
-        
-        if (window.db && userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
-            const depositsSnapshot = await window.db.collection(DB_COLLECTIONS.DEPOSITS)
-                .where('status', '==', 'pending')
-                .get();
-            
-            pendingDeposits = depositsSnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-            
-            const withdrawalsSnapshot = await window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-                .where('status', '==', 'pending')
-                .get();
-            
-            pendingWithdrawals = withdrawalsSnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
-        } else {
-            pendingDeposits = walletData.transactionHistory?.filter(tx => 
-                tx.type.includes('deposit') && tx.status === 'pending'
-            ) || [];
-            
-            pendingWithdrawals = walletData.transactionHistory?.filter(tx => 
-                tx.type.includes('withdrawal') && tx.status === 'pending'
-            ) || [];
-        }
-        
-        const modalContent = `
-            <div class="modal-overlay active" onclick="closeModal()">
-                <div class="modal active" onclick="event.stopPropagation()">
-                    <div class="modal-header">
-                        <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
-                        <button class="modal-close" onclick="closeModal()">×</button>
-                    </div>
-                    
-                    <div class="modal-body">
-                        <div style="text-align: center; padding: 20px;">
-                            <div style="font-size: 48px; margin-bottom: 20px;">👑</div>
-                            <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Admin Dashboard</h3>
-                            <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Welcome to the admin panel</p>
-                            
-                            <div class="admin-search-box mb-20">
-                                <input type="text" 
-                                       id="adminSearchInput" 
-                                       class="admin-search-input"
-                                       placeholder="🔍 Search by Telegram ID, username, or transaction..."
-                                       onkeyup="adminSearchUsers()">
-                            </div>
-                            
-                            <div class="admin-stats-grid mb-20">
-                                <div class="admin-stat">
-                                    <div class="admin-stat-value">${pendingDeposits.length}</div>
-                                    <div class="admin-stat-label">Pending Deposits</div>
-                                </div>
-                                <div class="admin-stat">
-                                    <div class="admin-stat-value">${pendingWithdrawals.length}</div>
-                                    <div class="admin-stat-label">Pending Withdrawals</div>
-                                </div>
-                            </div>
-                            
-                            <div class="admin-section mb-15">
-                                <h4><i class="fas fa-download"></i> Pending Deposit Requests</h4>
-                                <div class="admin-requests-list" id="admin-deposits-list">
-                                    ${getPendingDepositsHTML(pendingDeposits)}
-                                </div>
-                            </div>
-                            
-                            <div class="admin-section mb-15">
-                                <h4><i class="fas fa-upload"></i> Pending Withdrawal Requests</h4>
-                                <div class="admin-requests-list" id="admin-withdrawals-list">
-                                    ${getPendingWithdrawalsHTML(pendingWithdrawals)}
-                                </div>
-                            </div>
-                            
-                            <div class="admin-section">
-                                <h4><i class="fas fa-user-cog"></i> User Management</h4>
-                                <div class="admin-user-controls">
-                                    <div class="admin-user-control" onclick="adminSearchUser()">
-                                        <i class="fas fa-search" style="color: var(--quantum-blue);"></i>
-                                        <span>Find User</span>
-                                    </div>
-                                    <div class="admin-user-control" onclick="adminAddBalance()">
-                                        <i class="fas fa-plus-circle" style="color: var(--quantum-green);"></i>
-                                        <span>Add Balance</span>
-                                    </div>
-                                    <div class="admin-user-control" onclick="adminSubtractBalance()">
-                                        <i class="fas fa-minus-circle" style="color: #ff4444;"></i>
-                                        <span>Subtract Balance</span>
-                                    </div>
-                                    <div class="admin-user-control" onclick="closeModal()">
-                                        <i class="fas fa-times" style="color: var(--quantum-text-light);"></i>
-                                        <span>Close</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-        document.body.insertAdjacentHTML('beforeend', modalContent);
-        
-    } catch (error) {
-        console.error("❌ Error loading admin panel:", error);
-        showMessage("Failed to load admin panel", "error");
-    }
-}
-
-function getPendingDepositsHTML(pendingDeposits) {
-    if (pendingDeposits.length === 0) {
-        return `
-            <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
-                <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
-                <p>No pending deposits</p>
-            </div>
-        `;
-    }
-    
-    let html = '';
-    pendingDeposits.forEach((deposit) => {
-        const date = new Date(deposit.createdAt || deposit.timestamp).toLocaleDateString();
-        
-        html += `
-            <div class="request-item" data-deposit-id="${deposit.id}">
-                <div class="request-header">
-                    <div class="request-user">${deposit.username || 'User'}</div>
-                    <div class="request-amount">+${deposit.amount} ${deposit.currency}</div>
-                </div>
-                <div class="request-details">
-                    <div>TX ID: ${deposit.txId?.slice(0, 20)}...</div>
-                    <div>User: ${deposit.telegramId || deposit.userId?.replace('tg_', '')}</div>
-                    <div>Date: ${date}</div>
-                </div>
-                <div class="request-actions">
-                    <button class="btn-approve" onclick="approveDeposit('${deposit.id}')">Approve</button>
-                    <button class="btn-reject" onclick="rejectDeposit('${deposit.id}')">Reject</button>
-                </div>
-            </div>
-        `;
-    });
-    
-    return html;
-}
-
-function getPendingWithdrawalsHTML(pendingWithdrawals) {
-    if (pendingWithdrawals.length === 0) {
-        return `
-            <div style="text-align: center; padding: 30px; color: var(--quantum-text-light);">
-                <i class="fas fa-inbox" style="font-size: 36px; opacity: 0.5; margin-bottom: 10px;"></i>
-                <p>No pending withdrawals</p>
-            </div>
-        `;
-    }
-    
-    let html = '';
-    pendingWithdrawals.forEach((withdrawal) => {
-        const date = new Date(withdrawal.createdAt || withdrawal.timestamp).toLocaleDateString();
-        
-        html += `
-            <div class="request-item" data-withdrawal-id="${withdrawal.id}">
-                <div class="request-header">
-                    <div class="request-user">${withdrawal.username || 'User'}</div>
-                    <div class="request-amount">-${withdrawal.amount} ${withdrawal.currency}</div>
-                </div>
-                <div class="request-details">
-                    <div>Address: ${withdrawal.address?.slice(0, 20)}...</div>
-                    <div>User: ${withdrawal.telegramId || withdrawal.userId?.replace('tg_', '')}</div>
-                    <div>Date: ${date}</div>
-                </div>
-                <div class="request-actions">
-                    <button class="btn-approve" onclick="approveWithdrawal('${withdrawal.id}')">Approve</button>
-                    <button class="btn-reject" onclick="rejectWithdrawal('${withdrawal.id}')">Reject</button>
-                </div>
-            </div>
-        `;
-    });
-    
-    return html;
-}
-
-// ===========================================
-// ⏱️ BACKGROUND SERVICES - الخدمات الخلفية
+// ⏱️ BACKGROUND SERVICES - الخدمات الخلفية (محدثة - بدون setInterval للإحالات)
 // ===========================================
 function startBackgroundServices() {
     intervals.miningTimer = setInterval(() => {
@@ -9675,15 +9575,12 @@ function startBackgroundServices() {
         checkAndNotifyRewards();
     }, 1000);
     
+    // ✅ تمت إزالة setInterval الخاص بالإحالات - سيحدث فقط عند فتح الصفحة
+    
     // التحقق من الإحالات المعلقة كل دقيقة
     setInterval(() => {
         retryPendingReferrals();
     }, 60000);
-    
-    // تحديث إحصائيات الإحالات كل 5 دقائق
-    setInterval(() => {
-        refreshReferralStats();
-    }, 300000);
     
     if (userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
         console.log("👑 Admin mode - realtimeSync enabled");
@@ -9726,7 +9623,7 @@ function checkAndNotifyRewards() {
 }
 
 // ===========================================
-// 🎯 EVENT LISTENERS - مستمعات الأحداث
+// 🎯 EVENT LISTENERS - مستمعات الأحداث (محدثة مع فتح صفحة Referral)
 // ===========================================
 function setupEventListeners() {
     console.log("🎯 Setting up event listeners...");
@@ -9736,6 +9633,13 @@ function setupEventListeners() {
             e.preventDefault();
             const page = btn.dataset.page;
             switchPage(page);
+            
+            // ✅ إذا كانت الصفحة هي Referral، حدث الإحصائيات
+            if (page === 'referral') {
+                setTimeout(() => {
+                    refreshReferralStats();
+                }, 500);
+            }
         });
     });
     
@@ -9846,7 +9750,6 @@ function updateUI() {
     updateTasksDisplay();
     updateUITexts();
     
-    // تحديث نافذة History إذا كانت مفتوحة
     if (document.querySelector('.modal-overlay.active') && 
         document.querySelector('#historyContent')) {
         console.log("📜 History modal open - refreshing content");
@@ -9938,7 +9841,7 @@ window.getTranslation = getTranslation;
 window.selectWelcomeLanguage = selectWelcomeLanguage;
 window.closeLanguageWelcome = closeLanguageWelcome;
 
-console.log("👽 Alien Musk Quantum Platform v7.1 - STANDALONE MODE (app.js disabled) - Ready!");
+console.log("👽 Alien Musk Quantum Platform v7.1 - CLEAN VERSION - Ready!");
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initAlienMuskApp);
         } else {
