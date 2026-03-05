@@ -5451,7 +5451,8 @@ const DB_COLLECTIONS = {
     DEPOSITS: 'deposit_requests',
     WITHDRAWALS: 'withdrawal_requests',
     TRANSACTIONS: 'transactions',
-    ADMIN_LOGS: 'admin_logs'
+    ADMIN_LOGS: 'admin_logs',
+    REFERRALS: 'referrals' // ⚡ كولكشن جديد للإحالات
 };
 
 const elements = {};
@@ -5505,9 +5506,9 @@ async function initAlienMuskApp() {
             loadUserDataFromFirebase();
         }, 500);
         
-        setupUserRealtimeListener();
+        setupFinancialListeners(); // ⚡ تم تعديلها لتركز على المعاملات المالية فقط
         setupEventListeners();
-        await checkForReferral();
+        await checkForReferral(); // فحص الإحالة عند بدء التشغيل
         updateUI();
         startBackgroundServices();
         
@@ -5681,154 +5682,123 @@ function updateUserUI() {
 }
 
 // ===========================================
-// 🔥 دالة الاستماع المباشر للتحديثات من Firebase (محدثة بالكامل)
+// 🔥 دالة الاستماع المباشر للمعاملات المالية فقط (محدثة بالكامل)
 // ===========================================
-function setupUserRealtimeListener() {
+function setupFinancialListeners() {
     if (!window.db || !userData.id) {
-        console.log("⚠️ Cannot setup realtime listener: Firebase not available or user ID missing");
+        console.log("⚠️ Cannot setup financial listeners: Firebase not available or user ID missing");
         return;
     }
 
-    if (unsubscribeUserListener) {
-        unsubscribeUserListener();
-    }
+    console.log("👂 Setting up real-time listeners for financial transactions only...");
 
-    console.log("👂 Setting up optimized realtime listener for user:", userData.id);
-
-    unsubscribeUserListener = window.db.collection(DB_COLLECTIONS.USERS)
-        .doc(userData.id)
-        .onSnapshot((doc) => {
-            if (doc.exists) {
-                console.log("🔄 Realtime update received from Firestore");
-                const firebaseData = doc.data();
-
-                let hasChanges = false;
-                let historyUpdated = false;
-                
-                // تحديث الرصيد
-                if (firebaseData.balances) {
-                    if (JSON.stringify(walletData.balances) !== JSON.stringify(firebaseData.balances)) {
-                        walletData.balances = firebaseData.balances;
-                        hasChanges = true;
-                        showMessage("💰 Your balance has been updated!", "info", 2000);
-                    }
+    // الاستماع فقط لطلبات الإيداع
+    window.db.collection(DB_COLLECTIONS.DEPOSITS)
+        .where('userId', '==', userData.id)
+        .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                const data = change.doc.data();
+                if (change.type === 'modified' && data.status) {
+                    console.log('🔄 Deposit update received:', data.status);
+                    updateLocalDepositStatus(change.doc.id, data);
                 }
-                
-                // تحديث بيانات التعدين
-                if (firebaseData.mining) {
-                    walletData.mining = firebaseData.mining;
-                    hasChanges = true;
-                }
-                
-                // تحديث بيانات الإيداع
-                if (firebaseData.staking) {
-                    walletData.staking = firebaseData.staking;
-                    hasChanges = true;
-                }
-                
-                // تحديث بيانات الإحالات
-                if (firebaseData.referrals) {
-                    walletData.referrals = firebaseData.referrals;
-                    hasChanges = true;
-                }
-                
-                // تحديث المهام
-                if (firebaseData.tasks) {
-                    walletData.tasks = firebaseData.tasks;
-                    hasChanges = true;
-                }
-                
-                // تحديث مهام VIP
-                if (firebaseData.vipTasks) {
-                    walletData.vipTasks = firebaseData.vipTasks;
-                    hasChanges = true;
-                }
-                
-                // ===========================================
-                // 🔥 التعديل المهم هنا - تحديث transactionHistory
-                // ===========================================
-                if (firebaseData.transactionHistory) {
-                    const newTransactions = firebaseData.transactionHistory || [];
-                    
-                    // التحقق مما إذا كان هناك تغيير في History
-                    if (!walletData.transactionHistory || walletData.transactionHistory.length !== newTransactions.length) {
-                        // الأطوال مختلفة → تمت إضافة معاملة جديدة
-                        walletData.transactionHistory = newTransactions;
-                        hasChanges = true;
-                        historyUpdated = true;
-                        console.log("📜 Transaction history updated from Firebase (new transaction)");
-                    } else if (walletData.transactionHistory.length > 0 && newTransactions.length > 0) {
-                        // التحقق من آخر معاملة إذا تغيرت حالتها
-                        const oldLastTx = walletData.transactionHistory[0];
-                        const newLastTx = newTransactions[0];
-                        
-                        if (oldLastTx && newLastTx && oldLastTx.status !== newLastTx.status) {
-                            walletData.transactionHistory = newTransactions;
-                            hasChanges = true;
-                            historyUpdated = true;
-                            console.log(`📜 Transaction status updated: ${oldLastTx.status} → ${newLastTx.status}`);
-                        } else {
-                            // تحقق أعمق - هل هناك أي معاملة تغيرت حالتها؟
-                            for (let i = 0; i < Math.min(walletData.transactionHistory.length, newTransactions.length); i++) {
-                                if (walletData.transactionHistory[i].status !== newTransactions[i].status) {
-                                    walletData.transactionHistory = newTransactions;
-                                    hasChanges = true;
-                                    historyUpdated = true;
-                                    console.log("📜 Transaction status updated (detected change)");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // تحديث اللغة
-                if (firebaseData.userInfo && firebaseData.userInfo.language) {
-                    userData.language = firebaseData.userInfo.language;
-                    setLanguage(userData.language);
-                }
-
-                // إذا كان هناك تغييرات، حدث الواجهة واحفظ محلياً
-                if (hasChanges) {
-                    walletData.lastUpdate = Date.now();
-                    updateUI();
-                    saveUserDataToLocalStorage();
-                    
-                    // إذا كان هناك تحديث في History، أظهر إشعار للمستخدم
-                    if (historyUpdated && walletData.transactionHistory && walletData.transactionHistory.length > 0) {
-                        const lastTx = walletData.transactionHistory[0];
-                        if (lastTx && (lastTx.status === 'approved' || lastTx.status === 'rejected')) {
-                            // تحديد نوع المعاملة
-                            let txTypeText = '';
-                            if (lastTx.type.includes('deposit')) txTypeText = 'Deposit';
-                            else if (lastTx.type.includes('withdrawal')) txTypeText = 'Withdrawal';
-                            else txTypeText = lastTx.type;
-                            
-                            const statusText = lastTx.status === 'approved' ? '✅ Approved' : '❌ Rejected';
-                            const message = lastTx.rejectionReason ? 
-                                `${statusText} - Reason: ${lastTx.rejectionReason}` : 
-                                `${statusText}`;
-                            
-                            showMessage(`📬 ${txTypeText} request: ${message}`, 'info', 5000);
-                            
-                            // اهتزاز خفيف للإشعار
-                            if (window.tg && window.tg.HapticFeedback) {
-                                window.tg.HapticFeedback.notificationOccurred('success');
-                            }
-                        }
-                    }
-                }
-            }
-        }, (error) => {
-            console.error("❌ Realtime listener error:", error);
-            // محاولة إعادة الاتصال بعد خطأ
-            setTimeout(() => {
-                if (unsubscribeUserListener) {
-                    unsubscribeUserListener();
-                    setupUserRealtimeListener();
-                }
-            }, 5000);
+            });
         });
+
+    // الاستماع فقط لطلبات السحب
+    window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
+        .where('userId', '==', userData.id)
+        .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                const data = change.doc.data();
+                if (change.type === 'modified' && data.status) {
+                    console.log('🔄 Withdrawal update received:', data.status);
+                    updateLocalWithdrawalStatus(change.doc.id, data);
+                }
+            });
+        });
+
+    console.log("✅ Financial listeners set - no other data will be synced in real-time");
+}
+
+// تحديث حالة الإيداع محلياً
+function updateLocalDepositStatus(firebaseId, depositData) {
+    const status = depositData.status ? depositData.status.toLowerCase() : '';
+    
+    // البحث عن الإيداع في transactionHistory
+    const txIndex = walletData.transactionHistory?.findIndex(tx => 
+        tx.id === firebaseId || tx.txId === depositData.txId
+    );
+    
+    if (txIndex > -1 && walletData.transactionHistory) {
+        // تحديث الحالة فقط دون تعديل الرصيد (لأن الموافقة/الرفض تمت بالفعل)
+        walletData.transactionHistory[txIndex].status = status;
+        walletData.transactionHistory[txIndex].updatedAt = Date.now();
+        
+        if (status === 'approved') {
+            walletData.transactionHistory[txIndex].message = '✅ Deposit approved';
+        } else if (status === 'rejected') {
+            walletData.transactionHistory[txIndex].message = `❌ Deposit rejected: ${depositData.rejectionReason || 'No reason provided'}`;
+            walletData.transactionHistory[txIndex].rejectionReason = depositData.rejectionReason;
+        }
+        
+        saveUserDataToLocalStorage();
+        
+        // تحديث واجهة المستخدم إذا كانت نافذة History مفتوحة
+        if (document.querySelector('.modal-overlay.active') && 
+            document.querySelector('#historyContent')) {
+            const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+            const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+            loadHistoryContent(activeTab, activeFilter);
+        }
+        
+        // إظهار إشعار للمستخدم
+        if (status === 'approved') {
+            showMessage(`✅ Your deposit request has been approved!`, 'success', 4000);
+        } else if (status === 'rejected') {
+            showMessage(`❌ Your deposit request was rejected: ${depositData.rejectionReason || 'No reason provided'}`, 'warning', 5000);
+        }
+    }
+}
+
+// تحديث حالة السحب محلياً
+function updateLocalWithdrawalStatus(firebaseId, withdrawalData) {
+    const status = withdrawalData.status ? withdrawalData.status.toLowerCase() : '';
+    
+    // البحث عن السحب في transactionHistory
+    const txIndex = walletData.transactionHistory?.findIndex(tx => 
+        tx.id === firebaseId || (tx.description && tx.description.includes(withdrawalData.address?.slice(0, 10)))
+    );
+    
+    if (txIndex > -1 && walletData.transactionHistory) {
+        // تحديث الحالة فقط دون تعديل الرصيد
+        walletData.transactionHistory[txIndex].status = status;
+        walletData.transactionHistory[txIndex].updatedAt = Date.now();
+        
+        if (status === 'approved' || status === 'completed') {
+            walletData.transactionHistory[txIndex].message = '✅ Withdrawal approved and sent';
+        } else if (status === 'rejected') {
+            walletData.transactionHistory[txIndex].message = `❌ Withdrawal rejected: ${withdrawalData.rejectionReason || 'No reason provided'}`;
+            walletData.transactionHistory[txIndex].rejectionReason = withdrawalData.rejectionReason;
+        }
+        
+        saveUserDataToLocalStorage();
+        
+        // تحديث واجهة المستخدم إذا كانت نافذة History مفتوحة
+        if (document.querySelector('.modal-overlay.active') && 
+            document.querySelector('#historyContent')) {
+            const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+            const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+            loadHistoryContent(activeTab, activeFilter);
+        }
+        
+        // إظهار إشعار للمستخدم
+        if (status === 'approved' || status === 'completed') {
+            showMessage(`✅ Your withdrawal request has been processed and sent!`, 'success', 4000);
+        } else if (status === 'rejected') {
+            showMessage(`❌ Your withdrawal request was rejected: ${withdrawalData.rejectionReason || 'No reason provided'}`, 'warning', 5000);
+        }
+    }
 }
 
 // ===========================================
@@ -5921,7 +5891,7 @@ async function loadUserDataFromFirebase(force = false) {
 }
 
 // ===========================================
-// ✅ FIREBASE SAVE - محسن بالكامل
+// ✅ FIREBASE SAVE - محسن بالكامل مع حفظ كل ساعة فقط
 // ===========================================
 async function saveUserDataToFirebase(force = false) {
     if (!window.db || !userData.id) {
@@ -5935,10 +5905,12 @@ async function saveUserDataToFirebase(force = false) {
         return true;
     }
     
-    // تجنب الحفظ المتكرر (debouncing)
+    // ⚡ حفظ في Firebase كل ساعة فقط للمستخدمين العاديين
     const now = Date.now();
-    if (now - (userData.lastFirebaseSave || 0) < 10000 && !force) { // 10 ثواني
-        console.log("⏳ Too many save attempts, throttling...");
+    const oneHour = 3600000; // 60 دقيقة
+    
+    if (!force && now - (userData.lastFirebaseSave || 0) < oneHour) {
+        console.log("⏳ Firebase save skipped - last save was less than 1 hour ago");
         return false;
     }
     
@@ -5973,7 +5945,7 @@ async function saveUserDataToFirebase(force = false) {
             .doc(userData.id)
             .set(firebaseData, { merge: true });
         
-        console.log("💾 User data saved to Firebase");
+        console.log("💾 User data saved to Firebase (hourly backup)");
         userData.lastFirebaseSave = Date.now();
         userData.lastSaveTime = Date.now();
         
@@ -8097,17 +8069,27 @@ function updateVipTasksDisplay() {
 }
 
 // ===========================================
-// 👥 REFERRAL SYSTEM - نظام الدعوات (مبسط وآمن)
+// 👥 REFERRAL SYSTEM - نظام الدعوات (محسن بالكامل - آمن وبدون تكرار)
 // ===========================================
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
     // إذا كان المستخدم مأخوذ بالفعل، لا تفعل شيء
-    if (userData.referredBy || userData.referralBonusClaimed) {
-        console.log("✅ User already referred or bonus claimed");
+    if (userData.referredBy) {
+        console.log("✅ User already referred by:", userData.referredBy);
         return;
     }
     
+    // التحقق من وجود إحالة في localStorage (قد تكون من جلسة سابقة)
+    const pendingRef = localStorage.getItem('pending_referral');
+    if (pendingRef && pendingRef !== userData.referralCode) {
+        console.log("📦 Found pending referral in localStorage:", pendingRef);
+        await processReferral(pendingRef);
+        localStorage.removeItem('pending_referral');
+        return;
+    }
+    
+    // التحقق من وجود إحالة من تيليجرام
     let referralCode = null;
     
     if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.start_param) {
@@ -8115,9 +8097,13 @@ async function checkForReferral() {
         console.log("📱 Telegram referral detected:", referralCode);
     }
     
+    // التحقق من وجود إحالة في رابط الصفحة
     if (!referralCode) {
         const urlParams = new URLSearchParams(window.location.search);
         referralCode = urlParams.get('startapp') || urlParams.get('ref') || urlParams.get('start');
+        if (referralCode) {
+            console.log("🔗 URL referral detected:", referralCode);
+        }
     }
     
     if (!referralCode) {
@@ -8131,6 +8117,9 @@ async function checkForReferral() {
         return;
     }
     
+    // حفظ في localStorage مؤقتاً في حال فشل الاتصال
+    localStorage.setItem('pending_referral', referralCode);
+    
     await processReferral(referralCode);
 }
 
@@ -8138,7 +8127,32 @@ async function processReferral(referralCode) {
     console.log("🎯 Processing referral with code:", referralCode);
     
     try {
+        // التحقق من وجود إحالة سابقة محلياً
+        if (userData.referredBy) {
+            console.log("⚠️ User already referred locally");
+            localStorage.removeItem('pending_referral');
+            return;
+        }
+        
+        // التحقق من وجود إحالة سابقة في Firebase
+        if (window.db) {
+            const existingRef = await window.db.collection(DB_COLLECTIONS.REFERRALS)
+                .where('referredId', '==', userData.id)
+                .get();
+            
+            if (!existingRef.empty) {
+                console.log("⚠️ User already referred in Firebase");
+                userData.referredBy = existingRef.docs[0].data().referrerCode;
+                userData.referralBonusClaimed = true;
+                saveUserDataToLocalStorage();
+                localStorage.removeItem('pending_referral');
+                return;
+            }
+        }
+        
+        // البحث عن المُحيل باستخدام كود الإحالة
         let referrerId = null;
+        let referrerData = null;
         
         if (window.db) {
             const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
@@ -8147,69 +8161,208 @@ async function processReferral(referralCode) {
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
                 referrerId = doc.id;
+                referrerData = doc.data();
             }
         } else {
-            console.log("⚠️ Firebase not available, referral may not be saved permanently");
+            console.log("⚠️ Firebase not available, checking localStorage...");
+            // البحث في localStorage عن المُحيل (للمستخدمين المسجلين محلياً)
+            const allUsers = Object.keys(localStorage)
+                .filter(key => key.startsWith('alien_musk_'))
+                .map(key => {
+                    try {
+                        return JSON.parse(localStorage.getItem(key));
+                    } catch { return null; }
+                })
+                .filter(data => data && data.userInfo?.referralCode === referralCode);
+            
+            if (allUsers.length > 0) {
+                referrerId = allUsers[0].userInfo.id;
+                referrerData = allUsers[0];
+            }
         }
         
         if (!referrerId || referrerId === userData.id) {
             console.log("❌ Referrer not found or self-referral");
+            localStorage.removeItem('pending_referral');
             return;
         }
         
-        // التحقق من أن المستخدم لم يسبق له الإحالة
+        // التحقق النهائي من عدم وجود إحالة سابقة
         if (userData.referredBy) {
             console.log("❌ User already referred by:", userData.referredBy);
+            localStorage.removeItem('pending_referral');
             return;
         }
         
-        userData.referredBy = referrerId;
+        // تسجيل الإحالة في Firebase
+        if (window.db) {
+            const referralData = {
+                referrerId: referrerId,
+                referredId: userData.id,
+                referrerCode: referralCode,
+                referredUsername: userData.username,
+                referredTelegramId: userData.telegramId,
+                timestamp: Date.now(),
+                status: 'completed',
+                rewardPaid: false
+            };
+            
+            await window.db.collection(DB_COLLECTIONS.REFERRALS).add(referralData);
+            console.log("✅ Referral recorded in Firebase");
+        }
+        
+        // تحديث بيانات المستخدم محلياً
+        userData.referredBy = referralCode;
         userData.referralBonusClaimed = true;
         
-        if (referrerId !== userData.id) {
-            if (window.db) {
-                const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
+        // منح مكافأة للمدعو
+        walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
+        
+        // تحديث إحصائيات المُحيل
+        if (window.db && referrerId) {
+            const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
+            const referrerDoc = await referrerRef.get();
+            
+            if (referrerDoc.exists) {
+                const referrerWallet = referrerDoc.data();
                 
-                const referrerDoc = await referrerRef.get();
-                if (referrerDoc.exists) {
-                    const referrerWallet = referrerDoc.data();
-                    
-                    const newCount = (referrerWallet.referrals?.count || 0) + 1;
-                    const newReferrals = referrerWallet.referrals?.referrals || [];
-                    newReferrals.push({
-                        userId: userData.id,
-                        username: userData.username,
-                        joinedAt: Date.now()
-                    });
-                    
-                    const newBalance = (referrerWallet.balances?.AMSK || 0) + CONFIG.REFERRAL.BONUS.REFERRER;
-                    
-                    await referrerRef.update({
-                        'balances.AMSK': newBalance,
-                        'referrals.count': newCount,
-                        'referrals.referrals': newReferrals,
-                        'referrals.earned.amsk': (referrerWallet.referrals?.earned?.amsk || 0) + CONFIG.REFERRAL.BONUS.REFERRER
-                    });
-                    
-                    console.log(`✅ Referrer ${referrerId} updated with +10000 AMSK`);
-                }
+                const newCount = (referrerWallet.referrals?.count || 0) + 1;
+                const newReferrals = referrerWallet.referrals?.referrals || [];
+                newReferrals.push({
+                    userId: userData.id,
+                    username: userData.username,
+                    joinedAt: Date.now(),
+                    bonusPaid: false
+                });
+                
+                const newBalance = (referrerWallet.balances?.AMSK || 0) + CONFIG.REFERRAL.BONUS.REFERRER;
+                
+                await referrerRef.update({
+                    'balances.AMSK': newBalance,
+                    'referrals.count': newCount,
+                    'referrals.referrals': newReferrals,
+                    'referrals.earned.amsk': (referrerWallet.referrals?.earned?.amsk || 0) + CONFIG.REFERRAL.BONUS.REFERRER
+                });
+                
+                console.log(`✅ Referrer ${referrerId} updated with +${CONFIG.REFERRAL.BONUS.REFERRER} AMSK`);
             }
-            
-            // منح مكافأة للمدعو
-            walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
-            
-            addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
-            
-            showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
-            
-            await saveUserData();
         }
+        
+        // إضافة معاملة للإحالة في history
+        addTransactionToHistory(
+            'referral_bonus', 
+            CONFIG.REFERRAL.BONUS.REFERRED, 
+            'AMSK', 
+            `Welcome bonus from referral code: ${referralCode}`, 
+            'completed', 
+            'Welcome bonus for joining via referral'
+        );
+        
+        // تحديث واجهة المستخدم
+        updateWalletUI();
+        updateReferralDisplay();
+        
+        // حفظ جميع التغييرات
+        await saveUserData();
+        localStorage.removeItem('pending_referral');
+        
+        showMessage(`🎉 Welcome! You received ${CONFIG.REFERRAL.BONUS.REFERRED.toLocaleString()} AMSK bonus!`, "success");
         
     } catch (error) {
         console.error("❌ Error processing referral:", error);
+        showMessage("Failed to process referral", "error");
     }
 }
 
+// دالة جديدة للتحقق من صحة كود الإحالة قبل المعالجة
+async function validateReferralCode(referralCode) {
+    if (!referralCode || referralCode === userData.referralCode) {
+        return { valid: false, reason: "Invalid or self-referral" };
+    }
+    
+    if (userData.referredBy) {
+        return { valid: false, reason: "Already referred" };
+    }
+    
+    if (window.db) {
+        try {
+            // التحقق من وجود الإحالة في Firebase
+            const existingRef = await window.db.collection(DB_COLLECTIONS.REFERRALS)
+                .where('referredId', '==', userData.id)
+                .get();
+            
+            if (!existingRef.empty) {
+                return { valid: false, reason: "Already referred in database" };
+            }
+            
+            // التحقق من وجود المُحيل
+            const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
+            const querySnapshot = await usersRef.where('userInfo.referralCode', '==', referralCode).get();
+            
+            if (querySnapshot.empty) {
+                return { valid: false, reason: "Referrer not found" };
+            }
+            
+            const referrerId = querySnapshot.docs[0].id;
+            if (referrerId === userData.id) {
+                return { valid: false, reason: "Cannot refer yourself" };
+            }
+            
+            return { valid: true, referrerId: referrerId };
+            
+        } catch (error) {
+            console.error("❌ Error validating referral:", error);
+            return { valid: false, reason: "Validation error" };
+        }
+    }
+    
+    return { valid: true }; // في حالة عدم وجود Firebase، نقبل الإحالة مؤقتاً
+}
+
+// دالة جديدة لإعادة معالجة الإحالات المعلقة عند استعادة الاتصال
+async function retryPendingReferrals() {
+    const pendingRef = localStorage.getItem('pending_referral');
+    if (pendingRef && !userData.referredBy) {
+        console.log("🔄 Retrying pending referral:", pendingRef);
+        await processReferral(pendingRef);
+    }
+}
+
+// دالة جديدة للحصول على إحصائيات الإحالات من Firebase
+async function refreshReferralStats() {
+    if (!window.db || !userData.id) return;
+    
+    try {
+        // الحصول على عدد الإحالات من Firebase
+        const referralsSnapshot = await window.db.collection(DB_COLLECTIONS.REFERRALS)
+            .where('referrerId', '==', userData.id)
+            .get();
+        
+        const firebaseCount = referralsSnapshot.size;
+        
+        // تحديث العدد المحلي إذا كان مختلفاً
+        if (firebaseCount > (walletData.referrals?.count || 0)) {
+            walletData.referrals.count = firebaseCount;
+            
+            // تحديث قائمة الإحالات
+            const referrals = [];
+            referralsSnapshot.forEach(doc => {
+                referrals.push(doc.data());
+            });
+            walletData.referrals.referrals = referrals;
+            
+            saveUserDataToLocalStorage();
+            updateReferralDisplay();
+            
+            console.log(`📊 Referral stats updated: ${firebaseCount} total referrals`);
+        }
+        
+    } catch (error) {
+        console.error("❌ Error refreshing referral stats:", error);
+    }
+}
+
+// تحديث دالة updateReferralDisplay لتشمل إحصائيات Firebase
 function updateReferralDisplay() {
     if (!walletData.referrals) {
         walletData.referrals = {
@@ -8218,7 +8371,6 @@ function updateReferralDisplay() {
             referrals: [],
             claimedMilestones: []
         };
-        return;
     }
     
     const referrals = walletData.referrals;
@@ -8228,52 +8380,18 @@ function updateReferralDisplay() {
     }
     
     if (elements.refEarned) {
-        const earnedAmsk = referrals.earned?.amsk || 0;
+        const earnedAmsk = (referrals.earned?.amsk || 0) + 
+                          (referrals.count * CONFIG.REFERRAL.BONUS.REFERRER);
         elements.refEarned.textContent = formatNumber(earnedAmsk);
     }
     
     updateMilestonesDisplay();
+    
+    // تحديث إحصائيات Firebase في الخلفية
+    setTimeout(refreshReferralStats, 2000);
 }
 
-function updateMilestonesDisplay() {
-    if (!elements.milestonesList) return;
-    
-    const referralCount = walletData.referrals?.count || 0;
-    const claimedMilestones = walletData.referrals?.claimedMilestones || [];
-    
-    const milestones = elements.milestonesList.querySelectorAll('.milestone-item');
-    milestones.forEach(item => {
-        const milestoneNum = parseInt(item.dataset.milestone);
-        const progressElement = item.querySelector('.milestone-progress');
-        const actionElement = item.querySelector('.milestone-action');
-        
-        if (!milestoneNum) return;
-        
-        item.classList.remove('locked', 'can-claim', 'claimed');
-        
-        if (progressElement) {
-            progressElement.textContent = `${referralCount}/${milestoneNum}`;
-        }
-        
-        if (claimedMilestones.includes(milestoneNum)) {
-            item.classList.add('claimed');
-            if (actionElement) {
-                actionElement.innerHTML = '<span class="claimed-badge">Claimed</span>';
-            }
-        } else if (referralCount >= milestoneNum) {
-            item.classList.add('can-claim');
-            if (actionElement) {
-                actionElement.innerHTML = `<button class="btn-claim-milestone" onclick="claimMilestone(${milestoneNum})">Claim</button>`;
-            }
-        } else {
-            item.classList.add('locked');
-            if (actionElement) {
-                actionElement.innerHTML = `<span class="locked-badge">${referralCount}/${milestoneNum}</span>`;
-            }
-        }
-    });
-}
-
+// تحديث دالة claimMilestone لتسجيل المكافآت في Firebase
 async function claimMilestone(milestoneNum) {
     try {
         const milestoneReward = CONFIG.REFERRAL.MILESTONES[milestoneNum];
@@ -8298,6 +8416,20 @@ async function claimMilestone(milestoneNum) {
         if (walletData.referrals.count < milestoneNum) {
             showMessage(`Need ${milestoneNum} referrals to claim this milestone`, "error");
             return;
+        }
+        
+        // تسجيل المكافأة في Firebase
+        if (window.db) {
+            const milestoneData = {
+                userId: userData.id,
+                milestone: milestoneNum,
+                reward: milestoneReward,
+                timestamp: Date.now(),
+                status: 'claimed'
+            };
+            
+            await window.db.collection('milestone_claims').add(milestoneData);
+            console.log("🏆 Milestone claim recorded in Firebase");
         }
         
         if (milestoneReward.amsk > 0) {
@@ -9542,6 +9674,16 @@ function startBackgroundServices() {
         updateMiningTimer();
         checkAndNotifyRewards();
     }, 1000);
+    
+    // التحقق من الإحالات المعلقة كل دقيقة
+    setInterval(() => {
+        retryPendingReferrals();
+    }, 60000);
+    
+    // تحديث إحصائيات الإحالات كل 5 دقائق
+    setInterval(() => {
+        refreshReferralStats();
+    }, 300000);
     
     if (userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID) {
         console.log("👑 Admin mode - realtimeSync enabled");
