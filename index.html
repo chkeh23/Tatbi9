@@ -5258,7 +5258,7 @@
         
         console.log("✅ Alien Musk Connector Loaded Successfully - STANDALONE MODE");
         
-       // ===========================================
+// ===========================================
 // ⚙️ CONFIGURATION - الإعدادات الأساسية (محدثة)
 // ===========================================
 const CONFIG = {
@@ -5421,7 +5421,8 @@ let walletData = {
         lastReward: null,
         nextReward: null,
         totalMined: 1000,
-        minedToday: 1000
+        minedToday: 0,
+        lastResetDate: null
     },
     staking: {
         activeStakes: [],
@@ -5744,21 +5745,17 @@ function setupUserRealtimeListener() {
                     hasChanges = true;
                 }
                 
-                // ===========================================
-                // 🔥 التعديل المهم هنا - تحديث transactionHistory
-                // ===========================================
+                // تحديث transactionHistory
                 if (firebaseData.transactionHistory) {
                     const newTransactions = firebaseData.transactionHistory || [];
                     
                     // التحقق مما إذا كان هناك تغيير في History
                     if (!walletData.transactionHistory || walletData.transactionHistory.length !== newTransactions.length) {
-                        // الأطوال مختلفة → تمت إضافة معاملة جديدة
                         walletData.transactionHistory = newTransactions;
                         hasChanges = true;
                         historyUpdated = true;
                         console.log("📜 Transaction history updated from Firebase (new transaction)");
                     } else if (walletData.transactionHistory.length > 0 && newTransactions.length > 0) {
-                        // التحقق من آخر معاملة إذا تغيرت حالتها
                         const oldLastTx = walletData.transactionHistory[0];
                         const newLastTx = newTransactions[0];
                         
@@ -5767,17 +5764,6 @@ function setupUserRealtimeListener() {
                             hasChanges = true;
                             historyUpdated = true;
                             console.log(`📜 Transaction status updated: ${oldLastTx.status} → ${newLastTx.status}`);
-                        } else {
-                            // تحقق أعمق - هل هناك أي معاملة تغيرت حالتها؟
-                            for (let i = 0; i < Math.min(walletData.transactionHistory.length, newTransactions.length); i++) {
-                                if (walletData.transactionHistory[i].status !== newTransactions[i].status) {
-                                    walletData.transactionHistory = newTransactions;
-                                    hasChanges = true;
-                                    historyUpdated = true;
-                                    console.log("📜 Transaction status updated (detected change)");
-                                    break;
-                                }
-                            }
                         }
                     }
                 }
@@ -5788,17 +5774,14 @@ function setupUserRealtimeListener() {
                     setLanguage(userData.language);
                 }
 
-                // إذا كان هناك تغييرات، حدث الواجهة واحفظ محلياً
                 if (hasChanges) {
                     walletData.lastUpdate = Date.now();
                     updateUI();
                     saveUserDataToLocalStorage();
                     
-                    // إذا كان هناك تحديث في History، أظهر إشعار للمستخدم
                     if (historyUpdated && walletData.transactionHistory && walletData.transactionHistory.length > 0) {
                         const lastTx = walletData.transactionHistory[0];
                         if (lastTx && (lastTx.status === 'approved' || lastTx.status === 'rejected')) {
-                            // تحديد نوع المعاملة
                             let txTypeText = '';
                             if (lastTx.type.includes('deposit')) txTypeText = 'Deposit';
                             else if (lastTx.type.includes('withdrawal')) txTypeText = 'Withdrawal';
@@ -5811,7 +5794,6 @@ function setupUserRealtimeListener() {
                             
                             showMessage(`📬 ${txTypeText} request: ${message}`, 'info', 5000);
                             
-                            // اهتزاز خفيف للإشعار
                             if (window.tg && window.tg.HapticFeedback) {
                                 window.tg.HapticFeedback.notificationOccurred('success');
                             }
@@ -5821,7 +5803,6 @@ function setupUserRealtimeListener() {
             }
         }, (error) => {
             console.error("❌ Realtime listener error:", error);
-            // محاولة إعادة الاتصال بعد خطأ
             setTimeout(() => {
                 if (unsubscribeUserListener) {
                     unsubscribeUserListener();
@@ -5844,7 +5825,6 @@ async function loadUserDataFromFirebase(force = false) {
             return;
         }
         
-        // إذا لم يكن force، تحقق من حداثة البيانات المحلية
         if (!force) {
             const localData = localStorage.getItem(`alien_musk_${userData.id}`);
             if (localData) {
@@ -5908,7 +5888,7 @@ async function loadUserDataFromFirebase(force = false) {
         } else {
             console.log("📝 New user, saving to Firebase...");
             userData.isNewUser = true;
-            await saveUserDataToFirebase(true); // حفظ المستخدم الجديد فوراً
+            await saveUserDataToFirebase(true);
         }
         
         saveUserDataToLocalStorage();
@@ -5929,15 +5909,13 @@ async function saveUserDataToFirebase(force = false) {
         return false;
     }
     
-    // التحقق من وجود تغييرات مهمة
     if (!force && !hasImportantChanges()) {
         console.log("⏭️ No important changes, skipping Firebase save");
         return true;
     }
     
-    // تجنب الحفظ المتكرر (debouncing)
     const now = Date.now();
-    if (now - (userData.lastFirebaseSave || 0) < 10000 && !force) { // 10 ثواني
+    if (now - (userData.lastFirebaseSave || 0) < 10000 && !force) {
         console.log("⏳ Too many save attempts, throttling...");
         return false;
     }
@@ -5989,35 +5967,26 @@ async function saveUserDataToFirebase(force = false) {
     }
 }
 
-// ✅ تحديد الأحداث المهمة فقط للحفظ
 function hasImportantChanges() {
     const now = Date.now();
     
-    // أحداث مهمة تستحق الحفظ الفوري
     const importantEvents = [
-        // تغيير في الرصيد (أكبر من الصفر)
         walletData.balances.AMSK !== 1000 || 
         walletData.balances.USDT !== 0 || 
         walletData.balances.BNB !== 0 || 
         walletData.balances.TON !== 0,
         
-        // تغيير في مستوى التعدين
         walletData.mining.level !== 1,
         
-        // وجود إيداعات نشطة في staking
         walletData.staking.activeStakes.length > 0,
         
-        // وجود معاملات معلقة
         walletData.transactionHistory.some(tx => tx.status === 'pending'),
         
-        // تغيير في عدد الدعوات
         walletData.referrals.count > 0,
         
-        // تغيير في المهام المكتملة
         walletData.tasks.completed.length > 0
     ];
     
-    // إذا كان أي حدث مهم موجود
     if (importantEvents.some(event => event === true)) {
         console.log("🔥 Important change detected, saving to Firebase");
         return true;
@@ -6125,6 +6094,8 @@ async function loadUserFromLocalStorage() {
 }
 
 function initializeDefaultData() {
+    const today = new Date().setHours(0,0,0,0);
+    
     walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
     walletData.mining = {
         level: 1,
@@ -6132,7 +6103,8 @@ function initializeDefaultData() {
         lastReward: null,
         nextReward: null,
         totalMined: 1000,
-        minedToday: 1000
+        minedToday: 0,
+        lastResetDate: today
     };
     walletData.staking = {
         activeStakes: [],
@@ -6174,20 +6146,16 @@ function cleanDuplicateTransactions() {
 }
 
 async function saveUserData() {
-    // حفظ محلي فوري
     saveUserDataToLocalStorage();
     
-    // حفظ في Firebase فقط إذا كان هناك تغييرات مهمة
     if (hasImportantChanges()) {
         await saveUserDataToFirebase();
     }
 }
 
-// ✅ مصدر واحد للمعاملات - تم توحيده بالكامل
 function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
     const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     
-    // تحديد أيقونة المعاملة بناءً على النوع
     let iconClass = 'swap';
     let icon = 'fa-exchange-alt';
     
@@ -6242,7 +6210,6 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         walletData.transactionHistory = [];
     }
     
-    // التحقق من عدم وجود تكرار
     const isDuplicate = walletData.transactionHistory.some(tx => 
         tx.type === type && 
         tx.amount === amount && 
@@ -6260,10 +6227,8 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         
         console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
         
-        // حفظ فوري بعد إضافة معاملة
         saveUserDataToLocalStorage();
         
-        // حفظ في Firebase إذا كانت معاملة مهمة (خاصة الإيداع/السحب)
         if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
             saveUserDataToFirebase();
         }
@@ -6282,6 +6247,15 @@ function updateMiningDisplay() {
     
     const mining = walletData.mining;
     const level = CONFIG.MINING.LEVELS[mining.level] || CONFIG.MINING.LEVELS[1];
+    
+    // التحقق اليومي وإعادة تعيين minedToday إذا لزم الأمر
+    const now = new Date();
+    const today = now.setHours(0,0,0,0);
+    
+    if (!mining.lastResetDate || mining.lastResetDate < today) {
+        mining.minedToday = 0;
+        mining.lastResetDate = today;
+    }
     
     if (elements.currentMiningLevel) {
         elements.currentMiningLevel.textContent = mining.level;
@@ -6316,7 +6290,7 @@ function updateMiningTimer() {
     const nextRewardTime = walletData.mining.nextReward;
     
     if (!nextRewardTime) {
-        elements.miningTimerDisplay.textContent = "02:30:00"; // 2.5 ساعة
+        elements.miningTimerDisplay.textContent = "02:30:00";
         return;
     }
     
@@ -6474,6 +6448,15 @@ async function claimMiningReward() {
         const level = CONFIG.MINING.LEVELS[walletData.mining.level];
         let reward = level.reward;
         
+        // التحقق من تجاوز منتصف الليل
+        const now = new Date();
+        const today = now.setHours(0,0,0,0);
+        
+        if (!walletData.mining.lastResetDate || walletData.mining.lastResetDate < today) {
+            walletData.mining.minedToday = 0;
+            walletData.mining.lastResetDate = today;
+        }
+        
         walletData.balances.AMSK = (walletData.balances.AMSK || 0) + reward;
         walletData.mining.totalMined = (walletData.mining.totalMined || 0) + reward;
         walletData.mining.minedToday = (walletData.mining.minedToday || 0) + reward;
@@ -6486,7 +6469,7 @@ async function claimMiningReward() {
         updateWalletUI();
         await saveUserData();
         
-        showMessage(`💰 +${formatNumber(reward)} AMSK mined!`, "success");
+        showMessage(`💰 +${formatNumber(reward)} AMSK mined today! Total: ${formatNumber(walletData.mining.totalMined)} AMSK`, "success");
         
     } catch (error) {
         console.error("❌ Error claiming mining reward:", error);
@@ -6584,13 +6567,11 @@ function scrollToTasks() {
 // 💰 WALLET UI - تحديث واجهة المحفظة (محسنة بالكامل)
 // ===========================================
 function updateWalletUI() {
-    // التحقق القوي من وجود البيانات
     if (!walletData || !walletData.balances) {
         console.log("⚠️ Wallet data not ready yet");
         return;
     }
     
-    // استخدام قيم افتراضية مع التحقق من الوجود
     const AMSK = walletData.balances.AMSK ?? 0;
     const USDT = walletData.balances.USDT ?? 0;
     const BNB = walletData.balances.BNB ?? 0;
@@ -6698,7 +6679,6 @@ async function approveDeposit(depositId) {
         
         console.log("✅ Found deposit:", deposit);
         
-        // تحديث رصيد المستخدم
         if (userId === userData.id) {
             if (!walletData.balances) walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
             walletData.balances[deposit.currency] = (walletData.balances[deposit.currency] || 0) + deposit.amount;
@@ -6715,12 +6695,8 @@ async function approveDeposit(depositId) {
                     [`balances.${deposit.currency}`]: newBalance
                 });
                 
-                // ===========================================
-                // 🔥 تحديث transactionHistory للمستخدم المستهدف
-                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
@@ -6736,7 +6712,6 @@ async function approveDeposit(depositId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: depositId,
@@ -6760,7 +6735,6 @@ async function approveDeposit(depositId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === depositId || (tx.txId && tx.txId === deposit.txId)
         );
@@ -6774,7 +6748,6 @@ async function approveDeposit(depositId) {
                 `TX: ${deposit.txId?.slice(0, 10)}...`, 'approved', 'Deposit approved by admin', deposit.txId);
         }
         
-        // تنظيف TX ID
         if (deposit.txId && walletData.usedTxIds) {
             const txIdIndex = walletData.usedTxIds.indexOf(deposit.txId);
             if (txIdIndex > -1) {
@@ -6782,10 +6755,8 @@ async function approveDeposit(depositId) {
             }
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
-        // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
             updateWalletUI();
         }
@@ -6853,9 +6824,6 @@ async function rejectDeposit(depositId) {
             userId = deposit.userId || userData.id;
         }
         
-        // ===========================================
-        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
-        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -6864,7 +6832,6 @@ async function rejectDeposit(depositId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === depositId || tx.txId === deposit.txId) {
@@ -6881,7 +6848,6 @@ async function rejectDeposit(depositId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: depositId,
@@ -6906,7 +6872,6 @@ async function rejectDeposit(depositId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === depositId || (tx.txId && tx.txId === deposit.txId)
         );
@@ -6921,7 +6886,6 @@ async function rejectDeposit(depositId) {
                 `TX: ${deposit.txId?.slice(0, 10)}...`, 'rejected', `Deposit rejected: ${reason}`, deposit.txId);
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
         await saveUserData();
@@ -6985,7 +6949,6 @@ async function approveWithdrawal(withdrawalId) {
         
         console.log("✅ Found withdrawal:", withdrawal);
         
-        // تحديث رصيد المستخدم
         if (userId === userData.id) {
             if (walletData.balances[withdrawal.currency] >= withdrawal.amount && 
                 walletData.balances.BNB >= withdrawal.fee) {
@@ -7009,12 +6972,8 @@ async function approveWithdrawal(withdrawalId) {
                     });
                 }
                 
-                // ===========================================
-                // 🔥 تحديث transactionHistory للمستخدم المستهدف
-                // ===========================================
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) || 
@@ -7031,7 +6990,6 @@ async function approveWithdrawal(withdrawalId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: withdrawalId,
@@ -7055,7 +7013,6 @@ async function approveWithdrawal(withdrawalId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === withdrawalId || (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))
         );
@@ -7070,10 +7027,8 @@ async function approveWithdrawal(withdrawalId) {
             addTransactionToHistory('withdrawal_fee', -withdrawal.fee, 'BNB', 'Fee for withdrawal', 'completed', 'Withdrawal fee charged');
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
-        // تحديث الواجهة بشكل آمن
         if (userId === userData.id) {
             updateWalletUI();
         }
@@ -7141,9 +7096,6 @@ async function rejectWithdrawal(withdrawalId) {
             userId = withdrawal.userId || userData.id;
         }
         
-        // ===========================================
-        // 🔥 تحديث transactionHistory للمستخدم المستهدف مع الملاحظة
-        // ===========================================
         if (userId !== userData.id && window.db) {
             const userRef = window.db.collection(DB_COLLECTIONS.USERS).doc(userId);
             const userDoc = await userRef.get();
@@ -7152,7 +7104,6 @@ async function rejectWithdrawal(withdrawalId) {
                 const userDataFB = userDoc.data();
                 const userHistory = userDataFB.transactionHistory || [];
                 
-                // البحث عن الطلب في History المستخدم
                 let found = false;
                 const updatedHistory = userHistory.map(tx => {
                     if (tx.id === withdrawalId || (tx.txId && tx.txId === withdrawal.txId) ||
@@ -7170,7 +7121,6 @@ async function rejectWithdrawal(withdrawalId) {
                     return tx;
                 });
                 
-                // إذا لم نجد الطلب، نضيفه جديد (للتأكد)
                 if (!found) {
                     updatedHistory.unshift({
                         id: withdrawalId,
@@ -7195,7 +7145,6 @@ async function rejectWithdrawal(withdrawalId) {
             }
         }
         
-        // ✅ تحديث محلي للمشرف
         const transactionIndex = walletData.transactionHistory?.findIndex(tx => 
             tx.id === withdrawalId || (tx.description && tx.description.includes(withdrawal.address?.slice(0, 10)))
         );
@@ -7210,7 +7159,6 @@ async function rejectWithdrawal(withdrawalId) {
                 `To: ${withdrawal.address?.slice(0, 10)}...`, 'rejected', `Withdrawal rejected: ${reason}`);
         }
         
-        // حفظ التغييرات المحلية
         saveUserDataToLocalStorage();
         
         await saveUserData();
@@ -7398,7 +7346,6 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
             displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
         }
         
-        // ✅ إضافة ملاحظة المشرف إذا موجودة
         const rejectionMessage = tx.rejectionReason ? 
             `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
         
@@ -7449,7 +7396,6 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
 // 💎 STAKING SYSTEM - نظام الإيداع
 // ===========================================
 function updateStakingDisplay() {
-    // التحقق من وجود بيانات staking
     if (!walletData.staking) {
         console.log("⚠️ Staking data not ready");
         return;
@@ -8102,7 +8048,6 @@ function updateVipTasksDisplay() {
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
-    // إذا كان المستخدم مأخوذ بالفعل، لا تفعل شيء
     if (userData.referredBy || userData.referralBonusClaimed) {
         console.log("✅ User already referred or bonus claimed");
         return;
@@ -8125,7 +8070,6 @@ async function checkForReferral() {
         return;
     }
     
-    // منع دعوة النفس
     if (referralCode === userData.referralCode) {
         console.log("⚠️ Cannot refer yourself");
         return;
@@ -8157,7 +8101,6 @@ async function processReferral(referralCode) {
             return;
         }
         
-        // التحقق من أن المستخدم لم يسبق له الإحالة
         if (userData.referredBy) {
             console.log("❌ User already referred by:", userData.referredBy);
             return;
@@ -8195,7 +8138,6 @@ async function processReferral(referralCode) {
                 }
             }
             
-            // منح مكافأة للمدعو
             walletData.balances.AMSK += CONFIG.REFERRAL.BONUS.REFERRED;
             
             addTransactionToHistory('referral_bonus', CONFIG.REFERRAL.BONUS.REFERRED, 'AMSK', 'Welcome bonus from referral', 'completed', 'Welcome bonus for joining via referral');
@@ -9019,7 +8961,6 @@ async function submitDepositRequest() {
 // 💸 WITHDRAWAL SYSTEM - نظام السحب (يبقى مباشر في Firebase)
 // ===========================================
 
-// دالة مساعدة لحساب إجمالي طلبات السحب المعلقة
 function getPendingWithdrawalsTotal() {
     if (!walletData.transactionHistory) return 0;
     
@@ -9031,7 +8972,6 @@ function getPendingWithdrawalsTotal() {
 async function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
-    // حساب الرصيد المتاح بعد خصم الطلبات المعلقة
     const pendingTotal = getPendingWithdrawalsTotal();
     const availableBalance = walletData.balances.USDT - pendingTotal;
     
@@ -9175,7 +9115,6 @@ async function submitWithdrawRequest() {
     
     if (!walletData || !walletData.balances) return;
     
-    // التحقق من الرصيد المتاح (مع مراعاة الطلبات المعلقة)
     const pendingTotal = getPendingWithdrawalsTotal();
     const availableBalance = walletData.balances.USDT - pendingTotal;
     
@@ -9195,7 +9134,6 @@ async function submitWithdrawRequest() {
     }
     
     try {
-        // خصم الرصيد فوراً (تجميده)
         walletData.balances.USDT -= amount;
         
         const withdrawRequest = {
@@ -9222,13 +9160,11 @@ async function submitWithdrawRequest() {
             withdrawRequest.id = withdrawalId;
         }
         
-        // إضافة المعاملة للتاريخ مع علامة "pending"
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal request submitted. Funds frozen pending approval.', 
             withdrawalId);
         
-        // تحديث الواجهة
         updateWalletUI();
         await saveUserData();
         closeModal();
@@ -9239,7 +9175,6 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
-        // في حال الخطأ، أرجع الرصيد
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -9704,7 +9639,6 @@ function updateUI() {
     updateTasksDisplay();
     updateUITexts();
     
-    // تحديث نافذة History إذا كانت مفتوحة
     if (document.querySelector('.modal-overlay.active') && 
         document.querySelector('#historyContent')) {
         console.log("📜 History modal open - refreshing content");
