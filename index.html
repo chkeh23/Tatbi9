@@ -5263,77 +5263,6 @@
 // ===========================================
 const CONFIG = {
     PRICES: {
-                                    
-                /            }
-            const             statusClass = 'pending';
-            statusText = 'Pending';
-        } else if (tx.status === 'completed' || tx.status === 'approved') {
-            statusClass = 'completed';
-            statusText = 'Completed';
-        } else if (tx.status === 'rejected') {
-            statusClass = 'rejected';
-            statusText = 'Rejected';
-        } else if (tx.status === 'processing') {
-            statusClass = 'processing';
-            statusText = 'Processing';
-        }
-        
-        let displayAmount = `${amountSign}${absAmount.toLocaleString()} ${tx.currency}`;
-        if (tx.currency === 'AMSK' && absAmount >= 1000) {
-            displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
-        }
-        
-        const rejectionMessage = tx.rejectionReason ? 
-            `<br><small style="color: #ff4444;">❌ Reason: ${tx.rejectionReason}</small>` : '';
-        
-        const approvalMessage = tx.message && tx.status === 'approved' ?
-            `<br><small style="color: #00ff88;">✅ ${tx.message}</small>` : '';
-        
-        const pendingMessage = tx.message && tx.status === 'pending' ?
-            `<br><small style="color: #ff9900;">⏳ ${tx.message}</small>` : '';
-        
-        html += `
-            <div class="history-card">
-                <div class="history-card-header">
-                    <div class="history-card-icon ${iconClass}">
-                        <i class="fas ${icon}"></i>
-                    </div>
-                    <div class="history-card-details">
-                        <div class="history-card-title">
-                            <span class="history-card-type">${typeText}</span>
-                            <span class="history-card-amount ${amountColor}">${displayAmount}</span>
-                        </div>
-                        <div class="history-card-description">
-                            ${tx.description || ''}
-                            ${approvalMessage}
-                            ${rejectionMessage}
-                            ${pendingMessage}
-                        </div>
-                        <div class="history-card-footer">
-                            <span class="history-card-date">${tx.dateFormatted || new Date(tx.timestamp).toLocaleDateString()}</span>
-                            <span class="history-card-status ${statusClass}">${statusText}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-    
-    html += '</div>';
-    if (transactions.length > 50) {
-        html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
-            Showing 50 of ${transactions.length} transactions
-        </div>`;
-    }
-    
-    historyContent.innerHTML = html;
-}
-
-// ===========================================
-// ⚙️ CONFIGURATION - الإعدادات الأساسية (محدثة)
-// ===========================================
-const CONFIG = {
-    PRICES: {
         AMSK: 0.0002,
         USDT: 1.00,
         BNB: 640.00,
@@ -5559,6 +5488,25 @@ function generateReferralCode() {
 // 🚀 INITIALIZATION - بدء التطبيق
 // ===========================================
 async function initAlienMuskApp() {
+    // دالة مساعدة لإخفاء شاشة التحميل في حالة الخطأ
+    const hideLoadingScreen = () => {
+        try {
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+        } catch (e) {
+            console.error("Error hiding loading screen:", e);
+        }
+    };
+
     // تأكيد وضع التشغيل المستقل
     console.log("🚀 Running in STANDALONE HTML mode - app.js is disabled");
     
@@ -5601,8 +5549,12 @@ async function initAlienMuskApp() {
             showMessage("👽 Welcome to Alien Musk Quantum Platform v7.1 (Professional Mode)!", "success");
         }, 800);
         
+        // إخفاء شاشة التحميل بعد النجاح
+        hideLoadingScreen();
+        
     } catch (error) {
         console.error("❌ Initialization failed:", error);
+        hideLoadingScreen();
         showMessage("Failed to initialize platform", "error");
     }
 }
