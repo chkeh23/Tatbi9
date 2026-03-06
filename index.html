@@ -5535,6 +5535,7 @@ async function initAlienMuskApp() {
         }, 500);
         
         setupTransactionListener(); // استماع فقط للمعاملات المالية
+        setupDepositListener(); // إضافة استماع للإيداعات
         setupEventListeners();
         await checkForReferral();
         updateUI();
@@ -5785,6 +5786,44 @@ function setupTransactionListener() {
         }, (error) => {
             console.error("❌ Transaction listener error:", error);
             setTimeout(setupTransactionListener, 5000);
+        });
+}
+
+// ===========================================
+// 📥 الاستماع للإيداعات (جديد)
+// ===========================================
+function setupDepositListener() {
+    if (!window.db || !userData.id) return;
+    
+    window.db.collection(DB_COLLECTIONS.DEPOSITS)
+        .where('userId', '==', userData.id)
+        .onSnapshot((snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === 'modified') {
+                    const depositData = change.doc.data();
+                    console.log("💰 Deposit update received:", depositData.status);
+                    
+                    if (depositData.status === 'approved') {
+                        // إضافة الرصيد
+                        walletData.balances[depositData.currency] = (walletData.balances[depositData.currency] || 0) + depositData.amount;
+                        
+                        addTransactionToHistory('deposit_approved', depositData.amount, depositData.currency, 
+                            `TX: ${depositData.txId.slice(0, 10)}...`, 'completed', 
+                            'Deposit approved and credited');
+                        
+                        showMessage(`✅ Deposit of ${depositData.amount} ${depositData.currency} approved and credited!`, 'success');
+                        updateWalletUI();
+                        saveUserDataToLocalStorage();
+                        
+                    } else if (depositData.status === 'rejected') {
+                        addTransactionToHistory('deposit_rejected', depositData.amount, depositData.currency, 
+                            `Rejected: ${depositData.rejectionReason || 'No reason'}`, 'rejected', 
+                            'Deposit rejected');
+                        
+                        showMessage(`❌ Deposit rejected: ${depositData.rejectionReason || 'No reason provided'}`, 'warning');
+                    }
+                }
+            });
         });
 }
 
@@ -7353,43 +7392,74 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     const historyContent = document.getElementById('historyContent');
     if (!historyContent) return;
     
-    if (!walletData.transactionHistory) {
-        walletData.transactionHistory = [];
+    let allTransactions = [];
+    
+    // إضافة معاملات التاريخ
+    if (walletData.transactionHistory) {
+        allTransactions.push(...walletData.transactionHistory);
     }
     
-    let transactions = [...(walletData.transactionHistory || [])];
+    // إضافة طلبات السحب المعلقة
+    if (walletData.pendingWithdrawals) {
+        walletData.pendingWithdrawals.forEach(pending => {
+            if (pending.status === 'pending') {
+                allTransactions.push({
+                    id: pending.id,
+                    type: 'withdrawal',
+                    amount: -pending.amount,
+                    currency: 'USDT',
+                    description: `To: ${pending.address.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Withdrawal requested - Funds deducted and held for approval',
+                    timestamp: pending.createdAt,
+                    dateFormatted: new Date(pending.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                });
+            }
+        });
+    }
     
-    transactions.sort((a, b) => b.timestamp - a.timestamp);
+    // ترتيب من الأحدث إلى الأقدم
+    allTransactions.sort((a, b) => b.timestamp - a.timestamp);
+    
+    // تطبيق التصفية حسب التبويب
+    let filteredTransactions = allTransactions;
     
     if (tabType === 'pending') {
-        transactions = transactions.filter(tx => tx.status === 'pending');
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'pending');
     } else if (tabType === 'completed') {
-        transactions = transactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
     } else if (tabType === 'rejected') {
-        transactions = transactions.filter(tx => tx.status === 'rejected');
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'rejected');
     }
     
+    // تطبيق التصفية حسب النوع
     if (filterType !== 'all') {
         if (filterType === 'deposit') {
-            transactions = transactions.filter(tx => tx.type.includes('deposit'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('deposit'));
         } else if (filterType === 'withdrawal') {
-            transactions = transactions.filter(tx => tx.type.includes('withdrawal'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('withdrawal'));
         } else if (filterType === 'mining') {
-            transactions = transactions.filter(tx => tx.type.includes('mining'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('mining'));
         } else if (filterType === 'staking') {
-            transactions = transactions.filter(tx => tx.type.includes('staking'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('staking'));
         } else if (filterType === 'swap') {
-            transactions = transactions.filter(tx => tx.type.includes('swap'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('swap'));
         } else if (filterType === 'referral') {
-            transactions = transactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
         } else if (filterType === 'task') {
-            transactions = transactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
         } else if (filterType === 'vip') {
-            transactions = transactions.filter(tx => tx.type.includes('vip'));
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('vip'));
         }
     }
     
-    if (transactions.length === 0) {
+    if (filteredTransactions.length === 0) {
         historyContent.innerHTML = `
             <div class="history-empty">
                 <i class="fas fa-history"></i>
@@ -7402,7 +7472,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     
     let html = '<div class="history-list">';
     
-    transactions.slice(0, 50).forEach(tx => {
+    filteredTransactions.slice(0, 50).forEach(tx => {
         const amountColor = tx.amount > 0 ? 'positive' : 'negative';
         const amountSign = tx.amount > 0 ? '+' : '';
         const absAmount = Math.abs(tx.amount);
@@ -7489,9 +7559,9 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     });
     
     html += '</div>';
-    if (transactions.length > 50) {
+    if (filteredTransactions.length > 50) {
         html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
-            Showing 50 of ${transactions.length} transactions
+            Showing 50 of ${filteredTransactions.length} transactions
         </div>`;
     }
     
