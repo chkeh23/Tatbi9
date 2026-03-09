@@ -5632,23 +5632,34 @@ async function fetchLivePrices() {
         livePrices.BNB = data.binancecoin?.usd || CONFIG.PRICES.BNB;
         livePrices.TON = data['the-open-network']?.usd || CONFIG.PRICES.TON;
         
-        // تحديث أسعار الميمات
+        // تحديث أسعار الميمات مع نسبة التغيير
         livePrices.DOGE = data.dogecoin?.usd || 0;
-        livePrices.SHIB = data['shiba-inu']?.usd || 0;
-        livePrices.PEPE = data.pepe?.usd || 0;
-        livePrices.TRUMP = data['official-trump']?.usd || 0;
-        livePrices.BONK = data.bonk?.usd || 0;
-        livePrices.PENGU = data['pudgy-penguins']?.usd || 0;
-        livePrices.FLOKI = data.floki?.usd || 0;
-        livePrices.WIF = data.dogwifcoin?.usd || 0;
+        livePrices.DOGE_24h_change = data.dogecoin?.usd_24h_change || 0;
         
-        // تحديث مؤشرات التغيير (اختياري)
-        if (data.binancecoin?.usd_24h_change) {
-            livePrices.BNB_24h_change = data.binancecoin.usd_24h_change;
-        }
-        if (data['the-open-network']?.usd_24h_change) {
-            livePrices.TON_24h_change = data['the-open-network'].usd_24h_change;
-        }
+        livePrices.SHIB = data['shiba-inu']?.usd || 0;
+        livePrices.SHIB_24h_change = data['shiba-inu']?.usd_24h_change || 0;
+        
+        livePrices.PEPE = data.pepe?.usd || 0;
+        livePrices.PEPE_24h_change = data.pepe?.usd_24h_change || 0;
+        
+        livePrices.TRUMP = data['official-trump']?.usd || 0;
+        livePrices.TRUMP_24h_change = data['official-trump']?.usd_24h_change || 0;
+        
+        livePrices.BONK = data.bonk?.usd || 0;
+        livePrices.BONK_24h_change = data.bonk?.usd_24h_change || 0;
+        
+        livePrices.PENGU = data['pudgy-penguins']?.usd || 0;
+        livePrices.PENGU_24h_change = data['pudgy-penguins']?.usd_24h_change || 0;
+        
+        livePrices.FLOKI = data.floki?.usd || 0;
+        livePrices.FLOKI_24h_change = data.floki?.usd_24h_change || 0;
+        
+        livePrices.WIF = data.dogwifcoin?.usd || 0;
+        livePrices.WIF_24h_change = data.dogwifcoin?.usd_24h_change || 0;
+        
+        // تحديث مؤشرات التغيير لـ BNB و TON
+        livePrices.BNB_24h_change = data.binancecoin?.usd_24h_change || 0;
+        livePrices.TON_24h_change = data['the-open-network']?.usd_24h_change || 0;
         
         // حفظ في localStorage
         localStorage.setItem('livePrices', JSON.stringify({
@@ -5660,7 +5671,7 @@ async function fetchLivePrices() {
         updateWalletUI();
         renderTopMemes();
         
-        console.log("✅ Live prices updated:", livePrices);
+        console.log("✅ Live prices updated with 24h changes:", livePrices);
         
     } catch (error) {
         console.error("❌ Error fetching live prices:", error);
