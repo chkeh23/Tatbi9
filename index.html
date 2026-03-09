@@ -5572,28 +5572,46 @@ function addMemesSection() {
     }
 }
 
-// ===========================================
-// 📊 عرض الميمات
-// ===========================================
 function renderTopMemes() {
     const memesList = document.getElementById('memes-list');
     if (!memesList) return;
     
+    const memes = [
+        { symbol: "DOGE", name: "Dogecoin", iconKey: "DOGE" },
+        { symbol: "SHIB", name: "Shiba Inu", iconKey: "SHIB" },
+        { symbol: "PEPE", name: "Pepe", iconKey: "PEPE" },
+        { symbol: "TRUMP", name: "Official Trump", iconKey: "TRUMP" },
+        { symbol: "BONK", name: "Bonk", iconKey: "BONK" },
+        { symbol: "PENGU", name: "Pudgy Penguins", iconKey: "PENGU" },
+        { symbol: "FLOKI", name: "Floki", iconKey: "FLOKI" },
+        { symbol: "WIF", name: "Dogwifhat", iconKey: "WIF" }
+    ];
+    
     let html = '';
-    CONFIG.TOP_MEMES.forEach(meme => {
+    memes.forEach(meme => {
         const price = livePrices[meme.symbol] || 0;
         const priceFormatted = price < 0.01 ? price.toFixed(8) : price.toFixed(4);
+        
+        // جلب نسبة التغيير
+        const change = livePrices[`${meme.symbol}_24h_change`] || 0;
+        const changeSymbol = change >= 0 ? '▲' : '▼';
         
         html += `
             <div class="asset-item-compact" style="cursor: default;">
                 <div class="asset-icon-compact" style="border-color: #ff6b6b; background: transparent;">
-                    <img src="${CONFIG.CMC_ICONS[meme.iconKey]}" width="24" height="24" style="border-radius: 50%;">
+                    <img src="${CONFIG.CMC_ICONS[meme.iconKey]}" width="24" height="24" style="border-radius: 50%;" 
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-coins\\' style=\\'color: #ff6b6b;\\'></i>'">
                 </div>
                 <div class="asset-details-compact">
                     <div class="asset-name-compact">${meme.name}</div>
                     <div class="asset-balance-compact">${meme.symbol}</div>
                 </div>
-                <div class="asset-value-compact" style="color: #ff6b6b;">$${priceFormatted}</div>
+                <div class="asset-value-compact" style="color: #ff6b6b; display: flex; align-items: center;">
+                    $${priceFormatted}
+                    <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px; margin-left: 5px;">
+                        ${changeSymbol} ${Math.abs(change).toFixed(1)}%
+                    </span>
+                </div>
             </div>
         `;
     });
