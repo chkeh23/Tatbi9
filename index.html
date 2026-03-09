@@ -4075,251 +4075,261 @@
             </div>
         </div>
         
-        <!-- =========================================== -->
-        <!-- صفحة Wallet (المحفظة) -->
-        <!-- =========================================== -->
-        <div id="wallet-page" class="page">
-            <div class="wallet-content">
-                <!-- بطاقة الرصيد الإجمالي -->
-                <div class="wallet-balance-card">
-                    <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
-                    <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
-                    <div class="wallet-balance-subtitle" data-translate="wallet_total_usd">Total Value in USD</div>
-                    <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
+            <!-- =========================================== -->
+    <!-- صفحة Wallet (المحفظة) -->
+    <!-- =========================================== -->
+    <div id="wallet-page" class="page">
+        <div class="wallet-content">
+            <!-- بطاقة الرصيد الإجمالي -->
+            <div class="wallet-balance-card">
+                <h4><i class="fas fa-wallet"></i> <span data-translate="wallet_total_balance">Total Balance</span></h4>
+                <div class="wallet-balance-amount" id="wallet-balance-usd">$0.00</div>
+                <div class="wallet-balance-subtitle" data-translate="wallet_total_usd">Total Value in USD</div>
+                <div class="wallet-balance-usd" id="wallet-balance-amsk">0 AMSK</div>
+            </div>
+
+            <!-- الأزرار السريعة -->
+            <div class="wallet-actions-card">
+                <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
+                
+                <div class="wallet-actions-compact">
+                    <button class="wallet-action-btn" id="deposit-btn">
+                        <i class="fas fa-download"></i>
+                        <span data-translate="wallet_deposit">Deposit</span>
+                    </button>
+                    <button class="wallet-action-btn" id="withdraw-btn">
+                        <i class="fas fa-upload"></i>
+                        <span data-translate="wallet_withdraw">Withdraw</span>
+                    </button>
+                    <button class="wallet-action-btn" id="swap-btn">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span data-translate="wallet_swap">Swap</span>
+                    </button>
+                    <button class="wallet-action-btn" id="history-btn">
+                        <i class="fas fa-history"></i>
+                        <span data-translate="wallet_history">History</span>
+                    </button>
                 </div>
+            </div>
 
-                <!-- الأزرار السريعة -->
-                <div class="wallet-actions-card">
-                    <h4><i class="fas fa-bolt"></i> <span data-translate="wallet_quick_actions">Quick Actions</span></h4>
-                    
-                    <div class="wallet-actions-compact">
-                        <button class="wallet-action-btn" id="deposit-btn">
-                            <i class="fas fa-download"></i>
-                            <span data-translate="wallet_deposit">Deposit</span>
-                        </button>
-                        <button class="wallet-action-btn" id="withdraw-btn">
-                            <i class="fas fa-upload"></i>
-                            <span data-translate="wallet_withdraw">Withdraw</span>
-                        </button>
-                        <button class="wallet-action-btn" id="swap-btn">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span data-translate="wallet_swap">Swap</span>
-                        </button>
-                        <button class="wallet-action-btn" id="history-btn">
-                            <i class="fas fa-history"></i>
-                            <span data-translate="wallet_history">History</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- قائمة الأصول -->
-                <div class="wallet-assets-card">
-                    <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
-                    
-                    <div class="assets-section">
-                        <div class="asset-list-compact">
-                            <!-- AMSK Token -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ams-icon">
-                                    <i class="fas fa-robot"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">AMSK Token</div>
-                                    <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+            <!-- قائمة الأصول - المعدلة -->
+            <div class="wallet-assets-card">
+                <h4><i class="fas fa-coins"></i> <span data-translate="wallet_assets">Assets</span></h4>
+                
+                <div class="assets-section">
+                    <div class="asset-list-compact" id="assets-list-container">
+                        <!-- AMSK Token -->
+                        <div class="asset-item-compact" id="asset-amsk">
+                            <div class="asset-icon-compact" style="border-color: #00ff88; background: transparent;">
+                                <img src="" id="amsk-icon-img" width="24" height="24" style="border-radius: 50%; display: none;">
                             </div>
-
-                            <!-- USDT -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact usdt-icon">
-                                    <i class="fas fa-coins"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">USDT</div>
-                                    <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">AMSK Token</div>
+                                <div class="asset-balance-compact" id="wallet-amsk-balance">0 AMSK</div>
                             </div>
+                            <div class="asset-value-compact" id="wallet-amsk-value">$0.00</div>
+                        </div>
 
-                            <!-- BNB -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact bnb-icon">
-                                    <i class="fab fa-btc"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">BNB</div>
-                                    <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                        <!-- USDT -->
+                        <div class="asset-item-compact" id="asset-usdt">
+                            <div class="asset-icon-compact" style="border-color: #00d4ff; background: transparent;">
+                                <img src="" id="usdt-icon-img" width="24" height="24" style="border-radius: 50%; display: none;">
                             </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">USDT</div>
+                                <div class="asset-balance-compact" id="wallet-usdt-balance">0 USDT</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-usdt-value">$0.00</div>
+                        </div>
 
-                            <!-- TON -->
-                            <div class="asset-item-compact">
-                                <div class="asset-icon-compact ton-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="asset-details-compact">
-                                    <div class="asset-name-compact">TON</div>
-                                    <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
-                                </div>
-                                <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                        <!-- BNB -->
+                        <div class="asset-item-compact" id="asset-bnb">
+                            <div class="asset-icon-compact" style="border-color: #ffd700; background: transparent;">
+                                <img src="" id="bnb-icon-img" width="24" height="24" style="border-radius: 50%; display: none;">
                             </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">BNB</div>
+                                <div class="asset-balance-compact" id="wallet-bnb-balance">0 BNB</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-bnb-value">$0.00</div>
+                            <span class="price-change" id="bnb-price-change" style="font-size: 10px; margin-left: 5px;"></span>
+                        </div>
+
+                        <!-- TON -->
+                        <div class="asset-item-compact" id="asset-ton">
+                            <div class="asset-icon-compact" style="border-color: #9d4edd; background: transparent;">
+                                <img src="" id="ton-icon-img" width="24" height="24" style="border-radius: 50%; display: none;">
+                            </div>
+                            <div class="asset-details-compact">
+                                <div class="asset-name-compact">TON</div>
+                                <div class="asset-balance-compact" id="wallet-ton-balance">0 TON</div>
+                            </div>
+                            <div class="asset-value-compact" id="wallet-ton-value">$0.00</div>
+                            <span class="price-change" id="ton-price-change" style="font-size: 10px; margin-left: 5px;"></span>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- قسم أفضل 10 ميمات - جديد -->
+            <div class="wallet-assets-card" id="memes-section" style="display: none;">
+                <h4><i class="fas fa-fire" style="color: #ff6b6b;"></i> Top Meme Coins 🔥</h4>
+                <div class="asset-list-compact" id="memes-list">
+                    <!-- سيتم إضافة الميمات هنا عبر JavaScript -->
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- =========================================== -->
-        <!-- صفحة Referral (الدعوات) -->
-        <!-- =========================================== -->
-        <div id="referral-page" class="page">
-            <div class="referral-content">
-                <!-- إحصائيات الدعوات -->
-                <div class="referral-stats-card">
-                    <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
-                    
-                    <div class="referral-stats-grid">
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-count">0</div>
-                            <div class="ref-stat-label" data-translate="referral_count">Referrals</div>
-                        </div>
-                        <div class="ref-stat-item">
-                            <div class="ref-stat-value" id="ref-earned">0</div>
-                            <div class="ref-stat-label" data-translate="referral_earned">AMSK Earned</div>
-                        </div>
+    <!-- =========================================== -->
+    <!-- صفحة Referral (الدعوات) - بدون تغيير -->
+    <!-- =========================================== -->
+    <div id="referral-page" class="page">
+        <div class="referral-content">
+            <!-- إحصائيات الدعوات -->
+            <div class="referral-stats-card">
+                <h4><i class="fas fa-chart-line"></i> <span data-translate="referral_stats">Referral Stats</span></h4>
+                
+                <div class="referral-stats-grid">
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-count">0</div>
+                        <div class="ref-stat-label" data-translate="referral_count">Referrals</div>
+                    </div>
+                    <div class="ref-stat-item">
+                        <div class="ref-stat-value" id="ref-earned">0</div>
+                        <div class="ref-stat-label" data-translate="referral_earned">AMSK Earned</div>
                     </div>
                 </div>
+            </div>
 
-                <!-- رابط الدعوة -->
-                <div class="referral-link-card">
-                    <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
-                    
-                    <!-- وصف الدعوة -->
-                    <div class="referral-description">
-                        <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
-                        <ul>
-                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_1" class="allow-html">Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_2" class="allow-html">Earn <strong>16% commission</strong> on their deposits forever</span></li>
-                            <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_3" class="allow-html">Unlimited referrals, instant rewards!</span></li>
-                        </ul>
-                    </div>
-                    
-                    <!-- حقل الرابط وزر النسخ -->
-                    <div class="link-input-group">
-                        <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
-                        <button class="copy-link-btn" id="copy-link-btn">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- أزرار المشاركة -->
-                    <div class="share-buttons">
-                        <button class="share-btn telegram" id="telegram-share-btn">
-                            <i class="fab fa-telegram"></i>
-                            <span data-translate="share_telegram">Telegram</span>
-                        </button>
-                        <button class="share-btn whatsapp" id="whatsapp-share-btn">
-                            <i class="fab fa-whatsapp"></i>
-                            <span data-translate="share_whatsapp">WhatsApp</span>
-                        </button>
-                    </div>
+            <!-- رابط الدعوة -->
+            <div class="referral-link-card">
+                <h4><i class="fas fa-link"></i> <span data-translate="referral_your_link">Your Referral Link</span></h4>
+                
+                <!-- وصف الدعوة -->
+                <div class="referral-description">
+                    <p data-translate="referral_invite" class="allow-html">🚀 Invite friends and earn big!</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_1" class="allow-html">Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_2" class="allow-html">Earn <strong>16% commission</strong> on their deposits forever</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-translate="referral_bonus_3" class="allow-html">Unlimited referrals, instant rewards!</span></li>
+                    </ul>
                 </div>
+                
+                <!-- حقل الرابط وزر النسخ -->
+                <div class="link-input-group">
+                    <input type="text" class="link-input" id="referral-link-input" readonly value="Loading...">
+                    <button class="copy-link-btn" id="copy-link-btn">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                
+                <!-- أزرار المشاركة -->
+                <div class="share-buttons">
+                    <button class="share-btn telegram" id="telegram-share-btn">
+                        <i class="fab fa-telegram"></i>
+                        <span data-translate="share_telegram">Telegram</span>
+                    </button>
+                    <button class="share-btn whatsapp" id="whatsapp-share-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        <span data-translate="share_whatsapp">WhatsApp</span>
+                    </button>
+                </div>
+            </div>
 
-                <!-- مراحل الدعوات (Milestones) -->
-                <div class="milestones-card">
-                    <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
-                    <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
-                    
-                    <div class="milestones-list" id="milestones-list">
-                        <!-- مرحلة 10 دعوات -->
-                        <div class="milestone-item locked" data-milestone="10">
-                            <div class="milestone-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement" data-translate="referral_milestone_10">10 Referrals</div>
-                                <div class="milestone-progress">0/10</div>
-                                <div class="milestone-reward">+50,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/10</span>
-                            </div>
+            <!-- مراحل الدعوات (Milestones) -->
+            <div class="milestones-card">
+                <h4><i class="fas fa-trophy"></i> <span data-translate="referral_milestones">Referral Milestones</span></h4>
+                <p class="milestones-description" data-translate="referral_milestones_desc">Earn bonus rewards for reaching referral milestones!</p>
+                
+                <div class="milestones-list" id="milestones-list">
+                    <!-- مرحلة 10 دعوات -->
+                    <div class="milestone-item locked" data-milestone="10">
+                        <div class="milestone-icon">
+                            <i class="fas fa-users"></i>
                         </div>
-
-                        <!-- مرحلة 25 دعوة -->
-                        <div class="milestone-item locked" data-milestone="25">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-friends"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement" data-translate="referral_milestone_25">25 Referrals</div>
-                                <div class="milestone-progress">0/25</div>
-                                <div class="milestone-reward">+150,000 AMSK</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/25</span>
-                            </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_10">10 Referrals</div>
+                            <div class="milestone-progress">0/10</div>
+                            <div class="milestone-reward">+50,000 AMSK</div>
                         </div>
-
-                        <!-- مرحلة 50 دعوة -->
-                        <div class="milestone-item locked" data-milestone="50">
-                            <div class="milestone-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement" data-translate="referral_milestone_50">50 Referrals</div>
-                                <div class="milestone-progress">0/50</div>
-                                <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/50</span>
-                            </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/10</span>
                         </div>
+                    </div>
 
-                        <!-- مرحلة 100 دعوة -->
-                        <div class="milestone-item locked" data-milestone="100">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement" data-translate="referral_milestone_100">100 Referrals</div>
-                                <div class="milestone-progress">0/100</div>
-                                <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/100</span>
-                            </div>
+                    <!-- مرحلة 25 دعوة -->
+                    <div class="milestone-item locked" data-milestone="25">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-friends"></i>
                         </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_25">25 Referrals</div>
+                            <div class="milestone-progress">0/25</div>
+                            <div class="milestone-reward">+150,000 AMSK</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/25</span>
+                        </div>
+                    </div>
 
-                        <!-- مرحلة 250 دعوة -->
-                        <div class="milestone-item locked" data-milestone="250">
-                            <div class="milestone-icon">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="milestone-details">
-                                <div class="milestone-requirement" data-translate="referral_milestone_250">250 Referrals</div>
-                                <div class="milestone-progress">0/250</div>
-                                <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
-                            </div>
-                            <div class="milestone-action">
-                                <span class="locked-badge">0/250</span>
-                            </div>
+                    <!-- مرحلة 50 دعوة -->
+                    <div class="milestone-item locked" data-milestone="50">
+                        <div class="milestone-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_50">50 Referrals</div>
+                            <div class="milestone-progress">0/50</div>
+                            <div class="milestone-reward">+350,000 AMSK + 0.01 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/50</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 100 دعوة -->
+                    <div class="milestone-item locked" data-milestone="100">
+                        <div class="milestone-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_100">100 Referrals</div>
+                            <div class="milestone-progress">0/100</div>
+                            <div class="milestone-reward">+1,000,000 AMSK + 0.025 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/100</span>
+                        </div>
+                    </div>
+
+                    <!-- مرحلة 250 دعوة -->
+                    <div class="milestone-item locked" data-milestone="250">
+                        <div class="milestone-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="milestone-details">
+                            <div class="milestone-requirement" data-translate="referral_milestone_250">250 Referrals</div>
+                            <div class="milestone-progress">0/250</div>
+                            <div class="milestone-reward">+3,000,000 AMSK + 0.075 BNB</div>
+                        </div>
+                        <div class="milestone-action">
+                            <span class="locked-badge">0/250</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- تم تعطيل app.js نهائياً - استخدام النظام المتكامل فقط -->
-    <!-- <script src="app.js"></script> -->
+<!-- تم تعطيل app.js نهائياً - استخدام النظام المتكامل فقط -->
+<!-- <script src="app.js"></script> -->
 
-    <script>
-        // ===========================================
-        // تأكيد وضع التشغيل المستقل
-        // ===========================================
+<script>
+    // ===========================================
+    // تأكيد وضع التشغيل المستقل
+    // ===========================================
         console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - STANDALONE MODE (app.js disabled)");
         
         // منع أي محاولة لتحميل أو تعريف متغيرات من app.js
