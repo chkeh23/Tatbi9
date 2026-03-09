@@ -4005,78 +4005,79 @@
         <!-- =========================================== -->
         <!-- صفحة Staking (الإيداع) -->
         <!-- =========================================== -->
-        <div id="staking-page" class="page">
-            <div class="staking-content">
-                <!-- بطاقة Staking الرئيسية -->
-                <div class="staking-card">
-                    <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
-                    <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
-                    
-                    <div class="total-staked-card">
-                        <div class="staked-info">
-                            <div class="staked-label" data-translate="staking_total">Total Staked</div>
-                            <div class="staked-amount" id="total-staked">0 USDT</div>
-                        </div>
-                        <div class="staked-earnings">
-                            <i class="fas fa-coins"></i>
-                            <span data-translate="staking_active">Active Earnings</span>
-                        </div>
+
+    <div id="staking-page" class="page">
+        <div class="staking-content">
+            <!-- بطاقة Staking الرئيسية -->
+            <div class="staking-card">
+                <h4><i class="fas fa-gem"></i> <span data-translate="staking_title">Quantum Staking</span></h4>
+                <p class="staking-description" data-translate="staking_description">Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.</p>
+                
+                <div class="total-staked-card">
+                    <div class="staked-info">
+                        <div class="staked-label" data-translate="staking_total">Total Staked</div>
+                        <div class="staked-amount" id="total-staked">0 USDT</div>
+                    </div>
+                    <div class="staked-earnings">
+                        <i class="fas fa-coins"></i>
+                        <span data-translate="staking_active">Active Earnings</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- خطط Staking -->
-                <div class="staking-card">
-                    <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
-                    
-                    <div class="staking-plans-grid">
-                        <!-- الخطة الفضية -->
-                        <div class="plan-item">
-                            <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
-                            <div class="plan-amount">10+ USDT</div>
-                            <div class="plan-duration" data-translate="staking_duration_7">7 Days</div>
-                            <div class="plan-apr">40% APR</div>
-                            <div class="plan-reward" data-translate="staking_silver_reward">Daily: 2,857 AMSK per $10</div>
-                            <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
-                        </div>
+            <!-- خطط Staking -->
+            <div class="staking-card">
+                <h4><i class="fas fa-cubes"></i> <span data-translate="staking_plans">Staking Plans</span></h4>
+                
+                <div class="staking-plans-grid">
+                    <!-- الخطة الفضية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_silver">Silver Plan</div>
+                        <div class="plan-amount">10+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_7">7 Days</div>
+                        <div class="plan-apr">40% APR</div>
+                        <div class="plan-reward" data-translate="staking_silver_reward">Daily: 2,857 AMSK per $10</div>
+                        <button class="stake-plan-btn" data-plan="1" data-translate="staking_stake_now">Stake Now</button>
+                    </div>
 
-                        <!-- الخطة الذهبية -->
-                        <div class="plan-item">
-                            <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
-                            <div class="plan-amount">50+ USDT</div>
-                            <div class="plan-duration" data-translate="staking_duration_15">15 Days</div>
-                            <div class="plan-apr">50% APR</div>
-                            <div class="plan-reward" data-translate="staking_gold_reward">Daily: 8,333 AMSK per $50</div>
-                            <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
-                        </div>
+                    <!-- الخطة الذهبية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_gold">Gold Plan</div>
+                        <div class="plan-amount">50+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_15">15 Days</div>
+                        <div class="plan-apr">50% APR</div>
+                        <div class="plan-reward" data-translate="staking_gold_reward">Daily: 8,333 AMSK per $50</div>
+                        <button class="stake-plan-btn" data-plan="2" data-translate="staking_stake_now">Stake Now</button>
+                    </div>
 
-                        <!-- الخطة الماسية -->
-                        <div class="plan-item">
-                            <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
-                            <div class="plan-amount">100+ USDT</div>
-                            <div class="plan-duration" data-translate="staking_duration_30">30 Days</div>
-                            <div class="plan-apr">60% APR</div>
-                            <div class="plan-reward" data-translate="staking_diamond_reward">Daily: 10,000 AMSK per $100</div>
-                            <button class="stake-plan-btn" data-plan="3" data-translate="staking_stake_now">Stake Now</button>
-                        </div>
+                    <!-- الخطة الماسية -->
+                    <div class="plan-item">
+                        <div class="plan-name" data-translate="staking_plan_diamond">Diamond Plan</div>
+                        <div class="plan-amount">100+ USDT</div>
+                        <div class="plan-duration" data-translate="staking_duration_30">30 Days</div>
+                        <div class="plan-apr">60% APR</div>
+                        <div class="plan-reward" data-translate="staking_diamond_reward">Daily: 10,000 AMSK per $100</div>
+                        <button class="stake-plan-btn" data-plan="3" data-translate="staking_stake_now">Stake Now</button>
                     </div>
                 </div>
+            </div>
 
-                <!-- الإيداعات النشطة -->
-                <div class="staking-card">
-                    <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
-                    <div class="active-stakes" id="active-stakes-list">
-                        <div class="empty-stakes">
-                            <i class="fas fa-inbox"></i>
-                            <p data-translate="staking_no_active">No active stakes yet</p>
-                            <small data-translate="staking_start_hint">Start staking to earn rewards</small>
-                        </div>
+            <!-- الإيداعات النشطة -->
+            <div class="staking-card">
+                <h4><i class="fas fa-history"></i> <span data-translate="staking_active_stakes">Active Stakes</span></h4>
+                <div class="active-stakes" id="active-stakes-list">
+                    <div class="empty-stakes">
+                        <i class="fas fa-inbox"></i>
+                        <p data-translate="staking_no_active">No active stakes yet</p>
+                        <small data-translate="staking_start_hint">Start staking to earn rewards</small>
                     </div>
                 </div>
             </div>
         </div>
-        
-            <!-- =========================================== -->
-    <!-- صفحة Wallet (المحفظة) -->
+    </div>
+    
+    <!-- =========================================== -->
+    <!-- صفحة Wallet (المحفظة) - مع تعديل إظهار الميمات -->
     <!-- =========================================== -->
     <div id="wallet-page" class="page">
         <div class="wallet-content">
@@ -4171,8 +4172,8 @@
                 </div>
             </div>
 
-            <!-- قسم أفضل 10 ميمات - جديد -->
-            <div class="wallet-assets-card" id="memes-section" style="display: none;">
+            <!-- قسم أفضل 10 ميمات - معدل ليظهر مباشرة (تم إزالة display: none) -->
+            <div class="wallet-assets-card" id="memes-section">
                 <h4><i class="fas fa-fire" style="color: #ff6b6b;"></i> Top Meme Coins 🔥</h4>
                 <div class="asset-list-compact" id="memes-list">
                     <!-- سيتم إضافة الميمات هنا عبر JavaScript -->
