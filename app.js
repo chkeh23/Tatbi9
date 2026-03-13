@@ -1,26 +1,16 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.1 - ULTIMATE ECONOMY EDITION (FIXED)
-// ===========================================
-// تمت الإضافة: نظام Zero Cost (مثل REFI)
-// مع الحفاظ على كل دوال Alien Musk الأصلية (بدون حذف)
-// تم إصلاح مشكلة STORAGE_KEYS
+// ALIEN MUSK QUANTUM v7.2 - ZERO WASTE EDITION
 // ===========================================
 
-// ===========================================
-// تأكيد وضع التشغيل المستقل
-// ===========================================
-console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - ULTIMATE ECONOMY EDITION");
-
-if (window.appJsLoaded) {
-    console.warn("⚠️ app.js detected but ignored - using standalone HTML mode");
+// ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
+const tg = window.Telegram?.WebApp;
+if (tg) {
+    tg.ready();
+    tg.expand();
+    console.log("✅ Telegram WebApp initialized");
 }
 
-window.tg = null;
-window.firebaseApp = null;
-window.db = null;
-window.auth = null;
-let appInitialized = false;
-
+// ====== 2. FIREBASE CONFIGURATION ======
 const FIREBASE_CONFIG = {
     apiKey: "AIzaSyCklv_zMfndK4-xUHECyD5XA7p_-20e1t8",
     authDomain: "tatbi9-681bf.firebaseapp.com",
@@ -30,920 +20,98 @@ const FIREBASE_CONFIG = {
     appId: "1:863237064748:web:134de1e01d2639ef5fa989"
 };
 
-// ===========================================
-// 🌐 نظام اللغات المتعددة - كامل كما كان
-// ===========================================
-const LANGUAGES = {
-    en: {
-        code: 'en',
-        flag: '🇬🇧',
-        name: 'English',
-        nativeName: 'English',
-        dir: 'ltr',
-        translations: {
-            app_name: "Alien Musk Quantum",
-            app_name_short: "Alien Musk",
-            loading: "Loading...",
-            loading_subtitle: "Initializing Quantum Systems...",
-            nav_home: "Home",
-            nav_staking: "Staking",
-            nav_wallet: "Wallet",
-            nav_referral: "Referral",
-            mining_title: "Quantum Mining Station",
-            mining_level: "Level",
-            mining_hashrate: "Hashrate",
-            mining_next_reward: "Next Reward:",
-            mining_start: "Start Quantum Mining",
-            mining_claim: "Claim Reward",
-            mining_in_progress: "Mining...",
-            mining_total: "Total Mined:",
-            mining_today: "Today:",
-            mining_quick_tasks: "Tasks",
-            mining_quick_booster: "Booster 🚀",
-            upgrade_title: "Upgrade Mining Level",
-            tasks_title: "Tasks & Rewards",
-            tasks_completed: "Completed",
-            tasks_basic: "Basic",
-            tasks_vip: "VIP 🏆",
-            tasks_start: "Start",
-            tasks_done: "Done ✓",
-            staking_title: "Quantum Staking",
-            staking_description: "Stake your USDT to earn AMSK tokens. Higher stakes and longer durations yield better rewards.",
-            staking_total: "Total Staked",
-            staking_active: "Active Earnings",
-            staking_plans: "Staking Plans",
-            staking_plan_silver: "Silver Plan",
-            staking_plan_gold: "Gold Plan",
-            staking_plan_diamond: "Diamond Plan",
-            staking_duration_7: "7 Days",
-            staking_duration_15: "15 Days",
-            staking_duration_30: "30 Days",
-            staking_silver_reward: "Daily: 2,857 AMSK per $10",
-            staking_gold_reward: "Daily: 8,333 AMSK per $50",
-            staking_diamond_reward: "Daily: 10,000 AMSK per $100",
-            staking_stake_now: "Stake Now",
-            staking_active_stakes: "Active Stakes",
-            staking_no_active: "No active stakes yet",
-            staking_start_hint: "Start staking to earn rewards",
-            wallet_total_balance: "Total Balance",
-            wallet_total_usd: "Total Value in USD",
-            wallet_quick_actions: "Quick Actions",
-            wallet_deposit: "Deposit",
-            wallet_withdraw: "Withdraw",
-            wallet_swap: "Swap",
-            wallet_history: "History",
-            wallet_assets: "Assets",
-            referral_stats: "Referral Stats",
-            referral_count: "Referrals",
-            referral_earned: "AMSK Earned",
-            referral_your_link: "Your Referral Link",
-            referral_invite: "🚀 Invite friends and earn big!",
-            referral_bonus_1: "Get <strong>10,000 AMSK ($2)</strong> per referral who starts mining",
-            referral_bonus_2: "Earn <strong>16% commission</strong> on their deposits forever",
-            referral_bonus_3: "Unlimited referrals, instant rewards!",
-            referral_milestones: "Referral Milestones",
-            referral_milestones_desc: "Earn bonus rewards for reaching referral milestones!",
-            referral_milestone_10: "10 Referrals",
-            referral_milestone_25: "25 Referrals",
-            referral_milestone_50: "50 Referrals",
-            referral_milestone_100: "100 Referrals",
-            referral_milestone_250: "250 Referrals",
-            share_telegram: "Telegram",
-            share_whatsapp: "WhatsApp",
-            language_welcome_title: "👽 Welcome to Alien Musk!",
-            language_welcome_subtitle: "Please select your preferred language",
-            language_continue: "Continue",
-            cancel: "Cancel",
-            confirm: "Confirm",
-            close: "Close",
-            save: "Save",
-            edit: "Edit",
-            copy: "Copy",
-            copied: "Copied!",
-            success: "Success",
-            error: "Error",
-            warning: "Warning",
-            info: "Info",
-            free: "Free",
-            history_title: "Transaction History",
-            history_all: "All",
-            history_pending: "Pending",
-            history_completed: "Completed",
-            history_rejected: "Rejected",
-            history_all_types: "All Types",
-            history_deposits: "Deposits",
-            history_withdrawals: "Withdrawals",
-            history_mining: "Mining",
-            history_staking: "Staking",
-            history_swap: "Swap",
-            history_referral: "Referral",
-            history_tasks: "Tasks",
-            history_vip: "VIP Tasks",
-            history_no_transactions: "No Transactions Found",
-            history_no_transactions_desc: "No transactions match your current filters"
-        }
-    },
-    ar: {
-        code: 'ar',
-        flag: '🇸🇦',
-        name: 'Arabic',
-        nativeName: 'العربية',
-        dir: 'rtl',
-        translations: {
-            app_name: "أليون ماسك كوانتوم",
-            app_name_short: "أليون ماسك",
-            loading: "جاري التحميل...",
-            loading_subtitle: "تشغيل الأنظمة الكمومية...",
-            nav_home: "الرئيسية",
-            nav_staking: "الإيداع",
-            nav_wallet: "المحفظة",
-            nav_referral: "الدعوات",
-            mining_title: "محطة التعدين الكمومي",
-            mining_level: "المستوى",
-            mining_hashrate: "قوة التعدين",
-            mining_next_reward: "المكافأة التالية:",
-            mining_start: "بدء التعدين الكمومي",
-            mining_claim: "استلام المكافأة",
-            mining_in_progress: "جاري التعدين...",
-            mining_total: "الإجمالي الملغوم:",
-            mining_today: "اليوم:",
-            mining_quick_tasks: "المهام",
-            mining_quick_booster: "معزز 🚀",
-            upgrade_title: "تطوير مستوى التعدين",
-            tasks_title: "المهام والمكافآت",
-            tasks_completed: "مكتمل",
-            tasks_basic: "أساسية",
-            tasks_vip: "VIP 🏆",
-            tasks_start: "ابدأ",
-            tasks_done: "تم ✓",
-            staking_title: "الإيداع الكمومي",
-            staking_description: "قم بإيداع USDT لكسب رموز AMSK. الإيداعات الأكبر والمدة الأطول تمنح مكافآت أفضل.",
-            staking_total: "إجمالي الإيداع",
-            staking_active: "الأرباح النشطة",
-            staking_plans: "خطط الإيداع",
-            staking_plan_silver: "الفضة",
-            staking_plan_gold: "الذهب",
-            staking_plan_diamond: "الألماس",
-            staking_duration_7: "7 أيام",
-            staking_duration_15: "15 يوم",
-            staking_duration_30: "30 يوم",
-            staking_silver_reward: "يومياً: 2,857 AMSK لكل $10",
-            staking_gold_reward: "يومياً: 8,333 AMSK لكل $50",
-            staking_diamond_reward: "يومياً: 10,000 AMSK لكل $100",
-            staking_stake_now: "إيداع الآن",
-            staking_active_stakes: "الإيداعات النشطة",
-            staking_no_active: "لا توجد إيداعات نشطة",
-            staking_start_hint: "ابدأ الإيداع لكسب المكافآت",
-            wallet_total_balance: "الرصيد الإجمالي",
-            wallet_total_usd: "القيمة الإجمالية بالدولار",
-            wallet_quick_actions: "إجراءات سريعة",
-            wallet_deposit: "إيداع",
-            wallet_withdraw: "سحب",
-            wallet_swap: "تبديل",
-            wallet_history: "السجل",
-            wallet_assets: "الأصول",
-            referral_stats: "إحصائيات الدعوات",
-            referral_count: "الدعوات",
-            referral_earned: "AMSK المكتسب",
-            referral_your_link: "رابط الدعوة الخاص بك",
-            referral_invite: "🚀 ادعُ أصدقائك واربح الكثير!",
-            referral_bonus_1: "احصل على <strong>10,000 AMSK ($2)</strong> عن كل صديق يبدأ التعدين",
-            referral_bonus_2: "اربح <strong>عمولة 16%</strong> من إيداعاتهم مدى الحياة",
-            referral_bonus_3: "دعوات غير محدودة، مكافآت فورية!",
-            referral_milestones: "مراحل الدعوات",
-            referral_milestones_desc: "احصل على مكافآت إضافية عند الوصول لمراحل محددة!",
-            referral_milestone_10: "10 دعوات",
-            referral_milestone_25: "25 دعوة",
-            referral_milestone_50: "50 دعوة",
-            referral_milestone_100: "100 دعوة",
-            referral_milestone_250: "250 دعوة",
-            share_telegram: "تليجرام",
-            share_whatsapp: "واتساب",
-            language_welcome_title: "👽 مرحباً بك في أليون ماسك!",
-            language_welcome_subtitle: "الرجاء اختيار لغتك المفضلة",
-            language_continue: "متابعة",
-            cancel: "إلغاء",
-            confirm: "تأكيد",
-            close: "إغلاق",
-            save: "حفظ",
-            edit: "تعديل",
-            copy: "نسخ",
-            copied: "تم النسخ!",
-            success: "نجاح",
-            error: "خطأ",
-            warning: "تحذير",
-            info: "معلومة",
-            free: "مجاني",
-            history_title: "سجل المعاملات",
-            history_all: "الكل",
-            history_pending: "معلقة",
-            history_completed: "مكتملة",
-            history_rejected: "مرفوضة",
-            history_all_types: "جميع الأنواع",
-            history_deposits: "إيداعات",
-            history_withdrawals: "سحوبات",
-            history_mining: "تعدين",
-            history_staking: "إيداع",
-            history_swap: "تبديل",
-            history_referral: "دعوات",
-            history_tasks: "مهام",
-            history_vip: "VIP مهام",
-            history_no_transactions: "لا توجد معاملات",
-            history_no_transactions_desc: "لا توجد معاملات تطابق عوامل التصفية الخاصة بك"
-        }
-    },
-    hi: {
-        code: 'hi',
-        flag: '🇮🇳',
-        name: 'Hindi',
-        nativeName: 'हिन्दी',
-        dir: 'ltr',
-        translations: {
-            app_name: "एलियन मस्क क्वांटम",
-            app_name_short: "एलियन मस्क",
-            loading: "लोड हो रहा है...",
-            loading_subtitle: "क्वांटम सिस्टम शुरू हो रहे हैं...",
-            nav_home: "होम",
-            nav_staking: "स्टेकिंग",
-            nav_wallet: "वॉलेट",
-            nav_referral: "रेफरल",
-            mining_title: "क्वांटम माइनिंग स्टेशन",
-            mining_level: "स्तर",
-            mining_hashrate: "हैशरेट",
-            mining_next_reward: "अगला इनाम:",
-            mining_start: "क्वांटम माइनिंग शुरू करें",
-            mining_claim: "इनाम प्राप्त करें",
-            mining_in_progress: "माइनिंग जारी...",
-            mining_total: "कुल माइन किया गया:",
-            mining_today: "आज:",
-            mining_quick_tasks: "कार्य",
-            mining_quick_booster: "बूस्टर 🚀",
-            upgrade_title: "माइनिंग स्तर अपग्रेड करें",
-            tasks_title: "कार्य और इनाम",
-            tasks_completed: "पूर्ण",
-            tasks_basic: "बेसिक",
-            tasks_vip: "वीआईपी 🏆",
-            tasks_start: "शुरू करें",
-            tasks_done: "पूर्ण ✓",
-            staking_title: "क्वांटम स्टेकिंग",
-            staking_description: "AMSK टोकन कमाने के लिए अपना USDT स्टेक करें। अधिक स्टेक और लंबी अवधि बेहतर इनाम देती है।",
-            staking_total: "कुल स्टेक",
-            staking_active: "सक्रिय कमाई",
-            staking_plans: "स्टेकिंग योजनाएं",
-            staking_plan_silver: "सिल्वर प्लान",
-            staking_plan_gold: "गोल्ड प्लान",
-            staking_plan_diamond: "डायमंड प्लान",
-            staking_duration_7: "7 दिन",
-            staking_duration_15: "15 दिन",
-            staking_duration_30: "30 दिन",
-            staking_silver_reward: "दैनिक: 2,857 AMSK प्रति $10",
-            staking_gold_reward: "दैनिक: 8,333 AMSK प्रति $50",
-            staking_diamond_reward: "दैनिक: 10,000 AMSK प्रति $100",
-            staking_stake_now: "अभी स्टेक करें",
-            staking_active_stakes: "सक्रिय स्टेक",
-            staking_no_active: "अभी तक कोई सक्रिय स्टेक नहीं",
-            staking_start_hint: "इनाम कमाने के लिए स्टेकिंग शुरू करें",
-            wallet_total_balance: "कुल बैलेंस",
-            wallet_total_usd: "डॉलर में कुल मूल्य",
-            wallet_quick_actions: "त्वरित कार्रवाई",
-            wallet_deposit: "जमा करें",
-            wallet_withdraw: "निकासी",
-            wallet_swap: "स्वैप",
-            wallet_history: "इतिहास",
-            wallet_assets: "संपत्ति",
-            referral_stats: "रेफरल आँकड़े",
-            referral_count: "रेफरल",
-            referral_earned: "AMSK कमाया",
-            referral_your_link: "आपका रेफरल लिंक",
-            referral_invite: "🚀 दोस्तों को आमंत्रित करें और बड़ा कमाएं!",
-            referral_bonus_1: "<strong>10,000 AMSK ($2)</strong> प्रति रेफरल जो माइनिंग शुरू करता है",
-            referral_bonus_2: "उनकी जमा पर <strong>16% कमीशन</strong> हमेशा के लिए कमाएं",
-            referral_bonus_3: "असीमित रेफरल, तत्काल इनाम!",
-            referral_milestones: "रेफरल मील के पत्थर",
-            referral_milestones_desc: "रेफरल मील के पत्थर तक पहुंचने पर बोनस इनाम अर्जित करें!",
-            referral_milestone_10: "10 रेफरल",
-            referral_milestone_25: "25 रेफरल",
-            referral_milestone_50: "50 रेफरल",
-            referral_milestone_100: "100 रेफरल",
-            referral_milestone_250: "250 रेफरल",
-            share_telegram: "टेलीग्राम",
-            share_whatsapp: "व्हाट्सएप",
-            language_welcome_title: "👽 एलियन मस्क में आपका स्वागत है!",
-            language_welcome_subtitle: "कृपया अपनी पसंदीदा भाषा चुनें",
-            language_continue: "जारी रखें",
-            cancel: "रद्द करें",
-            confirm: "पुष्टि करें",
-            close: "बंद करें",
-            save: "सहेजें",
-            edit: "संपादित करें",
-            copy: "कॉपी करें",
-            copied: "कॉपी हो गया!",
-            success: "सफलता",
-            error: "त्रुटि",
-            warning: "चेतावनी",
-            info: "जानकारी",
-            free: "मुफ्त",
-            history_title: "लेनदेन इतिहास",
-            history_all: "सभी",
-            history_pending: "लंबित",
-            history_completed: "पूर्ण",
-            history_rejected: "अस्वीकृत",
-            history_all_types: "सभी प्रकार",
-            history_deposits: "जमा",
-            history_withdrawals: "निकासी",
-            history_mining: "माइनिंग",
-            history_staking: "स्टेकिंग",
-            history_swap: "स्वैप",
-            history_referral: "रेफरल",
-            history_tasks: "कार्य",
-            history_vip: "वीआईपी कार्य",
-            history_no_transactions: "कोई लेनदेन नहीं मिला",
-            history_no_transactions_desc: "आपके वर्तमान फ़िल्टर से कोई लेनदेन मेल नहीं खाता"
-        }
-    },
-    bn: {
-        code: 'bn',
-        flag: '🇧🇩',
-        name: 'Bengali',
-        nativeName: 'বাংলা',
-        dir: 'ltr',
-        translations: {
-            app_name: "এলিয়েন মাস্ক কোয়ান্টাম",
-            app_name_short: "এলিয়েন মাস্ক",
-            loading: "লোড হচ্ছে...",
-            loading_subtitle: "কোয়ান্টাম সিস্টেম চালু হচ্ছে...",
-            nav_home: "হোম",
-            nav_staking: "স্টেকিং",
-            nav_wallet: "ওয়ালেট",
-            nav_referral: "রেফারেল",
-            mining_title: "কোয়ান্টাম মাইনিং স্টেশন",
-            mining_level: "স্তর",
-            mining_hashrate: "হ্যাশরেট",
-            mining_next_reward: "পরবর্তী পুরস্কার:",
-            mining_start: "কোয়ান্টাম মাইনিং শুরু করুন",
-            mining_claim: "পুরস্কার দাবি করুন",
-            mining_in_progress: "মাইনিং চলছে...",
-            mining_total: "মোট মাইন করা:",
-            mining_today: "আজ:",
-            mining_quick_tasks: "কাজ",
-            mining_quick_booster: "বুস্টার 🚀",
-            upgrade_title: "মাইনিং স্তর আপগ্রেড করুন",
-            tasks_title: "কাজ এবং পুরস্কার",
-            tasks_completed: "সম্পন্ন",
-            tasks_basic: "মৌলিক",
-            tasks_vip: "ভিআইপি 🏆",
-            tasks_start: "শুরু করুন",
-            tasks_done: "সম্পন্ন ✓",
-            staking_title: "কোয়ান্টাম স্টেকিং",
-            staking_description: "AMSK টোকেন অর্জনের জন্য আপনার USDT স্টেক করুন। বেশি স্টেক এবং দীর্ঘ সময়কাল আরও ভাল পুরস্কার দেয়।",
-            staking_total: "মোট স্টেক",
-            staking_active: "সক্রিয় আয়",
-            staking_plans: "স্টেকিং পরিকল্পনা",
-            staking_plan_silver: "সিলভার প্ল্যান",
-            staking_plan_gold: "গোল্ড প্ল্যান",
-            staking_plan_diamond: "ডায়মন্ড প্ল্যান",
-            staking_duration_7: "৭ দিন",
-            staking_duration_15: "১৫ দিন",
-            staking_duration_30: "৩০ দিন",
-            staking_silver_reward: "দৈনিক: $10 প্রতি 2,857 AMSK",
-            staking_gold_reward: "দৈনিক: $50 প্রতি 8,333 AMSK",
-            staking_diamond_reward: "দৈনিক: $100 প্রতি 10,000 AMSK",
-            staking_stake_now: "এখনই স্টেক করুন",
-            staking_active_stakes: "সক্রিয় স্টেক",
-            staking_no_active: "এখনও কোন সক্রিয় স্টেক নেই",
-            staking_start_hint: "পুরস্কার অর্জনের জন্য স্টেকিং শুরু করুন",
-            wallet_total_balance: "মোট ব্যালেন্স",
-            wallet_total_usd: "ডলারে মোট মূল্য",
-            wallet_quick_actions: "দ্রুত কর্ম",
-            wallet_deposit: "জমা",
-            wallet_withdraw: "উত্তোলন",
-            wallet_swap: "অদলবদল",
-            wallet_history: "ইতিহাস",
-            wallet_assets: "সম্পদ",
-            referral_stats: "রেফারেল পরিসংখ্যান",
-            referral_count: "রেফারেল",
-            referral_earned: "AMSK অর্জিত",
-            referral_your_link: "আপনার রেফারেল লিঙ্ক",
-            referral_invite: "🚀 বন্ধুদের আমন্ত্রণ জানান এবং বড় অর্জন করুন!",
-            referral_bonus_1: "প্রতি রেফারেলের জন্য <strong>১০,০০০ AMSK ($২)</strong> পান যারা মাইনিং শুরু করে",
-            referral_bonus_2: "তাদের জমার উপর <strong>১৬% কমিশন</strong> চিরকাল অর্জন করুন",
-            referral_bonus_3: "সীমাহীন রেফারেল, তাৎক্ষণিক পুরস্কার!",
-            referral_milestones: "রেফারেল মাইলফলক",
-            referral_milestones_desc: "রেফারেল মাইলফলকে পৌঁছানোর জন্য বোনাস পুরস্কার অর্জন করুন!",
-            referral_milestone_10: "১০ রেফারেল",
-            referral_milestone_25: "২৫ রেফারেল",
-            referral_milestone_50: "৫০ রেফারেল",
-            referral_milestone_100: "১০০ রেফারেল",
-            referral_milestone_250: "২৫০ রেফারেল",
-            share_telegram: "টেলিগ্রাম",
-            share_whatsapp: "হোয়াটসঅ্যাপ",
-            language_welcome_title: "👽 এলিয়েন মাস্কে স্বাগতম!",
-            language_welcome_subtitle: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
-            language_continue: "চালিয়ে যান",
-            cancel: "বাতিল",
-            confirm: "নিশ্চিত করুন",
-            close: "বন্ধ করুন",
-            save: "সংরক্ষণ করুন",
-            edit: "সম্পাদনা করুন",
-            copy: "কপি করুন",
-            copied: "কপি হয়েছে!",
-            success: "সফল",
-            error: "ত্রুটি",
-            warning: "সতর্কতা",
-            info: "তথ্য",
-            free: "বিনামূল্যে",
-            history_title: "লেনদেনের ইতিহাস",
-            history_all: "সব",
-            history_pending: "বিচারাধীন",
-            history_completed: "সম্পন্ন",
-            history_rejected: "প্রত্যাখ্যাত",
-            history_all_types: "সব ধরনের",
-            history_deposits: "জমা",
-            history_withdrawals: "উত্তোলন",
-            history_mining: "মাইনিং",
-            history_staking: "স্টেকিং",
-            history_swap: "অদলবদল",
-            history_referral: "রেফারেল",
-            history_tasks: "কাজ",
-            history_vip: "ভিআইপি কাজ",
-            history_no_transactions: "কোন লেনদেন পাওয়া যায়নি",
-            history_no_transactions_desc: "আপনার বর্তমান ফিল্টারের সাথে কোন লেনদেন মেলে না"
-        }
-    },
-    ru: {
-        code: 'ru',
-        flag: '🇷🇺',
-        name: 'Russian',
-        nativeName: 'Русский',
-        dir: 'ltr',
-        translations: {
-            app_name: "Alien Musk Quantum",
-            app_name_short: "Alien Musk",
-            loading: "Загрузка...",
-            loading_subtitle: "Инициализация квантовых систем...",
-            nav_home: "Главная",
-            nav_staking: "Стейкинг",
-            nav_wallet: "Кошелек",
-            nav_referral: "Рефералы",
-            mining_title: "Квантовая майнинг-станция",
-            mining_level: "Уровень",
-            mining_hashrate: "Хешрейт",
-            mining_next_reward: "Следующая награда:",
-            mining_start: "Начать квантовый майнинг",
-            mining_claim: "Получить награду",
-            mining_in_progress: "Майнинг...",
-            mining_total: "Всего добыто:",
-            mining_today: "Сегодня:",
-            mining_quick_tasks: "Задания",
-            mining_quick_booster: "Бустер 🚀",
-            upgrade_title: "Улучшить уровень майнинга",
-            tasks_title: "Задания и награды",
-            tasks_completed: "Выполнено",
-            tasks_basic: "Базовые",
-            tasks_vip: "VIP 🏆",
-            tasks_start: "Начать",
-            tasks_done: "Готово ✓",
-            staking_title: "Квантовый стейкинг",
-            staking_description: "Стейкайте свои USDT, чтобы зарабатывать токены AMSK. Большие стейки и более длительные сроки дают лучшие награды.",
-            staking_total: "Всего в стейкинге",
-            staking_active: "Активный доход",
-            staking_plans: "Планы стейкинга",
-            staking_plan_silver: "Silver",
-            staking_plan_gold: "Gold",
-            staking_plan_diamond: "Diamond",
-            staking_duration_7: "7 дней",
-            staking_duration_15: "15 дней",
-            staking_duration_30: "30 дней",
-            staking_silver_reward: "Ежедневно: 2,857 AMSK за $10",
-            staking_gold_reward: "Ежедневно: 8,333 AMSK за $50",
-            staking_diamond_reward: "Ежедневно: 10,000 AMSK за $100",
-            staking_stake_now: "Начать стейкинг",
-            staking_active_stakes: "Активные стейки",
-            staking_no_active: "Нет активных стейков",
-            staking_start_hint: "Начните стейкинг, чтобы зарабатывать награды",
-            wallet_total_balance: "Общий баланс",
-            wallet_total_usd: "Общая стоимость в USD",
-            wallet_quick_actions: "Быстрые действия",
-            wallet_deposit: "Депозит",
-            wallet_withdraw: "Вывод",
-            wallet_swap: "Обмен",
-            wallet_history: "История",
-            wallet_assets: "Активы",
-            referral_stats: "Реферальная статистика",
-            referral_count: "Рефералы",
-            referral_earned: "Заработано AMSK",
-            referral_your_link: "Ваша реферальная ссылка",
-            referral_invite: "🚀 Приглашайте друзей и зарабатывайте!",
-            referral_bonus_1: "Получите <strong>10,000 AMSK ($2)</strong> за каждого реферала, начавшего майнинг",
-            referral_bonus_2: "Зарабатывайте <strong>16% комиссии</strong> с их депозитов навсегда",
-            referral_bonus_3: "Неограниченное количество рефералов, мгновенные награды!",
-            referral_milestones: "Реферальные этапы",
-            referral_milestones_desc: "Зарабатывайте бонусные награды за достижение реферальных этапов!",
-            referral_milestone_10: "10 рефералов",
-            referral_milestone_25: "25 рефералов",
-            referral_milestone_50: "50 рефералов",
-            referral_milestone_100: "100 рефералов",
-            referral_milestone_250: "250 рефералов",
-            share_telegram: "Telegram",
-            share_whatsapp: "WhatsApp",
-            language_welcome_title: "👽 Добро пожаловать в Alien Musk!",
-            language_welcome_subtitle: "Пожалуйста, выберите предпочитаемый язык",
-            language_continue: "Продолжить",
-            cancel: "Отмена",
-            confirm: "Подтвердить",
-            close: "Закрыть",
-            save: "Сохранить",
-            edit: "Редактировать",
-            copy: "Копировать",
-            copied: "Скопировано!",
-            success: "Успешно",
-            error: "Ошибка",
-            warning: "Предупреждение",
-            info: "Информация",
-            free: "Бесплатно",
-            history_title: "История транзакций",
-            history_all: "Все",
-            history_pending: "В ожидании",
-            history_completed: "Завершено",
-            history_rejected: "Отклонено",
-            history_all_types: "Все типы",
-            history_deposits: "Депозиты",
-            history_withdrawals: "Выводы",
-            history_mining: "Майнинг",
-            history_staking: "Стейкинг",
-            history_swap: "Обмен",
-            history_referral: "Рефералы",
-            history_tasks: "Задания",
-            history_vip: "VIP задания",
-            history_no_transactions: "Транзакции не найдены",
-            history_no_transactions_desc: "Нет транзакций, соответствующих текущим фильтрам"
-        }
-    }
-};
-
-let currentLanguage = 'en';
-let isLanguageChanging = false;
-
-function setLanguage(langCode) {
-    if (isLanguageChanging || !LANGUAGES[langCode]) return;
-    
-    isLanguageChanging = true;
-    
-    try {
-        currentLanguage = langCode;
-        localStorage.setItem('user_language', langCode);
-        
-        document.documentElement.lang = langCode;
-        document.body.lang = langCode;
-        
-        const langIcon = document.getElementById('languageSelectorBtn');
-        if (langIcon) {
-            langIcon.textContent = LANGUAGES[langCode].flag;
-        }
-        
-        updateUITexts();
-        
-        if (userData && userData.id && window.db) {
-            window.db.collection('users')
-                .doc(userData.id)
-                .update({
-                    'userInfo.language': langCode
-                }).catch(console.error);
-        }
-    } finally {
-        isLanguageChanging = false;
-    }
-}
-
-function getTranslation(key, params = {}) {
-    const lang = LANGUAGES[currentLanguage] || LANGUAGES.en;
-    let text = lang.translations[key] || LANGUAGES.en.translations[key] || key;
-    
-    Object.keys(params).forEach(param => {
-        text = text.replace(`{${param}}`, params[param]);
-    });
-    
-    return text;
-}
-
-function updateUITexts() {
-    document.querySelectorAll('[data-translate]').forEach(element => {
-        const key = element.getAttribute('data-translate');
-        const text = getTranslation(key);
-        
-        if (element.classList.contains('allow-html') || (text.includes('<') && text.includes('>'))) {
-            element.innerHTML = text;
-        } else {
-            element.textContent = text;
-        }
-    });
-}
-
-function showLanguageWelcomeModal() {
-    if (localStorage.getItem('user_language')) return;
-    
-    const modal = document.createElement('div');
-    modal.className = 'language-welcome-modal';
-    modal.innerHTML = `
-        <div class="language-welcome-content">
-            <div class="welcome-icon">👽</div>
-            <h2 class="welcome-title" data-translate="language_welcome_title"></h2>
-            <p class="welcome-subtitle" data-translate="language_welcome_subtitle"></p>
-            
-            <div class="language-grid">
-                <div class="language-grid-item" onclick="selectWelcomeLanguage('en')">
-                    <span class="flag">🇬🇧</span>
-                    <span class="lang-name">English</span>
-                    <span class="native-name">English</span>
-                </div>
-                <div class="language-grid-item" onclick="selectWelcomeLanguage('ar')">
-                    <span class="flag">🇸🇦</span>
-                    <span class="lang-name">العربية</span>
-                    <span class="native-name">العربية</span>
-                </div>
-                <div class="language-grid-item" onclick="selectWelcomeLanguage('hi')">
-                    <span class="flag">🇮🇳</span>
-                    <span class="lang-name">हिन्दी</span>
-                    <span class="native-name">हिन्दी</span>
-                </div>
-                <div class="language-grid-item" onclick="selectWelcomeLanguage('bn')">
-                    <span class="flag">🇧🇩</span>
-                    <span class="lang-name">বাংলা</span>
-                    <span class="native-name">বাংলা</span>
-                </div>
-                <div class="language-grid-item" onclick="selectWelcomeLanguage('ru')">
-                    <span class="flag">🇷🇺</span>
-                    <span class="lang-name">Русский</span>
-                    <span class="native-name">Русский</span>
-                </div>
-            </div>
-            
-            <button class="continue-btn" onclick="closeLanguageWelcome()" data-translate="language_continue"></button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    updateUITexts();
-}
-
-function selectWelcomeLanguage(langCode) {
-    setLanguage(langCode);
-    closeLanguageWelcome();
-}
-
-function closeLanguageWelcome() {
-    const modal = document.querySelector('.language-welcome-modal');
-    if (modal) modal.remove();
-}
-
-function initLanguageSystem() {
-    const savedLang = localStorage.getItem('user_language');
-    if (savedLang && LANGUAGES[savedLang]) {
-        setLanguage(savedLang);
-    } else {
-        showLanguageWelcomeModal();
-    }
-    
-    const langIcon = document.getElementById('languageSelectorBtn');
-    const dropdown = document.getElementById('languageDropdown');
-    
-    if (langIcon && dropdown) {
-        langIcon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle('show');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!langIcon.contains(e.target) && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-        
-        const options = dropdown.querySelectorAll('.language-option');
-        options.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const lang = option.dataset.lang;
-                setLanguage(lang);
-                
-                options.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                
-                dropdown.classList.remove('show');
-            });
-        });
-    }
-}
-
-// ===========================================
-// 🆘 أيقونة الدعم الفني
-// ===========================================
-function initSupportIcon() {
-    const supportIcon = document.getElementById('support-icon');
-    if (supportIcon) {
-        supportIcon.addEventListener('click', function() {
-            const supportUsername = 'AlienMusk_support';
-            
-            if (window.tg && window.tg.openTelegramLink) {
-                window.tg.openTelegramLink(`https://t.me/${supportUsername}`);
-            } else {
-                window.open(`https://t.me/${supportUsername}`, '_blank');
-            }
-            
-            showMessage("Opening support chat...", "info");
-        });
-    }
-}
-
-function initTelegram() {
-    try {
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.tg = Telegram.WebApp;
-            window.tg.ready();
-            window.tg.expand();
-            window.tg.setHeaderColor('#0a0a0f');
-            window.tg.setBackgroundColor('#0a0a0f');
-            console.log("✅ Telegram WebApp initialized");
-            return true;
-        }
-    } catch (e) {
-        console.log("⚠️ Not in Telegram environment");
-    }
-    return false;
-}
-
-function initFirebase() {
+// Initialize Firebase
+let firebaseApp, db, auth;
+try {
     if (typeof firebase !== 'undefined') {
-        try {
-            window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
-            window.db = firebase.firestore();
-            window.auth = firebase.auth();
-            console.log("✅ Firebase initialized");
-            return true;
-        } catch (error) {
-            console.error("❌ Firebase error:", error);
-        }
+        firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.firestore();
+        auth = firebase.auth();
+        console.log("🔥 Firebase initialized successfully");
     }
-    return false;
+} catch (error) {
+    console.error("❌ Firebase initialization error:", error);
 }
 
-window.switchPage = function(pageName) {
-    console.log(`🔀 Switching to page: ${pageName}`);
-    
-    try {
-        closeModal();
-        
-        document.querySelectorAll('.page').forEach(page => {
-            page.classList.remove('active');
-            if (page.id === `${pageName}-page`) {
-                page.classList.add('active');
-            }
-        });
-        
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.page === pageName) {
-                btn.classList.add('active');
-            }
-        });
-        
-    } catch (error) {
-        console.error("❌ Page switch error:", error);
-    }
-};
+// ====== 3. ON-DEMAND LISTENERS SYSTEM - مستمعين عند الطلب فقط (30 ثانية) ======
+let activeListeners = new Map();
+let listenerTimeouts = new Map();
 
-window.closeModal = function() {
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.remove();
+function startOnDemandListener(collection, docId, callback, timeoutMs = 30000) {
+    const listenerId = `${collection}_${docId}`;
+    
+    if (activeListeners.has(listenerId)) {
+        activeListeners.get(listenerId)();
+        activeListeners.delete(listenerId);
+    }
+    
+    if (listenerTimeouts.has(listenerId)) {
+        clearTimeout(listenerTimeouts.get(listenerId));
+        listenerTimeouts.delete(listenerId);
+    }
+    
+    console.log(`👂 بدء مستمع عند الطلب لـ ${collection}/${docId} (${timeoutMs/1000} ثانية)`);
+    
+    const unsubscribe = db.collection(collection).doc(docId).onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            callback(data);
+            
+            if (data.status === 'approved' || data.status === 'rejected') {
+                console.log(`✅ حالة نهائية، إيقاف مستمع ${collection}/${docId}`);
+                stopOnDemandListener(listenerId);
+            }
+        }
+    }, (error) => {
+        console.error(`❌ خطأ في المستمع ${collection}/${docId}:`, error);
+        stopOnDemandListener(listenerId);
     });
-};
-
-window.copyToClipboard = function(text) {
-    navigator.clipboard.writeText(text)
-        .then(() => showMessage('✅ Copied to clipboard!', 'success'))
-        .catch(() => showMessage('❌ Failed to copy', 'error'));
-};
-
-function showMessage(text, type = 'info', duration = 3000) {
-    const container = document.getElementById('notification-container');
-    if (!container) return;
     
-    if (duration === 3000) {
-        if (type === 'warning' || type === 'error') {
-            duration = 4500;
-        } else if (type === 'success') {
-            duration = 3000;
-        } else {
-            duration = 3500;
-        }
-    }
+    activeListeners.set(listenerId, unsubscribe);
     
-    const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-    const messageDiv = document.createElement('div');
-    messageDiv.id = messageId;
-    messageDiv.className = `message ${type}`;
+    const timeout = setTimeout(() => {
+        console.log(`⏰ انتهاء وقت المستمع لـ ${collection}/${docId}`);
+        stopOnDemandListener(listenerId);
+    }, timeoutMs);
     
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle';
-    else if (type === 'error') icon = 'fa-times-circle';
-    else if (type === 'warning') icon = 'fa-exclamation-triangle';
-    
-    let displayText = text;
-    if (text.startsWith('msg_')) {
-        displayText = getTranslation(text);
-    }
-    
-    messageDiv.innerHTML = `
-        <i class="fas ${icon}"></i>
-        <span>${displayText}</span>
-    `;
-    
-    container.appendChild(messageDiv);
-    
-    setTimeout(() => {
-        const msgElement = document.getElementById(messageId);
-        if (msgElement) {
-            msgElement.style.opacity = '0';
-            msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
-            setTimeout(() => {
-                if (msgElement.parentNode) msgElement.remove();
-            }, 300);
-        }
-    }, duration);
+    listenerTimeouts.set(listenerId, timeout);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("📱 DOM Content Loaded - Starting initialization...");
-    
-    initTelegram();
-    initFirebase();
-    initLanguageSystem();
-    
-    let progress = 25;
-    const progressInterval = setInterval(() => {
-        progress += 15;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(progressInterval);
-        }
-        
-        const progressBar = document.getElementById('loading-progress-bar');
-        const progressText = document.getElementById('loading-progress-text');
-        
-        if (progressBar) progressBar.style.width = `${progress}%`;
-        if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
-    }, 300);
-    
-    setTimeout(() => {
-        clearInterval(progressInterval);
-        
-        const loadingScreen = document.getElementById('loading-screen');
-        const appContainer = document.getElementById('app-container');
-        
-        if (loadingScreen) {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
-        }
-        
-        if (appContainer) {
-            appContainer.classList.remove('hidden');
-        }
-        
-        if (typeof initAlienMuskApp === 'function') {
-            console.log("🚀 Starting main application...");
-            initAlienMuskApp();
-        } else {
-            console.error("❌ Main app function not found!");
-            showMessage("Welcome to Alien Musk Quantum!", "success");
-        }
-    }, 2500);
-});
-
-setTimeout(() => {
-    if (!window.tg && !window.firebaseApp) {
-        console.log("⚠️ Using fallback initialization...");
-        const loadingScreen = document.getElementById('loading-screen');
-        const appContainer = document.getElementById('app-container');
-        
-        if (loadingScreen) {
-            loadingScreen.style.display = 'none';
-        }
-        
-        if (appContainer) {
-            appContainer.classList.remove('hidden');
-        }
-        
-        showMessage("Running in standalone mode", "info");
+function stopOnDemandListener(listenerId) {
+    if (activeListeners.has(listenerId)) {
+        activeListeners.get(listenerId)();
+        activeListeners.delete(listenerId);
     }
-}, 10000);
+    
+    if (listenerTimeouts.has(listenerId)) {
+        clearTimeout(listenerTimeouts.get(listenerId));
+        listenerTimeouts.delete(listenerId);
+    }
+}
 
-console.log("✅ Alien Musk Connector Loaded Successfully - STANDALONE MODE");
+function stopAllListeners() {
+    activeListeners.forEach((unsubscribe) => unsubscribe());
+    activeListeners.clear();
+    listenerTimeouts.clear();
+    console.log("🛑 جميع المستمعين النشطين متوقفين");
+}
 
-// ===========================================
-// ⚙️ CONFIGURATION - الإعدادات الأساسية
-// ===========================================
+// ====== 4. CACHE SYSTEM - نظام التخزين المؤقت ======
+const CACHE_TIME = {
+    USER: 5 * 60 * 1000,        // 5 دقائق
+    PRICES: 3 * 60 * 60 * 1000,  // 3 ساعات
+    HISTORY: 10 * 60 * 1000,     // 10 دقائق
+    MINING: 60 * 1000            // دقيقة واحدة (للتعدين)
+};
+
+let lastCacheTime = {
+    user: 0,
+    prices: 0,
+    history: 0,
+    mining: 0
+};
+
+// ====== 5. CONFIGURATION ======
 const CONFIG = {
     PRICES: {
         AMSK: 0.0002,
@@ -992,7 +160,7 @@ const CONFIG = {
     ],
     
     MINING: {
-        DURATION: 9000000,
+        DURATION: 9000000, // 2.5 ساعة
         
         LEVELS: {
             1: { name: "⚡ Beginner", cost: 0, reward: 1000, hashrate: 1000, apy: "∞" },
@@ -1033,10 +201,10 @@ const CONFIG = {
     },
     
     TASKS: {
-        1: { name: "Join Telegram Channel", url: "https://t.me/alienmusk", icon: "fab fa-telegram", reward: 5000 },
-        2: { name: "Subscribe on YouTube", url: "https://youtube.com/@alienmusk", icon: "fab fa-youtube", reward: 5000 },
-        3: { name: "Follow on TikTok", url: "https://tiktok.com/@alienmusk", icon: "fab fa-tiktok", reward: 5000 },
-        4: { name: "Like & Share Post", url: "https://t.me/alienmusk/1", icon: "fas fa-heart", reward: 5000 }
+        1: { name: "Join Telegram Channel", url: "https://t.me/your_channel", icon: "fab fa-telegram", reward: 5000 },
+        2: { name: "Subscribe on YouTube", url: "https://youtube.com/your_channel", icon: "fab fa-youtube", reward: 5000 },
+        3: { name: "Follow on TikTok", url: "https://tiktok.com/@your_account", icon: "fab fa-tiktok", reward: 5000 },
+        4: { name: "Like & Share Latest Post", url: "https://t.me/your_channel/123", icon: "fas fa-heart", reward: 5000 }
     },
     
     VIP_TASKS: {
@@ -1103,27 +271,10 @@ const CONFIG = {
     ADMIN: {
         TELEGRAM_ID: "1653918641",
         PASSWORD: "Ali97$"
-    },
-    
-    // ===== ZERO COST SETTINGS (مثل REFI) =====
-    CACHE: {
-        USER: 5 * 60 * 1000,        // 5 دقائق
-        PRICES: 3 * 60 * 60 * 1000,  // 3 ساعات
-        HISTORY: 10 * 60 * 1000,     // 10 دقائق
-        ADMIN: 30 * 1000             // 30 ثانية بين تحديثات الأدمن
-    },
-    
-    LISTENER_LIFETIME: 30000, // 30 ثانية
-    
-    FIREBASE: {
-        SAVE_INTERVAL: 3600000, // ساعة واحدة
-        LOCAL_SAVE_INTERVAL: 300000 // 5 دقائق
     }
 };
 
-// ===========================================
-// 📊 LIVE PRICES - متغير منفصل للأسعار الحية
-// ===========================================
+// ====== 6. LIVE PRICES ======
 let livePrices = {
     BNB: CONFIG.PRICES.BNB,
     TON: CONFIG.PRICES.TON,
@@ -1137,9 +288,7 @@ let livePrices = {
     WIF: 0
 };
 
-// ===========================================
-// 💰 WALLET DATA - بيانات المحفظة
-// ===========================================
+// ====== 7. WALLET DATA ======
 let walletData = {
     balances: {
         AMSK: 1000,
@@ -1180,9 +329,7 @@ let walletData = {
     lastUpdate: Date.now()
 };
 
-// ===========================================
-// 👤 USER DATA - بيانات المستخدم
-// ===========================================
+// ====== 8. USER DATA ======
 let userData = {
     id: null,
     telegramId: null,
@@ -1202,79 +349,6 @@ let userData = {
     processedReferrals: []
 };
 
-// ===========================================
-// 👤 USER IDENTIFICATION - يجب أن يكون هنا
-// ===========================================
-const userId = tg?.initDataUnsafe?.user?.id?.toString() || 
-               localStorage.getItem('alien_musk_user_id') || 
-               'guest_' + Math.random().toString(36).substr(2, 9);
-
-const userName = tg?.initDataUnsafe?.user?.first_name || 'Alien';
-
-localStorage.setItem('alien_musk_user_id', userId);
-
-// ===========================================
-// 🔥 ON-DEMAND LISTENERS SYSTEM (جديد - مثل REFI)
-// ===========================================
-const activeListeners = new Map();
-const listenerTimeouts = new Map();
-
-function startOnDemandListener(collection, docId, callback, timeoutMs = CONFIG.LISTENER_LIFETIME) {
-    const listenerId = `${collection}_${docId}`;
-    
-    if (activeListeners.has(listenerId)) {
-        activeListeners.get(listenerId)();
-        activeListeners.delete(listenerId);
-        clearTimeout(listenerTimeouts.get(listenerId));
-    }
-    
-    const unsubscribe = db?.collection(collection).doc(docId).onSnapshot((doc) => {
-        if (doc.exists) {
-            const data = doc.data();
-            console.log(`📡 Listener update for ${collection}/${docId}:`, data.status);
-            callback(data);
-            
-            if (data.status === 'approved' || data.status === 'rejected') {
-                stopOnDemandListener(listenerId);
-            }
-        }
-    });
-    
-    if (unsubscribe) {
-        activeListeners.set(listenerId, unsubscribe);
-        
-        const timeout = setTimeout(() => {
-            stopOnDemandListener(listenerId);
-        }, timeoutMs);
-        
-        listenerTimeouts.set(listenerId, timeout);
-    }
-}
-
-function stopOnDemandListener(listenerId) {
-    if (activeListeners.has(listenerId)) {
-        activeListeners.get(listenerId)();
-        activeListeners.delete(listenerId);
-        clearTimeout(listenerTimeouts.get(listenerId));
-        listenerTimeouts.delete(listenerId);
-    }
-}
-
-function stopAllListeners() {
-    activeListeners.forEach((unsubscribe) => unsubscribe());
-    listenerTimeouts.forEach((timeout) => clearTimeout(timeout));
-    activeListeners.clear();
-    listenerTimeouts.clear();
-}
-
-// ===========================================
-// 🕒 CACHE TIMERS (جديد - مثل REFI)
-// ===========================================
-let lastUserLoadTime = 0;
-let lastPricesLoadTime = 0;
-let lastHistoryCheckTime = 0;
-let lastAdminRefreshTime = 0;
-
 const DB_COLLECTIONS = {
     USERS: 'users',
     DEPOSITS: 'deposit_requests',
@@ -1287,41 +361,365 @@ const elements = {};
 
 let intervals = {
     miningTimer: null,
-    localSaveTimer: null,
-    firebaseSaveTimer: null
+    localSaveTimer: null
 };
 
-let unsubscribeTransactionsListener = null;
-let pendingFirebaseSave = null;
-let lastImportantChange = 0;
+let appInitialized = false;
 
-// ===========================================
-// 🔥 STORAGE KEYS (يجب أن يكون بعد تعريف userId)
-// ===========================================
-const STORAGE_KEYS = {
-    USER: `user_${userId}`,
-    WALLET: `wallet_${userId}`,
-    TRANSACTIONS: `transactions_${userId}`,
-    PRICES: 'live_prices'
+// ====== 9. LANGUAGE SYSTEM ======
+const LANGUAGES = {
+    en: {
+        code: 'en',
+        flag: '🇬🇧',
+        name: 'English',
+        nativeName: 'English',
+        dir: 'ltr',
+        translations: {
+            app_name: "Alien Musk Quantum",
+            app_name_short: "Alien Musk",
+            loading: "Loading...",
+            loading_subtitle: "Initializing Quantum Systems...",
+            nav_home: "Home",
+            nav_staking: "Staking",
+            nav_wallet: "Wallet",
+            nav_referral: "Referral",
+            mining_title: "Quantum Mining Station",
+            mining_level: "Level",
+            mining_hashrate: "Hashrate",
+            mining_next_reward: "Next Reward:",
+            mining_start: "Start Quantum Mining",
+            mining_claim: "Claim Reward",
+            mining_in_progress: "Mining...",
+            mining_total: "Total Mined:",
+            mining_today: "Today:",
+            mining_quick_tasks: "Tasks",
+            mining_quick_booster: "Booster 🚀",
+            upgrade_title: "Upgrade Mining Level",
+            tasks_title: "Tasks & Rewards",
+            tasks_completed: "Completed",
+            tasks_basic: "Basic",
+            tasks_vip: "VIP 🏆",
+            tasks_start: "Start",
+            tasks_done: "Done ✓",
+            staking_title: "Quantum Staking",
+            staking_description: "Stake your USDT to earn AMSK tokens.",
+            staking_total: "Total Staked",
+            staking_active: "Active Earnings",
+            staking_plans: "Staking Plans",
+            staking_plan_silver: "Silver Plan",
+            staking_plan_gold: "Gold Plan",
+            staking_plan_diamond: "Diamond Plan",
+            staking_duration_7: "7 Days",
+            staking_duration_15: "15 Days",
+            staking_duration_30: "30 Days",
+            staking_stake_now: "Stake Now",
+            staking_active_stakes: "Active Stakes",
+            staking_no_active: "No active stakes yet",
+            staking_start_hint: "Start staking to earn rewards",
+            wallet_total_balance: "Total Balance",
+            wallet_total_usd: "Total Value in USD",
+            wallet_quick_actions: "Quick Actions",
+            wallet_deposit: "Deposit",
+            wallet_withdraw: "Withdraw",
+            wallet_swap: "Swap",
+            wallet_history: "History",
+            wallet_assets: "Assets",
+            referral_stats: "Referral Stats",
+            referral_count: "Referrals",
+            referral_earned: "AMSK Earned",
+            referral_your_link: "Your Referral Link",
+            referral_invite: "🚀 Invite friends and earn big!",
+            referral_milestones: "Referral Milestones",
+            share_telegram: "Telegram",
+            share_whatsapp: "WhatsApp",
+            language_welcome_title: "👽 Welcome to Alien Musk!",
+            language_welcome_subtitle: "Please select your preferred language",
+            language_continue: "Continue",
+            cancel: "Cancel",
+            confirm: "Confirm",
+            close: "Close",
+            save: "Save",
+            copy: "Copy",
+            copied: "Copied!",
+            success: "Success",
+            error: "Error",
+            warning: "Warning",
+            info: "Info",
+            free: "Free",
+            history_title: "Transaction History",
+            history_all: "All",
+            history_pending: "Pending",
+            history_completed: "Completed",
+            history_rejected: "Rejected",
+            history_all_types: "All Types",
+            history_deposits: "Deposits",
+            history_withdrawals: "Withdrawals",
+            history_mining: "Mining",
+            history_staking: "Staking",
+            history_swap: "Swap",
+            history_referral: "Referral",
+            history_tasks: "Tasks",
+            history_vip: "VIP Tasks",
+            history_no_transactions: "No Transactions Found",
+            history_no_transactions_desc: "No transactions match your current filters"
+        }
+    },
+    ar: {
+        code: 'ar',
+        flag: '🇸🇦',
+        name: 'Arabic',
+        nativeName: 'العربية',
+        dir: 'rtl',
+        translations: {
+            app_name: "أليون ماسك كوانتوم",
+            app_name_short: "أليون ماسك",
+            loading: "جاري التحميل...",
+            loading_subtitle: "تشغيل الأنظمة الكمومية...",
+            nav_home: "الرئيسية",
+            nav_staking: "الإيداع",
+            nav_wallet: "المحفظة",
+            nav_referral: "الدعوات",
+            mining_title: "محطة التعدين الكمومي",
+            mining_level: "المستوى",
+            mining_hashrate: "قوة التعدين",
+            mining_next_reward: "المكافأة التالية:",
+            mining_start: "بدء التعدين الكمومي",
+            mining_claim: "استلام المكافأة",
+            mining_in_progress: "جاري التعدين...",
+            mining_total: "الإجمالي الملغوم:",
+            mining_today: "اليوم:",
+            mining_quick_tasks: "المهام",
+            mining_quick_booster: "معزز 🚀",
+            upgrade_title: "تطوير مستوى التعدين",
+            tasks_title: "المهام والمكافآت",
+            tasks_completed: "مكتمل",
+            tasks_basic: "أساسية",
+            tasks_vip: "VIP 🏆",
+            tasks_start: "ابدأ",
+            tasks_done: "تم ✓",
+            staking_title: "الإيداع الكمومي",
+            staking_description: "قم بإيداع USDT لكسب رموز AMSK.",
+            staking_total: "إجمالي الإيداع",
+            staking_active: "الأرباح النشطة",
+            staking_plans: "خطط الإيداع",
+            staking_plan_silver: "الفضة",
+            staking_plan_gold: "الذهب",
+            staking_plan_diamond: "الألماس",
+            staking_duration_7: "7 أيام",
+            staking_duration_15: "15 يوم",
+            staking_duration_30: "30 يوم",
+            staking_stake_now: "إيداع الآن",
+            staking_active_stakes: "الإيداعات النشطة",
+            staking_no_active: "لا توجد إيداعات نشطة",
+            staking_start_hint: "ابدأ الإيداع لكسب المكافآت",
+            wallet_total_balance: "الرصيد الإجمالي",
+            wallet_total_usd: "القيمة الإجمالية بالدولار",
+            wallet_quick_actions: "إجراءات سريعة",
+            wallet_deposit: "إيداع",
+            wallet_withdraw: "سحب",
+            wallet_swap: "تبديل",
+            wallet_history: "السجل",
+            wallet_assets: "الأصول",
+            referral_stats: "إحصائيات الدعوات",
+            referral_count: "الدعوات",
+            referral_earned: "AMSK المكتسب",
+            referral_your_link: "رابط الدعوة الخاص بك",
+            referral_invite: "🚀 ادعُ أصدقائك واربح الكثير!",
+            referral_milestones: "مراحل الدعوات",
+            share_telegram: "تليجرام",
+            share_whatsapp: "واتساب",
+            language_welcome_title: "👽 مرحباً بك في أليون ماسك!",
+            language_welcome_subtitle: "الرجاء اختيار لغتك المفضلة",
+            language_continue: "متابعة",
+            cancel: "إلغاء",
+            confirm: "تأكيد",
+            close: "إغلاق",
+            save: "حفظ",
+            copy: "نسخ",
+            copied: "تم النسخ!",
+            success: "نجاح",
+            error: "خطأ",
+            warning: "تحذير",
+            info: "معلومة",
+            free: "مجاني",
+            history_title: "سجل المعاملات",
+            history_all: "الكل",
+            history_pending: "معلقة",
+            history_completed: "مكتملة",
+            history_rejected: "مرفوضة",
+            history_all_types: "جميع الأنواع",
+            history_deposits: "إيداعات",
+            history_withdrawals: "سحوبات",
+            history_mining: "تعدين",
+            history_staking: "إيداع",
+            history_swap: "تبديل",
+            history_referral: "دعوات",
+            history_tasks: "مهام",
+            history_vip: "VIP مهام",
+            history_no_transactions: "لا توجد معاملات",
+            history_no_transactions_desc: "لا توجد معاملات تطابق عوامل التصفية الخاصة بك"
+        }
+    }
 };
 
-function loadLocalData(key) {
+let currentLanguage = 'en';
+let isLanguageChanging = false;
+
+function setLanguage(langCode) {
+    if (isLanguageChanging || !LANGUAGES[langCode]) return;
+    
+    isLanguageChanging = true;
+    
     try {
-        return JSON.parse(localStorage.getItem(key)) || null;
-    } catch {
-        return null;
+        currentLanguage = langCode;
+        localStorage.setItem('user_language', langCode);
+        
+        document.documentElement.lang = langCode;
+        document.body.lang = langCode;
+        
+        const langIcon = document.getElementById('languageSelectorBtn');
+        if (langIcon) {
+            langIcon.textContent = LANGUAGES[langCode].flag;
+        }
+        
+        updateUITexts();
+        
+        if (userData && userData.id && db) {
+            db.collection(DB_COLLECTIONS.USERS)
+                .doc(userData.id)
+                .update({
+                    'userInfo.language': langCode
+                }).catch(console.error);
+        }
+    } finally {
+        isLanguageChanging = false;
     }
 }
 
-function saveLocalData(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch {
-        return false;
+function getTranslation(key, params = {}) {
+    const lang = LANGUAGES[currentLanguage] || LANGUAGES.en;
+    let text = lang.translations[key] || LANGUAGES.en.translations[key] || key;
+    
+    Object.keys(params).forEach(param => {
+        text = text.replace(`{${param}}`, params[param]);
+    });
+    
+    return text;
+}
+
+function updateUITexts() {
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const key = element.getAttribute('data-translate');
+        const text = getTranslation(key);
+        
+        if (element.classList.contains('allow-html') || (text.includes('<') && text.includes('>'))) {
+            element.innerHTML = text;
+        } else {
+            element.textContent = text;
+        }
+    });
+}
+
+function showLanguageWelcomeModal() {
+    if (localStorage.getItem('user_language')) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'language-welcome-modal';
+    modal.innerHTML = `
+        <div class="language-welcome-content">
+            <div class="welcome-icon">👽</div>
+            <h2 class="welcome-title" data-translate="language_welcome_title"></h2>
+            <p class="welcome-subtitle" data-translate="language_welcome_subtitle"></p>
+            
+            <div class="language-grid">
+                <div class="language-grid-item" onclick="window.selectWelcomeLanguage('en')">
+                    <span class="flag">🇬🇧</span>
+                    <span class="lang-name">English</span>
+                    <span class="native-name">English</span>
+                </div>
+                <div class="language-grid-item" onclick="window.selectWelcomeLanguage('ar')">
+                    <span class="flag">🇸🇦</span>
+                    <span class="lang-name">العربية</span>
+                    <span class="native-name">العربية</span>
+                </div>
+            </div>
+            
+            <button class="continue-btn" onclick="window.closeLanguageWelcome()" data-translate="language_continue"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    updateUITexts();
+}
+
+function selectWelcomeLanguage(langCode) {
+    setLanguage(langCode);
+    closeLanguageWelcome();
+}
+
+function closeLanguageWelcome() {
+    const modal = document.querySelector('.language-welcome-modal');
+    if (modal) modal.remove();
+}
+
+function initLanguageSystem() {
+    const savedLang = localStorage.getItem('user_language');
+    if (savedLang && LANGUAGES[savedLang]) {
+        setLanguage(savedLang);
+    } else {
+        showLanguageWelcomeModal();
+    }
+    
+    const langIcon = document.getElementById('languageSelectorBtn');
+    const dropdown = document.getElementById('languageDropdown');
+    
+    if (langIcon && dropdown) {
+        langIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!langIcon.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        const options = dropdown.querySelectorAll('.language-option');
+        options.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const lang = option.dataset.lang;
+                setLanguage(lang);
+                
+                options.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                dropdown.classList.remove('show');
+            });
+        });
     }
 }
 
+// ====== 10. SUPPORT ICON ======
+function initSupportIcon() {
+    const supportIcon = document.getElementById('support-icon');
+    if (supportIcon) {
+        supportIcon.addEventListener('click', function() {
+            const supportUsername = 'AlienMusk_support';
+            
+            if (tg && tg.openTelegramLink) {
+                tg.openTelegramLink(`https://t.me/${supportUsername}`);
+            } else {
+                window.open(`https://t.me/${supportUsername}`, '_blank');
+            }
+            
+            showMessage("Opening support chat...", "info");
+        });
+    }
+}
+
+// ====== 11. UTILITY FUNCTIONS ======
 function generateReferralCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
@@ -1389,12 +787,230 @@ function cacheElements() {
     console.log(`✅ Cached ${Object.keys(elements).length} element groups`);
 }
 
+function formatNumber(num, decimals = 0) {
+    if (typeof num !== 'number' || isNaN(num)) return '0';
+    
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(decimals) + 'M';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(decimals) + 'K';
+    }
+    
+    return num.toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    });
+}
+
+function showMessage(text, type = 'info', duration = 3000) {
+    const container = document.getElementById('notification-container');
+    if (!container) return;
+    
+    if (duration === 3000) {
+        if (type === 'warning' || type === 'error') {
+            duration = 4500;
+        } else if (type === 'success') {
+            duration = 3000;
+        } else {
+            duration = 3500;
+        }
+    }
+    
+    const messageId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+    const messageDiv = document.createElement('div');
+    messageDiv.id = messageId;
+    messageDiv.className = `message ${type}`;
+    
+    let icon = 'fa-info-circle';
+    if (type === 'success') icon = 'fa-check-circle';
+    else if (type === 'error') icon = 'fa-times-circle';
+    else if (type === 'warning') icon = 'fa-exclamation-triangle';
+    
+    messageDiv.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span>${text}</span>
+    `;
+    
+    container.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        const msgElement = document.getElementById(messageId);
+        if (msgElement) {
+            msgElement.style.opacity = '0';
+            msgElement.style.transform = 'translateX(-50%) translateY(-20px)';
+            setTimeout(() => {
+                if (msgElement.parentNode) msgElement.remove();
+            }, 300);
+        }
+    }, duration);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => showMessage(getTranslation('copied'), 'success'))
+        .catch(() => showMessage(getTranslation('error'), 'error'));
+}
+
+function closeModal() {
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.remove();
+    });
+}
+
+function switchPage(pageName) {
+    console.log(`🔀 Switching to page: ${pageName}`);
+    
+    try {
+        closeModal();
+        
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+            if (page.id === `${pageName}-page`) {
+                page.classList.add('active');
+            }
+        });
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.page === pageName) {
+                btn.classList.add('active');
+            }
+        });
+        
+    } catch (error) {
+        console.error("❌ Page switch error:", error);
+    }
+}
+
+// ====== 12. PRICES FUNCTIONS ======
+async function fetchLivePrices(force = false) {
+    const now = Date.now();
+    const cachedPrices = localStorage.getItem('live_prices');
+    
+    if (!force && cachedPrices && (now - lastCacheTime.prices) < CACHE_TIME.PRICES) {
+        try {
+            const { prices, timestamp } = JSON.parse(cachedPrices);
+            livePrices = prices;
+            lastCacheTime.prices = timestamp;
+            console.log("📦 Using cached prices (less than 3 hours old)");
+            updateWalletUI();
+            renderTopMemes();
+            return;
+        } catch (e) {}
+    }
+    
+    try {
+        const ids = Object.values(CONFIG.COINGECKO_IDS).join(',');
+        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
+        const data = await response.json();
+        
+        livePrices.BNB = data.binancecoin?.usd || CONFIG.PRICES.BNB;
+        livePrices.TON = data['the-open-network']?.usd || CONFIG.PRICES.TON;
+        livePrices.BNB_24h_change = data.binancecoin?.usd_24h_change || 0;
+        livePrices.TON_24h_change = data['the-open-network']?.usd_24h_change || 0;
+        
+        CONFIG.TOP_MEMES.forEach(meme => {
+            const id = CONFIG.COINGECKO_IDS[meme.symbol];
+            if (data[id]) {
+                livePrices[meme.symbol] = data[id].usd || 0;
+                livePrices[`${meme.symbol}_24h_change`] = data[id].usd_24h_change || 0;
+            }
+        });
+        
+        lastCacheTime.prices = now;
+        localStorage.setItem('live_prices', JSON.stringify({
+            prices: livePrices,
+            timestamp: now
+        }));
+        
+        updateWalletUI();
+        renderTopMemes();
+        console.log("✅ Live prices updated");
+        
+    } catch (error) {
+        console.error("❌ Error fetching live prices:", error);
+    }
+}
+
+function renderTopMemes() {
+    const memesList = document.getElementById('memes-list');
+    if (!memesList) return;
+    
+    let html = '';
+    CONFIG.TOP_MEMES.forEach(meme => {
+        const price = livePrices[meme.symbol] || 0;
+        const priceFormatted = price < 0.01 ? price.toFixed(8) : price.toFixed(4);
+        const change = livePrices[`${meme.symbol}_24h_change`] || 0;
+        const changeSymbol = change >= 0 ? '▲' : '▼';
+        
+        html += `
+            <div class="asset-item-compact" style="cursor: default;">
+                <div class="asset-icon-compact" style="border-color: #ff6b6b; background: transparent;">
+                    <img src="${CONFIG.CMC_ICONS[meme.iconKey]}" width="24" height="24" style="border-radius: 50%;" 
+                         onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-coins\\' style=\\'color: #ff6b6b;\\'></i>'">
+                </div>
+                <div class="asset-details-compact">
+                    <div class="asset-name-compact">${meme.name}</div>
+                    <div class="asset-balance-compact">${meme.symbol}</div>
+                </div>
+                <div class="asset-value-compact" style="color: #ff6b6b; display: flex; align-items: center;">
+                    $${priceFormatted}
+                    <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px; margin-left: 5px;">
+                        ${changeSymbol} ${Math.abs(change).toFixed(1)}%
+                    </span>
+                </div>
+            </div>
+        `;
+    });
+    
+    memesList.innerHTML = html;
+}
+
+function updateAssetsIcons() {
+    const assetsContainer = document.querySelector('.asset-list-compact');
+    if (!assetsContainer) return;
+    
+    const assets = ['AMSK', 'USDT', 'BNB', 'TON'];
+    assets.forEach((asset, index) => {
+        const item = assetsContainer.querySelector(`.asset-item-compact:nth-child(${index + 1})`);
+        if (item) {
+            const iconDiv = item.querySelector('.asset-icon-compact');
+            iconDiv.innerHTML = `<img src="${CONFIG.CMC_ICONS[asset]}" width="24" height="24" style="border-radius: 50%;">`;
+            iconDiv.style.background = 'transparent';
+            iconDiv.style.border = `2px solid ${asset === 'AMSK' ? '#00ff88' : asset === 'USDT' ? '#00d4ff' : asset === 'BNB' ? '#ffd700' : '#9d4edd'}`;
+        }
+    });
+}
+
+function addMemesSection() {
+    const walletPage = document.getElementById('wallet-page');
+    if (!walletPage) return;
+    
+    if (document.getElementById('memes-section')) return;
+    
+    const memesSection = document.createElement('div');
+    memesSection.className = 'wallet-assets-card';
+    memesSection.id = 'memes-section';
+    memesSection.innerHTML = `
+        <h4><i class="fas fa-fire" style="color: #ff6b6b;"></i> Top Meme Coins 🔥</h4>
+        <div class="asset-list-compact" id="memes-list"></div>
+    `;
+    
+    const lastElement = walletPage.querySelector('.wallet-assets-card:last-child');
+    if (lastElement) {
+        lastElement.insertAdjacentElement('afterend', memesSection);
+    } else {
+        walletPage.appendChild(memesSection);
+    }
+}
+
+// ====== 13. USER SETUP ======
 async function setupUser() {
     console.log("👤 Setting up user...");
     
     let telegramUser = null;
-    if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.user) {
-        telegramUser = window.tg.initDataUnsafe.user;
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+        telegramUser = tg.initDataUnsafe.user;
         console.log("📱 Telegram user found:", telegramUser.id);
     }
     
@@ -1493,215 +1109,211 @@ function updateUserUI() {
     }
 }
 
-// ===========================================
-// 📂 LOAD USER DATA (مع التخزين المؤقت)
-// ===========================================
-async function loadUserData(force = false) {
-    console.log("📂 Loading user data for:", userData.id);
-    
+// ====== 14. LOAD USER DATA (مع التخزين المؤقت) ======
+async function loadUserDataOptimized(force = false) {
     const now = Date.now();
-    const localData = loadLocalData(STORAGE_KEYS.USER);
+    const localData = localStorage.getItem(`alien_musk_${userData.id}`);
     
-    if (!force && localData && (now - lastUserLoadTime) < CONFIG.CACHE.USER) {
-        userData = { ...userData, ...localData };
-        walletData = localData.wallet || walletData;
-        console.log("✅ Using cached user data (less than 5 min old)");
-        updateUI();
-        return;
-    }
-    
-    if (localData) {
-        userData = { ...userData, ...localData };
-        walletData = localData.wallet || walletData;
-        console.log("📦 Using localStorage data while fetching fresh data");
-    }
-    
-    if (db) {
+    if (!force && localData && (now - lastCacheTime.user) < CACHE_TIME.USER) {
         try {
-            console.log("🔥 Loading from Firebase...");
-            
-            const userDoc = await db.collection('users').doc(userData.id).get();
-            
-            if (userDoc.exists) {
-                const fbData = userDoc.data();
-                
-                userData = { ...userData, ...fbData };
-                walletData = fbData.wallet || walletData;
-                
-                lastUserLoadTime = now;
-                saveLocalData(STORAGE_KEYS.USER, { ...userData, wallet: walletData });
+            const parsed = JSON.parse(localData);
+            if (parsed.balances) {
+                console.log("📦 Using cached user data (less than 5 minutes old)");
+                walletData = parsed;
+                lastCacheTime.user = now;
+                return;
             }
-        } catch (error) {
-            console.error("❌ Error loading from Firebase:", error);
-        }
+        } catch (e) {}
     }
     
-    const txs = loadLocalData(STORAGE_KEYS.TRANSACTIONS) || [];
-    walletData.transactionHistory = txs;
-    
-    updateUI();
-    checkAdminAndAddCrown();
+    await loadUserDataFromFirebase();
+    lastCacheTime.user = now;
 }
 
-async function saveUserData(important = false) {
-    if (!userData.id) return;
+async function loadUserDataFromFirebase(force = false) {
+    console.log("🔥 Loading user data from Firebase...");
     
-    userData.lastActive = new Date().toISOString();
-    walletData.lastUpdate = Date.now();
-    
-    const data = { ...userData, wallet: walletData };
-    saveLocalData(STORAGE_KEYS.USER, data);
-    saveLocalData(STORAGE_KEYS.WALLET, walletData);
-    saveLocalData(STORAGE_KEYS.TRANSACTIONS, walletData.transactionHistory);
-    
-    if (important && db && hasImportantChanges()) {
-        try {
-            await db.collection('users').doc(userData.id).set(data, { merge: true });
-            console.log("💾 Important data saved to Firebase");
-        } catch (error) {
-            console.error("❌ Error saving to Firebase:", error);
+    try {
+        if (!db || !userData.id) {
+            console.log("⚠️ Firebase or user ID not available, using localStorage");
+            await loadUserFromLocalStorage();
+            return;
         }
+        
+        const userDoc = await db.collection(DB_COLLECTIONS.USERS)
+            .doc(userData.id)
+            .get();
+        
+        if (userDoc.exists) {
+            const firebaseData = userDoc.data();
+            
+            if (firebaseData.balances) {
+                walletData.balances = firebaseData.balances;
+            }
+            if (firebaseData.mining) {
+                walletData.mining = firebaseData.mining;
+            }
+            if (firebaseData.staking) {
+                walletData.staking = firebaseData.staking;
+            }
+            if (firebaseData.referrals) {
+                walletData.referrals = firebaseData.referrals;
+            }
+            if (firebaseData.tasks) {
+                walletData.tasks = firebaseData.tasks;
+            }
+            if (firebaseData.vipTasks) {
+                walletData.vipTasks = firebaseData.vipTasks;
+            }
+            if (firebaseData.transactionHistory) {
+                walletData.transactionHistory = firebaseData.transactionHistory;
+            }
+            if (firebaseData.pendingWithdrawals) {
+                walletData.pendingWithdrawals = firebaseData.pendingWithdrawals;
+            }
+            
+            if (firebaseData.userInfo && firebaseData.userInfo.referralBonusClaimed !== undefined) {
+                userData.referralBonusClaimed = firebaseData.userInfo.referralBonusClaimed;
+            }
+            
+            if (firebaseData.userInfo && firebaseData.userInfo.language) {
+                userData.language = firebaseData.userInfo.language;
+                setLanguage(userData.language);
+            }
+            
+            if (firebaseData.userInfo && firebaseData.userInfo.processedReferrals) {
+                userData.processedReferrals = firebaseData.userInfo.processedReferrals;
+            }
+            
+            userData.isNewUser = false;
+            console.log("✅ Data loaded from Firebase");
+            
+            cleanDuplicateTransactions();
+            
+        } else {
+            console.log("📝 New user, saving to Firebase...");
+            userData.isNewUser = true;
+            await saveUserDataToFirebase(true);
+        }
+        
+        saveUserDataToLocalStorage();
+        
+    } catch (error) {
+        console.error("❌ Error loading from Firebase, falling back to localStorage:", error);
+        showMessage("Using offline mode", "info");
+        await loadUserFromLocalStorage();
     }
 }
 
 function hasImportantChanges() {
-    return (
-        walletData.balances.USDT > 0 ||
-        walletData.balances.BNB > 0 ||
-        walletData.staking.activeStakes.length > 0 ||
-        walletData.pendingWithdrawals.length > 0 ||
-        walletData.referrals.count > 0 ||
-        walletData.tasks.completed.length > 0
-    );
-}
-
-function initializeDefaultData() {
-    const today = new Date().setHours(0,0,0,0);
+    const importantEvents = [
+        walletData.balances.AMSK !== 1000 || 
+        walletData.balances.USDT !== 0 || 
+        walletData.balances.BNB !== 0 || 
+        walletData.balances.TON !== 0,
+        
+        walletData.mining.level !== 1,
+        
+        walletData.staking.activeStakes.length > 0,
+        
+        walletData.transactionHistory.some(tx => tx.status === 'pending'),
+        
+        walletData.pendingWithdrawals.length > 0,
+        
+        walletData.referrals.count > 0,
+        
+        walletData.tasks.completed.length > 0,
+        
+        userData.referredBy !== null
+    ];
     
-    walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
-    walletData.mining = {
-        level: 1,
-        active: false,
-        lastReward: null,
-        nextReward: null,
-        totalMined: 1000,
-        minedToday: 0,
-        lastResetDate: today
-    };
-    walletData.staking = {
-        activeStakes: [],
-        totalEarned: 0,
-        totalStaked: 0
-    };
-    walletData.referrals = {
-        count: 0,
-        earned: { amsk: 0, bnb: 0 },
-        referrals: [],
-        claimedMilestones: []
-    };
-    walletData.tasks = {
-        completed: []
-    };
-    walletData.vipTasks = {
-        claimedMiningRewards: [],
-        claimedStakingRewards: []
-    };
-    walletData.transactionHistory = [];
-    walletData.usedTxIds = [];
-    walletData.pendingWithdrawals = [];
+    return importantEvents.some(event => event === true);
 }
 
-function setupTransactionListener() {
-    if (!window.db || !userData.id) {
-        console.log("⚠️ Cannot setup transaction listener: Firebase not available");
-        return;
+async function saveUserDataToFirebase(force = false) {
+    if (!db || !userData.id) {
+        console.log("⚠️ Cannot save to Firebase: No DB connection or user ID");
+        return false;
     }
-
-    if (unsubscribeTransactionsListener) {
-        unsubscribeTransactionsListener();
-    }
-
-    console.log("👂 Setting up transaction listener for financial operations only");
-
-    unsubscribeTransactionsListener = window.db.collection(DB_COLLECTIONS.WITHDRAWALS)
-        .where('userId', '==', userData.id)
-        .onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'modified' || change.type === 'added') {
-                    const withdrawalData = change.doc.data();
-                    console.log("🔄 Withdrawal update received:", withdrawalData.status);
-                    
-                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === change.doc.id);
-                    
-                    if (pendingIndex !== -1) {
-                        if (withdrawalData.status === 'approved') {
-                            const approvedWithdrawal = walletData.pendingWithdrawals[pendingIndex];
-                            approvedWithdrawal.status = 'approved';
-                            approvedWithdrawal.approvedAt = Date.now();
-                            
-                            addTransactionToHistory('withdrawal_approved', -approvedWithdrawal.amount, 'USDT', 
-                                `To: ${approvedWithdrawal.address.slice(0, 10)}...`, 'completed', 
-                                'Withdrawal approved and processed');
-                            
-                            walletData.pendingWithdrawals.splice(pendingIndex, 1);
-                            showMessage(`✅ Withdrawal of ${approvedWithdrawal.amount} USDT approved and sent!`, 'success');
-                            
-                        } else if (withdrawalData.status === 'rejected') {
-                            const rejectedWithdrawal = walletData.pendingWithdrawals[pendingIndex];
-                            
-                            walletData.balances.USDT += rejectedWithdrawal.amount;
-                            
-                            addTransactionToHistory('withdrawal_rejected', -rejectedWithdrawal.amount, 'USDT', 
-                                `Rejected: ${withdrawalData.rejectionReason || 'No reason'}`, 'rejected', 
-                                'Withdrawal rejected and funds returned');
-                            
-                            walletData.pendingWithdrawals.splice(pendingIndex, 1);
-                            showMessage(`❌ Withdrawal rejected: ${withdrawalData.rejectionReason || 'No reason provided'}`, 'warning');
-                        }
-                        
-                        saveUserDataToLocalStorage();
-                        updateWalletUI();
-                    }
-                }
-            });
-        }, (error) => {
-            console.error("❌ Transaction listener error:", error);
-            setTimeout(setupTransactionListener, 5000);
-        });
-}
-
-function setupDepositListener() {
-    if (!window.db || !userData.id) return;
     
-    window.db.collection(DB_COLLECTIONS.DEPOSITS)
-        .where('userId', '==', userData.id)
-        .onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'modified') {
-                    const depositData = change.doc.data();
-                    console.log("💰 Deposit update received:", depositData.status);
-                    
-                    if (depositData.status === 'approved') {
-                        walletData.balances[depositData.currency] = (walletData.balances[depositData.currency] || 0) + depositData.amount;
-                        
-                        addTransactionToHistory('deposit_approved', depositData.amount, depositData.currency, 
-                            `TX: ${depositData.txId.slice(0, 10)}...`, 'completed', 
-                            'Deposit approved and credited');
-                        
-                        showMessage(`✅ Deposit of ${depositData.amount} ${depositData.currency} approved and credited!`, 'success');
-                        updateWalletUI();
-                        saveUserDataToLocalStorage();
-                        
-                    } else if (depositData.status === 'rejected') {
-                        addTransactionToHistory('deposit_rejected', depositData.amount, depositData.currency, 
-                            `Rejected: ${depositData.rejectionReason || 'No reason'}`, 'rejected', 
-                            'Deposit rejected');
-                        
-                        showMessage(`❌ Deposit rejected: ${depositData.rejectionReason || 'No reason provided'}`, 'warning');
-                    }
-                }
-            });
-        });
+    if (!force && !hasImportantChanges()) {
+        console.log("⏭️ No important changes, skipping Firebase save");
+        return true;
+    }
+    
+    try {
+        userData.lastActive = new Date().toISOString();
+        walletData.lastUpdate = Date.now();
+        
+        const firebaseData = {
+            balances: walletData.balances,
+            mining: walletData.mining,
+            staking: walletData.staking,
+            referrals: walletData.referrals,
+            tasks: walletData.tasks,
+            vipTasks: walletData.vipTasks,
+            transactionHistory: walletData.transactionHistory?.slice(0, 50) || [],
+            pendingWithdrawals: walletData.pendingWithdrawals,
+            userInfo: {
+                id: userData.id,
+                telegramId: userData.telegramId,
+                username: userData.username,
+                firstName: userData.firstName,
+                referralCode: userData.referralCode,
+                referredBy: userData.referredBy,
+                joinedAt: userData.joinedAt,
+                lastActive: userData.lastActive,
+                referralBonusClaimed: userData.referralBonusClaimed,
+                language: userData.language || currentLanguage,
+                processedReferrals: userData.processedReferrals || []
+            },
+            lastUpdate: walletData.lastUpdate
+        };
+        
+        await db.collection(DB_COLLECTIONS.USERS)
+            .doc(userData.id)
+            .set(firebaseData, { merge: true });
+        
+        console.log("💾 User data saved to Firebase");
+        userData.lastFirebaseSave = Date.now();
+        userData.lastSaveTime = Date.now();
+        
+        if (userData.isNewUser) {
+            userData.isNewUser = false;
+        }
+        
+        return true;
+        
+    } catch (error) {
+        console.error("❌ Error saving to Firebase:", error);
+        return false;
+    }
+}
+
+function saveUserDataToLocalStorage() {
+    try {
+        const storageKey = `alien_musk_${userData.id}`;
+        const dataToSave = {
+            balances: walletData.balances,
+            mining: walletData.mining,
+            staking: walletData.staking,
+            referrals: walletData.referrals,
+            tasks: walletData.tasks,
+            vipTasks: walletData.vipTasks,
+            transactionHistory: walletData.transactionHistory,
+            usedTxIds: walletData.usedTxIds,
+            pendingWithdrawals: walletData.pendingWithdrawals,
+            lastUpdate: walletData.lastUpdate,
+            language: currentLanguage,
+            version: '7.2-zero-waste'
+        };
+        
+        localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+        console.log("💾 Data backed up to localStorage");
+        
+    } catch (error) {
+        console.error("❌ Error saving to localStorage:", error);
+    }
 }
 
 async function loadUserFromLocalStorage() {
@@ -1783,30 +1395,40 @@ async function loadUserFromLocalStorage() {
     }
 }
 
-function saveUserDataToLocalStorage() {
-    try {
-        const storageKey = `alien_musk_${userData.id}`;
-        const dataToSave = {
-            balances: walletData.balances,
-            mining: walletData.mining,
-            staking: walletData.staking,
-            referrals: walletData.referrals,
-            tasks: walletData.tasks,
-            vipTasks: walletData.vipTasks,
-            transactionHistory: walletData.transactionHistory,
-            usedTxIds: walletData.usedTxIds,
-            pendingWithdrawals: walletData.pendingWithdrawals,
-            lastUpdate: walletData.lastUpdate,
-            language: currentLanguage,
-            version: '7.1-ultimate-economy'
-        };
-        
-        localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-        console.log("💾 Data backed up to localStorage");
-        
-    } catch (error) {
-        console.error("❌ Error saving to localStorage:", error);
-    }
+function initializeDefaultData() {
+    const today = new Date().setHours(0,0,0,0);
+    
+    walletData.balances = { AMSK: 1000, USDT: 0, BNB: 0, TON: 0 };
+    walletData.mining = {
+        level: 1,
+        active: false,
+        lastReward: null,
+        nextReward: null,
+        totalMined: 1000,
+        minedToday: 0,
+        lastResetDate: today
+    };
+    walletData.staking = {
+        activeStakes: [],
+        totalEarned: 0,
+        totalStaked: 0
+    };
+    walletData.referrals = {
+        count: 0,
+        earned: { amsk: 0, bnb: 0 },
+        referrals: [],
+        claimedMilestones: []
+    };
+    walletData.tasks = {
+        completed: []
+    };
+    walletData.vipTasks = {
+        claimedMiningRewards: [],
+        claimedStakingRewards: []
+    };
+    walletData.transactionHistory = [];
+    walletData.usedTxIds = [];
+    walletData.pendingWithdrawals = [];
 }
 
 function cleanDuplicateTransactions() {
@@ -1824,6 +1446,14 @@ function cleanDuplicateTransactions() {
     walletData.transactionHistory.sort((a, b) => b.timestamp - a.timestamp);
     
     console.log(`🔄 Cleaned transactions: ${walletData.transactionHistory.length} unique transactions`);
+}
+
+async function saveUserData() {
+    saveUserDataToLocalStorage();
+    
+    if (hasImportantChanges()) {
+        await saveUserDataToFirebase();
+    }
 }
 
 function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
@@ -1903,272 +1533,1050 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         saveUserDataToLocalStorage();
         
         if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
-            saveUserData();
+            saveUserDataToFirebase();
         }
-    } else {
-        console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
     }
     
     return transaction;
 }
 
-// ===========================================
-// 🖼️ تحديث HTML لإضافة أيقونات العملات وقسم الميمات
-// ===========================================
-function updateAssetsIcons() {
-    const assetsContainer = document.querySelector('.asset-list-compact');
-    if (!assetsContainer) return;
+// ====== 15. CHECK PENDING TRANSACTIONS (يدوي مع تخزين مؤقت) ======
+async function checkPendingTransactions(force = false) {
+    if (!db || !userData) return;
     
-    const amskItem = assetsContainer.querySelector('.asset-item-compact:first-child');
-    if (amskItem) {
-        const iconDiv = amskItem.querySelector('.asset-icon-compact');
-        iconDiv.innerHTML = `<img src="${CONFIG.CMC_ICONS.AMSK}" width="24" height="24" style="border-radius: 50%;">`;
-        iconDiv.style.background = 'transparent';
-        iconDiv.style.border = '2px solid #00ff88';
+    const now = Date.now();
+    if (!force && (now - lastCacheTime.history) < CACHE_TIME.HISTORY) {
+        console.log("📦 Using cached history (less than 10 minutes old)");
+        return;
     }
     
-    const usdtItem = assetsContainer.querySelector('.asset-item-compact:nth-child(2)');
-    if (usdtItem) {
-        const iconDiv = usdtItem.querySelector('.asset-icon-compact');
-        iconDiv.innerHTML = `<img src="${CONFIG.CMC_ICONS.USDT}" width="24" height="24" style="border-radius: 50%;">`;
-        iconDiv.style.background = 'transparent';
-        iconDiv.style.border = '2px solid #00d4ff';
+    console.log("🔍 Checking for updated pending transactions...");
+    lastCacheTime.history = now;
+    
+    const pendingTxs = walletData.transactionHistory.filter(tx => 
+        (tx.type === 'deposit' || tx.type === 'withdrawal') && 
+        tx.status === 'pending' &&
+        tx.txId
+    );
+    
+    if (pendingTxs.length === 0) {
+        console.log("✅ No pending transactions to check");
+        return;
     }
     
-    const bnbItem = assetsContainer.querySelector('.asset-item-compact:nth-child(3)');
-    if (bnbItem) {
-        const iconDiv = bnbItem.querySelector('.asset-icon-compact');
-        iconDiv.innerHTML = `<img src="${CONFIG.CMC_ICONS.BNB}" width="24" height="24" style="border-radius: 50%;">`;
-        iconDiv.style.background = 'transparent';
-        iconDiv.style.border = '2px solid #ffd700';
+    console.log(`⏳ Found ${pendingTxs.length} pending transactions, checking status...`);
+    let updated = false;
+    
+    for (const tx of pendingTxs) {
+        try {
+            const collection = tx.type === 'deposit' ? 'deposit_requests' : 'withdrawal_requests';
+            const docRef = db.collection(collection).doc(tx.txId);
+            const docSnap = await docRef.get();
+            
+            if (!docSnap.exists) continue;
+            
+            const data = docSnap.data();
+            
+            if (data.status !== tx.status) {
+                console.log(`🔄 Transaction ${tx.txId} status changed: ${tx.status} → ${data.status}`);
+                
+                tx.status = data.status;
+                tx.message = data.status === 'approved' ? 'Transaction approved' : `Rejected: ${data.reason || 'Unknown reason'}`;
+                
+                if (data.status === 'approved' && tx.type === 'deposit') {
+                    walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
+                    showMessage(`✅ Your ${Math.abs(tx.amount)} ${tx.currency} deposit has been approved!`, 'success');
+                }
+                
+                if (data.status === 'rejected' && tx.type === 'withdrawal') {
+                    walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
+                    showMessage(`❌ Your withdrawal was rejected: ${data.reason || 'Unknown reason'}`, 'error');
+                }
+                
+                updated = true;
+            }
+        } catch (error) {
+            console.error(`❌ Error checking transaction ${tx.txId}:`, error);
+        }
     }
     
-    const tonItem = assetsContainer.querySelector('.asset-item-compact:nth-child(4)');
-    if (tonItem) {
-        const iconDiv = tonItem.querySelector('.asset-icon-compact');
-        iconDiv.innerHTML = `<img src="${CONFIG.CMC_ICONS.TON}" width="24" height="24" style="border-radius: 50%;">`;
-        iconDiv.style.background = 'transparent';
-        iconDiv.style.border = '2px solid #9d4edd';
+    if (updated) {
+        saveUserDataToLocalStorage();
+        
+        if (document.getElementById('historyModal')?.classList.contains('show')) {
+            loadHistoryContent('all', 'all');
+        }
+        
+        updateWalletUI();
+        showMessage('✅ Transaction history updated!', 'success');
     }
 }
 
-// ===========================================
-// 🔥 إضافة قسم أفضل 10 ميمات
-// ===========================================
-function addMemesSection() {
-    const walletPage = document.getElementById('wallet-page');
-    if (!walletPage) return;
-    
-    if (document.getElementById('memes-section')) return;
-    
-    const memesSection = document.createElement('div');
-    memesSection.className = 'wallet-assets-card';
-    memesSection.id = 'memes-section';
-    memesSection.innerHTML = `
-        <h4><i class="fas fa-fire" style="color: #ff6b6b;"></i> Top Meme Coins 🔥</h4>
-        <div class="asset-list-compact" id="memes-list"></div>
+// ====== 16. TRANSACTION HISTORY (مع زر تحديث يدوي) ======
+function showTransactionHistory() {
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-history"></i> ${getTranslation('history_title')}</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="refresh-history-btn" onclick="refreshHistory()" style="background: transparent; border: none; color: var(--quantum-blue); font-size: 18px; cursor: pointer;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="modal-close" onclick="closeModal()">×</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="history-tabs" id="historyTabs">
+                        <button class="history-tab active" data-tab="all">${getTranslation('history_all')}</button>
+                        <button class="history-tab" data-tab="pending">${getTranslation('history_pending')}</button>
+                        <button class="history-tab" data-tab="completed">${getTranslation('history_completed')}</button>
+                        <button class="history-tab" data-tab="rejected">${getTranslation('history_rejected')}</button>
+                    </div>
+                    
+                    <div class="history-filters" id="historyFilters">
+                        <button class="history-filter-btn active" data-filter="all">${getTranslation('history_all_types')}</button>
+                        <button class="history-filter-btn" data-filter="deposit">${getTranslation('history_deposits')}</button>
+                        <button class="history-filter-btn" data-filter="withdrawal">${getTranslation('history_withdrawals')}</button>
+                        <button class="history-filter-btn" data-filter="mining">${getTranslation('history_mining')}</button>
+                        <button class="history-filter-btn" data-filter="staking">${getTranslation('history_staking')}</button>
+                        <button class="history-filter-btn" data-filter="swap">${getTranslation('history_swap')}</button>
+                        <button class="history-filter-btn" data-filter="referral">${getTranslation('history_referral')}</button>
+                        <button class="history-filter-btn" data-filter="task">${getTranslation('history_tasks')}</button>
+                        <button class="history-filter-btn" data-filter="vip">${getTranslation('history_vip')}</button>
+                    </div>
+                    
+                    <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
+                    
+                    <div class="modal-actions mt-20">
+                        <button class="btn-secondary" onclick="closeModal()" style="width: 100%;">${getTranslation('close')}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     `;
     
-    const lastElement = walletPage.querySelector('.wallet-assets-card:last-child');
-    if (lastElement) {
-        lastElement.insertAdjacentElement('afterend', memesSection);
-    } else {
-        walletPage.appendChild(memesSection);
-    }
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+    
+    loadHistoryContent('all', 'all');
+    
+    setTimeout(() => {
+        const tabs = document.querySelectorAll('#historyTabs .history-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                const tabType = tab.dataset.tab;
+                const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                loadHistoryContent(tabType, activeFilter);
+            });
+        });
+        
+        const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                filters.forEach(f => f.classList.remove('active'));
+                filter.classList.add('active');
+                const filterType = filter.dataset.filter;
+                const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                loadHistoryContent(activeTab, filterType);
+            });
+        });
+    }, 100);
 }
 
-function renderTopMemes() {
-    const memesList = document.getElementById('memes-list');
-    if (!memesList) return;
+function refreshHistory() {
+    const refreshBtn = document.querySelector('.refresh-history-btn i');
+    if (refreshBtn) refreshBtn.classList.add('fa-spin');
     
-    const memes = [
-        { symbol: "DOGE", name: "Dogecoin", iconKey: "DOGE" },
-        { symbol: "SHIB", name: "Shiba Inu", iconKey: "SHIB" },
-        { symbol: "PEPE", name: "Pepe", iconKey: "PEPE" },
-        { symbol: "TRUMP", name: "Official Trump", iconKey: "TRUMP" },
-        { symbol: "BONK", name: "Bonk", iconKey: "BONK" },
-        { symbol: "PENGU", name: "Pudgy Penguins", iconKey: "PENGU" },
-        { symbol: "FLOKI", name: "Floki", iconKey: "FLOKI" },
-        { symbol: "WIF", name: "Dogwifhat", iconKey: "WIF" }
-    ];
-    
-    let html = '';
-    memes.forEach(meme => {
-        const price = livePrices[meme.symbol] || 0;
-        const priceFormatted = price < 0.01 ? price.toFixed(8) : price.toFixed(4);
+    checkPendingTransactions(true).finally(() => {
+        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+        loadHistoryContent(activeTab, activeFilter);
         
-        const change = livePrices[`${meme.symbol}_24h_change`] || 0;
-        const changeSymbol = change >= 0 ? '▲' : '▼';
+        setTimeout(() => {
+            if (refreshBtn) refreshBtn.classList.remove('fa-spin');
+        }, 500);
+    });
+}
+
+function loadHistoryContent(tabType = 'all', filterType = 'all') {
+    const historyContent = document.getElementById('historyContent');
+    if (!historyContent) return;
+    
+    let allTransactions = [...(walletData.transactionHistory || [])];
+    
+    if (walletData.pendingWithdrawals) {
+        walletData.pendingWithdrawals.forEach(pending => {
+            if (pending.status === 'pending') {
+                allTransactions.push({
+                    id: pending.id,
+                    type: 'withdrawal',
+                    amount: -pending.amount,
+                    currency: 'USDT',
+                    description: `To: ${pending.address?.slice(0, 10)}...`,
+                    status: 'pending',
+                    message: 'Withdrawal requested - Funds deducted and held for approval',
+                    timestamp: pending.createdAt,
+                    dateFormatted: new Date(pending.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })
+                });
+            }
+        });
+    }
+    
+    allTransactions.sort((a, b) => b.timestamp - a.timestamp);
+    
+    let filteredTransactions = allTransactions;
+    
+    if (tabType === 'pending') {
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'pending');
+    } else if (tabType === 'completed') {
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
+    } else if (tabType === 'rejected') {
+        filteredTransactions = allTransactions.filter(tx => tx.status === 'rejected');
+    }
+    
+    if (filterType !== 'all') {
+        if (filterType === 'deposit') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('deposit'));
+        } else if (filterType === 'withdrawal') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('withdrawal'));
+        } else if (filterType === 'mining') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('mining'));
+        } else if (filterType === 'staking') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('staking'));
+        } else if (filterType === 'swap') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('swap'));
+        } else if (filterType === 'referral') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('referral') || tx.type.includes('milestone'));
+        } else if (filterType === 'task') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('task') && !tx.type.includes('vip'));
+        } else if (filterType === 'vip') {
+            filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('vip'));
+        }
+    }
+    
+    if (filteredTransactions.length === 0) {
+        historyContent.innerHTML = `
+            <div class="history-empty">
+                <i class="fas fa-history"></i>
+                <p>${getTranslation('history_no_transactions')}</p>
+                <small>${getTranslation('history_no_transactions_desc')}</small>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<div class="history-list">';
+    
+    filteredTransactions.slice(0, 50).forEach(tx => {
+        const amountColor = tx.amount > 0 ? 'positive' : 'negative';
+        const amountSign = tx.amount > 0 ? '+' : '';
+        const absAmount = Math.abs(tx.amount);
+        
+        let iconClass = tx.iconClass || 'swap';
+        let icon = tx.icon || 'fa-exchange-alt';
+        let typeText = 'Transaction';
+        
+        if (tx.type.includes('mining')) typeText = 'Mining';
+        else if (tx.type.includes('staking')) typeText = 'Staking';
+        else if (tx.type.includes('deposit')) typeText = 'Deposit';
+        else if (tx.type.includes('withdrawal')) typeText = 'Withdrawal';
+        else if (tx.type.includes('referral')) typeText = 'Referral';
+        else if (tx.type.includes('milestone')) typeText = 'Milestone';
+        else if (tx.type.includes('task')) typeText = 'Task';
+        else if (tx.type.includes('vip')) typeText = 'VIP Task';
+        else if (tx.type.includes('swap')) typeText = 'Swap';
+        
+        let statusClass = '';
+        let statusText = '';
+        if (tx.status === 'pending') {
+            statusClass = 'pending';
+            statusText = 'Pending';
+        } else if (tx.status === 'completed' || tx.status === 'approved') {
+            statusClass = 'completed';
+            statusText = 'Completed';
+        } else if (tx.status === 'rejected') {
+            statusClass = 'rejected';
+            statusText = 'Rejected';
+        }
+        
+        let displayAmount = `${amountSign}${absAmount.toLocaleString()} ${tx.currency}`;
+        if (tx.currency === 'AMSK' && absAmount >= 1000) {
+            displayAmount = `${amountSign}${formatNumber(absAmount)} ${tx.currency}`;
+        }
         
         html += `
-            <div class="asset-item-compact" style="cursor: default;">
-                <div class="asset-icon-compact" style="border-color: #ff6b6b; background: transparent;">
-                    <img src="${CONFIG.CMC_ICONS[meme.iconKey]}" width="24" height="24" style="border-radius: 50%;" 
-                         onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\\'fas fa-coins\\' style=\\'color: #ff6b6b;\\'></i>'">
-                </div>
-                <div class="asset-details-compact">
-                    <div class="asset-name-compact">${meme.name}</div>
-                    <div class="asset-balance-compact">${meme.symbol}</div>
-                </div>
-                <div class="asset-value-compact" style="color: #ff6b6b; display: flex; align-items: center;">
-                    $${priceFormatted}
-                    <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px; margin-left: 5px;">
-                        ${changeSymbol} ${Math.abs(change).toFixed(1)}%
-                    </span>
+            <div class="history-card">
+                <div class="history-card-header">
+                    <div class="history-card-icon ${iconClass}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="history-card-details">
+                        <div class="history-card-title">
+                            <span class="history-card-type">${typeText}</span>
+                            <span class="history-card-amount ${amountColor}">${displayAmount}</span>
+                        </div>
+                        <div class="history-card-description">
+                            ${tx.description || ''}
+                            ${tx.message ? `<br><small style="color: ${tx.status === 'approved' ? '#00ff88' : tx.status === 'rejected' ? '#ff4444' : '#ff9900'};">${tx.message}</small>` : ''}
+                        </div>
+                        <div class="history-card-footer">
+                            <span class="history-card-date">${tx.dateFormatted || new Date(tx.timestamp).toLocaleDateString()}</span>
+                            <span class="history-card-status ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
     });
     
-    memesList.innerHTML = html;
+    html += '</div>';
+    if (filteredTransactions.length > 50) {
+        html += `<div style="text-align: center; padding: 10px; color: var(--quantum-text-light); font-size: 12px;">
+            Showing 50 of ${filteredTransactions.length} transactions
+        </div>`;
+    }
+    
+    historyContent.innerHTML = html;
 }
 
-// ===========================================
-// 🔄 جلب الأسعار الحية من CoinGecko
-// ===========================================
-async function fetchLivePrices(force = false) {
-    const now = Date.now();
-    const cached = loadLocalData(STORAGE_KEYS.PRICES);
+// ====== 17. DEPOSIT FUNCTIONS (مع مستمع عند الطلب) ======
+async function submitDepositRequest() {
+    const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
+    const amountInput = document.getElementById('depositAmount');
+    const txIdInput = document.getElementById('depositTxId');
     
-    if (!force && cached && (now - cached.timestamp) < CONFIG.CACHE.PRICES) {
-        livePrices = cached.prices || livePrices;
-        console.log("📦 Using cached prices (less than 3 hours old)");
-        updateWalletUI();
-        renderTopMemes();
+    if (!amountInput || !txIdInput) return;
+    
+    const amount = parseFloat(amountInput.value);
+    const txId = txIdInput.value.trim();
+    const minAmount = CONFIG.DEPOSIT.MIN_AMOUNTS[activeCurrency];
+    
+    if (!amount || amount < minAmount) {
+        showMessage(`Minimum deposit is ${minAmount} ${activeCurrency}`, "error");
+        return;
+    }
+    
+    if (!txId) {
+        showMessage("Please enter Transaction ID", "error");
+        return;
+    }
+    
+    if (!walletData.usedTxIds) walletData.usedTxIds = [];
+    if (walletData.usedTxIds.includes(txId)) {
+        showMessage("⚠️ This TX ID has already been used", "warning", 4500);
         return;
     }
     
     try {
-        const ids = Object.values(CONFIG.COINGECKO_IDS).join(',');
-        const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`);
-        const data = await response.json();
+        const depositRequest = {
+            userId: userData.id,
+            telegramId: userData.telegramId,
+            username: userData.username,
+            currency: activeCurrency,
+            amount: amount,
+            txId: txId,
+            status: 'pending',
+            createdAt: Date.now(),
+            createdAtFormatted: new Date().toISOString()
+        };
         
-        livePrices.BNB = data.binancecoin?.usd || CONFIG.PRICES.BNB;
-        livePrices.TON = data['the-open-network']?.usd || CONFIG.PRICES.TON;
+        let depositId = '';
         
-        livePrices.DOGE = data.dogecoin?.usd || 0;
-        livePrices.DOGE_24h_change = data.dogecoin?.usd_24h_change || 0;
+        if (db) {
+            const depositRef = await db.collection(DB_COLLECTIONS.DEPOSITS).add(depositRequest);
+            depositId = depositRef.id;
+            depositRequest.id = depositId;
+            
+            // 🔥 مستمع عند الطلب لمدة 30 ثانية
+            startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
+                console.log("📥 Deposit update received:", data);
+                
+                if (data.status === 'approved') {
+                    walletData.balances[activeCurrency] = (walletData.balances[activeCurrency] || 0) + amount;
+                    saveUserDataToLocalStorage();
+                    
+                    const txIndex = walletData.transactionHistory.findIndex(t => t.txId === txId);
+                    if (txIndex !== -1) {
+                        walletData.transactionHistory[txIndex].status = 'approved';
+                        walletData.transactionHistory[txIndex].message = 'Deposit approved';
+                    }
+                    
+                    showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
+                    updateWalletUI();
+                } else if (data.status === 'rejected') {
+                    const txIndex = walletData.transactionHistory.findIndex(t => t.txId === txId);
+                    if (txIndex !== -1) {
+                        walletData.transactionHistory[txIndex].status = 'rejected';
+                        walletData.transactionHistory[txIndex].message = `Rejected: ${data.reason || 'Unknown reason'}`;
+                    }
+                    
+                    showMessage(`❌ Your deposit was rejected: ${data.reason || 'Unknown reason'}`, 'error');
+                }
+            });
+        } else {
+            depositId = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            depositRequest.id = depositId;
+        }
         
-        livePrices.SHIB = data['shiba-inu']?.usd || 0;
-        livePrices.SHIB_24h_change = data['shiba-inu']?.usd_24h_change || 0;
+        addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', txId);
         
-        livePrices.PEPE = data.pepe?.usd || 0;
-        livePrices.PEPE_24h_change = data.pepe?.usd_24h_change || 0;
+        walletData.usedTxIds.push(txId);
         
-        livePrices.TRUMP = data['official-trump']?.usd || 0;
-        livePrices.TRUMP_24h_change = data['official-trump']?.usd_24h_change || 0;
+        await saveUserData();
+        closeModal();
         
-        livePrices.BONK = data.bonk?.usd || 0;
-        livePrices.BONK_24h_change = data.bonk?.usd_24h_change || 0;
-        
-        livePrices.PENGU = data['pudgy-penguins']?.usd || 0;
-        livePrices.PENGU_24h_change = data['pudgy-penguins']?.usd_24h_change || 0;
-        
-        livePrices.FLOKI = data.floki?.usd || 0;
-        livePrices.FLOKI_24h_change = data.floki?.usd_24h_change || 0;
-        
-        livePrices.WIF = data.dogwifcoin?.usd || 0;
-        livePrices.WIF_24h_change = data.dogwifcoin?.usd_24h_change || 0;
-        
-        livePrices.BNB_24h_change = data.binancecoin?.usd_24h_change || 0;
-        livePrices.TON_24h_change = data['the-open-network']?.usd_24h_change || 0;
-        
-        saveLocalData(STORAGE_KEYS.PRICES, { prices: livePrices, timestamp: now });
-        lastPricesLoadTime = now;
-        
-        updateWalletUI();
-        renderTopMemes();
-        
-        console.log("✅ Live prices updated");
+        showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Waiting for admin approval.`, "success");
         
     } catch (error) {
-        console.error("❌ Error fetching live prices:", error);
+        console.error("❌ Error submitting deposit:", error);
+        showMessage("Failed to submit deposit request", "error");
     }
 }
 
-// ===========================================
-// 💰 تحديث دالة updateWalletUI
-// ===========================================
-function updateWalletUI() {
-    if (!walletData || !walletData.balances) {
-        console.log("⚠️ Wallet data not ready yet");
+// ====== 18. WITHDRAW FUNCTIONS (مع مستمع عند الطلب) ======
+async function submitWithdrawRequest() {
+    const amountInput = document.getElementById('withdrawAmount');
+    const addressInput = document.getElementById('withdrawAddress');
+    
+    if (!amountInput || !addressInput) return;
+    
+    const amount = parseFloat(amountInput.value);
+    const address = addressInput.value.trim();
+    
+    if (!amount || amount < CONFIG.WITHDRAW.MIN_USDT) {
+        showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
         return;
     }
     
-    const AMSK = walletData.balances.AMSK ?? 0;
-    const USDT = walletData.balances.USDT ?? 0;
-    const BNB = walletData.balances.BNB ?? 0;
-    const TON = walletData.balances.TON ?? 0;
+    if (!walletData || !walletData.balances) return;
     
-    const amskPrice = CONFIG.PRICES.AMSK;
-    const usdtPrice = CONFIG.PRICES.USDT;
-    const bnbPrice = livePrices.BNB || CONFIG.PRICES.BNB;
-    const tonPrice = livePrices.TON || CONFIG.PRICES.TON;
-    
-    const totalUSD = (AMSK * amskPrice) + (USDT * usdtPrice) + (BNB * bnbPrice) + (TON * tonPrice);
-    
-    if (elements.walletBalanceUsd) {
-        elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
+    if (amount > walletData.balances.USDT) {
+        showMessage(`⚠️ Insufficient balance. You have ${walletData.balances.USDT.toFixed(2)} USDT`, "warning", 4500);
+        return;
     }
     
-    if (elements.walletBalanceAmsk) {
-        elements.walletBalanceAmsk.textContent = `${formatNumber(AMSK)} AMSK`;
+    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
+        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
+        return;
     }
     
-    if (elements.totalBalanceUsd) {
-        elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
+    if (!address || address.length < 20) {
+        showMessage(`Please enter a valid wallet address`, "error");
+        return;
     }
     
-    if (elements.totalBalanceAmsk) {
-        elements.totalBalanceAmsk.textContent = formatNumber(AMSK);
-    }
-    
-    if (elements.walletAmskBalance) {
-        elements.walletAmskBalance.textContent = `${formatNumber(AMSK)} AMSK`;
-    }
-    if (elements.walletAmskValue) {
-        elements.walletAmskValue.textContent = `$${(AMSK * amskPrice).toFixed(2)}`;
-    }
-    
-    if (elements.walletUsdtBalance) {
-        elements.walletUsdtBalance.textContent = `${USDT.toFixed(2)} USDT`;
-    }
-    if (elements.walletUsdtValue) {
-        elements.walletUsdtValue.textContent = `$${USDT.toFixed(2)}`;
-    }
-    
-    if (elements.walletBnbBalance) {
-        elements.walletBnbBalance.textContent = `${BNB.toFixed(4)} BNB`;
-    }
-    if (elements.walletBnbValue) {
-        const bnbValue = BNB * bnbPrice;
-        elements.walletBnbValue.textContent = `$${bnbValue.toFixed(2)}`;
+    try {
+        walletData.balances.USDT -= amount;
         
-        if (livePrices.BNB_24h_change) {
-            const change = livePrices.BNB_24h_change;
-            const changeSymbol = change >= 0 ? '▲' : '▼';
-            elements.walletBnbValue.innerHTML += ` <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px;">${changeSymbol} ${Math.abs(change).toFixed(1)}%</span>`;
+        const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        const withdrawRequest = {
+            id: withdrawalId,
+            userId: userData.id,
+            telegramId: userData.telegramId,
+            username: userData.username,
+            currency: 'USDT',
+            amount: amount,
+            address: address,
+            fee: CONFIG.WITHDRAW.FEE_BNB,
+            status: 'pending',
+            createdAt: Date.now(),
+            createdAtFormatted: new Date().toISOString()
+        };
+        
+        if (!walletData.pendingWithdrawals) {
+            walletData.pendingWithdrawals = [];
         }
-    }
-    
-    if (elements.walletTonBalance) {
-        elements.walletTonBalance.textContent = `${formatNumber(TON)} TON`;
-    }
-    if (elements.walletTonValue) {
-        const tonValue = TON * tonPrice;
-        elements.walletTonValue.textContent = `$${tonValue.toFixed(2)}`;
+        walletData.pendingWithdrawals.push(withdrawRequest);
         
-        if (livePrices.TON_24h_change) {
-            const change = livePrices.TON_24h_change;
-            const changeSymbol = change >= 0 ? '▲' : '▼';
-            elements.walletTonValue.innerHTML += ` <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px;">${changeSymbol} ${Math.abs(change).toFixed(1)}%</span>`;
+        addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
+            `To: ${address.slice(0, 10)}...`, 'pending', 
+            'Withdrawal requested - Funds deducted and held for approval', 
+            withdrawalId);
+        
+        if (db) {
+            await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
+            
+            // 🔥 مستمع عند الطلب لمدة 30 ثانية
+            startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
+                console.log("📤 Withdrawal update received:", data);
+                
+                if (data.status === 'approved') {
+                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                    if (pendingIndex !== -1) {
+                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
+                    }
+                    
+                    if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
+                        walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
+                    }
+                    
+                    const txIndex = walletData.transactionHistory.findIndex(t => t.txId === withdrawalId);
+                    if (txIndex !== -1) {
+                        walletData.transactionHistory[txIndex].status = 'approved';
+                        walletData.transactionHistory[txIndex].message = 'Withdrawal approved and processed';
+                    }
+                    
+                    saveUserDataToLocalStorage();
+                    showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
+                    updateWalletUI();
+                    
+                } else if (data.status === 'rejected') {
+                    walletData.balances.USDT += amount;
+                    
+                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                    if (pendingIndex !== -1) {
+                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
+                    }
+                    
+                    const txIndex = walletData.transactionHistory.findIndex(t => t.txId === withdrawalId);
+                    if (txIndex !== -1) {
+                        walletData.transactionHistory[txIndex].status = 'rejected';
+                        walletData.transactionHistory[txIndex].message = `Rejected: ${data.reason || 'Unknown reason'}`;
+                    }
+                    
+                    saveUserDataToLocalStorage();
+                    showMessage(`❌ Your withdrawal was rejected: ${data.reason || 'Unknown reason'}`, 'error');
+                    updateWalletUI();
+                }
+            });
+        }
+        
+        updateWalletUI();
+        await saveUserData();
+        
+        closeModal();
+        
+        showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Funds deducted and held for approval.`, "success");
+        
+    } catch (error) {
+        console.error("❌ Error submitting withdrawal:", error);
+        showMessage("Failed to submit withdrawal request", "error");
+        
+        if (amount) {
+            walletData.balances.USDT += amount;
+            updateWalletUI();
         }
     }
 }
 
-// ===========================================
-// MINING SYSTEM (بدون تغيير)
-// ===========================================
+// ====== 19. ADMIN FUNCTIONS (مع تحديث يدوي فقط) ======
+let isAdmin = userData?.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
+
+function initAdminSystem() {
+    if (elements.adminLogo) {
+        let clickCount = 0;
+        let lastClickTime = 0;
+        
+        elements.adminLogo.addEventListener('click', () => {
+            const now = Date.now();
+            
+            if (now - lastClickTime > 2000) {
+                clickCount = 0;
+            }
+            
+            clickCount++;
+            lastClickTime = now;
+            
+            console.log(`👑 Logo click ${clickCount}/5`);
+            
+            if (clickCount >= 5) {
+                showAdminLogin();
+                clickCount = 0;
+            }
+        });
+        
+        console.log("👑 Admin system initialized");
+    }
+}
+
+function showAdminLogin() {
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-lock"></i> Admin Access</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div style="text-align: center; padding: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+                        <h3 style="color: var(--quantum-text); margin-bottom: 20px;">Administrator Access</h3>
+                        <p style="color: var(--quantum-text-light); margin-bottom: 30px;">Enter administrator password</p>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <input type="password" 
+                                   id="adminPasswordInput" 
+                                   style="width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; font-size: 16px;"
+                                   placeholder="Enter password">
+                        </div>
+                        
+                        <button onclick="checkAdminPassword()" 
+                                style="width: 100%; padding: 12px; background: var(--gradient-quantum); color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        
+                        <div id="adminError" style="color: #ff4444; margin-top: 15px; display: none;">
+                            <i class="fas fa-exclamation-circle"></i> <span id="adminErrorText"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+}
+
+function checkAdminPassword() {
+    const passwordInput = document.getElementById('adminPasswordInput');
+    const errorDiv = document.getElementById('adminError');
+    const errorText = document.getElementById('adminErrorText');
+    
+    if (!passwordInput) return;
+    
+    if (passwordInput.value !== CONFIG.ADMIN.PASSWORD) {
+        if (errorDiv && errorText) {
+            errorText.textContent = "Incorrect password";
+            errorDiv.style.display = 'block';
+        }
+        return;
+    }
+    
+    if (!userData.telegramId || userData.telegramId !== CONFIG.ADMIN.TELEGRAM_ID) {
+        if (errorDiv && errorText) {
+            errorText.textContent = "Access denied: Invalid Telegram ID";
+            errorDiv.style.display = 'block';
+        }
+        return;
+    }
+    
+    isAdmin = true;
+    closeModal();
+    showAdminPanel();
+    showMessage("✅ Admin access granted", "success");
+}
+
+async function showAdminPanel() {
+    if (!isAdmin) return;
+    
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h3><i class="fas fa-user-shield"></i> Admin Panel</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="refresh-admin-btn" onclick="refreshAdminData()" style="background: transparent; border: none; color: var(--quantum-green); font-size: 18px; cursor: pointer;">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="modal-close" onclick="closeModal()">×</button>
+                    </div>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="admin-tabs" style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                        <button class="admin-tab active" data-admin-tab="deposits" onclick="switchAdminTab('deposits')">Pending Deposits</button>
+                        <button class="admin-tab" data-admin-tab="withdrawals" onclick="switchAdminTab('withdrawals')">Pending Withdrawals</button>
+                        <button class="admin-tab" data-admin-tab="users" onclick="switchAdminTab('users')">User Management</button>
+                    </div>
+                    
+                    <div id="adminContent" style="min-height: 300px;">
+                        <div style="text-align: center; padding: 50px;">
+                            <i class="fas fa-hand-pointer" style="font-size: 48px; color: var(--quantum-blue); opacity: 0.5;"></i>
+                            <p style="margin-top: 20px; color: var(--quantum-text-light);">Click the refresh button to load data</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+}
+
+async function refreshAdminData() {
+    if (!isAdmin || !db) return;
+    
+    const refreshBtn = document.querySelector('.refresh-admin-btn i');
+    if (refreshBtn) refreshBtn.classList.add('fa-spin');
+    
+    const activeTab = document.querySelector('.admin-tab.active')?.dataset.adminTab || 'deposits';
+    
+    try {
+        let html = '';
+        
+        if (activeTab === 'deposits') {
+            const snapshot = await db.collection(DB_COLLECTIONS.DEPOSITS)
+                .where('status', '==', 'pending')
+                .get();
+            
+            if (snapshot.empty) {
+                html = '<div class="empty-state">No pending deposits</div>';
+            } else {
+                html = '<div class="admin-requests-list">';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    html += `
+                        <div class="request-item" data-id="${doc.id}">
+                            <div class="request-header">
+                                <div class="request-user">${data.username || 'User'}</div>
+                                <div class="request-amount">+${data.amount} ${data.currency}</div>
+                            </div>
+                            <div class="request-details">
+                                <div>TX: ${data.txId?.slice(0, 20)}...</div>
+                                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
+                                <div>Time: ${new Date(data.createdAt).toLocaleString()}</div>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-approve" onclick="adminApproveDeposit('${doc.id}', '${data.userId}', '${data.currency}', ${data.amount})">Approve</button>
+                                <button class="btn-reject" onclick="adminRejectDeposit('${doc.id}', '${data.userId}')">Reject</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+        } else if (activeTab === 'withdrawals') {
+            const snapshot = await db.collection(DB_COLLECTIONS.WITHDRAWALS)
+                .where('status', '==', 'pending')
+                .get();
+            
+            if (snapshot.empty) {
+                html = '<div class="empty-state">No pending withdrawals</div>';
+            } else {
+                html = '<div class="admin-requests-list">';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    html += `
+                        <div class="request-item" data-id="${doc.id}">
+                            <div class="request-header">
+                                <div class="request-user">${data.username || 'User'}</div>
+                                <div class="request-amount">-${data.amount} ${data.currency}</div>
+                            </div>
+                            <div class="request-details">
+                                <div>Address: ${data.address?.slice(0, 20)}...</div>
+                                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
+                                <div>Time: ${new Date(data.createdAt).toLocaleString()}</div>
+                            </div>
+                            <div class="request-actions">
+                                <button class="btn-approve" onclick="adminApproveWithdrawal('${doc.id}', '${data.userId}', ${data.amount})">Approve</button>
+                                <button class="btn-reject" onclick="adminRejectWithdrawal('${doc.id}', '${data.userId}', ${data.amount})">Reject</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+        } else if (activeTab === 'users') {
+            html = `
+                <div class="admin-user-controls" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <div class="admin-user-control" onclick="adminSearchUser()">
+                        <i class="fas fa-search" style="color: var(--quantum-blue); font-size: 24px;"></i>
+                        <span>Find User by ID</span>
+                    </div>
+                    <div class="admin-user-control" onclick="adminAddBalance()">
+                        <i class="fas fa-plus-circle" style="color: var(--quantum-green); font-size: 24px;"></i>
+                        <span>Add Balance</span>
+                    </div>
+                    <div class="admin-user-control" onclick="adminSubtractBalance()">
+                        <i class="fas fa-minus-circle" style="color: #ff4444; font-size: 24px;"></i>
+                        <span>Subtract Balance</span>
+                    </div>
+                    <div class="admin-user-control" onclick="adminBulkAdd()">
+                        <i class="fas fa-users" style="color: var(--quantum-gold); font-size: 24px;"></i>
+                        <span>Bulk Add</span>
+                    </div>
+                </div>
+                <div id="adminUserResult" style="margin-top: 20px;"></div>
+            `;
+        }
+        
+        document.getElementById('adminContent').innerHTML = html;
+        
+    } catch (error) {
+        console.error("❌ Error refreshing admin data:", error);
+        document.getElementById('adminContent').innerHTML = '<div class="empty-state">Error loading data</div>';
+    } finally {
+        setTimeout(() => {
+            if (refreshBtn) refreshBtn.classList.remove('fa-spin');
+        }, 500);
+    }
+}
+
+function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`[data-admin-tab="${tab}"]`).classList.add('active');
+    refreshAdminData();
+}
+
+async function adminApproveDeposit(docId, targetUserId, currency, amount) {
+    if (!isAdmin || !db) return;
+    
+    try {
+        await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
+            status: 'approved',
+            approvedAt: Date.now(),
+            approvedBy: userData.id
+        });
+        
+        await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
+            [`balances.${currency}`]: firebase.firestore.FieldValue.increment(amount)
+        });
+        
+        showMessage(`✅ Deposit approved: +${amount} ${currency}`, 'success');
+        refreshAdminData();
+        
+    } catch (error) {
+        console.error("❌ Error approving deposit:", error);
+        showMessage("Failed to approve deposit", "error");
+    }
+}
+
+async function adminRejectDeposit(docId, targetUserId) {
+    if (!isAdmin || !db) return;
+    
+    const reason = prompt("Enter rejection reason:");
+    if (!reason) return;
+    
+    try {
+        await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
+            status: 'rejected',
+            reason: reason,
+            rejectedAt: Date.now(),
+            rejectedBy: userData.id
+        });
+        
+        showMessage(`✅ Deposit rejected`, 'success');
+        refreshAdminData();
+        
+    } catch (error) {
+        console.error("❌ Error rejecting deposit:", error);
+        showMessage("Failed to reject deposit", "error");
+    }
+}
+
+async function adminApproveWithdrawal(docId, targetUserId, amount) {
+    if (!isAdmin || !db) return;
+    
+    try {
+        await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
+            status: 'approved',
+            approvedAt: Date.now(),
+            approvedBy: userData.id
+        });
+        
+        showMessage(`✅ Withdrawal approved: -${amount} USDT`, 'success');
+        refreshAdminData();
+        
+    } catch (error) {
+        console.error("❌ Error approving withdrawal:", error);
+        showMessage("Failed to approve withdrawal", "error");
+    }
+}
+
+async function adminRejectWithdrawal(docId, targetUserId, amount) {
+    if (!isAdmin || !db) return;
+    
+    const reason = prompt("Enter rejection reason:");
+    if (!reason) return;
+    
+    try {
+        await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
+            status: 'rejected',
+            reason: reason,
+            rejectedAt: Date.now(),
+            rejectedBy: userData.id
+        });
+        
+        await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
+            'balances.USDT': firebase.firestore.FieldValue.increment(amount)
+        });
+        
+        showMessage(`✅ Withdrawal rejected, funds returned`, 'success');
+        refreshAdminData();
+        
+    } catch (error) {
+        console.error("❌ Error rejecting withdrawal:", error);
+        showMessage("Failed to reject withdrawal", "error");
+    }
+}
+
+function adminSearchUser() {
+    const targetId = prompt("Enter user ID (tg_... or web_...):");
+    if (!targetId) return;
+    
+    const resultDiv = document.getElementById('adminUserResult');
+    resultDiv.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
+    
+    setTimeout(() => {
+        resultDiv.innerHTML = `
+            <div class="admin-user-card">
+                <h4>User: ${targetId}</h4>
+                <div style="margin: 15px 0;">
+                    <input type="number" id="adminBalanceAmount" placeholder="Amount" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; margin-bottom: 10px;">
+                    <select id="adminBalanceCurrency" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: white; margin-bottom: 10px;">
+                        <option value="AMSK">AMSK</option>
+                        <option value="USDT">USDT</option>
+                        <option value="BNB">BNB</option>
+                        <option value="TON">TON</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="adminAddToUser('${targetId}')" style="flex: 1; padding: 10px; background: var(--gradient-quantum); border: none; border-radius: 8px; color: white;">Add</button>
+                    <button onclick="adminSubtractFromUser('${targetId}')" style="flex: 1; padding: 10px; background: linear-gradient(135deg, #ff4444, #cc0000); border: none; border-radius: 8px; color: white;">Subtract</button>
+                </div>
+            </div>
+        `;
+    }, 500);
+}
+
+function adminAddBalance() {
+    adminSearchUser();
+}
+
+function adminSubtractBalance() {
+    adminSearchUser();
+}
+
+function adminBulkAdd() {
+    const amount = prompt("Enter amount to add to all users (AMSK):");
+    if (!amount) return;
+    
+    if (confirm(`Add ${amount} AMSK to ALL users?`)) {
+        showMessage("Bulk add feature - would process all users", "info");
+    }
+}
+
+async function adminAddToUser(targetId) {
+    const amount = document.getElementById('adminBalanceAmount')?.value;
+    const currency = document.getElementById('adminBalanceCurrency')?.value;
+    
+    if (!amount || !currency) return;
+    
+    if (!db) {
+        showMessage("Firebase not available", "error");
+        return;
+    }
+    
+    try {
+        await db.collection(DB_COLLECTIONS.USERS).doc(targetId).update({
+            [`balances.${currency}`]: firebase.firestore.FieldValue.increment(parseFloat(amount))
+        });
+        
+        showMessage(`✅ Added ${amount} ${currency} to ${targetId}`, 'success');
+        document.getElementById('adminUserResult').innerHTML = '';
+        
+    } catch (error) {
+        console.error("❌ Error adding balance:", error);
+        showMessage("Failed to add balance", "error");
+    }
+}
+
+async function adminSubtractFromUser(targetId) {
+    const amount = document.getElementById('adminBalanceAmount')?.value;
+    const currency = document.getElementById('adminBalanceCurrency')?.value;
+    
+    if (!amount || !currency) return;
+    
+    if (!db) {
+        showMessage("Firebase not available", "error");
+        return;
+    }
+    
+    try {
+        await db.collection(DB_COLLECTIONS.USERS).doc(targetId).update({
+            [`balances.${currency}`]: firebase.firestore.FieldValue.increment(-parseFloat(amount))
+        });
+        
+        showMessage(`✅ Subtracted ${amount} ${currency} from ${targetId}`, 'success');
+        document.getElementById('adminUserResult').innerHTML = '';
+        
+    } catch (error) {
+        console.error("❌ Error subtracting balance:", error);
+        showMessage("Failed to subtract balance", "error");
+    }
+}
+
+// ====== 20. MINING FUNCTIONS ======
+function handleMiningAction() {
+    if (!walletData.mining) return;
+    
+    const mining = walletData.mining;
+    const now = Date.now();
+    
+    if (mining.active && mining.nextReward && now < mining.nextReward) {
+        showMessage("⏳ Mining in progress. Please wait.", "info");
+        return;
+    }
+    
+    if (!mining.active) {
+        startMining();
+    } else if (mining.nextReward && now >= mining.nextReward) {
+        claimMiningReward();
+    }
+}
+
+async function startMining() {
+    try {
+        walletData.mining.active = true;
+        walletData.mining.lastReward = Date.now();
+        walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+        
+        updateMiningDisplay();
+        await saveUserData();
+        
+        showMessage("⚡ Quantum mining started!", "success");
+        
+    } catch (error) {
+        console.error("❌ Error starting mining:", error);
+        showMessage("Failed to start mining", "error");
+    }
+}
+
+async function claimMiningReward() {
+    try {
+        const level = CONFIG.MINING.LEVELS[walletData.mining.level];
+        let reward = level.reward;
+        
+        const now = new Date();
+        const today = now.setHours(0,0,0,0);
+        
+        if (!walletData.mining.lastResetDate || walletData.mining.lastResetDate < today) {
+            walletData.mining.minedToday = 0;
+            walletData.mining.lastResetDate = today;
+        }
+        
+        walletData.balances.AMSK = (walletData.balances.AMSK || 0) + reward;
+        walletData.mining.totalMined = (walletData.mining.totalMined || 0) + reward;
+        walletData.mining.minedToday = (walletData.mining.minedToday || 0) + reward;
+        walletData.mining.lastReward = Date.now();
+        walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
+        
+        addTransactionToHistory('mining_reward', reward, 'AMSK', 'Mining reward', 'completed', 'Mining reward claimed');
+        
+        updateMiningDisplay();
+        updateWalletUI();
+        await saveUserData();
+        
+        showMessage(`💰 +${formatNumber(reward)} AMSK mined!`, "success");
+        
+    } catch (error) {
+        console.error("❌ Error claiming mining reward:", error);
+        showMessage("Failed to claim reward", "error");
+    }
+}
+
 function updateMiningDisplay() {
     if (!walletData.mining) return;
     
@@ -2297,7 +2705,7 @@ function updateUpgradeCards() {
         } else {
             buttonText = `Upgrade (${levelData.cost} USDT)`;
             buttonClass = '';
-            disabled = usdtBalance < levelData.cost;
+            disabled = false;
         }
 
         html += `
@@ -2332,74 +2740,6 @@ function updateUpgradeCards() {
     }
     
     elements.upgradeCardsContainer.innerHTML = html;
-}
-
-function handleMiningAction() {
-    if (!walletData.mining) return;
-    
-    const mining = walletData.mining;
-    const now = Date.now();
-    
-    if (mining.active && mining.nextReward && now < mining.nextReward) {
-        showMessage("⏳ Mining in progress. Please wait.", "info");
-        return;
-    }
-    
-    if (!mining.active) {
-        startMining();
-    } else if (mining.nextReward && now >= mining.nextReward) {
-        claimMiningReward();
-    }
-}
-
-async function startMining() {
-    try {
-        walletData.mining.active = true;
-        walletData.mining.lastReward = Date.now();
-        walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
-        
-        updateMiningDisplay();
-        await saveUserData();
-        
-        showMessage("⚡ Quantum mining started!", "success");
-        
-    } catch (error) {
-        console.error("❌ Error starting mining:", error);
-        showMessage("Failed to start mining", "error");
-    }
-}
-
-async function claimMiningReward() {
-    try {
-        const level = CONFIG.MINING.LEVELS[walletData.mining.level];
-        let reward = level.reward;
-        
-        const now = new Date();
-        const today = now.setHours(0,0,0,0);
-        
-        if (!walletData.mining.lastResetDate || walletData.mining.lastResetDate < today) {
-            walletData.mining.minedToday = 0;
-            walletData.mining.lastResetDate = today;
-        }
-        
-        walletData.balances.AMSK = (walletData.balances.AMSK || 0) + reward;
-        walletData.mining.totalMined = (walletData.mining.totalMined || 0) + reward;
-        walletData.mining.minedToday = (walletData.mining.minedToday || 0) + reward;
-        walletData.mining.lastReward = Date.now();
-        walletData.mining.nextReward = Date.now() + CONFIG.MINING.DURATION;
-        
-        addTransactionToHistory('mining_reward', reward, 'AMSK', 'Mining reward', 'completed', 'Mining reward claimed successfully');
-        
-        updateMiningDisplay();
-        updateWalletUI();
-        await saveUserData();
-        
-        showMessage(`💰 +${formatNumber(reward)} AMSK mined today! Total: ${formatNumber(walletData.mining.totalMined)} AMSK`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error claiming mining reward:", error);
-        showMessage("Failed to claim reward", "error");
-    }
 }
 
 async function upgradeMiningLevel(level) {
@@ -2440,375 +2780,7 @@ async function upgradeMiningLevel(level) {
     }
 }
 
-async function boosterUpgrade() {
-    const targetLevel = 5;
-    const currentLevel = walletData.mining.level;
-    
-    if (currentLevel >= targetLevel) {
-        showMessage("You are already at maximum level!", "info");
-        return;
-    }
-    
-    const levelData = CONFIG.MINING.LEVELS[targetLevel];
-    const totalCost = levelData.cost;
-    
-    if (walletData.balances.USDT < totalCost) {
-        showMessage(`⚠️ You need ${totalCost} USDT for Level 5 upgrade!`, "warning", 4500);
-        return;
-    }
-    
-    if (!confirm(`Upgrade directly to Level 5 (Mythic) for ${totalCost} USDT?`)) {
-        return;
-    }
-    
-    try {
-        walletData.balances.USDT -= totalCost;
-        walletData.mining.level = targetLevel;
-        
-        addTransactionToHistory('mining_upgrade', -totalCost, 'USDT', 'Booster upgrade to Level 5', 'completed', 'Mining level upgraded via Booster');
-        
-        checkMiningVipReward(targetLevel);
-        
-        updateMiningDisplay();
-        updateWalletUI();
-        await saveUserData();
-        
-        showMessage(`🚀 BOOSTER ACTIVATED! Upgraded to Level 5 Mythic! Hashrate: ${levelData.hashrate.toLocaleString()}/s`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error in booster upgrade:", error);
-        showMessage("Failed to upgrade via Booster", "error");
-    }
-}
-
-function scrollToTasks() {
-    const tasksSection = document.getElementById('tasks-section');
-    if (tasksSection) {
-        tasksSection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function checkMiningVipReward(newLevel) {
-    if (!walletData.vipTasks) {
-        walletData.vipTasks = {
-            claimedMiningRewards: [],
-            claimedStakingRewards: []
-        };
-    }
-    
-    for (let level = 2; level <= newLevel; level++) {
-        const vipTask = CONFIG.VIP_TASKS.MINING[level];
-        if (!vipTask) continue;
-        
-        if (!walletData.vipTasks.claimedMiningRewards.includes(level)) {
-            showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for reaching Level ${level}!`, "success", 5000);
-        }
-    }
-    
-    updateVipTasksDisplay();
-}
-
-function checkStakingVipReward(planId, planName) {
-    if (!walletData.vipTasks) {
-        walletData.vipTasks = {
-            claimedMiningRewards: [],
-            claimedStakingRewards: []
-        };
-    }
-    
-    let planKey = '';
-    if (planName.toLowerCase().includes('silver')) planKey = 'silver';
-    else if (planName.toLowerCase().includes('gold')) planKey = 'gold';
-    else if (planName.toLowerCase().includes('diamond')) planKey = 'diamond';
-    else return;
-    
-    const vipTask = CONFIG.VIP_TASKS.STAKING[planKey];
-    if (!vipTask) return;
-    
-    if (!walletData.vipTasks.claimedStakingRewards.includes(planKey)) {
-        showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for your first ${planName} Staking!`, "success", 5000);
-    }
-    
-    updateVipTasksDisplay();
-}
-
-function claimVipTask(type, id, reward, taskName) {
-    try {
-        if (!walletData.vipTasks) {
-            walletData.vipTasks = {
-                claimedMiningRewards: [],
-                claimedStakingRewards: []
-            };
-        }
-        
-        if (type === 'mining') {
-            if (walletData.vipTasks.claimedMiningRewards.includes(id)) {
-                showMessage("Task already claimed!", "warning");
-                return false;
-            }
-            
-            walletData.balances.AMSK += reward;
-            walletData.vipTasks.claimedMiningRewards.push(id);
-            
-            addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Mining Task: ${taskName}`, 'completed', 'VIP task reward claimed');
-            
-        } else if (type === 'staking') {
-            if (walletData.vipTasks.claimedStakingRewards.includes(id)) {
-                showMessage("Task already claimed!", "warning");
-                return false;
-            }
-            
-            const hasActiveStake = walletData.staking.activeStakes.some(stake => {
-                const plan = CONFIG.STAKING.PLANS[stake.planId];
-                if (!plan) return false;
-                const stakePlanKey = plan.name.toLowerCase();
-                return stakePlanKey === id;
-            });
-            
-            if (!hasActiveStake) {
-                showMessage("You need an active stake in this plan to claim the reward!", "warning", 4500);
-                return false;
-            }
-            
-            walletData.balances.AMSK += reward;
-            walletData.vipTasks.claimedStakingRewards.push(id);
-            
-            addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Staking Task: ${taskName}`, 'completed', 'VIP task reward claimed');
-        }
-        
-        updateVipTasksDisplay();
-        updateWalletUI();
-        saveUserData();
-        
-        showMessage(`✅ Claimed ${reward.toLocaleString()} AMSK from ${taskName}!`, "success");
-        return true;
-        
-    } catch (error) {
-        console.error("❌ Error claiming VIP task:", error);
-        showMessage("Failed to claim VIP task", "error");
-        return false;
-    }
-}
-
-function updateVipTasksDisplay() {
-    if (!elements.vipTasksGrid) return;
-    
-    if (!walletData.vipTasks) {
-        walletData.vipTasks = {
-            claimedMiningRewards: [],
-            claimedStakingRewards: []
-        };
-    }
-    
-    const miningTasks = CONFIG.VIP_TASKS.MINING;
-    const stakingTasks = CONFIG.VIP_TASKS.STAKING;
-    const currentLevel = walletData.mining.level;
-    
-    let html = '';
-    
-    html += `
-        <div class="vip-task-category">
-            <h5><i class="fas fa-rocket"></i> Mining Level Rewards</h5>
-    `;
-    
-    for (let level = 2; level <= 5; level++) {
-        const task = miningTasks[level];
-        if (!task) continue;
-        
-        const isClaimed = walletData.vipTasks?.claimedMiningRewards?.includes(level) || false;
-        const isAvailable = currentLevel >= level && !isClaimed;
-        const isLocked = currentLevel < level;
-        
-        let statusButton = '';
-        if (isClaimed) {
-            statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
-        } else if (isAvailable) {
-            statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('mining', ${level}, ${task.reward}, '${task.name}')">Claim</button>`;
-        } else {
-            statusButton = `<button class="vip-task-btn locked" disabled>🔒 Level ${level}</button>`;
-        }
-        
-        html += `
-            <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
-                <div class="vip-task-icon">
-                    <i class="${task.icon}"></i>
-                </div>
-                <div class="vip-task-details">
-                    <div class="vip-task-name">${task.name}</div>
-                    <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
-                </div>
-                <div class="vip-task-status">
-                    ${statusButton}
-                </div>
-            </div>
-        `;
-    }
-    
-    html += `</div>`;
-    
-    html += `
-        <div class="vip-task-category">
-            <h5><i class="fas fa-gem"></i> First Staking Rewards</h5>
-    `;
-    
-    for (let [planKey, task] of Object.entries(stakingTasks)) {
-        const isClaimed = walletData.vipTasks?.claimedStakingRewards?.includes(planKey) || false;
-        
-        const hasActiveStake = walletData.staking.activeStakes.some(stake => {
-            const plan = CONFIG.STAKING.PLANS[stake.planId];
-            if (!plan) return false;
-            const stakePlanKey = plan.name.toLowerCase();
-            return stakePlanKey === planKey;
-        });
-        
-        let statusButton = '';
-        
-        if (isClaimed) {
-            statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
-        } else if (hasActiveStake) {
-            statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('staking', '${planKey}', ${task.reward}, '${task.name}')">Claim</button>`;
-        } else {
-            statusButton = `<button class="vip-task-btn locked" disabled>🔒 Need Active Stake</button>`;
-        }
-        
-        html += `
-            <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
-                <div class="vip-task-icon">
-                    <i class="${task.icon}"></i>
-                </div>
-                <div class="vip-task-details">
-                    <div class="vip-task-name">${task.name}</div>
-                    <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
-                </div>
-                <div class="vip-task-status">
-                    ${statusButton}
-                </div>
-            </div>
-        `;
-    }
-    
-    html += `</div>`;
-    
-    elements.vipTasksGrid.innerHTML = html;
-}
-
-// ===========================================
-// STAKING SYSTEM (بدون تغيير)
-// ===========================================
-function updateStakingDisplay() {
-    if (!walletData.staking) {
-        console.log("⚠️ Staking data not ready");
-        return;
-    }
-    updateStakingStats();
-    if (Array.isArray(walletData.staking.activeStakes)) {
-        updateActiveStakes();
-    } else {
-        console.warn("Staking stakes not ready");
-        if (elements.activeStakesList) {
-            elements.activeStakesList.innerHTML = '<div class="empty-stakes">No stakes available</div>';
-        }
-    }
-}
-
-function updateStakingStats() {
-    if (elements.totalStaked) {
-        elements.totalStaked.textContent = `${walletData.staking.totalStaked} USDT`;
-    }
-}
-
-function updateActiveStakes() {
-    if (!elements.activeStakesList) return;
-    
-    const activeStakes = walletData.staking.activeStakes || [];
-    
-    if (!activeStakes.length) {
-        elements.activeStakesList.innerHTML = `
-            <div class="empty-stakes">
-                <i class="fas fa-inbox"></i>
-                <p>No active stakes yet</p>
-                <small>Start staking to earn rewards</small>
-            </div>
-        `;
-        return;
-    }
-    
-    let html = '';
-    activeStakes.forEach((stake, index) => {
-        const plan = CONFIG.STAKING.PLANS[stake.planId];
-        if (!plan) return;
-        
-        const now = Date.now();
-        const startTime = stake.startTime || now;
-        const durationMs = plan.duration * 24 * 60 * 60 * 1000;
-        const endTime = startTime + durationMs;
-        const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
-        const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
-        
-        let dailyReward = 0;
-        let totalReward = 0;
-        
-        if (plan.name === "Silver") {
-            dailyReward = (stake.amount / 10) * plan.dailyPer10;
-            totalReward = (stake.amount / 10) * plan.totalPer10;
-        } else if (plan.name === "Gold") {
-            dailyReward = (stake.amount / 50) * plan.dailyPer50;
-            totalReward = (stake.amount / 50) * plan.totalPer50;
-        } else if (plan.name === "Diamond") {
-            dailyReward = (stake.amount / 100) * plan.dailyPer100;
-            totalReward = (stake.amount / 100) * plan.totalPer100;
-        }
-        
-        html += `
-            <div class="stake-item">
-                <div class="stake-header">
-                    <div class="stake-info">
-                        <h5>${plan.name} - ${stake.amount} USDT</h5>
-                        <span class="stake-duration">${plan.duration} Days</span>
-                    </div>
-                    <span class="status-badge active">Active</span>
-                </div>
-                
-                <div class="stake-progress">
-                    <div class="progress-info">
-                        <span>${Math.round(progress)}%</span>
-                        <span>${daysLeft} days left</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                </div>
-                
-                <div class="stake-details">
-                    <div class="detail">
-                        <i class="fas fa-percentage"></i>
-                        <span>${plan.apr}% APR</span>
-                    </div>
-                    <div class="detail">
-                        <i class="fas fa-gift"></i>
-                        <span>${dailyReward.toLocaleString()} AMSK/Day</span>
-                    </div>
-                    <div class="detail">
-                        <i class="fas fa-coins"></i>
-                        <span>Total: ${totalReward.toLocaleString()} AMSK</span>
-                    </div>
-                </div>
-                
-                <div class="stake-actions">
-                    <button class="btn-secondary" onclick="cancelStake(${index})" ${progress < 50 ? '' : 'disabled'}>
-                        Cancel (50% penalty)
-                    </button>
-                    <button class="btn-primary" onclick="claimStakeReward(${index})" ${progress >= 100 ? '' : 'disabled'}>
-                        Claim
-                    </button>
-                </div>
-            </div>
-        `;
-    });
-    
-    elements.activeStakesList.innerHTML = html;
-}
-
+// ====== 21. STAKING FUNCTIONS ======
 function openStakeModal(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
     if (!plan) return;
@@ -3030,7 +3002,7 @@ async function confirmStaking(planId) {
         walletData.staking.activeStakes.push(stake);
         walletData.staking.totalStaked = (walletData.staking.totalStaked || 0) + amount;
         
-        addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started successfully');
+        addTransactionToHistory('staking_start', -amount, 'USDT', `${plan.name} Plan - ${plan.duration} days`, 'completed', 'Staking started');
         
         checkStakingVipReward(planId, plan.name);
         
@@ -3045,6 +3017,120 @@ async function confirmStaking(planId) {
         console.error("❌ Error confirming stake:", error);
         showMessage("Failed to process stake", "error");
     }
+}
+
+function updateStakingDisplay() {
+    if (!walletData.staking) {
+        console.log("⚠️ Staking data not ready");
+        return;
+    }
+    updateStakingStats();
+    if (Array.isArray(walletData.staking.activeStakes)) {
+        updateActiveStakes();
+    } else {
+        console.warn("Staking stakes not ready");
+        if (elements.activeStakesList) {
+            elements.activeStakesList.innerHTML = '<div class="empty-stakes">No stakes available</div>';
+        }
+    }
+}
+
+function updateStakingStats() {
+    if (elements.totalStaked) {
+        elements.totalStaked.textContent = `${walletData.staking.totalStaked} USDT`;
+    }
+}
+
+function updateActiveStakes() {
+    if (!elements.activeStakesList) return;
+    
+    const activeStakes = walletData.staking.activeStakes || [];
+    
+    if (!activeStakes.length) {
+        elements.activeStakesList.innerHTML = `
+            <div class="empty-stakes">
+                <i class="fas fa-inbox"></i>
+                <p>No active stakes yet</p>
+                <small>Start staking to earn rewards</small>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    activeStakes.forEach((stake, index) => {
+        const plan = CONFIG.STAKING.PLANS[stake.planId];
+        if (!plan) return;
+        
+        const now = Date.now();
+        const startTime = stake.startTime || now;
+        const durationMs = plan.duration * 24 * 60 * 60 * 1000;
+        const endTime = startTime + durationMs;
+        const progress = Math.min(((now - startTime) / durationMs) * 100, 100);
+        const daysLeft = Math.ceil((endTime - now) / (24 * 60 * 60 * 1000));
+        
+        let dailyReward = 0;
+        let totalReward = 0;
+        
+        if (plan.name === "Silver") {
+            dailyReward = (stake.amount / 10) * plan.dailyPer10;
+            totalReward = (stake.amount / 10) * plan.totalPer10;
+        } else if (plan.name === "Gold") {
+            dailyReward = (stake.amount / 50) * plan.dailyPer50;
+            totalReward = (stake.amount / 50) * plan.totalPer50;
+        } else if (plan.name === "Diamond") {
+            dailyReward = (stake.amount / 100) * plan.dailyPer100;
+            totalReward = (stake.amount / 100) * plan.totalPer100;
+        }
+        
+        html += `
+            <div class="stake-item">
+                <div class="stake-header">
+                    <div class="stake-info">
+                        <h5>${plan.name} - ${stake.amount} USDT</h5>
+                        <span class="stake-duration">${plan.duration} Days</span>
+                    </div>
+                    <span class="status-badge active">Active</span>
+                </div>
+                
+                <div class="stake-progress">
+                    <div class="progress-info">
+                        <span>${Math.round(progress)}%</span>
+                        <span>${daysLeft} days left</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progress}%"></div>
+                    </div>
+                </div>
+                
+                <div class="stake-details">
+                    <div class="detail">
+                        <i class="fas fa-percentage"></i>
+                        <span>${plan.apr}% APR</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-gift"></i>
+                        <span>${dailyReward.toLocaleString()} AMSK/Day</span>
+                    </div>
+                    <div class="detail">
+                        <i class="fas fa-coins"></i>
+                        <span>Total: ${totalReward.toLocaleString()} AMSK</span>
+                    </div>
+                </div>
+                
+                <div class="stake-actions">
+                    <button class="btn-secondary" onclick="cancelStake(${index})" ${progress < 50 ? '' : 'disabled'}>
+                        Cancel (50% penalty)
+                    </button>
+                    <button class="btn-primary" onclick="claimStakeReward(${index})" ${progress >= 100 ? '' : 'disabled'}>
+                        Claim
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    elements.activeStakesList.innerHTML = html;
 }
 
 async function claimStakeReward(stakeIndex) {
@@ -3135,9 +3221,109 @@ async function cancelStake(stakeIndex) {
     await saveUserData();
 }
 
-// ===========================================
-// REFERRAL SYSTEM (بدون تغيير)
-// ===========================================
+function checkStakingVipReward(planId, planName) {
+    if (!walletData.vipTasks) {
+        walletData.vipTasks = {
+            claimedMiningRewards: [],
+            claimedStakingRewards: []
+        };
+    }
+    
+    let planKey = '';
+    if (planName.toLowerCase().includes('silver')) planKey = 'silver';
+    else if (planName.toLowerCase().includes('gold')) planKey = 'gold';
+    else if (planName.toLowerCase().includes('diamond')) planKey = 'diamond';
+    else return;
+    
+    const vipTask = CONFIG.VIP_TASKS.STAKING[planKey];
+    if (!vipTask) return;
+    
+    if (!walletData.vipTasks.claimedStakingRewards.includes(planKey)) {
+        showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for your first ${planName} Staking!`, "success", 5000);
+    }
+    
+    updateVipTasksDisplay();
+}
+
+// ====== 22. WALLET FUNCTIONS ======
+function updateWalletUI() {
+    if (!walletData || !walletData.balances) {
+        console.log("⚠️ Wallet data not ready yet");
+        return;
+    }
+    
+    const AMSK = walletData.balances.AMSK ?? 0;
+    const USDT = walletData.balances.USDT ?? 0;
+    const BNB = walletData.balances.BNB ?? 0;
+    const TON = walletData.balances.TON ?? 0;
+    
+    const amskPrice = CONFIG.PRICES.AMSK;
+    const usdtPrice = CONFIG.PRICES.USDT;
+    const bnbPrice = livePrices.BNB || CONFIG.PRICES.BNB;
+    const tonPrice = livePrices.TON || CONFIG.PRICES.TON;
+    
+    const totalUSD = (AMSK * amskPrice) + (USDT * usdtPrice) + (BNB * bnbPrice) + (TON * tonPrice);
+    
+    if (elements.walletBalanceUsd) {
+        elements.walletBalanceUsd.textContent = `$${totalUSD.toFixed(2)}`;
+    }
+    
+    if (elements.walletBalanceAmsk) {
+        elements.walletBalanceAmsk.textContent = `${formatNumber(AMSK)} AMSK`;
+    }
+    
+    if (elements.totalBalanceUsd) {
+        elements.totalBalanceUsd.textContent = totalUSD.toFixed(2);
+    }
+    
+    if (elements.totalBalanceAmsk) {
+        elements.totalBalanceAmsk.textContent = formatNumber(AMSK);
+    }
+    
+    if (elements.walletAmskBalance) {
+        elements.walletAmskBalance.textContent = `${formatNumber(AMSK)} AMSK`;
+    }
+    if (elements.walletAmskValue) {
+        elements.walletAmskValue.textContent = `$${(AMSK * amskPrice).toFixed(2)}`;
+    }
+    
+    if (elements.walletUsdtBalance) {
+        elements.walletUsdtBalance.textContent = `${USDT.toFixed(2)} USDT`;
+    }
+    if (elements.walletUsdtValue) {
+        elements.walletUsdtValue.textContent = `$${USDT.toFixed(2)}`;
+    }
+    
+    if (elements.walletBnbBalance) {
+        elements.walletBnbBalance.textContent = `${BNB.toFixed(4)} BNB`;
+    }
+    if (elements.walletBnbValue) {
+        const bnbValue = BNB * bnbPrice;
+        elements.walletBnbValue.textContent = `$${bnbValue.toFixed(2)}`;
+        
+        if (livePrices.BNB_24h_change) {
+            const change = livePrices.BNB_24h_change;
+            const changeSymbol = change >= 0 ? '▲' : '▼';
+            elements.walletBnbValue.innerHTML += ` <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px;">${changeSymbol} ${Math.abs(change).toFixed(1)}%</span>`;
+        }
+    }
+    
+    if (elements.walletTonBalance) {
+        elements.walletTonBalance.textContent = `${formatNumber(TON)} TON`;
+    }
+    if (elements.walletTonValue) {
+        const tonValue = TON * tonPrice;
+        elements.walletTonValue.textContent = `$${tonValue.toFixed(2)}`;
+        
+        if (livePrices.TON_24h_change) {
+            const change = livePrices.TON_24h_change;
+            const changeSymbol = change >= 0 ? '▲' : '▼';
+            elements.walletTonValue.innerHTML += ` <span style="color: ${change >= 0 ? '#00ff88' : '#ff4444'}; font-size: 10px;">${changeSymbol} ${Math.abs(change).toFixed(1)}%</span>`;
+        }
+    }
+}
+
+// ====== 23. REFERRAL FUNCTIONS ======
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
@@ -3148,8 +3334,8 @@ async function checkForReferral() {
     
     let referralCode = null;
     
-    if (window.tg && window.tg.initDataUnsafe && window.tg.initDataUnsafe.start_param) {
-        referralCode = window.tg.initDataUnsafe.start_param;
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+        referralCode = tg.initDataUnsafe.start_param;
         console.log("📱 Telegram referral detected:", referralCode);
     }
     
@@ -3177,8 +3363,8 @@ async function processReferral(referralCode) {
     try {
         let referrerId = null;
         
-        if (window.db) {
-            const usersRef = window.db.collection(DB_COLLECTIONS.USERS);
+        if (db) {
+            const usersRef = db.collection(DB_COLLECTIONS.USERS);
             const querySnapshot = await usersRef.where('userInfo.referralCode', '==', referralCode).get();
             
             if (!querySnapshot.empty) {
@@ -3213,8 +3399,8 @@ async function processReferral(referralCode) {
         userData.processedReferrals.push(referrerId);
         
         if (referrerId !== userData.id) {
-            if (window.db) {
-                const referrerRef = window.db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
+            if (db) {
+                const referrerRef = db.collection(DB_COLLECTIONS.USERS).doc(referrerId);
                 
                 const referrerDoc = await referrerRef.get();
                 if (referrerDoc.exists) {
@@ -3377,9 +3563,7 @@ async function claimMilestone(milestoneNum) {
     }
 }
 
-// ===========================================
-// TASKS SYSTEM (بدون تغيير)
-// ===========================================
+// ====== 24. TASKS FUNCTIONS ======
 function updateTasksDisplay() {
     if (!elements.tasksGrid || !elements.tasksProgress) return;
     
@@ -3455,9 +3639,187 @@ async function markTaskCompleted(taskId) {
     showMessage(`✅ +${CONFIG.TASKS[taskId].reward.toLocaleString()} AMSK earned from ${CONFIG.TASKS[taskId].name}!`, "success");
 }
 
-// ===========================================
-// SWAP SYSTEM (بدون تغيير)
-// ===========================================
+function updateVipTasksDisplay() {
+    if (!elements.vipTasksGrid) return;
+    
+    if (!walletData.vipTasks) {
+        walletData.vipTasks = {
+            claimedMiningRewards: [],
+            claimedStakingRewards: []
+        };
+    }
+    
+    const miningTasks = CONFIG.VIP_TASKS.MINING;
+    const stakingTasks = CONFIG.VIP_TASKS.STAKING;
+    const currentLevel = walletData.mining.level;
+    
+    let html = '';
+    
+    html += `
+        <div class="vip-task-category">
+            <h5><i class="fas fa-rocket"></i> Mining Level Rewards</h5>
+    `;
+    
+    for (let level = 2; level <= 5; level++) {
+        const task = miningTasks[level];
+        if (!task) continue;
+        
+        const isClaimed = walletData.vipTasks?.claimedMiningRewards?.includes(level) || false;
+        const isAvailable = currentLevel >= level && !isClaimed;
+        const isLocked = currentLevel < level;
+        
+        let statusButton = '';
+        if (isClaimed) {
+            statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
+        } else if (isAvailable) {
+            statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('mining', ${level}, ${task.reward}, '${task.name}')">Claim</button>`;
+        } else {
+            statusButton = `<button class="vip-task-btn locked" disabled>🔒 Level ${level}</button>`;
+        }
+        
+        html += `
+            <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
+                <div class="vip-task-icon">
+                    <i class="${task.icon}"></i>
+                </div>
+                <div class="vip-task-details">
+                    <div class="vip-task-name">${task.name}</div>
+                    <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
+                </div>
+                <div class="vip-task-status">
+                    ${statusButton}
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `</div>`;
+    
+    html += `
+        <div class="vip-task-category">
+            <h5><i class="fas fa-gem"></i> First Staking Rewards</h5>
+    `;
+    
+    for (let [planKey, task] of Object.entries(stakingTasks)) {
+        const isClaimed = walletData.vipTasks?.claimedStakingRewards?.includes(planKey) || false;
+        
+        const hasActiveStake = walletData.staking.activeStakes.some(stake => {
+            const plan = CONFIG.STAKING.PLANS[stake.planId];
+            if (!plan) return false;
+            const stakePlanKey = plan.name.toLowerCase();
+            return stakePlanKey === planKey;
+        });
+        
+        let statusButton = '';
+        
+        if (isClaimed) {
+            statusButton = `<button class="vip-task-btn claimed" disabled>✓ Claimed</button>`;
+        } else if (hasActiveStake) {
+            statusButton = `<button class="vip-task-btn claim" onclick="claimVipTask('staking', '${planKey}', ${task.reward}, '${task.name}')">Claim</button>`;
+        } else {
+            statusButton = `<button class="vip-task-btn locked" disabled>🔒 Need Active Stake</button>`;
+        }
+        
+        html += `
+            <div class="vip-task-item ${isClaimed ? 'completed' : ''}">
+                <div class="vip-task-icon">
+                    <i class="${task.icon}"></i>
+                </div>
+                <div class="vip-task-details">
+                    <div class="vip-task-name">${task.name}</div>
+                    <div class="vip-task-reward">+${task.reward.toLocaleString()} AMSK</div>
+                </div>
+                <div class="vip-task-status">
+                    ${statusButton}
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `</div>`;
+    
+    elements.vipTasksGrid.innerHTML = html;
+}
+
+function claimVipTask(type, id, reward, taskName) {
+    try {
+        if (!walletData.vipTasks) {
+            walletData.vipTasks = {
+                claimedMiningRewards: [],
+                claimedStakingRewards: []
+            };
+        }
+        
+        if (type === 'mining') {
+            if (walletData.vipTasks.claimedMiningRewards.includes(id)) {
+                showMessage("Task already claimed!", "warning");
+                return false;
+            }
+            
+            walletData.balances.AMSK += reward;
+            walletData.vipTasks.claimedMiningRewards.push(id);
+            
+            addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Mining Task: ${taskName}`, 'completed', 'VIP task reward claimed');
+            
+        } else if (type === 'staking') {
+            if (walletData.vipTasks.claimedStakingRewards.includes(id)) {
+                showMessage("Task already claimed!", "warning");
+                return false;
+            }
+            
+            const hasActiveStake = walletData.staking.activeStakes.some(stake => {
+                const plan = CONFIG.STAKING.PLANS[stake.planId];
+                if (!plan) return false;
+                const stakePlanKey = plan.name.toLowerCase();
+                return stakePlanKey === id;
+            });
+            
+            if (!hasActiveStake) {
+                showMessage("You need an active stake in this plan to claim the reward!", "warning", 4500);
+                return false;
+            }
+            
+            walletData.balances.AMSK += reward;
+            walletData.vipTasks.claimedStakingRewards.push(id);
+            
+            addTransactionToHistory('vip_task_reward', reward, 'AMSK', `VIP Staking Task: ${taskName}`, 'completed', 'VIP task reward claimed');
+        }
+        
+        updateVipTasksDisplay();
+        updateWalletUI();
+        saveUserData();
+        
+        showMessage(`✅ Claimed ${reward.toLocaleString()} AMSK from ${taskName}!`, "success");
+        return true;
+        
+    } catch (error) {
+        console.error("❌ Error claiming VIP task:", error);
+        showMessage("Failed to claim VIP task", "error");
+        return false;
+    }
+}
+
+function checkMiningVipReward(newLevel) {
+    if (!walletData.vipTasks) {
+        walletData.vipTasks = {
+            claimedMiningRewards: [],
+            claimedStakingRewards: []
+        };
+    }
+    
+    for (let level = 2; level <= newLevel; level++) {
+        const vipTask = CONFIG.VIP_TASKS.MINING[level];
+        if (!vipTask) continue;
+        
+        if (!walletData.vipTasks.claimedMiningRewards.includes(level)) {
+            showMessage(`🏆 VIP Task available: Claim ${vipTask.reward.toLocaleString()} AMSK for reaching Level ${level}!`, "success", 5000);
+        }
+    }
+    
+    updateVipTasksDisplay();
+}
+
+// ====== 25. SWAP FUNCTIONS ======
 function openSwapModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -3549,92 +3911,6 @@ function openSwapModal() {
     setTimeout(() => {
         updateSwapRates();
     }, 100);
-}
-
-function getBalanceText(currency) {
-    if (!walletData || !walletData.balances) return '0.00';
-    const balance = walletData.balances[currency] || 0;
-    switch(currency) {
-        case 'USDT': return `${balance.toFixed(2)} USDT`;
-        case 'BNB': return `${balance.toFixed(4)} BNB`;
-        case 'TON': return `${balance.toFixed(2)} TON`;
-        case 'AMSK': return `${formatNumber(balance)} AMSK`;
-        default: return '0.00';
-    }
-}
-
-function swapCurrencies() {
-    const fromSelect = document.getElementById('swapFrom');
-    const toSelect = document.getElementById('swapTo');
-    
-    if (!fromSelect || !toSelect) return;
-    
-    const fromValue = fromSelect.value;
-    const toValue = toSelect.value;
-    
-    const reversePair = `${toValue}_to_${fromValue}`;
-    if (CONFIG.SWAP.ALLOWED_PAIRS.includes(reversePair)) {
-        fromSelect.value = toValue;
-        toSelect.value = fromValue;
-        updateSwapRates();
-    } else {
-        showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
-    }
-}
-
-function setSwapPercentage(percentage) {
-    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
-    const fromAmountInput = document.getElementById('swapFromAmount');
-    
-    if (!fromAmountInput) return;
-    
-    if (!walletData || !walletData.balances) return;
-    const balance = walletData.balances[fromCurrency] || 0;
-    const amount = (balance * percentage) / 100;
-    
-    fromAmountInput.value = amount.toFixed(fromCurrency === 'BNB' ? 4 : 2);
-    updateSwapCalculation('from');
-}
-
-async function confirmSwap() {
-    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
-    const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
-    const fromAmountInput = document.getElementById('swapFromAmount');
-    const toAmountInput = document.getElementById('swapToAmount');
-    
-    if (!fromAmountInput || !toAmountInput) return;
-    
-    const fromAmount = parseFloat(fromAmountInput.value) || 0;
-    const toAmount = parseFloat(toAmountInput.value) || 0;
-    
-    if (fromAmount <= 0 || toAmount <= 0) {
-        showMessage("Invalid swap amount", "error");
-        return;
-    }
-    
-    const swapPair = `${fromCurrency}_to_${toCurrency}`;
-    if (!CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair)) {
-        showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
-        return;
-    }
-    
-    if (!walletData || !walletData.balances) return;
-    if (fromAmount > (walletData.balances[fromCurrency] || 0)) {
-        showMessage(`⚠️ Insufficient ${fromCurrency} balance. Need ${(fromAmount - (walletData.balances[fromCurrency] || 0)).toFixed(2)}.`, "warning", 4500);
-        return;
-    }
-    
-    walletData.balances[fromCurrency] -= fromAmount;
-    walletData.balances[toCurrency] += toAmount;
-    
-    addTransactionToHistory('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`, 'completed', 'Swap completed successfully');
-    addTransactionToHistory('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`, 'completed', 'Swap completed successfully');
-    
-    updateWalletUI();
-    closeModal();
-    
-    showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}! New balance: ${walletData.balances[toCurrency].toLocaleString()} ${toCurrency}`, "success");
-    await saveUserData();
 }
 
 function updateSwapRates() {
@@ -3742,9 +4018,93 @@ function updateSwapCalculation(source) {
     confirmBtn.disabled = !isAllowed || fromAmount <= 0 || toAmount <= 0;
 }
 
-// ===========================================
-// 💳 DEPOSIT SYSTEM (مع On-Demand Listener)
-// ===========================================
+function getBalanceText(currency) {
+    if (!walletData || !walletData.balances) return '0.00';
+    const balance = walletData.balances[currency] || 0;
+    switch(currency) {
+        case 'USDT': return `${balance.toFixed(2)} USDT`;
+        case 'BNB': return `${balance.toFixed(4)} BNB`;
+        case 'TON': return `${balance.toFixed(2)} TON`;
+        case 'AMSK': return `${formatNumber(balance)} AMSK`;
+        default: return '0.00';
+    }
+}
+
+function swapCurrencies() {
+    const fromSelect = document.getElementById('swapFrom');
+    const toSelect = document.getElementById('swapTo');
+    
+    if (!fromSelect || !toSelect) return;
+    
+    const fromValue = fromSelect.value;
+    const toValue = toSelect.value;
+    
+    const reversePair = `${toValue}_to_${fromValue}`;
+    if (CONFIG.SWAP.ALLOWED_PAIRS.includes(reversePair)) {
+        fromSelect.value = toValue;
+        toSelect.value = fromValue;
+        updateSwapRates();
+    } else {
+        showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
+    }
+}
+
+function setSwapPercentage(percentage) {
+    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
+    const fromAmountInput = document.getElementById('swapFromAmount');
+    
+    if (!fromAmountInput) return;
+    
+    if (!walletData || !walletData.balances) return;
+    const balance = walletData.balances[fromCurrency] || 0;
+    const amount = (balance * percentage) / 100;
+    
+    fromAmountInput.value = amount.toFixed(fromCurrency === 'BNB' ? 4 : 2);
+    updateSwapCalculation('from');
+}
+
+async function confirmSwap() {
+    const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
+    const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
+    const fromAmountInput = document.getElementById('swapFromAmount');
+    const toAmountInput = document.getElementById('swapToAmount');
+    
+    if (!fromAmountInput || !toAmountInput) return;
+    
+    const fromAmount = parseFloat(fromAmountInput.value) || 0;
+    const toAmount = parseFloat(toAmountInput.value) || 0;
+    
+    if (fromAmount <= 0 || toAmount <= 0) {
+        showMessage("Invalid swap amount", "error");
+        return;
+    }
+    
+    const swapPair = `${fromCurrency}_to_${toCurrency}`;
+    if (!CONFIG.SWAP.ALLOWED_PAIRS.includes(swapPair)) {
+        showMessage("⚠️ This swap pair is not allowed. Only USDT/BNB/TON → AMSK and AMSK → USDT", "warning", 4500);
+        return;
+    }
+    
+    if (!walletData || !walletData.balances) return;
+    if (fromAmount > (walletData.balances[fromCurrency] || 0)) {
+        showMessage(`⚠️ Insufficient ${fromCurrency} balance. Need ${(fromAmount - (walletData.balances[fromCurrency] || 0)).toFixed(2)}.`, "warning", 4500);
+        return;
+    }
+    
+    walletData.balances[fromCurrency] -= fromAmount;
+    walletData.balances[toCurrency] += toAmount;
+    
+    addTransactionToHistory('swap', -fromAmount, fromCurrency, `Swapped to ${toAmount.toLocaleString()} ${toCurrency}`, 'completed', 'Swap completed');
+    addTransactionToHistory('swap', toAmount, toCurrency, `Swapped from ${fromAmount} ${fromCurrency}`, 'completed', 'Swap completed');
+    
+    updateWalletUI();
+    closeModal();
+    
+    showMessage(`✅ Swapped ${fromAmount} ${fromCurrency} to ${toAmount.toLocaleString()} ${toCurrency}!`, "success");
+    await saveUserData();
+}
+
+// ====== 26. DEPOSIT MODAL FUNCTIONS ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -3988,103 +4348,8 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-async function submitDepositRequest() {
-    const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
-    const amountInput = document.getElementById('depositAmount');
-    const txIdInput = document.getElementById('depositTxId');
-    
-    if (!amountInput || !txIdInput) return;
-    
-    const amount = parseFloat(amountInput.value);
-    const txId = txIdInput.value.trim();
-    const minAmount = CONFIG.DEPOSIT.MIN_AMOUNTS[activeCurrency];
-    
-    if (!amount || amount < minAmount) {
-        showMessage(`Minimum deposit is ${minAmount} ${activeCurrency}`, "error");
-        return;
-    }
-    
-    if (!txId) {
-        showMessage("Please enter Transaction ID", "error");
-        return;
-    }
-    
-    if (!walletData.usedTxIds) walletData.usedTxIds = [];
-    if (walletData.usedTxIds.includes(txId)) {
-        showMessage("⚠️ This TX ID has already been used", "warning", 4500);
-        return;
-    }
-    
-    if (activeCurrency === 'USDT' || activeCurrency === 'BNB') {
-        if (!txId.startsWith('0x') || txId.length !== 66) {
-            showMessage("⚠️ Invalid TX ID format. Should start with 0x and be 66 characters.", "warning", 4500);
-            return;
-        }
-    } else if (activeCurrency === 'TON') {
-        if (txId.length < 40 || txId.length > 70) {
-            showMessage("⚠️ Invalid TX ID format. Should be 40-70 characters.", "warning", 4500);
-            return;
-        }
-    }
-    
-    try {
-        const depositRequest = {
-            userId: userData.id,
-            telegramId: userData.telegramId,
-            username: userData.username,
-            currency: activeCurrency,
-            amount: amount,
-            txId: txId,
-            status: 'pending',
-            createdAt: Date.now(),
-            createdAtFormatted: new Date().toISOString()
-        };
-        
-        let depositId = '';
-        
-        if (window.db) {
-            const depositRef = await window.db.collection(DB_COLLECTIONS.DEPOSITS).add(depositRequest);
-            depositId = depositRef.id;
-            depositRequest.id = depositId;
-            
-            // 🔥 On-Demand Listener - 30 ثانية فقط
-            startOnDemandListener('deposit_requests', depositId, (data) => {
-                console.log("📥 Deposit update received:", data);
-                
-                if (data.status === 'approved') {
-                    walletData.balances[activeCurrency] = (walletData.balances[activeCurrency] || 0) + amount;
-                    saveUserData(true);
-                    updateWalletUI();
-                    showMessage(`✅ Deposit of ${amount} ${activeCurrency} approved!`, 'success');
-                    
-                } else if (data.status === 'rejected') {
-                    showMessage(`❌ Deposit rejected: ${data.reason || 'Unknown reason'}`, 'error');
-                }
-            }, 30000);
-        } else {
-            depositId = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            depositRequest.id = depositId;
-        }
-        
-        addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted. Waiting for admin approval.', txId);
-        
-        walletData.usedTxIds.push(txId);
-        
-        await saveUserData();
-        closeModal();
-        
-        showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Waiting for admin approval.`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error submitting deposit:", error);
-        showMessage("Failed to submit deposit request", "error");
-    }
-}
-
-// ===========================================
-// 💸 WITHDRAW SYSTEM (مع On-Demand Listener)
-// ===========================================
-async function openWithdrawModal() {
+// ====== 27. WITHDRAW MODAL FUNCTIONS ======
+function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
     const pendingTotal = getPendingWithdrawalsTotal();
@@ -4092,26 +4357,25 @@ async function openWithdrawModal() {
     if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
         const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
         
-📊 **Your Balance:** ${walletData.balances.USDT.toFixed(2)} USDT
-⏳ **Pending Withdrawals:** ${pendingTotal.toFixed(2)} USDT
+📊 Your Balance: ${walletData.balances.USDT.toFixed(2)} USDT
+⏳ Pending Withdrawals: ${pendingTotal.toFixed(2)} USDT
 
-📈 **Your Path to 100 USDT:**
+📈 Your Path to 100 USDT:
 
-⛏️ **Mining:** 
+⛏️ Mining: 
    • 1,000 AMSK/2.5h = 9,600 AMSK/day = 1.92 USDT/day
 
-👥 **Referrals:** 
+👥 Referrals: 
    • You get 10,000 AMSK per friend
-   • Your friend gets 5,000 AMSK bonus
 
-💱 **Swap Rate:** 
+💱 Swap Rate: 
    • 5,000 AMSK = 1 USDT
 
-✨ **Quick Math:**
+✨ Quick Math:
    • 1 referral = 10,000 AMSK = 2 USDT
    • 50 referrals = 100 USDT 🎯
 
-🚀 Keep going! Every referral brings you closer!`;
+🚀 Keep going!`;
         
         showMessage(motivationalMessage, "warning", 5000);
         return;
@@ -4220,510 +4484,7 @@ function getPendingWithdrawalsTotal() {
         .reduce((total, w) => total + w.amount, 0);
 }
 
-async function submitWithdrawRequest() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const addressInput = document.getElementById('withdrawAddress');
-    
-    if (!amountInput || !addressInput) return;
-    
-    const amount = parseFloat(amountInput.value);
-    const address = addressInput.value.trim();
-    
-    if (!amount || amount < CONFIG.WITHDRAW.MIN_USDT) {
-        showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
-        return;
-    }
-    
-    if (!walletData || !walletData.balances) return;
-    
-    if (amount > walletData.balances.USDT) {
-        showMessage(`⚠️ Insufficient balance. You have ${walletData.balances.USDT.toFixed(2)} USDT`, "warning", 4500);
-        return;
-    }
-    
-    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
-        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
-        return;
-    }
-    
-    if (!address || address.length < 20) {
-        showMessage(`Please enter a valid wallet address`, "error");
-        return;
-    }
-    
-    try {
-        walletData.balances.USDT -= amount;
-        
-        const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        const withdrawRequest = {
-            id: withdrawalId,
-            userId: userData.id,
-            telegramId: userData.telegramId,
-            username: userData.username,
-            currency: 'USDT',
-            amount: amount,
-            address: address,
-            fee: CONFIG.WITHDRAW.FEE_BNB,
-            status: 'pending',
-            createdAt: Date.now(),
-            createdAtFormatted: new Date().toISOString()
-        };
-        
-        if (!walletData.pendingWithdrawals) {
-            walletData.pendingWithdrawals = [];
-        }
-        walletData.pendingWithdrawals.push(withdrawRequest);
-        
-        addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
-            `To: ${address.slice(0, 10)}...`, 'pending', 
-            'Withdrawal requested - Funds deducted and held for approval', 
-            withdrawalId);
-        
-        if (window.db) {
-            await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
-            
-            // 🔥 On-Demand Listener - 30 ثانية فقط
-            startOnDemandListener('withdrawals', withdrawalId, (data) => {
-                console.log("📤 Withdrawal update received:", data);
-                
-                if (data.status === 'approved') {
-                    showMessage(`✅ Withdrawal of ${amount} USDT approved!`, 'success');
-                    
-                } else if (data.status === 'rejected') {
-                    walletData.balances.USDT += amount;
-                    walletData.balances.BNB += CONFIG.WITHDRAW.FEE_BNB;
-                    saveUserData(true);
-                    updateWalletUI();
-                    showMessage(`❌ Withdrawal rejected: ${data.reason || 'Unknown reason'}`, 'error');
-                }
-            }, 30000);
-        }
-        
-        updateWalletUI();
-        await saveUserData();
-        
-        closeModal();
-        
-        showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Funds deducted and held for approval.`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error submitting withdrawal:", error);
-        showMessage("Failed to submit withdrawal request", "error");
-        
-        if (amount) {
-            walletData.balances.USDT += amount;
-            updateWalletUI();
-        }
-    }
-}
-
-// ===========================================
-// 👑 ADMIN SYSTEM - إضافة تاج المشرف
-// ===========================================
-let isAdmin = userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
-
-function checkAdminAndAddCrown() {
-    if (!isAdmin) return;
-    
-    const addCrown = () => {
-        const header = document.querySelector('.header-icons-row');
-        if (!header) return false;
-        
-        const existingCrown = document.getElementById('adminCrownBtn');
-        if (existingCrown) return true;
-        
-        const adminBtn = document.createElement('button');
-        adminBtn.id = 'adminCrownBtn';
-        adminBtn.className = 'support-icon';
-        adminBtn.innerHTML = '<i class="fa-solid fa-crown" style="color: gold;"></i>';
-        adminBtn.onclick = showAdminPanel;
-        adminBtn.title = 'Admin Panel';
-        
-        header.insertBefore(adminBtn, elements.supportIcon);
-        return true;
-    };
-    
-    if (!addCrown()) {
-        setTimeout(addCrown, 500);
-    }
-}
-
-function showAdminPanel() {
-    if (!isAdmin) {
-        showMessage("Access denied", "error");
-        return;
-    }
-    
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay active';
-    modal.innerHTML = `
-        <div class="modal">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-crown" style="color:gold;"></i> Admin Panel</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
-                <div style="text-align:center;margin-bottom:15px;">
-                    <button class="btn-primary" onclick="refreshAdminPanel()" id="adminRefreshBtn">
-                        <i class="fas fa-sync-alt"></i> Refresh Data
-                    </button>
-                </div>
-                <div id="adminContent">
-                    <p style="text-align:center;color:#b0b0d0;">Click Refresh to load data</p>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-let adminData = {
-    pendingDeposits: [],
-    pendingWithdrawals: [],
-    lastRefresh: 0
-};
-
-window.refreshAdminPanel = async function() {
-    if (!db) {
-        showMessage("Firebase not available", "error");
-        return;
-    }
-    
-    const now = Date.now();
-    if (now - adminData.lastRefresh < CONFIG.CACHE.ADMIN) {
-        showMessage("Please wait 30 seconds", "warning");
-        return;
-    }
-    
-    const btn = document.getElementById('adminRefreshBtn');
-    if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    
-    try {
-        const deposits = await db.collection('deposit_requests').where('status', '==', 'pending').get();
-        const withdrawals = await db.collection('withdrawals').where('status', '==', 'pending').get();
-        
-        adminData.pendingDeposits = deposits.docs.map(d => ({ id: d.id, ...d.data() }));
-        adminData.pendingWithdrawals = withdrawals.docs.map(w => ({ id: w.id, ...w.data() }));
-        adminData.lastRefresh = now;
-        
-        renderAdminContent();
-        
-    } catch (e) {
-        console.error(e);
-        showMessage("Error loading data", "error");
-    } finally {
-        if (btn) btn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh Data';
-    }
-};
-
-function renderAdminContent() {
-    const content = document.getElementById('adminContent');
-    if (!content) return;
-    
-    let html = '<h4 style="color:#00ff88;margin-bottom:10px;">Pending Deposits</h4>';
-    
-    if (adminData.pendingDeposits.length === 0) {
-        html += '<p style="color:#b0b0d0;">No pending deposits</p>';
-    } else {
-        adminData.pendingDeposits.forEach(d => {
-            html += `
-                <div style="background:linear-gradient(145deg,#1e1e35,#15152a);border-radius:12px;padding:15px;margin-bottom:10px;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                        <span style="color:#00ff88;">${d.userName || 'User'}</span>
-                        <span style="color:#ffd700;">${d.amount} ${d.currency}</span>
-                    </div>
-                    <div style="font-size:12px;color:#b0b0d0;margin-bottom:10px;">
-                        <div>TX: ${d.txId?.substring(0,16)}...</div>
-                        <div>User ID: ${d.userId?.substring(0,10)}...</div>
-                    </div>
-                    <div style="display:flex;gap:8px;">
-                        <button class="btn-approve" style="flex:1;padding:8px;background:#00ff88;border:none;border-radius:8px;color:#000;font-weight:600;" onclick="approveDeposit('${d.id}')">Approve</button>
-                        <button class="btn-reject" style="flex:1;padding:8px;background:#ff4444;border:none;border-radius:8px;color:white;font-weight:600;" onclick="rejectDeposit('${d.id}')">Reject</button>
-                    </div>
-                </div>
-            `;
-        });
-    }
-    
-    html += '<h4 style="color:#00ff88;margin:15px 0 10px;">Pending Withdrawals</h4>';
-    
-    if (adminData.pendingWithdrawals.length === 0) {
-        html += '<p style="color:#b0b0d0;">No pending withdrawals</p>';
-    } else {
-        adminData.pendingWithdrawals.forEach(w => {
-            html += `
-                <div style="background:linear-gradient(145deg,#1e1e35,#15152a);border-radius:12px;padding:15px;margin-bottom:10px;">
-                    <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                        <span style="color:#00ff88;">${w.userName || 'User'}</span>
-                        <span style="color:#ffd700;">${w.amount} USDT</span>
-                    </div>
-                    <div style="font-size:12px;color:#b0b0d0;margin-bottom:10px;">
-                        <div>Address: ${w.address?.substring(0,16)}...</div>
-                        <div>User ID: ${w.userId?.substring(0,10)}...</div>
-                    </div>
-                    <div style="display:flex;gap:8px;">
-                        <button class="btn-approve" style="flex:1;padding:8px;background:#00ff88;border:none;border-radius:8px;color:#000;font-weight:600;" onclick="approveWithdrawal('${w.id}')">Approve</button>
-                        <button class="btn-reject" style="flex:1;padding:8px;background:#ff4444;border:none;border-radius:8px;color:white;font-weight:600;" onclick="rejectWithdrawal('${w.id}')">Reject</button>
-                    </div>
-                </div>
-            `;
-        });
-    }
-    
-    content.innerHTML = html;
-}
-
-window.approveDeposit = async function(id) {
-    if (!db) return;
-    try {
-        await db.collection('deposit_requests').doc(id).update({
-            status: 'approved',
-            approvedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showMessage("✅ Deposit approved", "success");
-        refreshAdminPanel();
-    } catch (e) {
-        console.error(e);
-        showMessage("Error approving", "error");
-    }
-};
-
-window.rejectDeposit = async function(id) {
-    if (!db) return;
-    const reason = prompt("Reason for rejection:");
-    if (!reason) return;
-    
-    try {
-        await db.collection('deposit_requests').doc(id).update({
-            status: 'rejected',
-            rejectionReason: reason,
-            rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showMessage("❌ Deposit rejected", "warning");
-        refreshAdminPanel();
-    } catch (e) {
-        console.error(e);
-        showMessage("Error rejecting", "error");
-    }
-};
-
-window.approveWithdrawal = async function(id) {
-    if (!db) return;
-    try {
-        await db.collection('withdrawals').doc(id).update({
-            status: 'approved',
-            approvedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showMessage("✅ Withdrawal approved", "success");
-        refreshAdminPanel();
-    } catch (e) {
-        console.error(e);
-        showMessage("Error approving", "error");
-    }
-};
-
-window.rejectWithdrawal = async function(id) {
-    if (!db) return;
-    const reason = prompt("Reason for rejection:");
-    if (!reason) return;
-    
-    try {
-        const doc = await db.collection('withdrawals').doc(id).get();
-        const data = doc.data();
-        
-        await db.collection('users').doc(data.userId).update({
-            'wallet.balances.USDT': firebase.firestore.FieldValue.increment(data.amount),
-            'wallet.balances.BNB': firebase.firestore.FieldValue.increment(data.fee || 0)
-        });
-        
-        await db.collection('withdrawals').doc(id).update({
-            status: 'rejected',
-            rejectionReason: reason,
-            rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        showMessage("❌ Withdrawal rejected", "warning");
-        refreshAdminPanel();
-    } catch (e) {
-        console.error(e);
-        showMessage("Error rejecting", "error");
-    }
-};
-
-// ===========================================
-// 🕒 HISTORY MODAL مع زر تحديث يدوي
-// ===========================================
-function showTransactionHistory() {
-    const modalContent = `
-        <div class="modal-overlay active" onclick="closeModal()">
-            <div class="modal active" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3><i class="fas fa-history"></i> ${getTranslation('history_title') || 'Transaction History'}</h3>
-                    <div style="display:flex;gap:10px;">
-                        <button class="refresh-history-btn" id="historyRefreshBtn" style="background:none;border:none;color:var(--quantum-blue);font-size:18px;cursor:pointer;">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                        <button class="modal-close" onclick="closeModal()">×</button>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div class="history-tabs" id="historyTabs">
-                        <button class="history-tab active" data-tab="all">${getTranslation('history_all') || 'All'}</button>
-                        <button class="history-tab" data-tab="pending">${getTranslation('history_pending') || 'Pending'}</button>
-                        <button class="history-tab" data-tab="completed">${getTranslation('history_completed') || 'Completed'}</button>
-                        <button class="history-tab" data-tab="rejected">${getTranslation('history_rejected') || 'Rejected'}</button>
-                    </div>
-                    
-                    <div id="historyContent" style="max-height: 400px; overflow-y: auto;"></div>
-                    
-                    <button class="btn-secondary" onclick="closeModal()" style="width: 100%; margin-top: 15px;">${getTranslation('close') || 'Close'}</button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-    document.body.insertAdjacentHTML('beforeend', modalContent);
-    
-    loadHistoryContent('all', 'all');
-    
-    document.getElementById('historyRefreshBtn').addEventListener('click', async function() {
-        const btn = this.querySelector('i');
-        btn.classList.add('fa-spin');
-        lastHistoryCheckTime = 0;
-        await checkPendingTransactions();
-        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
-        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
-        loadHistoryContent(activeTab, activeFilter);
-        btn.classList.remove('fa-spin');
-        showMessage("History updated", "success");
-    });
-    
-    setTimeout(() => {
-        const tabs = document.querySelectorAll('#historyTabs .history-tab');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                const tabType = tab.dataset.tab;
-                const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
-                loadHistoryContent(tabType, activeFilter);
-            });
-        });
-        
-        const filters = document.querySelectorAll('#historyFilters .history-filter-btn');
-        filters.forEach(filter => {
-            filter.addEventListener('click', () => {
-                filters.forEach(f => f.classList.remove('active'));
-                filter.classList.add('active');
-                const filterType = filter.dataset.filter;
-                const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
-                loadHistoryContent(activeTab, filterType);
-            });
-        });
-    }, 100);
-    
-    setTimeout(() => {
-        checkPendingTransactions();
-    }, 500);
-}
-
-async function checkPendingTransactions() {
-    if (!db || !walletData.transactionHistory) return;
-    
-    const now = Date.now();
-    if (now - lastHistoryCheckTime < CONFIG.CACHE.HISTORY) {
-        console.log("📦 Using cached history");
-        return;
-    }
-    lastHistoryCheckTime = now;
-    
-    const pendingTxs = walletData.transactionHistory.filter(tx => 
-        (tx.type === 'deposit' || tx.type === 'withdraw') && 
-        tx.status === 'pending' &&
-        tx.txId && !tx.txId.startsWith('temp_')
-    );
-    
-    if (pendingTxs.length === 0) return;
-    
-    for (const tx of pendingTxs) {
-        try {
-            const collection = tx.type === 'deposit' ? 'deposit_requests' : 'withdrawals';
-            const doc = await db.collection(collection).doc(tx.txId).get();
-            
-            if (doc.exists) {
-                const data = doc.data();
-                if (data.status !== tx.status) {
-                    const index = walletData.transactionHistory.findIndex(t => t.txId === tx.txId);
-                    if (index >= 0) {
-                        walletData.transactionHistory[index].status = data.status;
-                    }
-                }
-            }
-        } catch (error) {
-            console.error(`Error checking transaction ${tx.txId}:`, error);
-        }
-    }
-}
-
-function loadHistoryContent(tabType = 'all', filterType = 'all') {
-    const historyContent = document.getElementById('historyContent');
-    if (!historyContent) return;
-    
-    let transactions = walletData.transactionHistory || [];
-    
-    if (tabType === 'pending') {
-        transactions = transactions.filter(tx => tx.status === 'pending');
-    } else if (tabType === 'completed') {
-        transactions = transactions.filter(tx => tx.status === 'completed' || tx.status === 'approved');
-    } else if (tabType === 'rejected') {
-        transactions = transactions.filter(tx => tx.status === 'rejected');
-    }
-    
-    if (filterType !== 'all') {
-        transactions = transactions.filter(tx => tx.type.includes(filterType));
-    }
-    
-    if (transactions.length === 0) {
-        historyContent.innerHTML = '<div class="history-empty"><i class="fas fa-history"></i><p>No transactions</p></div>';
-        return;
-    }
-    
-    let html = '';
-    transactions.slice(0, 30).forEach(tx => {
-        const sign = tx.amount > 0 ? '+' : '';
-        const cls = tx.amount > 0 ? 'positive' : 'negative';
-        const date = new Date(tx.timestamp).toLocaleString();
-        
-        html += `
-            <div class="history-card">
-                <div class="history-card-header">
-                    <div class="history-card-icon ${tx.iconClass || 'swap'}">
-                        <i class="fas ${tx.icon || 'fa-exchange-alt'}"></i>
-                    </div>
-                    <div class="history-card-details">
-                        <div class="history-card-title">
-                            <span class="history-card-type">${tx.type.replace('_',' ').toUpperCase()}</span>
-                            <span class="history-card-amount ${cls}">${sign}${Math.abs(tx.amount).toLocaleString()} ${tx.currency}</span>
-                        </div>
-                        <div class="history-card-description">${tx.description || ''}</div>
-                        <div class="history-card-footer">
-                            <span class="history-card-date">${date}</span>
-                            <span class="history-card-status ${tx.status}">${tx.status}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-    
-    historyContent.innerHTML = html;
-}
-
-// ===========================================
-// ⏱️ BACKGROUND SERVICES
-// ===========================================
+// ====== 28. BACKGROUND SERVICES ======
 function startBackgroundServices() {
     intervals.miningTimer = setInterval(() => {
         updateMiningTimer();
@@ -4733,14 +4494,11 @@ function startBackgroundServices() {
     intervals.localSaveTimer = setInterval(() => {
         if (userData.id && userData.isInitialized) {
             saveUserDataToLocalStorage();
+            console.log("💾 Periodic local save completed");
         }
-    }, CONFIG.FIREBASE.LOCAL_SAVE_INTERVAL);
+    }, 300000); // 5 دقائق
     
-    intervals.firebaseSaveTimer = setInterval(async () => {
-        if (userData.id && userData.isInitialized && hasImportantChanges()) {
-            await saveUserData();
-        }
-    }, CONFIG.FIREBASE.SAVE_INTERVAL);
+    console.log("⏱️ Background services started");
 }
 
 function checkAndNotifyRewards() {
@@ -4752,16 +4510,68 @@ function checkAndNotifyRewards() {
         if (timeLeft > 0 && timeLeft < 5000 && !window.rewardNotified) {
             showMessage("⚡ Mining reward ready! Click Claim now!", "success", 4000);
             window.rewardNotified = true;
+            
+            if (tg && tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
         }
+        
         if (timeLeft > 10000) {
             window.rewardNotified = false;
         }
     }
 }
 
-// ===========================================
-// 🎯 EVENT LISTENERS
-// ===========================================
+// ====== 29. BOOSTER FUNCTIONS ======
+function boosterUpgrade() {
+    const targetLevel = 5;
+    const currentLevel = walletData.mining.level;
+    
+    if (currentLevel >= targetLevel) {
+        showMessage("You are already at maximum level!", "info");
+        return;
+    }
+    
+    const levelData = CONFIG.MINING.LEVELS[targetLevel];
+    const totalCost = levelData.cost;
+    
+    if (walletData.balances.USDT < totalCost) {
+        showMessage(`⚠️ You need ${totalCost} USDT for Level 5 upgrade!`, "warning", 4500);
+        return;
+    }
+    
+    if (!confirm(`Upgrade directly to Level 5 (Mythic) for ${totalCost} USDT?`)) {
+        return;
+    }
+    
+    try {
+        walletData.balances.USDT -= totalCost;
+        walletData.mining.level = targetLevel;
+        
+        addTransactionToHistory('mining_upgrade', -totalCost, 'USDT', 'Booster upgrade to Level 5', 'completed', 'Mining level upgraded via Booster');
+        
+        checkMiningVipReward(targetLevel);
+        
+        updateMiningDisplay();
+        updateWalletUI();
+        saveUserData();
+        
+        showMessage(`🚀 BOOSTER ACTIVATED! Upgraded to Level 5 Mythic!`, "success");
+        
+    } catch (error) {
+        console.error("❌ Error in booster upgrade:", error);
+        showMessage("Failed to upgrade via Booster", "error");
+    }
+}
+
+function scrollToTasks() {
+    const tasksSection = document.getElementById('tasks-section');
+    if (tasksSection) {
+        tasksSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// ====== 30. EVENT LISTENERS ======
 function setupEventListeners() {
     console.log("🎯 Setting up event listeners...");
     
@@ -4820,8 +4630,9 @@ function setupEventListeners() {
     if (elements.telegramShareBtn) {
         elements.telegramShareBtn.addEventListener('click', () => {
             if (elements.referralLinkInput) {
-                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n${elements.referralLinkInput.value}`;
-                window.open(`https://t.me/share/url?url=${encodeURIComponent(elements.referralLinkInput.value)}&text=${encodeURIComponent(text)}`);
+                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n⛏️ Mine AMSK tokens every hour\n💰 Earn from staking and referrals\n👥 Get 10,000 AMSK bonus with my link\n\n👉 ${elements.referralLinkInput.value}\n\n💎 Start your quantum mining journey!`;
+                const url = `https://t.me/share/url?url=${encodeURIComponent(elements.referralLinkInput.value)}&text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
             }
         });
     }
@@ -4829,8 +4640,9 @@ function setupEventListeners() {
     if (elements.whatsappShareBtn) {
         elements.whatsappShareBtn.addEventListener('click', () => {
             if (elements.referralLinkInput) {
-                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\n${elements.referralLinkInput.value}`;
-                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+                const text = `🚀 Join Alien Musk Quantum Mining Platform!\n\nMine AMSK tokens every hour\nEarn from staking and referrals\nGet 10,000 AMSK bonus with my link\n\n${elements.referralLinkInput.value}`;
+                const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank');
             }
         });
     }
@@ -4841,8 +4653,15 @@ function setupEventListeners() {
             tab.classList.add('active');
             
             const tabType = tab.dataset.tab;
-            document.querySelector('[data-tab-content="basic"]').style.display = tabType === 'basic' ? 'grid' : 'none';
-            document.querySelector('[data-tab-content="vip"]').style.display = tabType === 'vip' ? 'grid' : 'none';
+            document.querySelectorAll('[data-tab-content]').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            if (tabType === 'basic') {
+                document.getElementById('tasks-grid').style.display = 'grid';
+            } else {
+                document.getElementById('vip-tasks-grid').style.display = 'grid';
+            }
         });
     });
     
@@ -4854,24 +4673,11 @@ function setupEventListeners() {
         elements.boosterBtn.addEventListener('click', boosterUpgrade);
     }
     
-    if (elements.adminLogo) {
-        let clickCount = 0;
-        elements.adminLogo.addEventListener('click', () => {
-            clickCount++;
-            if (clickCount >= 5) {
-                showAdminPanel();
-                clickCount = 0;
-            }
-            setTimeout(() => clickCount = 0, 2000);
-        });
-    }
+    initAdminSystem();
     
-    initSupportIcon();
+    console.log("✅ Event listeners setup complete");
 }
 
-// ===========================================
-// 🔄 UPDATE UI
-// ===========================================
 function updateUI() {
     updateUserUI();
     updateMiningDisplay();
@@ -4880,31 +4686,37 @@ function updateUI() {
     updateReferralDisplay();
     updateTasksDisplay();
     updateUITexts();
-}
-
-// ===========================================
-// 📏 UTILITY FUNCTIONS
-// ===========================================
-function formatNumber(num, decimals = 0) {
-    if (typeof num !== 'number' || isNaN(num)) return '0';
     
-    if (num >= 1000000) {
-        return (num / 1000000).toFixed(decimals) + 'M';
-    } else if (num >= 1000) {
-        return (num / 1000).toFixed(decimals) + 'K';
+    if (document.querySelector('.modal-overlay.active') && 
+        document.querySelector('#historyContent')) {
+        console.log("📜 History modal open - refreshing content");
+        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+        loadHistoryContent(activeTab, activeFilter);
     }
-    
-    return num.toLocaleString('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-    });
 }
 
-// ===========================================
-// 🚀 INITIALIZATION
-// ===========================================
+// ====== 31. INITIALIZATION ======
 async function initAlienMuskApp() {
-    console.log("🚀 Initializing Alien Musk Quantum v7.1 - ULTIMATE ECONOMY EDITION");
+    const hideLoadingScreen = () => {
+        try {
+            const loadingScreen = document.getElementById('loading-screen');
+            const appContainer = document.getElementById('app-container');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            if (appContainer) {
+                appContainer.classList.remove('hidden');
+            }
+        } catch (e) {
+            console.error("Error hiding loading screen:", e);
+        }
+    };
+
+    console.log("🚀 Alien Musk Quantum v7.2 - ZERO WASTE EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4914,37 +4726,79 @@ async function initAlienMuskApp() {
     
     try {
         cacheElements();
+        initLanguageSystem();
         await setupUser();
-        await loadUserData();
-        await fetchLivePrices();
         
-        setupTransactionListener();
-        setupDepositListener();
+        await loadUserDataOptimized();
+        
+        setTimeout(() => {
+            loadUserDataFromFirebase();
+        }, 500);
+        
         setupEventListeners();
         await checkForReferral();
         
         updateAssetsIcons();
         addMemesSection();
+        await fetchLivePrices();
         
         updateUI();
         startBackgroundServices();
         
+        initSupportIcon();
+        
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
+        console.log("✅ Zero Waste Features:");
+        console.log("   - On-demand listeners (30 seconds)");
+        console.log("   - User data cached (5 minutes)");
+        console.log("   - Prices cached (3 hours)");
+        console.log("   - History manual refresh only");
+        console.log("   - Admin manual refresh only");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.1 - Ultimate Economy Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.2 - Zero Waste Edition!", "success");
         }, 800);
+        
+        hideLoadingScreen();
         
     } catch (error) {
         console.error("❌ Initialization failed:", error);
+        hideLoadingScreen();
         showMessage("Failed to initialize platform", "error");
     }
 }
 
-// ===========================================
-// 🎯 GLOBAL EXPORTS
-// ===========================================
+// ====== 32. WINDOW LOAD ======
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("📱 DOM Content Loaded - Starting initialization...");
+    
+    if (tg) {
+        console.log("✅ Telegram WebApp ready");
+    }
+    
+    let progress = 25;
+    const progressInterval = setInterval(() => {
+        progress += 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+        }
+        
+        const progressBar = document.getElementById('loading-progress-bar');
+        const progressText = document.getElementById('loading-progress-text');
+        
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (progressText) progressText.textContent = `${getTranslation('loading')} ${progress}%`;
+    }, 300);
+    
+    setTimeout(() => {
+        clearInterval(progressInterval);
+        initAlienMuskApp();
+    }, 2500);
+});
+
+// ====== 33. EXPORT GLOBAL FUNCTIONS ======
 window.initAlienMuskApp = initAlienMuskApp;
 window.switchPage = switchPage;
 window.closeModal = closeModal;
@@ -4952,53 +4806,38 @@ window.showMessage = showMessage;
 window.copyToClipboard = copyToClipboard;
 window.handleMiningAction = handleMiningAction;
 window.upgradeMiningLevel = upgradeMiningLevel;
-window.handleTaskClick = handleTaskClick;
-window.claimVipTask = claimVipTask;
-window.boosterUpgrade = boosterUpgrade;
-window.scrollToTasks = scrollToTasks;
 window.openStakeModal = openStakeModal;
-window.setMaxStakeAmount = setMaxStakeAmount;
 window.confirmStaking = confirmStaking;
 window.claimStakeReward = claimStakeReward;
 window.cancelStake = cancelStake;
 window.calculateStakeReward = calculateStakeReward;
+window.setMaxStakeAmount = setMaxStakeAmount;
 window.updateStakeAmountFromSlider = updateStakeAmountFromSlider;
 window.swapCurrencies = swapCurrencies;
 window.setSwapPercentage = setSwapPercentage;
-window.confirmSwap = confirmSwap;
-window.updateSwapRates = updateSwapRates;
-window.updateSwapCalculation = updateSwapCalculation;
-window.openDepositModal = openDepositModal;
-window.validateTxId = validateTxId;
-window.submitDepositRequest = submitDepositRequest;
-window.openWithdrawModal = openWithdrawModal;
-window.submitWithdrawRequest = submitWithdrawRequest;
-window.getPendingWithdrawalsTotal = getPendingWithdrawalsTotal;
-window.showTransactionHistory = showTransactionHistory;
-window.checkPendingTransactions = checkPendingTransactions;
-window.loadHistoryContent = loadHistoryContent;
-window.refreshAdminPanel = refreshAdminPanel;
-window.approveDeposit = approveDeposit;
-window.rejectDeposit = rejectDeposit;
-window.approveWithdrawal = approveWithdrawal;
-window.rejectWithdrawal = rejectWithdrawal;
+window.claimMilestone = claimMilestone;
+window.handleTaskClick = handleTaskClick;
+window.checkAdminPassword = checkAdminPassword;
+window.claimVipTask = claimVipTask;
+window.boosterUpgrade = boosterUpgrade;
+window.scrollToTasks = scrollToTasks;
 window.setLanguage = setLanguage;
 window.getTranslation = getTranslation;
 window.selectWelcomeLanguage = selectWelcomeLanguage;
 window.closeLanguageWelcome = closeLanguageWelcome;
 window.formatNumber = formatNumber;
+window.refreshHistory = refreshHistory;
+window.refreshAdminData = refreshAdminData;
+window.switchAdminTab = switchAdminTab;
+window.adminApproveDeposit = adminApproveDeposit;
+window.adminRejectDeposit = adminRejectDeposit;
+window.adminApproveWithdrawal = adminApproveWithdrawal;
+window.adminRejectWithdrawal = adminRejectWithdrawal;
+window.adminSearchUser = adminSearchUser;
+window.adminAddBalance = adminAddBalance;
+window.adminSubtractBalance = adminSubtractBalance;
+window.adminBulkAdd = adminBulkAdd;
+window.adminAddToUser = adminAddToUser;
+window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.1 - ULTIMATE ECONOMY EDITION Ready!");
-console.log("✅ On-Demand Listeners: 30 seconds");
-console.log("✅ Smart Caching: User(5min), Prices(3h), History(10min)");
-console.log("✅ Admin: Manual refresh with 30s cooldown");
-console.log("✅ History: Manual refresh button");
-
-// ===========================================
-// 🏁 AUTO-START
-// ===========================================
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAlienMuskApp);
-} else {
-    initAlienMuskApp();
-}
+console.log("👽 Alien Musk Quantum v7.2 - ZERO WASTE EDITION loaded successfully!");
