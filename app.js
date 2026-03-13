@@ -1,8 +1,9 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.1 - ULTIMATE ECONOMY EDITION
+// ALIEN MUSK QUANTUM v7.1 - ULTIMATE ECONOMY EDITION (FIXED)
 // ===========================================
 // تمت الإضافة: نظام Zero Cost (مثل REFI)
 // مع الحفاظ على كل دوال Alien Musk الأصلية (بدون حذف)
+// تم إصلاح مشكلة STORAGE_KEYS
 // ===========================================
 
 // ===========================================
@@ -440,7 +441,7 @@ const LANGUAGES = {
             language_welcome_subtitle: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
             language_continue: "চালিয়ে যান",
             cancel: "বাতিল",
-            confirm: "نিশ্চিত করুন",
+            confirm: "নিশ্চিত করুন",
             close: "বন্ধ করুন",
             save: "সংরক্ষণ করুন",
             edit: "সম্পাদনা করুন",
@@ -1202,6 +1203,17 @@ let userData = {
 };
 
 // ===========================================
+// 👤 USER IDENTIFICATION - يجب أن يكون هنا
+// ===========================================
+const userId = tg?.initDataUnsafe?.user?.id?.toString() || 
+               localStorage.getItem('alien_musk_user_id') || 
+               'guest_' + Math.random().toString(36).substr(2, 9);
+
+const userName = tg?.initDataUnsafe?.user?.first_name || 'Alien';
+
+localStorage.setItem('alien_musk_user_id', userId);
+
+// ===========================================
 // 🔥 ON-DEMAND LISTENERS SYSTEM (جديد - مثل REFI)
 // ===========================================
 const activeListeners = new Map();
@@ -1282,6 +1294,33 @@ let intervals = {
 let unsubscribeTransactionsListener = null;
 let pendingFirebaseSave = null;
 let lastImportantChange = 0;
+
+// ===========================================
+// 🔥 STORAGE KEYS (يجب أن يكون بعد تعريف userId)
+// ===========================================
+const STORAGE_KEYS = {
+    USER: `user_${userId}`,
+    WALLET: `wallet_${userId}`,
+    TRANSACTIONS: `transactions_${userId}`,
+    PRICES: 'live_prices'
+};
+
+function loadLocalData(key) {
+    try {
+        return JSON.parse(localStorage.getItem(key)) || null;
+    } catch {
+        return null;
+    }
+}
+
+function saveLocalData(key, data) {
+    try {
+        localStorage.setItem(key, JSON.stringify(data));
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 function generateReferralCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -1451,33 +1490,6 @@ function updateUserUI() {
     
     if (elements.referralLinkInput) {
         elements.referralLinkInput.value = `https://t.me/AlienMuskbot/Musk?startapp=${userData.referralCode}`;
-    }
-}
-
-// ===========================================
-// 🔥 STORAGE KEYS (جديد - مثل REFI)
-// ===========================================
-const STORAGE_KEYS = {
-    USER: `user_${userId}`,
-    WALLET: `wallet_${userId}`,
-    TRANSACTIONS: `transactions_${userId}`,
-    PRICES: 'live_prices'
-};
-
-function loadLocalData(key) {
-    try {
-        return JSON.parse(localStorage.getItem(key)) || null;
-    } catch {
-        return null;
-    }
-}
-
-function saveLocalData(key, data) {
-    try {
-        localStorage.setItem(key, JSON.stringify(data));
-        return true;
-    } catch {
-        return false;
     }
 }
 
