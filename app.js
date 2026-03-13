@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.3 - ULTIMATE ZERO WASTE EDITION
+// ALIEN MUSK QUANTUM v7.4 - ULTIMATE PROFESSIONAL EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1387,7 +1387,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.3-zero-waste'
+            version: '7.4-professional'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1595,6 +1595,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         walletData.transactionHistory = [];
     }
     
+    // التحقق من عدم وجود نفس المعاملة مسبقاً
     const isDuplicate = walletData.transactionHistory.some(tx => 
         tx.type === type && 
         tx.amount === amount && 
@@ -1617,6 +1618,8 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
             saveUserDataToFirebase();
         }
+    } else {
+        console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
     }
     
     return transaction;
@@ -1858,7 +1861,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS (مع مستمع عند الطلب) ======
+// ====== 17. DEPOSIT FUNCTIONS (مع مستمع ذكي لا يضاعف الرصيد) ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1894,7 +1897,10 @@ async function submitDepositRequest() {
     }
     
     try {
+        const depositId = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
         const depositRequest = {
+            id: depositId,
             userId: userData.id,
             telegramId: userData.telegramId,
             username: userData.username,
@@ -1906,42 +1912,40 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        let depositId = '';
+        // إضافة المعاملة للتاريخ المحلي
+        addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
+        
+        walletData.usedTxIds.push(txId);
         
         if (db) {
-            const depositRef = await db.collection(DB_COLLECTIONS.DEPOSITS).add(depositRequest);
-            depositId = depositRef.id;
-            depositRequest.id = depositId;
+            await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
-            // مستمع ذكي لمدة 30 ثانية فقط
+            // مستمع ذكي لمدة 30 ثانية - يقرأ فقط ولا يكتب
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
                 // البحث عن المعاملة الموجودة وتحديثها (بدون إضافة جديدة)
-                const existingTx = walletData.transactionHistory.find(t => t.txId === txId);
+                const existingTx = walletData.transactionHistory.find(t => t.txId === depositId || t.txId === txId);
                 if (existingTx) {
                     existingTx.status = data.status;
-                    existingTx.message = data.status === 'approved' ? 'Deposit approved' : `Rejected: ${data.reason || 'Unknown'}`;
                     
                     if (data.status === 'approved') {
-                        walletData.balances[activeCurrency] = (walletData.balances[activeCurrency] || 0) + amount;
+                        existingTx.message = 'Deposit approved';
                         showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
-                        updateWalletUI();
+                        
+                        // تحديث الرصيد من Firebase (مرة واحدة فقط)
+                        loadUserDataOptimized(true);
+                        
                     } else if (data.status === 'rejected') {
+                        existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
                         showMessage(`❌ Your deposit was rejected: ${data.reason || 'Unknown'}`, 'error');
                     }
                     
                     saveUserDataToLocalStorage();
+                    updateWalletUI();
                 }
             });
-        } else {
-            depositId = 'dep_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            depositRequest.id = depositId;
         }
-        
-        addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
-        
-        walletData.usedTxIds.push(txId);
         
         await saveUserData();
         closeModal();
@@ -1961,7 +1965,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 18. WITHDRAW FUNCTIONS (مع مستمع عند الطلب) ======
+// ====== 18. WITHDRAW FUNCTIONS (مع مستمع ذكي لا يضيف معاملات مكررة) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2001,6 +2005,7 @@ async function submitWithdrawRequest() {
     }
     
     try {
+        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2024,6 +2029,7 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
+        // إضافة المعاملة للتاريخ المحلي
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2032,40 +2038,47 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // مستمع ذكي لمدة 30 ثانية فقط
+            // مستمع ذكي لمدة 30 ثانية - يقرأ فقط ويحدث المعاملة الموجودة
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة وتحديثها
-                const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                // البحث عن المعاملة الموجودة في التاريخ
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
-                    if (pendingIndex !== -1) {
-                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
-                    }
-                    
-                    if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
-                        walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
-                    }
-                    
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
                     }
                     
-                    showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
-                    
-                } else if (data.status === 'rejected') {
-                    walletData.balances.USDT += amount;
-                    
+                    // إزالة من pendingWithdrawals
+                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
                     }
                     
+                    // خصم الرسوم
+                    if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
+                        walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
+                    }
+                    
+                    showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
+                    
+                } else if (data.status === 'rejected') {
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
+                    }
+                    
+                    // إعادة المبلغ
+                    walletData.balances.USDT += amount;
+                    
+                    // إزالة من pendingWithdrawals
+                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                    if (pendingIndex !== -1) {
+                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
                     }
                     
                     showMessage(`❌ Your withdrawal was rejected: ${data.reason || 'Unknown'}`, 'error');
@@ -2087,6 +2100,7 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
+        // إعادة المبلغ في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -2101,7 +2115,7 @@ async function submitWithdrawRequest() {
     }
 }
 
-// ====== 19. ADMIN FUNCTIONS (مع بحث مستخدم واحد وعرض بياناته) ======
+// ====== 19. ADMIN FUNCTIONS (مع فصل تام بين الإيداع والسحب) ======
 function initAdminSystem() {
     if (elements.adminLogo) {
         let clickCount = 0;
@@ -2241,12 +2255,14 @@ async function refreshAdminData() {
     const refreshBtn = document.querySelector('.refresh-admin-btn i');
     if (refreshBtn) refreshBtn.classList.add('fa-spin');
     
+    // تحديد التبويب النشط
     const activeTab = document.querySelector('.admin-tab.active')?.dataset.adminTab || 'deposits';
     
     try {
         let html = '';
         
         if (activeTab === 'deposits') {
+            // جلب طلبات الإيداع المعلقة فقط
             const snapshot = await db.collection(DB_COLLECTIONS.DEPOSITS)
                 .where('status', '==', 'pending')
                 .get();
@@ -2257,27 +2273,12 @@ async function refreshAdminData() {
                 html = '<div class="admin-requests-list">';
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    html += `
-                        <div class="request-item" data-id="${doc.id}">
-                            <div class="request-header">
-                                <div class="request-user">${data.username || 'User'}</div>
-                                <div class="request-amount">+${data.amount} ${data.currency}</div>
-                            </div>
-                            <div class="request-details">
-                                <div>TX: ${data.txId?.slice(0, 20)}...</div>
-                                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
-                                <div>Time: ${new Date(data.createdAt).toLocaleString()}</div>
-                            </div>
-                            <div class="request-actions">
-                                <button class="btn-approve" onclick="adminApproveDeposit('${doc.id}', '${data.userId}', '${data.currency}', ${data.amount}, '${data.txId}')">Approve</button>
-                                <button class="btn-reject" onclick="adminRejectDeposit('${doc.id}', '${data.userId}', '${data.txId}')">Reject</button>
-                            </div>
-                        </div>
-                    `;
+                    html += renderDepositCard(data, doc.id);
                 });
                 html += '</div>';
             }
         } else if (activeTab === 'withdrawals') {
+            // جلب طلبات السحب المعلقة فقط
             const snapshot = await db.collection(DB_COLLECTIONS.WITHDRAWALS)
                 .where('status', '==', 'pending')
                 .get();
@@ -2288,23 +2289,7 @@ async function refreshAdminData() {
                 html = '<div class="admin-requests-list">';
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    html += `
-                        <div class="request-item" data-id="${doc.id}">
-                            <div class="request-header">
-                                <div class="request-user">${data.username || 'User'}</div>
-                                <div class="request-amount">-${data.amount} ${data.currency}</div>
-                            </div>
-                            <div class="request-details">
-                                <div>Address: ${data.address?.slice(0, 20)}...</div>
-                                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
-                                <div>Time: ${new Date(data.createdAt).toLocaleString()}</div>
-                            </div>
-                            <div class="request-actions">
-                                <button class="btn-approve" onclick="adminApproveWithdrawal('${doc.id}', '${data.userId}', ${data.amount})">Approve</button>
-                                <button class="btn-reject" onclick="adminRejectWithdrawal('${doc.id}', '${data.userId}', ${data.amount})">Reject</button>
-                            </div>
-                        </div>
-                    `;
+                    html += renderWithdrawalCard(data, doc.id);
                 });
                 html += '</div>';
             }
@@ -2337,6 +2322,50 @@ async function refreshAdminData() {
             if (refreshBtn) refreshBtn.classList.remove('fa-spin');
         }, 500);
     }
+}
+
+function renderDepositCard(data, docId) {
+    const date = new Date(data.createdAt).toLocaleString();
+    
+    return `
+        <div class="request-item" data-id="${docId}" style="border-left: 4px solid #00ff88;">
+            <div class="request-header">
+                <div class="request-user">${data.username || 'User'}</div>
+                <div class="request-amount" style="color: #00ff88;">+${data.amount} ${data.currency}</div>
+            </div>
+            <div class="request-details">
+                <div>TX: ${data.txId?.slice(0, 20)}...</div>
+                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
+                <div>Time: ${date}</div>
+            </div>
+            <div class="request-actions">
+                <button class="btn-approve" onclick="adminApproveDeposit('${docId}', '${data.userId}', '${data.currency}', ${data.amount}, '${data.txId}')">Approve</button>
+                <button class="btn-reject" onclick="adminRejectDeposit('${docId}', '${data.userId}', '${data.txId}')">Reject</button>
+            </div>
+        </div>
+    `;
+}
+
+function renderWithdrawalCard(data, docId) {
+    const date = new Date(data.createdAt).toLocaleString();
+    
+    return `
+        <div class="request-item" data-id="${docId}" style="border-left: 4px solid #ff4444;">
+            <div class="request-header">
+                <div class="request-user">${data.username || 'User'}</div>
+                <div class="request-amount" style="color: #ff4444;">-${data.amount} ${data.currency}</div>
+            </div>
+            <div class="request-details">
+                <div>Address: ${data.address?.slice(0, 20)}...</div>
+                <div>User ID: ${data.userId?.replace('tg_', '')}</div>
+                <div>Time: ${date}</div>
+            </div>
+            <div class="request-actions">
+                <button class="btn-approve" onclick="adminApproveWithdrawal('${docId}', '${data.userId}', ${data.amount})">Approve</button>
+                <button class="btn-reject" onclick="adminRejectWithdrawal('${docId}', '${data.userId}', ${data.amount})">Reject</button>
+            </div>
+        </div>
+    `;
 }
 
 function switchAdminTab(tab) {
@@ -2527,23 +2556,22 @@ async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) 
     if (!isAdmin || !db) return;
     
     try {
+        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
-            approvedBy: userData.id
+            approvedBy: userData.id,
+            notification: {
+                message: `✅ Your deposit of ${amount} ${currency} has been approved!`,
+                type: 'success',
+                timestamp: Date.now()
+            }
         });
         
+        // إضافة الرصيد للمستخدم (مرة واحدة فقط)
         await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
             [`balances.${currency}`]: firebase.firestore.FieldValue.increment(amount)
         });
-        
-        // تحديث المعاملة الموجودة في localStorage (بدون إضافة جديدة)
-        const existingTx = walletData.transactionHistory.find(t => t.txId === txId || t.txId === docId);
-        if (existingTx) {
-            existingTx.status = 'approved';
-            existingTx.message = 'Deposit approved';
-            saveUserDataToLocalStorage();
-        }
         
         showMessage(`✅ Deposit approved: +${amount} ${currency}`, 'success');
         refreshAdminData();
@@ -2561,20 +2589,18 @@ async function adminRejectDeposit(docId, targetUserId, txId) {
     if (!reason) return;
     
     try {
+        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'rejected',
             reason: reason,
             rejectedAt: Date.now(),
-            rejectedBy: userData.id
+            rejectedBy: userData.id,
+            notification: {
+                message: `❌ Your deposit was rejected: ${reason}`,
+                type: 'error',
+                timestamp: Date.now()
+            }
         });
-        
-        // تحديث المعاملة الموجودة في localStorage
-        const existingTx = walletData.transactionHistory.find(t => t.txId === txId || t.txId === docId);
-        if (existingTx) {
-            existingTx.status = 'rejected';
-            existingTx.message = `Rejected: ${reason}`;
-            saveUserDataToLocalStorage();
-        }
         
         showMessage(`✅ Deposit rejected`, 'success');
         refreshAdminData();
@@ -2589,19 +2615,17 @@ async function adminApproveWithdrawal(docId, targetUserId, amount) {
     if (!isAdmin || !db) return;
     
     try {
+        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
-            approvedBy: userData.id
+            approvedBy: userData.id,
+            notification: {
+                message: `✅ Your withdrawal of ${amount} USDT has been approved and sent!`,
+                type: 'success',
+                timestamp: Date.now()
+            }
         });
-        
-        // تحديث المعاملة الموجودة في localStorage
-        const existingTx = walletData.transactionHistory.find(t => t.txId === docId);
-        if (existingTx) {
-            existingTx.status = 'approved';
-            existingTx.message = 'Withdrawal approved';
-            saveUserDataToLocalStorage();
-        }
         
         showMessage(`✅ Withdrawal approved: -${amount} USDT`, 'success');
         refreshAdminData();
@@ -2619,24 +2643,23 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
     if (!reason) return;
     
     try {
+        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
             status: 'rejected',
             reason: reason,
             rejectedAt: Date.now(),
-            rejectedBy: userData.id
+            rejectedBy: userData.id,
+            notification: {
+                message: `❌ Your withdrawal was rejected: ${reason}`,
+                type: 'error',
+                timestamp: Date.now()
+            }
         });
         
+        // إعادة المبلغ للمستخدم
         await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
             'balances.USDT': firebase.firestore.FieldValue.increment(amount)
         });
-        
-        // تحديث المعاملة الموجودة في localStorage
-        const existingTx = walletData.transactionHistory.find(t => t.txId === docId);
-        if (existingTx) {
-            existingTx.status = 'rejected';
-            existingTx.message = `Rejected: ${reason}`;
-            saveUserDataToLocalStorage();
-        }
         
         showMessage(`✅ Withdrawal rejected, funds returned`, 'success');
         refreshAdminData();
@@ -4859,7 +4882,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.3 - ULTIMATE ZERO WASTE EDITION");
+    console.log("🚀 Alien Musk Quantum v7.4 - ULTIMATE PROFESSIONAL EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4892,17 +4915,16 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ Zero Waste Features:");
-        console.log("   - On-demand listeners (30 seconds only)");
-        console.log("   - User data cached (5 minutes)");
-        console.log("   - Prices cached (3 hours)");
-        console.log("   - History checks when opened (cached 10 min)");
-        console.log("   - Admin manual refresh only");
+        console.log("✅ Professional Features:");
+        console.log("   - On-demand listeners (30 seconds)");
         console.log("   - No duplicate transactions");
+        console.log("   - No double balance adds");
+        console.log("   - Separated admin tabs (Deposits/Withdrawals)");
+        console.log("   - Smart notifications without extra reads");
         console.log("   - Live prices in swap (BNB/TON)");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.3 - Zero Waste Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4974,6 +4996,8 @@ window.formatNumber = formatNumber;
 window.refreshHistory = refreshHistory;
 window.refreshAdminData = refreshAdminData;
 window.switchAdminTab = switchAdminTab;
+window.renderDepositCard = renderDepositCard;
+window.renderWithdrawalCard = renderWithdrawalCard;
 window.adminApproveDeposit = adminApproveDeposit;
 window.adminRejectDeposit = adminRejectDeposit;
 window.adminApproveWithdrawal = adminApproveWithdrawal;
@@ -4982,5 +5006,5 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.3 - ULTIMATE ZERO WASTE EDITION loaded successfully!");
-console.log("✅ All features preserved, only improvements added!");
+console.log("👽 Alien Musk Quantum v7.4 - ULTIMATE PROFESSIONAL EDITION loaded successfully!");
+console.log("✅ All critical issues fixed!");
