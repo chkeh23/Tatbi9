@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.1 - ECONOMY EDITION
+// ALIEN MUSK QUANTUM v7.1 - ULTIMATE ECONOMY EDITION
 // ===========================================
 // تمت الإضافة: نظام Zero Cost (مثل REFI)
 // مع الحفاظ على كل دوال Alien Musk الأصلية (بدون حذف)
@@ -8,7 +8,7 @@
 // ===========================================
 // تأكيد وضع التشغيل المستقل
 // ===========================================
-console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - ECONOMY EDITION");
+console.log("🔗 Loading Alien Musk Quantum Platform v7.1 - ULTIMATE ECONOMY EDITION");
 
 if (window.appJsLoaded) {
     console.warn("⚠️ app.js detected but ignored - using standalone HTML mode");
@@ -440,7 +440,7 @@ const LANGUAGES = {
             language_welcome_subtitle: "অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন",
             language_continue: "চালিয়ে যান",
             cancel: "বাতিল",
-            confirm: "নিশ্চিত করুন",
+            confirm: "نিশ্চিত করুন",
             close: "বন্ধ করুন",
             save: "সংরক্ষণ করুন",
             edit: "সম্পাদনা করুন",
@@ -1786,7 +1786,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.1-economy'
+            version: '7.1-ultimate-economy'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -2473,241 +2473,6 @@ function scrollToTasks() {
     const tasksSection = document.getElementById('tasks-section');
     if (tasksSection) {
         tasksSection.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-function getPendingWithdrawalsTotal() {
-    if (!walletData.pendingWithdrawals) return 0;
-    
-    return walletData.pendingWithdrawals
-        .filter(w => w.status === 'pending')
-        .reduce((total, w) => total + w.amount, 0);
-}
-
-async function openWithdrawModal() {
-    if (!walletData || !walletData.balances) return;
-    
-    const pendingTotal = getPendingWithdrawalsTotal();
-    const availableBalance = walletData.balances.USDT;
-    
-    if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
-        const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
-        
-📊 **Your Balance:** ${walletData.balances.USDT.toFixed(2)} USDT
-⏳ **Pending Withdrawals:** ${pendingTotal.toFixed(2)} USDT
-
-📈 **Your Path to 100 USDT:**
-
-⛏️ **Mining:** 
-   • 1,000 AMSK/2.5h = 9,600 AMSK/day = 1.92 USDT/day
-
-👥 **Referrals:** 
-   • You get 10,000 AMSK per friend
-   • Your friend gets 5,000 AMSK bonus
-
-💱 **Swap Rate:** 
-   • 5,000 AMSK = 1 USDT
-
-✨ **Quick Math:**
-   • 1 referral = 10,000 AMSK = 2 USDT
-   • 50 referrals = 100 USDT 🎯
-
-🚀 Keep going! Every referral brings you closer!`;
-        
-        showMessage(motivationalMessage, "warning", 5000);
-        return;
-    }
-    
-    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
-        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
-        return;
-    }
-    
-    const modalContent = `
-        <div class="modal-overlay active" onclick="closeModal()">
-            <div class="modal active" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3><i class="fas fa-upload"></i> Withdraw USDT</h3>
-                    <button class="modal-close" onclick="closeModal()">×</button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-20">
-                        <h4 style="color: var(--quantum-text); margin-bottom: 10px;">Professional Withdrawal</h4>
-                        <p style="color: var(--quantum-text-light);">Funds are deducted immediately upon request and held securely until admin approval.</p>
-                    </div>
-                    
-                    <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px;">
-                        <div class="mb-15">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: var(--quantum-text-light);">Current Balance:</span>
-                                <span style="color: var(--quantum-text); font-weight: 600;">${walletData.balances.USDT.toFixed(2)} USDT</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: var(--quantum-text-light);">Pending Withdrawals:</span>
-                                <span style="color: #ff9900; font-weight: 600;">${pendingTotal.toFixed(2)} USDT</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                                <span style="color: var(--quantum-text-light);">BNB for Fees:</span>
-                                <span style="color: ${walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB ? 'var(--quantum-green)' : '#ff4444'}; font-weight: 600;">
-                                    ${walletData.balances.BNB.toFixed(4)} BNB
-                                </span>
-                            </div>
-                            <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.2); border-radius: 8px; padding: 10px; margin-top: 10px;">
-                                <p style="color: #ffc107; font-size: 12px; margin: 0;">
-                                    <i class="fas fa-info-circle"></i> 
-                                    Amount will be deducted immediately upon request and held until approval.
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-15">
-                            <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Amount (USDT)</label>
-                            <input type="number" 
-                                   id="withdrawAmount" 
-                                   placeholder="Enter amount"
-                                   min="${CONFIG.WITHDRAW.MIN_USDT}"
-                                   max="${walletData.balances.USDT}"
-                                   step="0.01"
-                                   value="${Math.min(CONFIG.WITHDRAW.MIN_USDT, walletData.balances.USDT)}"
-                                   style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text);">
-                        </div>
-                        
-                        <div class="mb-15">
-                            <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Wallet Address</label>
-                            <input type="text" 
-                                   id="withdrawAddress" 
-                                   placeholder="Enter your USDT wallet address (BEP20)"
-                                   style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text); font-family: monospace; font-size: 12px;">
-                        </div>
-                        
-                        <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                <span style="color: var(--quantum-green); font-size: 12px;">Network Fee:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">${CONFIG.WITHDRAW.FEE_BNB} BNB</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--quantum-green); font-size: 12px;">Processing:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Manual review (1-24h)</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 5px; border-top: 1px solid rgba(0,255,136,0.2); padding-top: 5px;">
-                                <span style="color: var(--quantum-green); font-size: 12px;">Funds Status:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Deducted & Held</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-actions mt-20">
-                        <button class="btn-secondary" onclick="closeModal()">
-                            Cancel
-                        </button>
-                        <button class="btn-primary" onclick="submitWithdrawRequest()">
-                            Request Withdrawal
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
-    document.body.insertAdjacentHTML('beforeend', modalContent);
-}
-
-async function submitWithdrawRequest() {
-    const amountInput = document.getElementById('withdrawAmount');
-    const addressInput = document.getElementById('withdrawAddress');
-    
-    if (!amountInput || !addressInput) return;
-    
-    const amount = parseFloat(amountInput.value);
-    const address = addressInput.value.trim();
-    
-    if (!amount || amount < CONFIG.WITHDRAW.MIN_USDT) {
-        showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
-        return;
-    }
-    
-    if (!walletData || !walletData.balances) return;
-    
-    if (amount > walletData.balances.USDT) {
-        showMessage(`⚠️ Insufficient balance. You have ${walletData.balances.USDT.toFixed(2)} USDT`, "warning", 4500);
-        return;
-    }
-    
-    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
-        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
-        return;
-    }
-    
-    if (!address || address.length < 20) {
-        showMessage(`Please enter a valid wallet address`, "error");
-        return;
-    }
-    
-    try {
-        walletData.balances.USDT -= amount;
-        
-        const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        const withdrawRequest = {
-            id: withdrawalId,
-            userId: userData.id,
-            telegramId: userData.telegramId,
-            username: userData.username,
-            currency: 'USDT',
-            amount: amount,
-            address: address,
-            fee: CONFIG.WITHDRAW.FEE_BNB,
-            status: 'pending',
-            createdAt: Date.now(),
-            createdAtFormatted: new Date().toISOString()
-        };
-        
-        if (!walletData.pendingWithdrawals) {
-            walletData.pendingWithdrawals = [];
-        }
-        walletData.pendingWithdrawals.push(withdrawRequest);
-        
-        addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
-            `To: ${address.slice(0, 10)}...`, 'pending', 
-            'Withdrawal requested - Funds deducted and held for approval', 
-            withdrawalId);
-        
-        if (window.db) {
-            await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
-            
-            // 🔥 On-Demand Listener - 30 ثانية فقط
-            startOnDemandListener('withdrawals', withdrawalId, (data) => {
-                console.log("📤 Withdrawal update received:", data);
-                
-                if (data.status === 'approved') {
-                    showMessage(`✅ Withdrawal of ${amount} USDT approved!`, 'success');
-                    
-                } else if (data.status === 'rejected') {
-                    walletData.balances.USDT += amount;
-                    walletData.balances.BNB += CONFIG.WITHDRAW.FEE_BNB;
-                    saveUserData(true);
-                    updateWalletUI();
-                    showMessage(`❌ Withdrawal rejected: ${data.reason || 'Unknown reason'}`, 'error');
-                }
-            }, 30000);
-        }
-        
-        updateWalletUI();
-        await saveUserData();
-        
-        closeModal();
-        
-        showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Funds deducted and held for approval.`, "success");
-        
-    } catch (error) {
-        console.error("❌ Error submitting withdrawal:", error);
-        showMessage("Failed to submit withdrawal request", "error");
-        
-        if (amount) {
-            walletData.balances.USDT += amount;
-            updateWalletUI();
-        }
     }
 }
 
@@ -4305,6 +4070,243 @@ async function submitDepositRequest() {
 }
 
 // ===========================================
+// 💸 WITHDRAW SYSTEM (مع On-Demand Listener)
+// ===========================================
+async function openWithdrawModal() {
+    if (!walletData || !walletData.balances) return;
+    
+    const pendingTotal = getPendingWithdrawalsTotal();
+    
+    if (walletData.balances.USDT < CONFIG.WITHDRAW.MIN_USDT) {
+        const motivationalMessage = `⚠️ Minimum withdrawal is 100 USDT.
+        
+📊 **Your Balance:** ${walletData.balances.USDT.toFixed(2)} USDT
+⏳ **Pending Withdrawals:** ${pendingTotal.toFixed(2)} USDT
+
+📈 **Your Path to 100 USDT:**
+
+⛏️ **Mining:** 
+   • 1,000 AMSK/2.5h = 9,600 AMSK/day = 1.92 USDT/day
+
+👥 **Referrals:** 
+   • You get 10,000 AMSK per friend
+   • Your friend gets 5,000 AMSK bonus
+
+💱 **Swap Rate:** 
+   • 5,000 AMSK = 1 USDT
+
+✨ **Quick Math:**
+   • 1 referral = 10,000 AMSK = 2 USDT
+   • 50 referrals = 100 USDT 🎯
+
+🚀 Keep going! Every referral brings you closer!`;
+        
+        showMessage(motivationalMessage, "warning", 5000);
+        return;
+    }
+    
+    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
+        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
+        return;
+    }
+    
+    const modalContent = `
+        <div class="modal-overlay active" onclick="closeModal()">
+            <div class="modal active" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h3><i class="fas fa-upload"></i> Withdraw USDT</h3>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-20">
+                        <h4 style="color: var(--quantum-text); margin-bottom: 10px;">Professional Withdrawal</h4>
+                        <p style="color: var(--quantum-text-light);">Funds are deducted immediately upon request and held securely until admin approval.</p>
+                    </div>
+                    
+                    <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px;">
+                        <div class="mb-15">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: var(--quantum-text-light);">Current Balance:</span>
+                                <span style="color: var(--quantum-text); font-weight: 600;">${walletData.balances.USDT.toFixed(2)} USDT</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: var(--quantum-text-light);">Pending Withdrawals:</span>
+                                <span style="color: #ff9900; font-weight: 600;">${pendingTotal.toFixed(2)} USDT</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <span style="color: var(--quantum-text-light);">BNB for Fees:</span>
+                                <span style="color: ${walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB ? 'var(--quantum-green)' : '#ff4444'}; font-weight: 600;">
+                                    ${walletData.balances.BNB.toFixed(4)} BNB
+                                </span>
+                            </div>
+                            <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.2); border-radius: 8px; padding: 10px; margin-top: 10px;">
+                                <p style="color: #ffc107; font-size: 12px; margin: 0;">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Amount will be deducted immediately upon request and held until approval.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-15">
+                            <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Amount (USDT)</label>
+                            <input type="number" 
+                                   id="withdrawAmount" 
+                                   placeholder="Enter amount"
+                                   min="${CONFIG.WITHDRAW.MIN_USDT}"
+                                   max="${walletData.balances.USDT}"
+                                   step="0.01"
+                                   value="${Math.min(CONFIG.WITHDRAW.MIN_USDT, walletData.balances.USDT)}"
+                                   style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text);">
+                        </div>
+                        
+                        <div class="mb-15">
+                            <label style="display: block; color: var(--quantum-text-light); font-size: 12px; margin-bottom: 5px;">Wallet Address</label>
+                            <input type="text" 
+                                   id="withdrawAddress" 
+                                   placeholder="Enter your USDT wallet address (BEP20)"
+                                   style="width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,212,255,0.2); border-radius: 8px; color: var(--quantum-text); font-family: monospace; font-size: 12px;">
+                        </div>
+                        
+                        <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                <span style="color: var(--quantum-green); font-size: 12px;">Network Fee:</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">${CONFIG.WITHDRAW.FEE_BNB} BNB</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--quantum-green); font-size: 12px;">Processing:</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Manual review (1-24h)</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 5px; border-top: 1px solid rgba(0,255,136,0.2); padding-top: 5px;">
+                                <span style="color: var(--quantum-green); font-size: 12px;">Funds Status:</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Deducted & Held</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions mt-20">
+                        <button class="btn-secondary" onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button class="btn-primary" onclick="submitWithdrawRequest()">
+                            Request Withdrawal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('.modal-overlay').forEach(el => el.remove());
+    document.body.insertAdjacentHTML('beforeend', modalContent);
+}
+
+function getPendingWithdrawalsTotal() {
+    if (!walletData.pendingWithdrawals) return 0;
+    
+    return walletData.pendingWithdrawals
+        .filter(w => w.status === 'pending')
+        .reduce((total, w) => total + w.amount, 0);
+}
+
+async function submitWithdrawRequest() {
+    const amountInput = document.getElementById('withdrawAmount');
+    const addressInput = document.getElementById('withdrawAddress');
+    
+    if (!amountInput || !addressInput) return;
+    
+    const amount = parseFloat(amountInput.value);
+    const address = addressInput.value.trim();
+    
+    if (!amount || amount < CONFIG.WITHDRAW.MIN_USDT) {
+        showMessage(`Minimum withdrawal is ${CONFIG.WITHDRAW.MIN_USDT} USDT`, "error");
+        return;
+    }
+    
+    if (!walletData || !walletData.balances) return;
+    
+    if (amount > walletData.balances.USDT) {
+        showMessage(`⚠️ Insufficient balance. You have ${walletData.balances.USDT.toFixed(2)} USDT`, "warning", 4500);
+        return;
+    }
+    
+    if (walletData.balances.BNB < CONFIG.WITHDRAW.FEE_BNB) {
+        showMessage(`You need at least ${CONFIG.WITHDRAW.FEE_BNB} BNB for withdrawal fee`, "error");
+        return;
+    }
+    
+    if (!address || address.length < 20) {
+        showMessage(`Please enter a valid wallet address`, "error");
+        return;
+    }
+    
+    try {
+        walletData.balances.USDT -= amount;
+        
+        const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        const withdrawRequest = {
+            id: withdrawalId,
+            userId: userData.id,
+            telegramId: userData.telegramId,
+            username: userData.username,
+            currency: 'USDT',
+            amount: amount,
+            address: address,
+            fee: CONFIG.WITHDRAW.FEE_BNB,
+            status: 'pending',
+            createdAt: Date.now(),
+            createdAtFormatted: new Date().toISOString()
+        };
+        
+        if (!walletData.pendingWithdrawals) {
+            walletData.pendingWithdrawals = [];
+        }
+        walletData.pendingWithdrawals.push(withdrawRequest);
+        
+        addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
+            `To: ${address.slice(0, 10)}...`, 'pending', 
+            'Withdrawal requested - Funds deducted and held for approval', 
+            withdrawalId);
+        
+        if (window.db) {
+            await window.db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
+            
+            // 🔥 On-Demand Listener - 30 ثانية فقط
+            startOnDemandListener('withdrawals', withdrawalId, (data) => {
+                console.log("📤 Withdrawal update received:", data);
+                
+                if (data.status === 'approved') {
+                    showMessage(`✅ Withdrawal of ${amount} USDT approved!`, 'success');
+                    
+                } else if (data.status === 'rejected') {
+                    walletData.balances.USDT += amount;
+                    walletData.balances.BNB += CONFIG.WITHDRAW.FEE_BNB;
+                    saveUserData(true);
+                    updateWalletUI();
+                    showMessage(`❌ Withdrawal rejected: ${data.reason || 'Unknown reason'}`, 'error');
+                }
+            }, 30000);
+        }
+        
+        updateWalletUI();
+        await saveUserData();
+        
+        closeModal();
+        
+        showMessage(`✅ Withdrawal request submitted for ${amount} USDT. Funds deducted and held for approval.`, "success");
+        
+    } catch (error) {
+        console.error("❌ Error submitting withdrawal:", error);
+        showMessage("Failed to submit withdrawal request", "error");
+        
+        if (amount) {
+            walletData.balances.USDT += amount;
+            updateWalletUI();
+        }
+    }
+}
+
+// ===========================================
 // 👑 ADMIN SYSTEM - إضافة تاج المشرف
 // ===========================================
 let isAdmin = userData.telegramId === CONFIG.ADMIN.TELEGRAM_ID;
@@ -4890,7 +4892,7 @@ function formatNumber(num, decimals = 0) {
 // 🚀 INITIALIZATION
 // ===========================================
 async function initAlienMuskApp() {
-    console.log("🚀 Initializing Alien Musk Quantum v7.1 - ECONOMY EDITION");
+    console.log("🚀 Initializing Alien Musk Quantum v7.1 - ULTIMATE ECONOMY EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4919,7 +4921,7 @@ async function initAlienMuskApp() {
         console.log("✅ Platform initialized successfully");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.1 - Economy Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.1 - Ultimate Economy Edition!", "success");
         }, 800);
         
     } catch (error) {
@@ -4974,7 +4976,7 @@ window.selectWelcomeLanguage = selectWelcomeLanguage;
 window.closeLanguageWelcome = closeLanguageWelcome;
 window.formatNumber = formatNumber;
 
-console.log("👽 Alien Musk Quantum v7.1 - ECONOMY EDITION Ready!");
+console.log("👽 Alien Musk Quantum v7.1 - ULTIMATE ECONOMY EDITION Ready!");
 console.log("✅ On-Demand Listeners: 30 seconds");
 console.log("✅ Smart Caching: User(5min), Prices(3h), History(10min)");
 console.log("✅ Admin: Manual refresh with 30s cooldown");
