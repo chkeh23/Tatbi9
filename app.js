@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v8.0 - FINAL SIMPLE FIX
+// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -100,10 +100,10 @@ function stopAllListeners() {
 
 // ====== 4. CACHE SYSTEM ======
 const CACHE_TIME = {
-    USER: 5 * 60 * 1000,        // 5 دقائق
-    PRICES: 3 * 60 * 60 * 1000,  // 3 ساعات
-    HISTORY: 10 * 60 * 1000,     // 10 دقائق
-    MINING: 60 * 1000            // دقيقة واحدة
+    USER: 5 * 60 * 1000,
+    PRICES: 3 * 60 * 60 * 1000,
+    HISTORY: 10 * 60 * 1000,
+    MINING: 60 * 1000
 };
 
 let lastCacheTime = {
@@ -432,6 +432,7 @@ const LANGUAGES = {
             referral_earned: "AMSK Earned",
             referral_your_link: "Your Referral Link",
             referral_invite: "🚀 Invite friends and earn big!",
+            referral_new_description: "💎 Get 10,000 AMSK for each referral who starts mining, and earn 16% from your referrals' deposits (coming soon)",
             referral_milestones: "Referral Milestones",
             share_telegram: "Telegram",
             share_whatsapp: "WhatsApp",
@@ -528,6 +529,7 @@ const LANGUAGES = {
             referral_earned: "AMSK المكتسب",
             referral_your_link: "رابط الدعوة الخاص بك",
             referral_invite: "🚀 ادعُ أصدقائك واربح الكثير!",
+            referral_new_description: "💎 احصل على 10,000 AMSK لكل صديق يبدأ التعدين، واربح 16% من إيداعات دعواتك (قريباً)",
             referral_milestones: "مراحل الدعوات",
             share_telegram: "تليجرام",
             share_whatsapp: "واتساب",
@@ -1384,7 +1386,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '8.0-simple-fix'
+            version: '7.4-professional'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1535,28 +1537,24 @@ async function saveUserData() {
     }
 }
 
-// ====== 16. ADD TRANSACTION TO HISTORY ======
 function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
     const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     
     let iconClass = 'swap';
     let icon = 'fa-exchange-alt';
     
-    if (type.includes('withdrawal')) {
-        iconClass = 'withdraw';
-        icon = 'fa-upload';
-    } else if (type.includes('deposit')) {
-        iconClass = 'deposit';
-        icon = 'fa-download';
-    } else if (type.includes('mining')) {
+    if (type.includes('mining')) {
         iconClass = 'mining';
         icon = 'fa-microchip';
     } else if (type.includes('staking')) {
         iconClass = 'staking';
         icon = 'fa-gem';
-    } else if (type.includes('swap')) {
-        iconClass = 'swap';
-        icon = 'fa-exchange-alt';
+    } else if (type.includes('deposit')) {
+        iconClass = 'deposit';
+        icon = 'fa-download';
+    } else if (type.includes('withdrawal')) {
+        iconClass = 'withdraw';
+        icon = 'fa-upload';
     } else if (type.includes('referral') || type.includes('milestone')) {
         iconClass = 'referral';
         icon = 'fa-users';
@@ -1566,6 +1564,9 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     } else if (type.includes('vip')) {
         iconClass = 'milestone';
         icon = 'fa-crown';
+    } else if (type.includes('swap')) {
+        iconClass = 'swap';
+        icon = 'fa-exchange-alt';
     }
     
     const transaction = {
@@ -1622,7 +1623,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     return transaction;
 }
 
-// ====== 17. TRANSACTION HISTORY ======
+// ====== 16. TRANSACTION HISTORY ======
 function showTransactionHistory() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1711,15 +1712,23 @@ function refreshHistory() {
     });
 }
 
+// ====== 16.1 LOAD HISTORY CONTENT (معدلة بالكامل - بدون تكرار) ======
 function loadHistoryContent(tabType = 'all', filterType = 'all') {
     const historyContent = document.getElementById('historyContent');
     if (!historyContent) return;
     
+    // نبدأ بالمعاملات من transactionHistory فقط
     let allTransactions = [...(walletData.transactionHistory || [])];
     
-    if (walletData.pendingWithdrawals) {
+    // نجمع كل الـ IDs الموجودة
+    const existingIds = new Set(allTransactions.map(tx => tx.id));
+    const existingTxIds = new Set(allTransactions.map(tx => tx.txId).filter(id => id));
+    
+    // نضيف pendingWithdrawals فقط إذا لم تكن موجودة مسبقاً
+    if (walletData.pendingWithdrawals && walletData.pendingWithdrawals.length > 0) {
         walletData.pendingWithdrawals.forEach(pending => {
-            if (pending.status === 'pending') {
+            // نتأكد أنها غير موجودة في transactionHistory
+            if (pending.status === 'pending' && !existingIds.has(pending.id) && !existingTxIds.has(pending.id)) {
                 allTransactions.push({
                     id: pending.id,
                     type: 'withdrawal',
@@ -1729,6 +1738,9 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
                     status: 'pending',
                     message: 'Withdrawal requested - Funds deducted and held for approval',
                     timestamp: pending.createdAt,
+                    txId: pending.id,
+                    iconClass: 'withdraw',
+                    icon: 'fa-upload',
                     dateFormatted: new Date(pending.createdAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -1741,8 +1753,10 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         });
     }
     
+    // ترتيب حسب التاريخ (الأحدث أولاً)
     allTransactions.sort((a, b) => b.timestamp - a.timestamp);
     
+    // تطبيق الفلاتر حسب الحالة (Pending, Completed, Rejected)
     let filteredTransactions = allTransactions;
     
     if (tabType === 'pending') {
@@ -1753,6 +1767,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         filteredTransactions = allTransactions.filter(tx => tx.status === 'rejected');
     }
     
+    // تطبيق الفلاتر حسب النوع (Deposit, Withdrawal, Mining, ...)
     if (filterType !== 'all') {
         if (filterType === 'deposit') {
             filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('deposit'));
@@ -1773,6 +1788,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         }
     }
     
+    // عرض النتائج
     if (filteredTransactions.length === 0) {
         historyContent.innerHTML = `
             <div class="history-empty">
@@ -1824,7 +1840,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         }
         
         html += `
-            <div class="history-card">
+            <div class="history-card" data-tx-id="${tx.id || tx.txId || ''}">
                 <div class="history-card-header">
                     <div class="history-card-icon ${iconClass}">
                         <i class="fas ${icon}"></i>
@@ -1858,7 +1874,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 18. DEPOSIT FUNCTIONS ======
+// ====== 17. DEPOSIT FUNCTIONS ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1935,6 +1951,12 @@ async function submitDepositRequest() {
                     
                     saveUserDataToLocalStorage();
                     updateWalletUI();
+                    
+                    if (document.getElementById('historyContent')) {
+                        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                        loadHistoryContent(activeTab, activeFilter);
+                    }
                 }
             });
         }
@@ -1957,7 +1979,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 19. WITHDRAW FUNCTIONS - FIXED (NO DUPLICATE TRANSACTIONS) ======
+// ====== 18. WITHDRAW FUNCTIONS (معدلة - مع إصلاح مشكلة التكرار) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -1996,6 +2018,7 @@ async function submitWithdrawRequest() {
     }
     
     try {
+        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2019,8 +2042,8 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // إضافة معاملة واحدة فقط عند التقديم
-        addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
+        // ✅ إضافة المعاملة إلى السجل مرة واحدة فقط (مع حفظ المرجع)
+        const transaction = addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
             withdrawalId);
@@ -2028,57 +2051,58 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // المستمع الذكي - يحدث المعاملة الموجودة فقط (لا يضيف جديدة)
+            // المستمع الذكي - يقوم بتحديث المعاملة الموجودة
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة وتحديثها
-                const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
+                // البحث عن المعاملة الموجودة في التاريخ
+                const existingTx = walletData.transactionHistory.find(t => t.id === transaction.id);
                 
-                if (data.status === 'approved') {
-                    // تحديث المعاملة الموجودة فقط (لا إضافة جديدة)
-                    if (existingTx) {
+                if (existingTx) {
+                    if (data.status === 'approved') {
+                        // تحديث المعاملة الموجودة
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
-                    }
-                    
-                    // إزالة من pendingWithdrawals
-                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
-                    if (pendingIndex !== -1) {
-                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
-                    }
-                    
-                    // خصم الرسوم
-                    if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
-                        walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
-                    }
-                    
-                    showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
-                    
-                } else if (data.status === 'rejected') {
-                    // تحديث المعاملة الموجودة فقط (لا إضافة جديدة)
-                    if (existingTx) {
+                        
+                        // إزالة من pendingWithdrawals
+                        const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                        if (pendingIndex !== -1) {
+                            walletData.pendingWithdrawals.splice(pendingIndex, 1);
+                        }
+                        
+                        // خصم الرسوم
+                        if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
+                            walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
+                        }
+                        
+                        showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
+                        
+                    } else if (data.status === 'rejected') {
+                        // تحديث المعاملة الموجودة
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
+                        
+                        // إعادة المبلغ
+                        walletData.balances.USDT += amount;
+                        
+                        // إزالة من pendingWithdrawals
+                        const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
+                        if (pendingIndex !== -1) {
+                            walletData.pendingWithdrawals.splice(pendingIndex, 1);
+                        }
+                        
+                        showMessage(`❌ Your withdrawal was rejected: ${data.reason || 'Unknown'}`, 'error');
                     }
                     
-                    // إعادة المبلغ
-                    walletData.balances.USDT += amount;
+                    saveUserDataToLocalStorage();
+                    updateWalletUI();
                     
-                    // إزالة من pendingWithdrawals
-                    const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
-                    if (pendingIndex !== -1) {
-                        walletData.pendingWithdrawals.splice(pendingIndex, 1);
+                    // تحديث واجهة التاريخ إذا كانت مفتوحة
+                    if (document.getElementById('historyContent')) {
+                        const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+                        const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+                        loadHistoryContent(activeTab, activeFilter);
                     }
-                    
-                    showMessage(`❌ Your withdrawal was rejected: ${data.reason || 'Unknown'}`, 'error');
-                }
-                
-                saveUserDataToLocalStorage();
-                updateWalletUI();
-                
-                if (document.getElementById('historyModal')?.classList.contains('show')) {
-                    loadHistoryContent('all', 'all');
                 }
             }, 30000);
         }
@@ -2094,6 +2118,7 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
+        // استعادة الرصيد في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -2108,7 +2133,7 @@ async function submitWithdrawRequest() {
     }
 }
 
-// ====== 20. ADMIN FUNCTIONS ======
+// ====== 19. ADMIN FUNCTIONS ======
 function initAdminSystem() {
     if (elements.adminLogo) {
         let clickCount = 0;
@@ -2646,7 +2671,7 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
     }
 }
 
-// ====== 21. MINING FUNCTIONS ======
+// ====== 20. MINING FUNCTIONS ======
 function handleMiningAction() {
     if (!walletData.mining) return;
     
@@ -2918,7 +2943,7 @@ async function upgradeMiningLevel(level) {
     }
 }
 
-// ====== 22. STAKING FUNCTIONS ======
+// ====== 21. STAKING FUNCTIONS ======
 function openStakeModal(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
     if (!plan) return;
@@ -3383,7 +3408,7 @@ function checkStakingVipReward(planId, planName) {
     updateVipTasksDisplay();
 }
 
-// ====== 23. WALLET FUNCTIONS ======
+// ====== 22. WALLET FUNCTIONS ======
 function updateWalletUI() {
     if (!walletData || !walletData.balances) {
         console.log("⚠️ Wallet data not ready yet");
@@ -3461,7 +3486,7 @@ function updateWalletUI() {
     }
 }
 
-// ====== 24. REFERRAL FUNCTIONS ======
+// ====== 23. REFERRAL FUNCTIONS ======
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
@@ -3701,7 +3726,7 @@ async function claimMilestone(milestoneNum) {
     }
 }
 
-// ====== 25. TASKS FUNCTIONS ======
+// ====== 24. TASKS FUNCTIONS ======
 function updateTasksDisplay() {
     if (!elements.tasksGrid || !elements.tasksProgress) return;
     
@@ -3957,7 +3982,7 @@ function checkMiningVipReward(newLevel) {
     updateVipTasksDisplay();
 }
 
-// ====== 26. SWAP FUNCTIONS ======
+// ====== 25. SWAP FUNCTIONS ======
 function openSwapModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4242,7 +4267,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 27. DEPOSIT MODAL FUNCTIONS ======
+// ====== 26. DEPOSIT MODAL FUNCTIONS ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4317,7 +4342,7 @@ async function openDepositModal() {
                             
                             <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
                                 <p style="color: var(--quantum-green); font-size: 11px; text-align: center; margin: 0;">
-                                    <i class="fas fa-info-circle"></i> Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. TX ID will be verified on the blockchain within 1-5 minutes.
+                                    <i class="fas fa-info-circle"></i> Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. TX ID will be verified by admin.
                                 </p>
                             </div>
                         </div>
@@ -4433,7 +4458,7 @@ function updateDepositDetails(currency) {
             
             <div style="background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; padding: 10px; margin-top: 15px;">
                 <p style="color: ${color}; font-size: 11px; text-align: center; margin: 0;">
-                    <i class="${icon}"></i> Minimum deposit: ${minDeposit}. TX ID will be verified on the blockchain within 1-5 minutes.
+                    <i class="${icon}"></i> Minimum deposit: ${minDeposit}. TX ID will be verified by admin.
                 </p>
             </div>
         </div>
@@ -4486,7 +4511,7 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-// ====== 28. WITHDRAW MODAL FUNCTIONS ======
+// ====== 27. WITHDRAW MODAL FUNCTIONS ======
 function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
@@ -4588,7 +4613,7 @@ function openWithdrawModal() {
                             </div>
                             <div style="display: flex; justify-content: space-between;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Processing:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">1-5 minutes blockchain confirmation</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Manual review (1-24h)</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-top: 5px; border-top: 1px solid rgba(0,255,136,0.2); padding-top: 5px;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Funds Status:</span>
@@ -4622,7 +4647,7 @@ function getPendingWithdrawalsTotal() {
         .reduce((total, w) => total + w.amount, 0);
 }
 
-// ====== 29. BACKGROUND SERVICES ======
+// ====== 28. BACKGROUND SERVICES ======
 function startBackgroundServices() {
     intervals.miningTimer = setInterval(() => {
         updateMiningTimer();
@@ -4660,7 +4685,7 @@ function checkAndNotifyRewards() {
     }
 }
 
-// ====== 30. BOOSTER FUNCTIONS ======
+// ====== 29. BOOSTER FUNCTIONS ======
 function boosterUpgrade() {
     const targetLevel = 5;
     const currentLevel = walletData.mining.level;
@@ -4709,7 +4734,7 @@ function scrollToTasks() {
     }
 }
 
-// ====== 31. EVENT LISTENERS ======
+// ====== 30. EVENT LISTENERS ======
 function setupEventListeners() {
     console.log("🎯 Setting up event listeners...");
     
@@ -4834,7 +4859,7 @@ function updateUI() {
     }
 }
 
-// ====== 32. INITIALIZATION ======
+// ====== 31. INITIALIZATION ======
 async function initAlienMuskApp() {
     const hideLoadingScreen = () => {
         try {
@@ -4854,7 +4879,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v8.0 - SIMPLE FIX");
+    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4887,13 +4912,17 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ SIMPLE FIX:");
-        console.log("   - Withdrawal: NO duplicate transactions");
-        console.log("   - Works exactly like deposit");
-        console.log("   - All systems go!");
+        console.log("✅ Professional Features:");
+        console.log("   - On-demand listeners (30 seconds)");
+        console.log("   - No duplicate transactions");
+        console.log("   - No double balance adds");
+        console.log("   - Separated admin tabs (Deposits/Withdrawals)");
+        console.log("   - Smart notifications without extra reads");
+        console.log("   - Live prices in swap (BNB/TON)");
+        console.log("   - Withdrawal double transaction fixed ✓");
         
         setTimeout(() => {
-            showMessage("👽 Alien Musk Quantum v8.0 - Ready for Launch! 🚀", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4905,7 +4934,7 @@ async function initAlienMuskApp() {
     }
 }
 
-// ====== 33. WINDOW LOAD ======
+// ====== 32. WINDOW LOAD ======
 document.addEventListener('DOMContentLoaded', function() {
     console.log("📱 DOM Content Loaded - Starting initialization...");
     
@@ -4934,7 +4963,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 2500);
 });
 
-// ====== 34. EXPORT GLOBAL FUNCTIONS ======
+// ====== 33. EXPORT GLOBAL FUNCTIONS ======
 window.initAlienMuskApp = initAlienMuskApp;
 window.switchPage = switchPage;
 window.closeModal = closeModal;
@@ -4975,6 +5004,5 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v8.0 - READY FOR LAUNCH!");
-console.log("✅ Withdrawal: NO DUPLICATES (simple fix)");
-console.log("✅ Launch when ready! 🚀");
+console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
+console.log("✅ Withdrawal double transaction issue fixed!");
