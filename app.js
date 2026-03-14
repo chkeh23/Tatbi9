@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
+// ALIEN MUSK QUANTUM v7.5 - ULTIMATE PROFESSIONAL EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -33,7 +33,7 @@ try {
     console.error("❌ Firebase initialization error:", error);
 }
 
-// ====== 3. ON-DEMAND LISTENERS SYSTEM - مستمعين عند الطلب فقط (30 ثانية) ======
+// ====== 3. ON-DEMAND LISTENERS SYSTEM ======
 let activeListeners = new Map();
 let listenerTimeouts = new Map();
 
@@ -98,12 +98,12 @@ function stopAllListeners() {
     listenerTimeouts.clear();
 }
 
-// ====== 4. CACHE SYSTEM - نظام التخزين المؤقت ======
+// ====== 4. CACHE SYSTEM ======
 const CACHE_TIME = {
     USER: 5 * 60 * 1000,        // 5 دقائق
     PRICES: 3 * 60 * 60 * 1000,  // 3 ساعات
     HISTORY: 10 * 60 * 1000,     // 10 دقائق
-    MINING: 60 * 1000            // دقيقة واحدة (للتعدين)
+    MINING: 60 * 1000            // دقيقة واحدة
 };
 
 let lastCacheTime = {
@@ -162,7 +162,7 @@ const CONFIG = {
     ],
     
     MINING: {
-        DURATION: 9000000, // 2.5 ساعة
+        DURATION: 9000000,
         
         LEVELS: {
             1: { name: "⚡ Beginner", cost: 0, reward: 1000, hashrate: 1000, apy: "∞" },
@@ -1384,7 +1384,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.4-professional'
+            version: '7.5-professional'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1535,24 +1535,30 @@ async function saveUserData() {
     }
 }
 
+// ====== 16. ADD TRANSACTION TO HISTORY (معدلة - مع ترتيب صحيح للأيقونات) ======
 function addTransactionToHistory(type, amount, currency, description = '', status = 'completed', message = '', txId = '') {
     const transactionId = 'tx_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     
+    // 🔥 ترتيب الشروط مهم جداً - نفحص الأنواع الأكثر تحديداً أولاً
     let iconClass = 'swap';
     let icon = 'fa-exchange-alt';
     
-    if (type.includes('mining')) {
+    // نفحص withdrawal أولاً لأنه قد يحتوي على كلمات أخرى في الوصف
+    if (type.includes('withdrawal')) {
+        iconClass = 'withdraw';
+        icon = 'fa-upload';
+    } else if (type.includes('deposit')) {
+        iconClass = 'deposit';
+        icon = 'fa-download';
+    } else if (type.includes('mining')) {
         iconClass = 'mining';
         icon = 'fa-microchip';
     } else if (type.includes('staking')) {
         iconClass = 'staking';
         icon = 'fa-gem';
-    } else if (type.includes('deposit')) {
-        iconClass = 'deposit';
-        icon = 'fa-download';
-    } else if (type.includes('withdrawal')) {
-        iconClass = 'withdraw';
-        icon = 'fa-upload';
+    } else if (type.includes('swap')) {
+        iconClass = 'swap';
+        icon = 'fa-exchange-alt';
     } else if (type.includes('referral') || type.includes('milestone')) {
         iconClass = 'referral';
         icon = 'fa-users';
@@ -1562,9 +1568,6 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     } else if (type.includes('vip')) {
         iconClass = 'milestone';
         icon = 'fa-crown';
-    } else if (type.includes('swap')) {
-        iconClass = 'swap';
-        icon = 'fa-exchange-alt';
     }
     
     const transaction = {
@@ -1607,7 +1610,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
             walletData.transactionHistory = walletData.transactionHistory.slice(0, 100);
         }
         
-        console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status})`);
+        console.log(`📝 Transaction added to history: ${type} ${amount} ${currency} (${status}) - Icon: ${iconClass}`);
         
         saveUserDataToLocalStorage();
         
@@ -1621,7 +1624,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     return transaction;
 }
 
-// ====== 16. TRANSACTION HISTORY ======
+// ====== 17. TRANSACTION HISTORY ======
 function showTransactionHistory() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1857,7 +1860,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS ======
+// ====== 18. DEPOSIT FUNCTIONS ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1956,7 +1959,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 18. WITHDRAW FUNCTIONS (معدلة - مع إصلاح مشكلة المزدوج) ======
+// ====== 19. WITHDRAW FUNCTIONS (معدلة بالكامل - مع إصلاح مشكلة المزدوج) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -1995,6 +1998,7 @@ async function submitWithdrawRequest() {
     }
     
     try {
+        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2018,6 +2022,7 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
+        // إضافة معاملة واحدة فقط في التاريخ
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2026,21 +2031,21 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // 🔥 المستمع الذكي - مع البحث عن المعاملة الموجودة وتحديثها
+            // 🔥 المستمع الذكي - يحدث المعاملة الموجودة ويمسح من pendingWithdrawals
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة في التاريخ
+                // البحث عن المعاملة الموجودة في التاريخ وتحديثها
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
-                    // تحديث المعاملة الموجودة (إن وجدت)
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
                     }
                     
-                    // إزالة من pendingWithdrawals
+                    // 🔥 الأهم: إزالة من pendingWithdrawals نهائياً
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
@@ -2054,7 +2059,7 @@ async function submitWithdrawRequest() {
                     showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                     
                 } else if (data.status === 'rejected') {
-                    // تحديث المعاملة الموجودة (إن وجدت)
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
@@ -2063,7 +2068,7 @@ async function submitWithdrawRequest() {
                     // إعادة المبلغ
                     walletData.balances.USDT += amount;
                     
-                    // إزالة من pendingWithdrawals
+                    // 🔥 إزالة من pendingWithdrawals نهائياً
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
@@ -2074,6 +2079,11 @@ async function submitWithdrawRequest() {
                 
                 saveUserDataToLocalStorage();
                 updateWalletUI();
+                
+                // تحديث التاريخ إذا كان مفتوحاً
+                if (document.getElementById('historyModal')?.classList.contains('show')) {
+                    loadHistoryContent('all', 'all');
+                }
             }, 30000);
         }
         
@@ -2088,6 +2098,7 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
+        // إعادة المبلغ في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -2102,7 +2113,7 @@ async function submitWithdrawRequest() {
     }
 }
 
-// ====== 19. ADMIN FUNCTIONS ======
+// ====== 20. ADMIN FUNCTIONS ======
 function initAdminSystem() {
     if (elements.adminLogo) {
         let clickCount = 0;
@@ -2640,7 +2651,7 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
     }
 }
 
-// ====== 20. MINING FUNCTIONS ======
+// ====== 21. MINING FUNCTIONS ======
 function handleMiningAction() {
     if (!walletData.mining) return;
     
@@ -2912,7 +2923,7 @@ async function upgradeMiningLevel(level) {
     }
 }
 
-// ====== 21. STAKING FUNCTIONS ======
+// ====== 22. STAKING FUNCTIONS ======
 function openStakeModal(planId) {
     const plan = CONFIG.STAKING.PLANS[planId];
     if (!plan) return;
@@ -3377,7 +3388,7 @@ function checkStakingVipReward(planId, planName) {
     updateVipTasksDisplay();
 }
 
-// ====== 22. WALLET FUNCTIONS ======
+// ====== 23. WALLET FUNCTIONS ======
 function updateWalletUI() {
     if (!walletData || !walletData.balances) {
         console.log("⚠️ Wallet data not ready yet");
@@ -3455,7 +3466,7 @@ function updateWalletUI() {
     }
 }
 
-// ====== 23. REFERRAL FUNCTIONS ======
+// ====== 24. REFERRAL FUNCTIONS ======
 async function checkForReferral() {
     console.log("🔍 Checking for referral...");
     
@@ -3695,7 +3706,7 @@ async function claimMilestone(milestoneNum) {
     }
 }
 
-// ====== 24. TASKS FUNCTIONS ======
+// ====== 25. TASKS FUNCTIONS ======
 function updateTasksDisplay() {
     if (!elements.tasksGrid || !elements.tasksProgress) return;
     
@@ -3951,7 +3962,7 @@ function checkMiningVipReward(newLevel) {
     updateVipTasksDisplay();
 }
 
-// ====== 25. SWAP FUNCTIONS ======
+// ====== 26. SWAP FUNCTIONS ======
 function openSwapModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4236,7 +4247,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 26. DEPOSIT MODAL FUNCTIONS ======
+// ====== 27. DEPOSIT MODAL FUNCTIONS ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4480,7 +4491,7 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-// ====== 27. WITHDRAW MODAL FUNCTIONS ======
+// ====== 28. WITHDRAW MODAL FUNCTIONS ======
 function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
@@ -4616,7 +4627,7 @@ function getPendingWithdrawalsTotal() {
         .reduce((total, w) => total + w.amount, 0);
 }
 
-// ====== 28. BACKGROUND SERVICES ======
+// ====== 29. BACKGROUND SERVICES ======
 function startBackgroundServices() {
     intervals.miningTimer = setInterval(() => {
         updateMiningTimer();
@@ -4654,7 +4665,7 @@ function checkAndNotifyRewards() {
     }
 }
 
-// ====== 29. BOOSTER FUNCTIONS ======
+// ====== 30. BOOSTER FUNCTIONS ======
 function boosterUpgrade() {
     const targetLevel = 5;
     const currentLevel = walletData.mining.level;
@@ -4703,7 +4714,7 @@ function scrollToTasks() {
     }
 }
 
-// ====== 30. EVENT LISTENERS ======
+// ====== 31. EVENT LISTENERS ======
 function setupEventListeners() {
     console.log("🎯 Setting up event listeners...");
     
@@ -4828,7 +4839,7 @@ function updateUI() {
     }
 }
 
-// ====== 31. INITIALIZATION ======
+// ====== 32. INITIALIZATION ======
 async function initAlienMuskApp() {
     const hideLoadingScreen = () => {
         try {
@@ -4848,7 +4859,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
+    console.log("🚀 Alien Musk Quantum v7.5 - ULTIMATE PROFESSIONAL EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4884,14 +4895,14 @@ async function initAlienMuskApp() {
         console.log("✅ Professional Features:");
         console.log("   - On-demand listeners (30 seconds)");
         console.log("   - No duplicate transactions");
-        console.log("   - No double balance adds");
+        console.log("   - Fixed withdrawal double transaction");
+        console.log("   - Fixed withdrawal icon (withdraw not swap)");
         console.log("   - Separated admin tabs (Deposits/Withdrawals)");
         console.log("   - Smart notifications without extra reads");
         console.log("   - Live prices in swap (BNB/TON)");
-        console.log("   - Withdrawal double transaction fixed");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.5 - Ultimate Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4903,7 +4914,7 @@ async function initAlienMuskApp() {
     }
 }
 
-// ====== 32. WINDOW LOAD ======
+// ====== 33. WINDOW LOAD ======
 document.addEventListener('DOMContentLoaded', function() {
     console.log("📱 DOM Content Loaded - Starting initialization...");
     
@@ -4932,7 +4943,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 2500);
 });
 
-// ====== 33. EXPORT GLOBAL FUNCTIONS ======
+// ====== 34. EXPORT GLOBAL FUNCTIONS ======
 window.initAlienMuskApp = initAlienMuskApp;
 window.switchPage = switchPage;
 window.closeModal = closeModal;
@@ -4973,5 +4984,5 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
-console.log("✅ Withdrawal double transaction issue fixed!");
+console.log("👽 Alien Musk Quantum v7.5 - ULTIMATE PROFESSIONAL EDITION loaded successfully!");
+console.log("✅ All issues fixed: Withdrawal double transaction + Wrong icon");
