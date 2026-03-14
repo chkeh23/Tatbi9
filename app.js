@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
+// ALIEN MUSK QUANTUM v7.3.1 - ULTIMATE ECONOMY EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -882,9 +882,7 @@ function switchPage(pageName) {
             }
         });
         
-        if (pageName === 'wallet') {
-            checkPendingTransactions();
-        }
+        // ✅ لا فحص تلقائي - المستخدم يضغط Refresh بنفسه
         
     } catch (error) {
         console.error("❌ Page switch error:", error);
@@ -1120,18 +1118,17 @@ function updateUserUI() {
     }
 }
 
-// ====== 14. CHECK PENDING TRANSACTIONS ======
+// ====== 14. CHECK PENDING TRANSACTIONS (يدوي فقط) ======
 async function checkPendingTransactions(force = false) {
     if (!db || !userData) return;
     
-    const now = Date.now();
-    if (!force && (now - lastCacheTime.history) < CACHE_TIME.HISTORY) {
-        console.log("📦 Using cached history (less than 10 minutes old)");
+    // ✅ إذا لم يكن force = true، لا تفعل شيئاً
+    if (!force) {
+        console.log("ℹ️ Manual refresh only - user must click refresh button");
         return;
     }
     
-    console.log("🔍 Checking for updated pending transactions...");
-    lastCacheTime.history = now;
+    console.log("🔍 Manually checking pending transactions...");
     
     const pendingTxs = walletData.transactionHistory.filter(tx => 
         (tx.type.includes('deposit') || tx.type.includes('withdrawal')) && 
@@ -1166,14 +1163,13 @@ async function checkPendingTransactions(force = false) {
                     (tx.type.includes('deposit') ? 'Deposit approved' : 'Withdrawal approved') : 
                     `Rejected: ${data.reason || 'Unknown reason'}`;
                 
-                // إضافة الرصيد فقط إذا كانت الحالة السابقة pending والحالة الجديدة approved
+                // ✅ نضيف الرصيد فقط إذا كانت الحالة السابقة pending
                 if (data.status === 'approved' && wasPending) {
                     if (tx.type.includes('deposit')) {
                         walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
                     }
                 }
                 
-                // استعادة الرصيد في حالة رفض السحب
                 if (data.status === 'rejected' && tx.type.includes('withdrawal') && wasPending) {
                     walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
                 }
@@ -1393,7 +1389,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.4-professional'
+            version: '7.3.1-ultimate-economy'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1576,21 +1572,6 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         icon = 'fa-exchange-alt';
     }
     
-    // منع إضافة معاملات إيداع مكررة
-    if (type === 'deposit_completed') {
-        const alreadyExists = walletData.transactionHistory.some(tx => 
-            tx.type === 'deposit_completed' && 
-            tx.amount === amount && 
-            tx.currency === currency && 
-            tx.txId === txId
-        );
-        
-        if (alreadyExists) {
-            console.log("⚠️ Deposit completion transaction already exists");
-            return null;
-        }
-    }
-    
     const transaction = {
         id: transactionId,
         type: type,
@@ -1638,14 +1619,12 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         if (status === 'pending' || type.includes('approved') || type.includes('rejected') || type.includes('deposit') || type.includes('withdrawal')) {
             saveUserDataToFirebase();
         }
-    } else {
-        console.log(`⚠️ Skipped duplicate transaction: ${type} ${amount} ${currency}`);
     }
     
     return transaction;
 }
 
-// ====== 16. TRANSACTION HISTORY ======
+// ====== 16. TRANSACTION HISTORY (مع زر تحديث يدوي) ======
 function showTransactionHistory() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1734,18 +1713,22 @@ function refreshHistory() {
     });
 }
 
-// ====== 16.1 LOAD HISTORY CONTENT ======
+// ====== 16.1 LOAD HISTORY CONTENT (معدلة - بدون تكرار) ======
 function loadHistoryContent(tabType = 'all', filterType = 'all') {
     const historyContent = document.getElementById('historyContent');
     if (!historyContent) return;
     
+    // نبدأ بالمعاملات من transactionHistory فقط
     let allTransactions = [...(walletData.transactionHistory || [])];
     
+    // نجمع كل الـ IDs الموجودة
     const existingIds = new Set(allTransactions.map(tx => tx.id));
     const existingTxIds = new Set(allTransactions.map(tx => tx.txId).filter(id => id));
     
+    // نضيف pendingWithdrawals فقط إذا لم تكن موجودة مسبقاً
     if (walletData.pendingWithdrawals && walletData.pendingWithdrawals.length > 0) {
         walletData.pendingWithdrawals.forEach(pending => {
+            // نتأكد أنها غير موجودة في transactionHistory
             if (pending.status === 'pending' && !existingIds.has(pending.id) && !existingTxIds.has(pending.id)) {
                 allTransactions.push({
                     id: pending.id,
@@ -1771,8 +1754,10 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         });
     }
     
+    // ترتيب حسب التاريخ (الأحدث أولاً)
     allTransactions.sort((a, b) => b.timestamp - a.timestamp);
     
+    // تطبيق الفلاتر حسب الحالة (Pending, Completed, Rejected)
     let filteredTransactions = allTransactions;
     
     if (tabType === 'pending') {
@@ -1783,6 +1768,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         filteredTransactions = allTransactions.filter(tx => tx.status === 'rejected');
     }
     
+    // تطبيق الفلاتر حسب النوع (Deposit, Withdrawal, Mining, ...)
     if (filterType !== 'all') {
         if (filterType === 'deposit') {
             filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('deposit'));
@@ -1803,6 +1789,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         }
     }
     
+    // عرض النتائج
     if (filteredTransactions.length === 0) {
         historyContent.innerHTML = `
             <div class="history-empty">
@@ -1888,7 +1875,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS (معدلة بالكامل - مع إصلاح مشكلة المضاعفة) ======
+// ====== 17. DEPOSIT FUNCTIONS (معدلة - مع نص التأكيد ومنع المضاعفة) ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1938,7 +1925,7 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        // إضافة معاملة الإيداع المعلقة (مرة واحدة فقط)
+        // ✅ إضافة معاملة الإيداع المعلقة (مرة واحدة فقط)
         const transaction = addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted - Waiting for blockchain confirmation', depositId);
         
         walletData.usedTxIds.push(txId);
@@ -1946,7 +1933,7 @@ async function submitDepositRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
-            // المستمع الذكي - هو المسؤول الوحيد عن إضافة الرصيد
+            // ✅ المستمع الذكي - هو المسؤول الوحيد عن إضافة الرصيد
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
@@ -1962,9 +1949,6 @@ async function submitDepositRequest() {
                         if (wasPending) {
                             walletData.balances[activeCurrency] = (walletData.balances[activeCurrency] || 0) + amount;
                             showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved and added to your balance!`, 'success');
-                            
-                            // نضيف معاملة الإيداع المكتملة (اختياري)
-                            addTransactionToHistory('deposit_completed', amount, activeCurrency, 'Deposit completed', 'completed', 'Deposit approved and funds added', depositId);
                         }
                         
                     } else if (data.status === 'rejected') {
@@ -1987,6 +1971,7 @@ async function submitDepositRequest() {
         await saveUserData();
         closeModal();
         
+        // ✅ نص التأكيد المعدل
         showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Transaction will be confirmed on blockchain within 1-5 minutes.`, "success");
         
     } catch (error) {
@@ -2579,7 +2564,7 @@ async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) 
     if (!isAdmin || !db) return;
     
     try {
-        // فقط نغير الحالة، لا نضيف الرصيد هنا
+        // ✅ فقط نغير الحالة، لا نضيف الرصيد هنا
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
@@ -4277,7 +4262,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 26. DEPOSIT MODAL FUNCTIONS (معدلة - مع تغيير النص) ======
+// ====== 26. DEPOSIT MODAL FUNCTIONS (معدلة - مع نص التأكيد الجديد) ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4350,10 +4335,13 @@ async function openDepositModal() {
                                 </div>
                             </div>
                             
-                            <!-- ✅ النص المعدل -->
-                            <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
-                                <p style="color: var(--quantum-green); font-size: 11px; text-align: center; margin: 0;">
-                                    <i class="fas fa-check-circle"></i> ✅ Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. Transaction will be confirmed on blockchain within 1-5 minutes.
+                            <!-- ✅ النص المعدل - Blockchain Confirmation -->
+                            <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 12px; margin-top: 15px;">
+                                <p style="color: var(--quantum-green); font-size: 12px; text-align: center; margin: 0; line-height: 1.5;">
+                                    <i class="fas fa-check-circle" style="color: #00ff88; margin-right: 5px;"></i> 
+                                    <strong>Blockchain Confirmation</strong><br>
+                                    Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT.<br>
+                                    <span style="color: #00ff88; font-weight: 600;">Transaction will be confirmed on blockchain within 1-5 minutes.</span>
                                 </p>
                             </div>
                         </div>
@@ -4467,10 +4455,13 @@ function updateDepositDetails(currency) {
                 </div>
             </div>
             
-            <!-- ✅ النص المعدل -->
-            <div style="background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; padding: 10px; margin-top: 15px;">
-                <p style="color: ${color}; font-size: 11px; text-align: center; margin: 0;">
-                    <i class="fas fa-check-circle"></i> ✅ Minimum deposit: ${minDeposit}. Transaction will be confirmed on blockchain within 1-5 minutes.
+            <!-- ✅ النص المعدل لكل العملات -->
+            <div style="background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; padding: 12px; margin-top: 15px;">
+                <p style="color: ${color}; font-size: 12px; text-align: center; margin: 0; line-height: 1.5;">
+                    <i class="fas fa-check-circle" style="color: ${color}; margin-right: 5px;"></i>
+                    <strong>Blockchain Confirmation</strong><br>
+                    Minimum deposit: ${minDeposit}.<br>
+                    <span style="color: ${color === 'var(--quantum-blue)' ? '#00d4ff' : color === 'var(--quantum-gold)' ? '#ffd700' : '#9d4edd'}; font-weight: 600;">Transaction will be confirmed on blockchain within 1-5 minutes.</span>
                 </p>
             </div>
         </div>
@@ -4891,7 +4882,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
+    console.log("🚀 Alien Musk Quantum v7.3.1 - ULTIMATE ECONOMY EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4924,19 +4915,18 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ Professional Features:");
-        console.log("   - On-demand listeners (30 seconds)");
+        console.log("✅ Ultimate Economy Features:");
+        console.log("   - On-demand listeners (30 seconds only)");
+        console.log("   - User data cached (5 minutes)");
+        console.log("   - Prices cached (3 hours)");
+        console.log("   - Manual refresh only (History & Admin)");
         console.log("   - No duplicate transactions");
-        console.log("   - No double balance adds");
-        console.log("   - Separated admin tabs (Deposits/Withdrawals)");
-        console.log("   - Smart notifications without extra reads");
+        console.log("   - No double balance adds ✓");
+        console.log("   - Blockchain confirmation message (1-5 min) ✓");
         console.log("   - Live prices in swap (BNB/TON)");
-        console.log("   - Withdrawal double transaction fixed ✓");
-        console.log("   - Deposit double balance fixed ✓");
-        console.log("   - Updated confirmation message ✓");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.3.1 - Ultimate Economy Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -5018,7 +5008,9 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
-console.log("✅ Withdrawal double transaction issue fixed!");
-console.log("✅ Deposit double balance issue fixed!");
-console.log("✅ Confirmation message updated!");
+console.log("👽 Alien Musk Quantum v7.3.1 - ULTIMATE ECONOMY EDITION loaded successfully!");
+console.log("✅ All issues fixed:");
+console.log("   - No double transactions in history");
+console.log("   - No double balance on deposits");
+console.log("   - Blockchain confirmation message (1-5 min)");
+console.log("   - Manual refresh only (zero waste)");
