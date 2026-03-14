@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.4 - ULTIMATE PROFESSIONAL EDITION
+// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -40,7 +40,6 @@ let listenerTimeouts = new Map();
 function startOnDemandListener(collection, docId, callback, timeoutMs = 30000) {
     const listenerId = `${collection}_${docId}`;
     
-    // إذا كان هناك مستمع نشط لهذا المستند، أوقفه أولاً
     if (activeListeners.has(listenerId)) {
         console.log(`🛑 Stopping previous listener for ${listenerId}`);
         activeListeners.get(listenerId)();
@@ -60,7 +59,6 @@ function startOnDemandListener(collection, docId, callback, timeoutMs = 30000) {
             console.log(`📡 مستمع تحديث لـ ${collection}/${docId}:`, data.status);
             callback(data);
             
-            // إذا كانت الحالة نهائية، أوقف المستمع فوراً
             if (data.status === 'approved' || data.status === 'rejected') {
                 console.log(`✅ حالة نهائية، إيقاف مستمع ${collection}/${docId}`);
                 stopOnDemandListener(listenerId);
@@ -882,7 +880,6 @@ function switchPage(pageName) {
             }
         });
         
-        // إذا فتح المحفظة، نتحقق من المعاملات المعلقة
         if (pageName === 'wallet') {
             checkPendingTransactions();
         }
@@ -1121,7 +1118,7 @@ function updateUserUI() {
     }
 }
 
-// ====== 14. CHECK PENDING TRANSACTIONS - فحص المعاملات المعلقة ======
+// ====== 14. CHECK PENDING TRANSACTIONS ======
 async function checkPendingTransactions(force = false) {
     if (!db || !userData) return;
     
@@ -1595,7 +1592,6 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
         walletData.transactionHistory = [];
     }
     
-    // التحقق من عدم وجود نفس المعاملة مسبقاً
     const isDuplicate = walletData.transactionHistory.some(tx => 
         tx.type === type && 
         tx.amount === amount && 
@@ -1625,7 +1621,7 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     return transaction;
 }
 
-// ====== 16. TRANSACTION HISTORY (مع زر تحديث يدوي) ======
+// ====== 16. TRANSACTION HISTORY ======
 function showTransactionHistory() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -1861,7 +1857,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS (مع مستمع ذكي لا يضاعف الرصيد) ======
+// ====== 17. DEPOSIT FUNCTIONS ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1889,7 +1885,6 @@ async function submitDepositRequest() {
         return;
     }
     
-    // تعطيل الزر لمنع التكرار
     const submitBtn = document.getElementById('submitDepositBtn');
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -1912,7 +1907,6 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        // إضافة المعاملة للتاريخ المحلي
         addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
         
         walletData.usedTxIds.push(txId);
@@ -1920,11 +1914,9 @@ async function submitDepositRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
-            // مستمع ذكي لمدة 30 ثانية - يقرأ فقط ولا يكتب
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
-                // البحث عن المعاملة الموجودة وتحديثها (بدون إضافة جديدة)
                 const existingTx = walletData.transactionHistory.find(t => t.txId === depositId || t.txId === txId);
                 if (existingTx) {
                     existingTx.status = data.status;
@@ -1933,7 +1925,6 @@ async function submitDepositRequest() {
                         existingTx.message = 'Deposit approved';
                         showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
                         
-                        // تحديث الرصيد من Firebase (مرة واحدة فقط)
                         loadUserDataOptimized(true);
                         
                     } else if (data.status === 'rejected') {
@@ -1965,7 +1956,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 18. WITHDRAW FUNCTIONS (مع مستمع ذكي لا يضيف معاملات مكررة) ======
+// ====== 18. WITHDRAW FUNCTIONS (معدلة - مع إصلاح مشكلة المزدوج) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -1997,7 +1988,6 @@ async function submitWithdrawRequest() {
         return;
     }
     
-    // تعطيل الزر لمنع التكرار
     const submitBtn = document.getElementById('submitWithdrawBtn');
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -2005,7 +1995,6 @@ async function submitWithdrawRequest() {
     }
     
     try {
-        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2029,7 +2018,6 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // إضافة المعاملة للتاريخ المحلي
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2038,7 +2026,7 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // مستمع ذكي لمدة 30 ثانية - يقرأ فقط ويحدث المعاملة الموجودة
+            // 🔥 المستمع الذكي - مع البحث عن المعاملة الموجودة وتحديثها
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
@@ -2046,7 +2034,7 @@ async function submitWithdrawRequest() {
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
-                    // تحديث المعاملة الموجودة
+                    // تحديث المعاملة الموجودة (إن وجدت)
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
@@ -2066,7 +2054,7 @@ async function submitWithdrawRequest() {
                     showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                     
                 } else if (data.status === 'rejected') {
-                    // تحديث المعاملة الموجودة
+                    // تحديث المعاملة الموجودة (إن وجدت)
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
@@ -2086,7 +2074,7 @@ async function submitWithdrawRequest() {
                 
                 saveUserDataToLocalStorage();
                 updateWalletUI();
-            });
+            }, 30000);
         }
         
         updateWalletUI();
@@ -2100,7 +2088,6 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
-        // إعادة المبلغ في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -2115,7 +2102,7 @@ async function submitWithdrawRequest() {
     }
 }
 
-// ====== 19. ADMIN FUNCTIONS (مع فصل تام بين الإيداع والسحب) ======
+// ====== 19. ADMIN FUNCTIONS ======
 function initAdminSystem() {
     if (elements.adminLogo) {
         let clickCount = 0;
@@ -2255,14 +2242,12 @@ async function refreshAdminData() {
     const refreshBtn = document.querySelector('.refresh-admin-btn i');
     if (refreshBtn) refreshBtn.classList.add('fa-spin');
     
-    // تحديد التبويب النشط
     const activeTab = document.querySelector('.admin-tab.active')?.dataset.adminTab || 'deposits';
     
     try {
         let html = '';
         
         if (activeTab === 'deposits') {
-            // جلب طلبات الإيداع المعلقة فقط
             const snapshot = await db.collection(DB_COLLECTIONS.DEPOSITS)
                 .where('status', '==', 'pending')
                 .get();
@@ -2278,7 +2263,6 @@ async function refreshAdminData() {
                 html += '</div>';
             }
         } else if (activeTab === 'withdrawals') {
-            // جلب طلبات السحب المعلقة فقط
             const snapshot = await db.collection(DB_COLLECTIONS.WITHDRAWALS)
                 .where('status', '==', 'pending')
                 .get();
@@ -2374,7 +2358,6 @@ function switchAdminTab(tab) {
     refreshAdminData();
 }
 
-// دالة البحث عن مستخدم واحد وعرض بياناته
 async function adminSearchUser() {
     const targetId = document.getElementById('adminSearchUserId')?.value.trim();
     if (!targetId) {
@@ -2386,7 +2369,6 @@ async function adminSearchUser() {
     resultDiv.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Searching...</div>';
     
     try {
-        // قراءة واحدة فقط من Firebase
         const userDoc = await db.collection(DB_COLLECTIONS.USERS).doc(targetId).get();
         
         if (!userDoc.exists) {
@@ -2401,12 +2383,10 @@ async function adminSearchUser() {
         
         const userData_ = userDoc.data();
         
-        // حساب الإحصائيات
         const referralCount = userData_.referrals?.count || 0;
         const earnedAMSK = userData_.referrals?.earned?.amsk || 0;
         const earnedBNB = userData_.referrals?.earned?.bnb || 0;
         
-        // عرض بطاقة المستخدم
         resultDiv.innerHTML = `
             <div class="admin-user-profile" style="background: linear-gradient(145deg, #1e1e35, #15152a); border-radius: 16px; padding: 20px; border: 1px solid rgba(0,255,136,0.2);">
                 <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
@@ -2505,14 +2485,12 @@ async function adminAddToUser(targetId) {
     }
     
     try {
-        // كتابة واحدة فقط في Firebase
         await db.collection(DB_COLLECTIONS.USERS).doc(targetId).update({
             [`balances.${currency}`]: firebase.firestore.FieldValue.increment(parseFloat(amount))
         });
         
         showMessage(`✅ Added ${amount} ${currency} to ${targetId}`, 'success');
         
-        // تحديث العرض
         adminSearchUser();
         
     } catch (error) {
@@ -2536,14 +2514,12 @@ async function adminSubtractFromUser(targetId) {
     }
     
     try {
-        // كتابة واحدة فقط في Firebase
         await db.collection(DB_COLLECTIONS.USERS).doc(targetId).update({
             [`balances.${currency}`]: firebase.firestore.FieldValue.increment(-parseFloat(amount))
         });
         
         showMessage(`✅ Subtracted ${amount} ${currency} from ${targetId}`, 'success');
         
-        // تحديث العرض
         adminSearchUser();
         
     } catch (error) {
@@ -2556,7 +2532,6 @@ async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) 
     if (!isAdmin || !db) return;
     
     try {
-        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
@@ -2568,7 +2543,6 @@ async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) 
             }
         });
         
-        // إضافة الرصيد للمستخدم (مرة واحدة فقط)
         await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
             [`balances.${currency}`]: firebase.firestore.FieldValue.increment(amount)
         });
@@ -2589,7 +2563,6 @@ async function adminRejectDeposit(docId, targetUserId, txId) {
     if (!reason) return;
     
     try {
-        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'rejected',
             reason: reason,
@@ -2615,7 +2588,6 @@ async function adminApproveWithdrawal(docId, targetUserId, amount) {
     if (!isAdmin || !db) return;
     
     try {
-        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
@@ -2643,7 +2615,6 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
     if (!reason) return;
     
     try {
-        // تحديث حالة الطلب في Firebase
         await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(docId).update({
             status: 'rejected',
             reason: reason,
@@ -2656,7 +2627,6 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
             }
         });
         
-        // إعادة المبلغ للمستخدم
         await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
             'balances.USDT': firebase.firestore.FieldValue.increment(amount)
         });
@@ -3981,7 +3951,7 @@ function checkMiningVipReward(newLevel) {
     updateVipTasksDisplay();
 }
 
-// ====== 25. SWAP FUNCTIONS (مع أسعار حية لـ BNB/TON) ======
+// ====== 25. SWAP FUNCTIONS ======
 function openSwapModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4075,7 +4045,6 @@ function openSwapModal() {
     }, 100);
 }
 
-// دالة تحديث أسعار السواب (معدلة بأسعار حية)
 function updateSwapRates() {
     const fromCurrency = document.getElementById('swapFrom')?.value || 'USDT';
     const toCurrency = document.getElementById('swapTo')?.value || 'AMSK';
@@ -4096,14 +4065,11 @@ function updateSwapRates() {
             rateText.textContent = `1 USDT = ${CONFIG.SWAP.RATES.USDT_TO_AMSK.toLocaleString()} AMSK`;
             rulesText.textContent = "USDT → AMSK allowed";
         } else if (fromCurrency === 'BNB' && toCurrency === 'AMSK') {
-            // استخدام السعر الحي لـ BNB
             const bnbPrice = livePrices.BNB || CONFIG.PRICES.BNB;
-            // تقدير سعر BNB إلى AMSK (بناءً على سعر USDT)
             const rate = (bnbPrice / CONFIG.PRICES.USDT) * CONFIG.SWAP.RATES.USDT_TO_AMSK;
             rateText.textContent = `1 BNB = ${rate.toLocaleString()} AMSK ($${bnbPrice.toFixed(2)})`;
             rulesText.textContent = "BNB → AMSK allowed (live price)";
         } else if (fromCurrency === 'TON' && toCurrency === 'AMSK') {
-            // استخدام السعر الحي لـ TON
             const tonPrice = livePrices.TON || CONFIG.PRICES.TON;
             const rate = (tonPrice / CONFIG.PRICES.USDT) * CONFIG.SWAP.RATES.USDT_TO_AMSK;
             rateText.textContent = `1 TON = ${rate.toLocaleString()} AMSK ($${tonPrice.toFixed(2)})`;
@@ -4882,7 +4848,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.4 - ULTIMATE PROFESSIONAL EDITION");
+    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4922,6 +4888,7 @@ async function initAlienMuskApp() {
         console.log("   - Separated admin tabs (Deposits/Withdrawals)");
         console.log("   - Smart notifications without extra reads");
         console.log("   - Live prices in swap (BNB/TON)");
+        console.log("   - Withdrawal double transaction fixed");
         
         setTimeout(() => {
             showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
@@ -5006,5 +4973,5 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.4 - ULTIMATE PROFESSIONAL EDITION loaded successfully!");
-console.log("✅ All critical issues fixed!");
+console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
+console.log("✅ Withdrawal double transaction issue fixed!");
