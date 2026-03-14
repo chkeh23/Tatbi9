@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.7 - FINAL FIXED EDITION
+// ALIEN MUSK QUANTUM v7.8 - LAUNCH READY
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1384,7 +1384,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.7-final'
+            version: '7.8-launch-ready'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1908,7 +1908,6 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        // إضافة المعاملة مرة واحدة فقط عند التقديم
         addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
         
         walletData.usedTxIds.push(txId);
@@ -1916,11 +1915,9 @@ async function submitDepositRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
-            // المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
-                // البحث عن المعاملة الموجودة وتحديثها
                 const existingTx = walletData.transactionHistory.find(t => t.txId === depositId || t.txId === txId);
                 if (existingTx) {
                     existingTx.status = data.status;
@@ -1929,7 +1926,6 @@ async function submitDepositRequest() {
                         existingTx.message = 'Deposit approved';
                         showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
                         
-                        // تحديث الرصيد من Firebase
                         loadUserDataOptimized(true);
                         
                     } else if (data.status === 'rejected') {
@@ -1961,7 +1957,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 19. WITHDRAW FUNCTIONS (معدلة - بدون معاملة مكررة) ======
+// ====== 19. WITHDRAW FUNCTIONS - FIXED (NO DUPLICATE TRANSACTIONS) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2000,7 +1996,6 @@ async function submitWithdrawRequest() {
     }
     
     try {
-        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2024,7 +2019,6 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // إضافة المعاملة مرة واحدة فقط عند التقديم
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2033,26 +2027,26 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
+            // 🔥 FIXED: Listener ONLY updates existing transaction, does NOT add new ones
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة وتحديثها
+                // Find existing transaction
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
+                    // Update existing transaction (NO new transaction added)
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
                     }
                     
-                    // إزالة من pendingWithdrawals
+                    // Remove from pendingWithdrawals
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
                     }
                     
-                    // خصم الرسوم
                     if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
                         walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
                     }
@@ -2060,15 +2054,14 @@ async function submitWithdrawRequest() {
                     showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                     
                 } else if (data.status === 'rejected') {
+                    // Update existing transaction (NO new transaction added)
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
                     }
                     
-                    // إعادة المبلغ
                     walletData.balances.USDT += amount;
                     
-                    // إزالة من pendingWithdrawals
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
@@ -2097,7 +2090,6 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
-        // إعادة المبلغ في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -4858,7 +4850,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.7 - FINAL FIXED EDITION");
+    console.log("🚀 Alien Musk Quantum v7.8 - LAUNCH READY");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4891,15 +4883,15 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ Fixed Features:");
-        console.log("   - Withdrawal fixed (like deposit)");
-        console.log("   - Deposit text updated (1-5 minutes blockchain)");
-        console.log("   - Withdrawal text updated (1-5 minutes blockchain)");
+        console.log("✅ Launch Ready Features:");
+        console.log("   - Withdrawal fixed (single transaction)");
+        console.log("   - Deposit fixed (single transaction)");
         console.log("   - On-demand listeners (30 seconds)");
         console.log("   - Live prices in swap (BNB/TON)");
+        console.log("   - All systems go!");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.7 - Final Fixed Edition!", "success");
+            showMessage("👽 Alien Musk Quantum v7.8 - Ready for Launch! 🚀", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4981,5 +4973,6 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.7 - FINAL FIXED EDITION loaded successfully!");
-console.log("✅ Withdrawal fixed: now works exactly like deposit (single transaction)");
+console.log("👽 Alien Musk Quantum v7.8 - LAUNCH READY!");
+console.log("✅ Withdrawal fixed: single transaction only");
+console.log("✅ All systems go for launch! 🚀");
