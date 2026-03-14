@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.6 - ULTIMATE FIXED EDITION
+// ALIEN MUSK QUANTUM v7.7 - FINAL FIXED EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1384,7 +1384,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.6-ultimate-fixed'
+            version: '7.7-final'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1908,7 +1908,7 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        // 🔥 إضافة المعاملة مرة واحدة فقط عند التقديم
+        // إضافة المعاملة مرة واحدة فقط عند التقديم
         addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
         
         walletData.usedTxIds.push(txId);
@@ -1916,7 +1916,7 @@ async function submitDepositRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
-            // 🔥 المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
+            // المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
@@ -1961,7 +1961,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 19. WITHDRAW FUNCTIONS ======
+// ====== 19. WITHDRAW FUNCTIONS (معدلة - بدون معاملة مكررة) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2024,7 +2024,7 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // 🔥 إضافة المعاملة مرة واحدة فقط عند التقديم
+        // إضافة المعاملة مرة واحدة فقط عند التقديم
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2033,7 +2033,7 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // 🔥 المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
+            // المستمع الذكي - يحدث المعاملة الموجودة فقط، لا يضيف جديدة
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
@@ -4246,7 +4246,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 27. DEPOSIT MODAL FUNCTIONS (مع نص محدث) ======
+// ====== 27. DEPOSIT MODAL FUNCTIONS ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4490,7 +4490,7 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-// ====== 28. WITHDRAW MODAL FUNCTIONS (مع نص محدث) ======
+// ====== 28. WITHDRAW MODAL FUNCTIONS ======
 function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
@@ -4858,7 +4858,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.6 - ULTIMATE FIXED EDITION");
+    console.log("🚀 Alien Musk Quantum v7.7 - FINAL FIXED EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4892,14 +4892,14 @@ async function initAlienMuskApp() {
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
         console.log("✅ Fixed Features:");
-        console.log("   - Withdrawal double transaction fixed (like REFI)");
+        console.log("   - Withdrawal fixed (like deposit)");
         console.log("   - Deposit text updated (1-5 minutes blockchain)");
         console.log("   - Withdrawal text updated (1-5 minutes blockchain)");
         console.log("   - On-demand listeners (30 seconds)");
         console.log("   - Live prices in swap (BNB/TON)");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.6 - Ultimate Fixed Edition!", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.7 - Final Fixed Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4981,5 +4981,5 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.6 - ULTIMATE FIXED EDITION loaded successfully!");
-console.log("✅ All issues fixed: Withdrawal double transaction + Updated texts");
+console.log("👽 Alien Musk Quantum v7.7 - FINAL FIXED EDITION loaded successfully!");
+console.log("✅ Withdrawal fixed: now works exactly like deposit (single transaction)");
