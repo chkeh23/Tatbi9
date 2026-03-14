@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.9 - FINAL FIXED
+// ALIEN MUSK QUANTUM v8.0 - FINAL SIMPLE FIX
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1384,7 +1384,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.9-final-fixed'
+            version: '8.0-simple-fix'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1957,7 +1957,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 19. WITHDRAW FUNCTIONS - FINAL FIXED ======
+// ====== 19. WITHDRAW FUNCTIONS - FIXED (NO DUPLICATE TRANSACTIONS) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2019,7 +2019,7 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // 🔥 إضافة المعاملة مرة واحدة فقط
+        // إضافة معاملة واحدة فقط عند التقديم
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2028,15 +2028,15 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // 🔥 المستمع الذكي - يحدث فقط ولا يضيف
+            // المستمع الذكي - يحدث المعاملة الموجودة فقط (لا يضيف جديدة)
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة
+                // البحث عن المعاملة الموجودة وتحديثها
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
-                    // تحديث المعاملة الموجودة
+                    // تحديث المعاملة الموجودة فقط (لا إضافة جديدة)
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
@@ -2056,7 +2056,7 @@ async function submitWithdrawRequest() {
                     showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                     
                 } else if (data.status === 'rejected') {
-                    // تحديث المعاملة الموجودة
+                    // تحديث المعاملة الموجودة فقط (لا إضافة جديدة)
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
@@ -4854,7 +4854,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.9 - FINAL FIXED");
+    console.log("🚀 Alien Musk Quantum v8.0 - SIMPLE FIX");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4887,13 +4887,13 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ FINAL FIXED:");
-        console.log("   - Withdrawal: single transaction only");
-        console.log("   - Deposit: perfect as before");
+        console.log("✅ SIMPLE FIX:");
+        console.log("   - Withdrawal: NO duplicate transactions");
+        console.log("   - Works exactly like deposit");
         console.log("   - All systems go!");
         
         setTimeout(() => {
-            showMessage("👽 Alien Musk Quantum v7.9 - Ready for Launch! 🚀", "success");
+            showMessage("👽 Alien Musk Quantum v8.0 - Ready for Launch! 🚀", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4975,6 +4975,6 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.9 - FINAL FIXED!");
-console.log("✅ Withdrawal: single transaction only (like deposit)");
-console.log("✅ Ready for launch! 🚀");
+console.log("👽 Alien Musk Quantum v8.0 - READY FOR LAUNCH!");
+console.log("✅ Withdrawal: NO DUPLICATES (simple fix)");
+console.log("✅ Launch when ready! 🚀");
