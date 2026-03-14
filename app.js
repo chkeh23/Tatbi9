@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.8 - LAUNCH READY
+// ALIEN MUSK QUANTUM v7.9 - FINAL FIXED
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1384,7 +1384,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.8-launch-ready'
+            version: '7.9-final-fixed'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1957,7 +1957,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 19. WITHDRAW FUNCTIONS - FIXED (NO DUPLICATE TRANSACTIONS) ======
+// ====== 19. WITHDRAW FUNCTIONS - FINAL FIXED ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2019,6 +2019,7 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
+        // 🔥 إضافة المعاملة مرة واحدة فقط
         addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2027,26 +2028,27 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // 🔥 FIXED: Listener ONLY updates existing transaction, does NOT add new ones
+            // 🔥 المستمع الذكي - يحدث فقط ولا يضيف
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // Find existing transaction
+                // البحث عن المعاملة الموجودة
                 const existingTx = walletData.transactionHistory.find(t => t.txId === withdrawalId);
                 
                 if (data.status === 'approved') {
-                    // Update existing transaction (NO new transaction added)
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
                     }
                     
-                    // Remove from pendingWithdrawals
+                    // إزالة من pendingWithdrawals
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
                     }
                     
+                    // خصم الرسوم
                     if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
                         walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
                     }
@@ -2054,14 +2056,16 @@ async function submitWithdrawRequest() {
                     showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                     
                 } else if (data.status === 'rejected') {
-                    // Update existing transaction (NO new transaction added)
+                    // تحديث المعاملة الموجودة
                     if (existingTx) {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
                     }
                     
+                    // إعادة المبلغ
                     walletData.balances.USDT += amount;
                     
+                    // إزالة من pendingWithdrawals
                     const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                     if (pendingIndex !== -1) {
                         walletData.pendingWithdrawals.splice(pendingIndex, 1);
@@ -4850,7 +4854,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.8 - LAUNCH READY");
+    console.log("🚀 Alien Musk Quantum v7.9 - FINAL FIXED");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4883,15 +4887,13 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ Launch Ready Features:");
-        console.log("   - Withdrawal fixed (single transaction)");
-        console.log("   - Deposit fixed (single transaction)");
-        console.log("   - On-demand listeners (30 seconds)");
-        console.log("   - Live prices in swap (BNB/TON)");
+        console.log("✅ FINAL FIXED:");
+        console.log("   - Withdrawal: single transaction only");
+        console.log("   - Deposit: perfect as before");
         console.log("   - All systems go!");
         
         setTimeout(() => {
-            showMessage("👽 Alien Musk Quantum v7.8 - Ready for Launch! 🚀", "success");
+            showMessage("👽 Alien Musk Quantum v7.9 - Ready for Launch! 🚀", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4973,6 +4975,6 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.8 - LAUNCH READY!");
-console.log("✅ Withdrawal fixed: single transaction only");
-console.log("✅ All systems go for launch! 🚀");
+console.log("👽 Alien Musk Quantum v7.9 - FINAL FIXED!");
+console.log("✅ Withdrawal: single transaction only (like deposit)");
+console.log("✅ Ready for launch! 🚀");
