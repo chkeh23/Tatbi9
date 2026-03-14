@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v8.1 - FINAL FIXED
+// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1160,16 +1160,21 @@ async function checkPendingTransactions(force = false) {
             if (data.status !== tx.status) {
                 console.log(`🔄 Transaction ${tx.txId} status changed: ${tx.status} → ${data.status}`);
                 
+                const wasPending = tx.status === 'pending';
                 tx.status = data.status;
                 tx.message = data.status === 'approved' ? 
                     (tx.type.includes('deposit') ? 'Deposit approved' : 'Withdrawal approved') : 
                     `Rejected: ${data.reason || 'Unknown reason'}`;
                 
-                if (data.status === 'approved' && tx.type.includes('deposit')) {
-                    walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
+                // إضافة الرصيد فقط إذا كانت الحالة السابقة pending والحالة الجديدة approved
+                if (data.status === 'approved' && wasPending) {
+                    if (tx.type.includes('deposit')) {
+                        walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
+                    }
                 }
                 
-                if (data.status === 'rejected' && tx.type.includes('withdrawal')) {
+                // استعادة الرصيد في حالة رفض السحب
+                if (data.status === 'rejected' && tx.type.includes('withdrawal') && wasPending) {
                     walletData.balances[tx.currency] = (walletData.balances[tx.currency] || 0) + Math.abs(tx.amount);
                 }
                 
@@ -1184,8 +1189,10 @@ async function checkPendingTransactions(force = false) {
         saveUserDataToLocalStorage();
         updateWalletUI();
         
-        if (document.getElementById('historyModal')?.classList.contains('show')) {
-            loadHistoryContent('all', 'all');
+        if (document.getElementById('historyContent')) {
+            const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
+            const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
+            loadHistoryContent(activeTab, activeFilter);
         }
     }
 }
@@ -1386,7 +1393,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '8.1-final-fixed'
+            version: '7.4-professional'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1567,6 +1574,21 @@ function addTransactionToHistory(type, amount, currency, description = '', statu
     } else if (type.includes('swap')) {
         iconClass = 'swap';
         icon = 'fa-exchange-alt';
+    }
+    
+    // منع إضافة معاملات إيداع مكررة
+    if (type === 'deposit_completed') {
+        const alreadyExists = walletData.transactionHistory.some(tx => 
+            tx.type === 'deposit_completed' && 
+            tx.amount === amount && 
+            tx.currency === currency && 
+            tx.txId === txId
+        );
+        
+        if (alreadyExists) {
+            console.log("⚠️ Deposit completion transaction already exists");
+            return null;
+        }
     }
     
     const transaction = {
@@ -1866,7 +1888,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS (معدلة - بدون مضاعفة الرصيد) ======
+// ====== 17. DEPOSIT FUNCTIONS (معدلة بالكامل - مع إصلاح مشكلة المضاعفة) ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1916,29 +1938,37 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        const transaction = addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
+        // إضافة معاملة الإيداع المعلقة (مرة واحدة فقط)
+        const transaction = addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted - Waiting for blockchain confirmation', depositId);
         
         walletData.usedTxIds.push(txId);
         
         if (db) {
             await db.collection(DB_COLLECTIONS.DEPOSITS).doc(depositId).set(depositRequest);
             
+            // المستمع الذكي - هو المسؤول الوحيد عن إضافة الرصيد
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
                 const existingTx = walletData.transactionHistory.find(t => t.id === transaction.id);
                 if (existingTx) {
+                    const wasPending = existingTx.status === 'pending';
                     existingTx.status = data.status;
                     
                     if (data.status === 'approved') {
-                        existingTx.message = 'Deposit approved';
-                        showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
+                        existingTx.message = 'Deposit approved - Funds added to your wallet';
                         
-                        // فقط نجلب البيانات من Firebase (لا نضيف الرصيد يدوياً)
-                        loadUserDataOptimized(true);
+                        // ✅ نضيف الرصيد فقط إذا كان سابقاً pending (مرة واحدة فقط)
+                        if (wasPending) {
+                            walletData.balances[activeCurrency] = (walletData.balances[activeCurrency] || 0) + amount;
+                            showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved and added to your balance!`, 'success');
+                            
+                            // نضيف معاملة الإيداع المكتملة (اختياري)
+                            addTransactionToHistory('deposit_completed', amount, activeCurrency, 'Deposit completed', 'completed', 'Deposit approved and funds added', depositId);
+                        }
                         
                     } else if (data.status === 'rejected') {
-                        existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
+                        existingTx.message = `Rejected: ${data.reason || 'Unknown reason'}`;
                         showMessage(`❌ Your deposit was rejected: ${data.reason || 'Unknown'}`, 'error');
                     }
                     
@@ -1957,7 +1987,7 @@ async function submitDepositRequest() {
         await saveUserData();
         closeModal();
         
-        showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Waiting for admin approval.`, "success");
+        showMessage(`✅ Deposit request submitted for ${amount} ${activeCurrency}. Transaction will be confirmed on blockchain within 1-5 minutes.`, "success");
         
     } catch (error) {
         console.error("❌ Error submitting deposit:", error);
@@ -1972,7 +2002,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 18. WITHDRAW FUNCTIONS ======
+// ====== 18. WITHDRAW FUNCTIONS (معدلة) ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2048,6 +2078,8 @@ async function submitWithdrawRequest() {
                 const existingTx = walletData.transactionHistory.find(t => t.id === transaction.id);
                 
                 if (existingTx) {
+                    const wasPending = existingTx.status === 'pending';
+                    
                     if (data.status === 'approved') {
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
@@ -2067,7 +2099,9 @@ async function submitWithdrawRequest() {
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
                         
-                        walletData.balances.USDT += amount;
+                        if (wasPending) {
+                            walletData.balances.USDT += amount;
+                        }
                         
                         const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                         if (pendingIndex !== -1) {
@@ -2114,7 +2148,7 @@ async function submitWithdrawRequest() {
     }
 }
 
-// ====== 19. ADMIN FUNCTIONS ======
+// ====== 19. ADMIN FUNCTIONS (معدلة - بدون إضافة الرصيد) ======
 function initAdminSystem() {
     if (elements.adminLogo) {
         let clickCount = 0;
@@ -2540,10 +2574,12 @@ async function adminSubtractFromUser(targetId) {
     }
 }
 
+// ✅ دالة الموافقة على الإيداع (معدلة - بدون إضافة الرصيد)
 async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) {
     if (!isAdmin || !db) return;
     
     try {
+        // فقط نغير الحالة، لا نضيف الرصيد هنا
         await db.collection(DB_COLLECTIONS.DEPOSITS).doc(docId).update({
             status: 'approved',
             approvedAt: Date.now(),
@@ -2553,10 +2589,6 @@ async function adminApproveDeposit(docId, targetUserId, currency, amount, txId) 
                 type: 'success',
                 timestamp: Date.now()
             }
-        });
-        
-        await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
-            [`balances.${currency}`]: firebase.firestore.FieldValue.increment(amount)
         });
         
         showMessage(`✅ Deposit approved: +${amount} ${currency}`, 'success');
@@ -2639,11 +2671,8 @@ async function adminRejectWithdrawal(docId, targetUserId, amount) {
             }
         });
         
-        await db.collection(DB_COLLECTIONS.USERS).doc(targetUserId).update({
-            'balances.USDT': firebase.firestore.FieldValue.increment(amount)
-        });
-        
-        showMessage(`✅ Withdrawal rejected, funds returned`, 'success');
+        // المستمع الذكي هو المسؤول عن إعادة الرصيد
+        showMessage(`✅ Withdrawal rejected`, 'success');
         refreshAdminData();
         
     } catch (error) {
@@ -4248,7 +4277,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 26. DEPOSIT MODAL FUNCTIONS (مع نص محدث) ======
+// ====== 26. DEPOSIT MODAL FUNCTIONS (معدلة - مع تغيير النص) ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4321,9 +4350,10 @@ async function openDepositModal() {
                                 </div>
                             </div>
                             
+                            <!-- ✅ النص المعدل -->
                             <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
                                 <p style="color: var(--quantum-green); font-size: 11px; text-align: center; margin: 0;">
-                                    <i class="fas fa-info-circle"></i> Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. TX ID will be verified on the blockchain within 1-5 minutes.
+                                    <i class="fas fa-check-circle"></i> ✅ Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. Transaction will be confirmed on blockchain within 1-5 minutes.
                                 </p>
                             </div>
                         </div>
@@ -4437,9 +4467,10 @@ function updateDepositDetails(currency) {
                 </div>
             </div>
             
+            <!-- ✅ النص المعدل -->
             <div style="background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; padding: 10px; margin-top: 15px;">
                 <p style="color: ${color}; font-size: 11px; text-align: center; margin: 0;">
-                    <i class="${icon}"></i> Minimum deposit: ${minDeposit}. TX ID will be verified on the blockchain within 1-5 minutes.
+                    <i class="fas fa-check-circle"></i> ✅ Minimum deposit: ${minDeposit}. Transaction will be confirmed on blockchain within 1-5 minutes.
                 </p>
             </div>
         </div>
@@ -4492,7 +4523,7 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-// ====== 27. WITHDRAW MODAL FUNCTIONS (مع نص محدث) ======
+// ====== 27. WITHDRAW MODAL FUNCTIONS ======
 function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
@@ -4594,7 +4625,7 @@ function openWithdrawModal() {
                             </div>
                             <div style="display: flex; justify-content: space-between;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Processing:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">1-5 minutes blockchain confirmation</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Manual review (1-24h)</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-top: 5px; border-top: 1px solid rgba(0,255,136,0.2); padding-top: 5px;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Funds Status:</span>
@@ -4860,7 +4891,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v8.1 - FINAL FIXED");
+    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4893,14 +4924,19 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ FINAL FIXES:");
-        console.log("   - Deposit: NO double balance (fixed)");
-        console.log("   - Deposit text: blockchain confirmation (1-5 min)");
-        console.log("   - Withdrawal text: blockchain confirmation (1-5 min)");
-        console.log("   - All systems go!");
+        console.log("✅ Professional Features:");
+        console.log("   - On-demand listeners (30 seconds)");
+        console.log("   - No duplicate transactions");
+        console.log("   - No double balance adds");
+        console.log("   - Separated admin tabs (Deposits/Withdrawals)");
+        console.log("   - Smart notifications without extra reads");
+        console.log("   - Live prices in swap (BNB/TON)");
+        console.log("   - Withdrawal double transaction fixed ✓");
+        console.log("   - Deposit double balance fixed ✓");
+        console.log("   - Updated confirmation message ✓");
         
         setTimeout(() => {
-            showMessage("👽 Alien Musk Quantum v8.1 - Ready for Launch! 🚀", "success");
+            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -4982,7 +5018,7 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v8.1 - READY FOR LAUNCH!");
-console.log("✅ Deposit: NO double balance");
-console.log("✅ Texts: blockchain confirmation (1-5 min)");
-console.log("✅ Launch when ready! 🚀");
+console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
+console.log("✅ Withdrawal double transaction issue fixed!");
+console.log("✅ Deposit double balance issue fixed!");
+console.log("✅ Confirmation message updated!");
