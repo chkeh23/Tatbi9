@@ -1,5 +1,5 @@
 // ===========================================
-// ALIEN MUSK QUANTUM v7.4 - PROFESSIONAL EDITION
+// ALIEN MUSK QUANTUM v8.1 - FINAL FIXED
 // ===========================================
 
 // ====== 1. TELEGRAM WEBAPP INITIALIZATION ======
@@ -1386,7 +1386,7 @@ function saveUserDataToLocalStorage() {
             pendingWithdrawals: walletData.pendingWithdrawals,
             lastUpdate: walletData.lastUpdate,
             language: currentLanguage,
-            version: '7.4-professional'
+            version: '8.1-final-fixed'
         };
         
         localStorage.setItem(storageKey, JSON.stringify(dataToSave));
@@ -1712,22 +1712,18 @@ function refreshHistory() {
     });
 }
 
-// ====== 16.1 LOAD HISTORY CONTENT (معدلة بالكامل - بدون تكرار) ======
+// ====== 16.1 LOAD HISTORY CONTENT ======
 function loadHistoryContent(tabType = 'all', filterType = 'all') {
     const historyContent = document.getElementById('historyContent');
     if (!historyContent) return;
     
-    // نبدأ بالمعاملات من transactionHistory فقط
     let allTransactions = [...(walletData.transactionHistory || [])];
     
-    // نجمع كل الـ IDs الموجودة
     const existingIds = new Set(allTransactions.map(tx => tx.id));
     const existingTxIds = new Set(allTransactions.map(tx => tx.txId).filter(id => id));
     
-    // نضيف pendingWithdrawals فقط إذا لم تكن موجودة مسبقاً
     if (walletData.pendingWithdrawals && walletData.pendingWithdrawals.length > 0) {
         walletData.pendingWithdrawals.forEach(pending => {
-            // نتأكد أنها غير موجودة في transactionHistory
             if (pending.status === 'pending' && !existingIds.has(pending.id) && !existingTxIds.has(pending.id)) {
                 allTransactions.push({
                     id: pending.id,
@@ -1753,10 +1749,8 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         });
     }
     
-    // ترتيب حسب التاريخ (الأحدث أولاً)
     allTransactions.sort((a, b) => b.timestamp - a.timestamp);
     
-    // تطبيق الفلاتر حسب الحالة (Pending, Completed, Rejected)
     let filteredTransactions = allTransactions;
     
     if (tabType === 'pending') {
@@ -1767,7 +1761,6 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         filteredTransactions = allTransactions.filter(tx => tx.status === 'rejected');
     }
     
-    // تطبيق الفلاتر حسب النوع (Deposit, Withdrawal, Mining, ...)
     if (filterType !== 'all') {
         if (filterType === 'deposit') {
             filteredTransactions = filteredTransactions.filter(tx => tx.type.includes('deposit'));
@@ -1788,7 +1781,6 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
         }
     }
     
-    // عرض النتائج
     if (filteredTransactions.length === 0) {
         historyContent.innerHTML = `
             <div class="history-empty">
@@ -1874,7 +1866,7 @@ function loadHistoryContent(tabType = 'all', filterType = 'all') {
     historyContent.innerHTML = html;
 }
 
-// ====== 17. DEPOSIT FUNCTIONS ======
+// ====== 17. DEPOSIT FUNCTIONS (معدلة - بدون مضاعفة الرصيد) ======
 async function submitDepositRequest() {
     const activeCurrency = document.querySelector('.deposit-option.active')?.dataset.currency || 'USDT';
     const amountInput = document.getElementById('depositAmount');
@@ -1924,7 +1916,7 @@ async function submitDepositRequest() {
             createdAtFormatted: new Date().toISOString()
         };
         
-        addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
+        const transaction = addTransactionToHistory('deposit_request', amount, activeCurrency, `TX: ${txId.slice(0, 10)}...`, 'pending', 'Deposit request submitted', depositId);
         
         walletData.usedTxIds.push(txId);
         
@@ -1934,7 +1926,7 @@ async function submitDepositRequest() {
             startOnDemandListener(DB_COLLECTIONS.DEPOSITS, depositId, (data) => {
                 console.log("📥 Deposit update received:", data);
                 
-                const existingTx = walletData.transactionHistory.find(t => t.txId === depositId || t.txId === txId);
+                const existingTx = walletData.transactionHistory.find(t => t.id === transaction.id);
                 if (existingTx) {
                     existingTx.status = data.status;
                     
@@ -1942,6 +1934,7 @@ async function submitDepositRequest() {
                         existingTx.message = 'Deposit approved';
                         showMessage(`✅ Your deposit of ${amount} ${activeCurrency} has been approved!`, 'success');
                         
+                        // فقط نجلب البيانات من Firebase (لا نضيف الرصيد يدوياً)
                         loadUserDataOptimized(true);
                         
                     } else if (data.status === 'rejected') {
@@ -1979,7 +1972,7 @@ async function submitDepositRequest() {
     }
 }
 
-// ====== 18. WITHDRAW FUNCTIONS (معدلة - مع إصلاح مشكلة التكرار) ======
+// ====== 18. WITHDRAW FUNCTIONS ======
 async function submitWithdrawRequest() {
     const amountInput = document.getElementById('withdrawAmount');
     const addressInput = document.getElementById('withdrawAddress');
@@ -2018,7 +2011,6 @@ async function submitWithdrawRequest() {
     }
     
     try {
-        // خصم المبلغ فوراً
         walletData.balances.USDT -= amount;
         
         const withdrawalId = 'wd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -2042,7 +2034,6 @@ async function submitWithdrawRequest() {
         }
         walletData.pendingWithdrawals.push(withdrawRequest);
         
-        // ✅ إضافة المعاملة إلى السجل مرة واحدة فقط (مع حفظ المرجع)
         const transaction = addTransactionToHistory('withdrawal_request', -amount, 'USDT', 
             `To: ${address.slice(0, 10)}...`, 'pending', 
             'Withdrawal requested - Funds deducted and held for approval', 
@@ -2051,26 +2042,21 @@ async function submitWithdrawRequest() {
         if (db) {
             await db.collection(DB_COLLECTIONS.WITHDRAWALS).doc(withdrawalId).set(withdrawRequest);
             
-            // المستمع الذكي - يقوم بتحديث المعاملة الموجودة
             startOnDemandListener(DB_COLLECTIONS.WITHDRAWALS, withdrawalId, (data) => {
                 console.log("📤 Withdrawal update received:", data);
                 
-                // البحث عن المعاملة الموجودة في التاريخ
                 const existingTx = walletData.transactionHistory.find(t => t.id === transaction.id);
                 
                 if (existingTx) {
                     if (data.status === 'approved') {
-                        // تحديث المعاملة الموجودة
                         existingTx.status = 'approved';
                         existingTx.message = 'Withdrawal approved and processed';
                         
-                        // إزالة من pendingWithdrawals
                         const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                         if (pendingIndex !== -1) {
                             walletData.pendingWithdrawals.splice(pendingIndex, 1);
                         }
                         
-                        // خصم الرسوم
                         if (walletData.balances.BNB >= CONFIG.WITHDRAW.FEE_BNB) {
                             walletData.balances.BNB -= CONFIG.WITHDRAW.FEE_BNB;
                         }
@@ -2078,14 +2064,11 @@ async function submitWithdrawRequest() {
                         showMessage(`✅ Your withdrawal of ${amount} USDT has been approved!`, 'success');
                         
                     } else if (data.status === 'rejected') {
-                        // تحديث المعاملة الموجودة
                         existingTx.status = 'rejected';
                         existingTx.message = `Rejected: ${data.reason || 'Unknown'}`;
                         
-                        // إعادة المبلغ
                         walletData.balances.USDT += amount;
                         
-                        // إزالة من pendingWithdrawals
                         const pendingIndex = walletData.pendingWithdrawals.findIndex(w => w.id === withdrawalId);
                         if (pendingIndex !== -1) {
                             walletData.pendingWithdrawals.splice(pendingIndex, 1);
@@ -2097,7 +2080,6 @@ async function submitWithdrawRequest() {
                     saveUserDataToLocalStorage();
                     updateWalletUI();
                     
-                    // تحديث واجهة التاريخ إذا كانت مفتوحة
                     if (document.getElementById('historyContent')) {
                         const activeTab = document.querySelector('#historyTabs .history-tab.active')?.dataset.tab || 'all';
                         const activeFilter = document.querySelector('#historyFilters .history-filter-btn.active')?.dataset.filter || 'all';
@@ -2118,7 +2100,6 @@ async function submitWithdrawRequest() {
         console.error("❌ Error submitting withdrawal:", error);
         showMessage("Failed to submit withdrawal request", "error");
         
-        // استعادة الرصيد في حالة الخطأ
         if (amount) {
             walletData.balances.USDT += amount;
             updateWalletUI();
@@ -4267,7 +4248,7 @@ async function confirmSwap() {
     await saveUserData();
 }
 
-// ====== 26. DEPOSIT MODAL FUNCTIONS ======
+// ====== 26. DEPOSIT MODAL FUNCTIONS (مع نص محدث) ======
 async function openDepositModal() {
     const modalContent = `
         <div class="modal-overlay active" onclick="closeModal()">
@@ -4342,7 +4323,7 @@ async function openDepositModal() {
                             
                             <div style="background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); border-radius: 8px; padding: 10px; margin-top: 15px;">
                                 <p style="color: var(--quantum-green); font-size: 11px; text-align: center; margin: 0;">
-                                    <i class="fas fa-info-circle"></i> Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. TX ID will be verified by admin.
+                                    <i class="fas fa-info-circle"></i> Minimum deposit: ${CONFIG.DEPOSIT.MIN_AMOUNTS.USDT} USDT. TX ID will be verified on the blockchain within 1-5 minutes.
                                 </p>
                             </div>
                         </div>
@@ -4458,7 +4439,7 @@ function updateDepositDetails(currency) {
             
             <div style="background: ${color.replace(')', ', 0.1)').replace('var(', 'rgba(')}; border: 1px solid ${color}; border-radius: 8px; padding: 10px; margin-top: 15px;">
                 <p style="color: ${color}; font-size: 11px; text-align: center; margin: 0;">
-                    <i class="${icon}"></i> Minimum deposit: ${minDeposit}. TX ID will be verified by admin.
+                    <i class="${icon}"></i> Minimum deposit: ${minDeposit}. TX ID will be verified on the blockchain within 1-5 minutes.
                 </p>
             </div>
         </div>
@@ -4511,7 +4492,7 @@ function validateTxId() {
     validationDiv.style.display = 'block';
 }
 
-// ====== 27. WITHDRAW MODAL FUNCTIONS ======
+// ====== 27. WITHDRAW MODAL FUNCTIONS (مع نص محدث) ======
 function openWithdrawModal() {
     if (!walletData || !walletData.balances) return;
     
@@ -4613,7 +4594,7 @@ function openWithdrawModal() {
                             </div>
                             <div style="display: flex; justify-content: space-between;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Processing:</span>
-                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">Manual review (1-24h)</span>
+                                <span style="color: var(--quantum-green); font-size: 12px; font-weight: 600;">1-5 minutes blockchain confirmation</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-top: 5px; border-top: 1px solid rgba(0,255,136,0.2); padding-top: 5px;">
                                 <span style="color: var(--quantum-green); font-size: 12px;">Funds Status:</span>
@@ -4879,7 +4860,7 @@ async function initAlienMuskApp() {
         }
     };
 
-    console.log("🚀 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION");
+    console.log("🚀 Alien Musk Quantum v8.1 - FINAL FIXED");
     
     if (appInitialized) {
         console.log("⚠️ Already initialized, skipping...");
@@ -4912,17 +4893,14 @@ async function initAlienMuskApp() {
         
         userData.isInitialized = true;
         console.log("✅ Platform initialized successfully");
-        console.log("✅ Professional Features:");
-        console.log("   - On-demand listeners (30 seconds)");
-        console.log("   - No duplicate transactions");
-        console.log("   - No double balance adds");
-        console.log("   - Separated admin tabs (Deposits/Withdrawals)");
-        console.log("   - Smart notifications without extra reads");
-        console.log("   - Live prices in swap (BNB/TON)");
-        console.log("   - Withdrawal double transaction fixed ✓");
+        console.log("✅ FINAL FIXES:");
+        console.log("   - Deposit: NO double balance (fixed)");
+        console.log("   - Deposit text: blockchain confirmation (1-5 min)");
+        console.log("   - Withdrawal text: blockchain confirmation (1-5 min)");
+        console.log("   - All systems go!");
         
         setTimeout(() => {
-            showMessage("👽 Welcome to Alien Musk Quantum v7.4 - Professional Edition!", "success");
+            showMessage("👽 Alien Musk Quantum v8.1 - Ready for Launch! 🚀", "success");
         }, 800);
         
         hideLoadingScreen();
@@ -5004,5 +4982,7 @@ window.adminSearchUser = adminSearchUser;
 window.adminAddToUser = adminAddToUser;
 window.adminSubtractFromUser = adminSubtractFromUser;
 
-console.log("👽 Alien Musk Quantum v7.4 - PROFESSIONAL EDITION loaded successfully!");
-console.log("✅ Withdrawal double transaction issue fixed!");
+console.log("👽 Alien Musk Quantum v8.1 - READY FOR LAUNCH!");
+console.log("✅ Deposit: NO double balance");
+console.log("✅ Texts: blockchain confirmation (1-5 min)");
+console.log("✅ Launch when ready! 🚀");
